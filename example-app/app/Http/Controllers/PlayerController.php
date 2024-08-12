@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Player;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Staff;
 
 class PlayerController extends Controller
 {
@@ -11,9 +13,9 @@ class PlayerController extends Controller
     {
         // Récupérer tous les joueurs
         $players = Player::all();
-
+        $staff = Staff::all(); 
         // Passer les joueurs à la vue
-        return view('teams', compact('players'));
+        return view('teams', compact('players', 'staff'));
     }
 
     public function create()
@@ -46,10 +48,11 @@ class PlayerController extends Controller
 
         return redirect()->route('players.index')->with('success', 'Player added successfully');
     }
-
     public function edit(Player $player)
     {
-        return view('players.edit', compact('player'));
+        $userSettings = Auth::user()->userSettings; // Récupère les paramètres utilisateur pour la personnalisation
+    
+        return view('players.edit', compact('player', 'userSettings'));
     }
 
     public function update(Request $request, Player $player)

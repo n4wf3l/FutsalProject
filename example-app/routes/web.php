@@ -3,7 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlayerController;
-
+use App\Http\Controllers\UserSettingController;
+use App\Models\UserSetting;
+use App\Http\Controllers\StaffController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,5 +50,20 @@ Route::get('/contact', function () {
 Route::get('/fanshop', function () {
     return view('fanshop');
 })->name('fanshop');
+
+
+
+Route::put('/settings', [UserSettingController::class, 'update'])->name('user.settings.update')->middleware('auth');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    $user = Auth::user();
+    $userSettings = UserSetting::where('user_id', $user->id)->first();
+    
+    return view('dashboard', compact('userSettings'));
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/players/{id}/edit', [PlayerController::class, 'edit'])->name('players.edit');
+
+Route::resource('staff', StaffController::class);
 
 require __DIR__.'/auth.php';
