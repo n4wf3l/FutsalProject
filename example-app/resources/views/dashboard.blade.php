@@ -1,17 +1,29 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <x-navbar />
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
+    <div class="container mx-auto mt-8">
+        <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
+
+        <p>Welcome to your dashboard, {{ Auth::user()->name }}!</p>
+
+        <!-- Exemple de boutons pour gérer les joueurs -->
+        <div class="mt-4">
+            <a href="{{ route('players.create') }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                Add Player
+            </a>
+            <!-- Le bouton Edit pourrait être généré dynamiquement en fonction de l'ID d'un joueur -->
+            <a href="{{ route('players.edit', 1) }}" class="bg-green-500 text-white font-bold py-2 px-4 rounded ml-4">
+                Edit Player
+            </a>
         </div>
     </div>
-</x-app-layout>
+</body>
+</html>

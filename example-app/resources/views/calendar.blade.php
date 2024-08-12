@@ -7,7 +7,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-<x-navbar />
+  <x-navbar />
 
 
 </body>
