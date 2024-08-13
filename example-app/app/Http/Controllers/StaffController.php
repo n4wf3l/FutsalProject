@@ -45,10 +45,17 @@ class StaffController extends Controller
         return redirect()->route('teams')->with('success', 'Staff member updated successfully.');
     }
 
-    public function destroy(Staff $staff)
+    public function edit(Staff $staff)
     {
-        $staff->delete();
-
-        return redirect()->route('staff.index')->with('success', 'Staff member deleted successfully.');
+        // Retourner la vue d'édition avec les données du membre du staff
+        return view('staff.edit', compact('staff'));
     }
+
+    public function destroy(Staff $staff)
+{
+    $staff->delete();
+
+    // Redirigez vers la page souhaitée, par exemple vers la page 'teams'
+    return redirect()->route('teams')->with('success', 'Staff member deleted successfully.');
+}
 }

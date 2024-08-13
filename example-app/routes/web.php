@@ -6,6 +6,7 @@ use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\UserSettingController;
 use App\Models\UserSetting;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\CoachController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -62,8 +63,10 @@ Route::get('/dashboard', function () {
     return view('dashboard', compact('userSettings'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/players/{id}/edit', [PlayerController::class, 'edit'])->name('players.edit');
 
 Route::resource('staff', StaffController::class);
+
+Route::put('/settings', [UserSettingController::class, 'update'])->name('user.settings.update');
+Route::resource('coaches', CoachController::class);
 
 require __DIR__.'/auth.php';

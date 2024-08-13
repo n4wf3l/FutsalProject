@@ -63,6 +63,12 @@
             <a href="#" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Edit News
             </a>
+            <a href="{{ route('coaches.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+    Add Coach
+</a>
+<a href="{{ route('coaches.index') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+    Edit Coach
+</a>
         </div>
 
         <!-- Conteneur pour les personnalisations du site -->

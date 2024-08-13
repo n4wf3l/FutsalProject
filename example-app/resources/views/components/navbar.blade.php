@@ -60,12 +60,12 @@
                     </button>
                 </form>
                 @else
-                    <a href="{{ route('login') }}" class="text-gray-300 hover:text-white transition duration-200">
-                        Log in
+                    <a href="{{ route('login') }}" class="text-white hover:text-white transition duration-200">
+                        Log in |
                     </a>
 
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="text-gray-300 hover:text-white transition duration-200">
+                        <a href="{{ route('register') }}" class="text-white hover:text-white transition duration-200">
                             Register
                         </a>
                     @endif

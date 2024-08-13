@@ -6,16 +6,18 @@ use App\Models\Player;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Staff;
+use App\Models\Coach;
 
 class PlayerController extends Controller
 {
     public function index()
     {
-        // Récupérer tous les joueurs
         $players = Player::all();
         $staff = Staff::all(); 
-        // Passer les joueurs à la vue
-        return view('teams', compact('players', 'staff'));
+        $coach = Coach::first(); // Supposons que vous n'avez qu'un seul coach principal
+    
+        // Passer les données à la vue
+        return view('teams', compact('players', 'staff', 'coach'));
     }
 
     public function create()

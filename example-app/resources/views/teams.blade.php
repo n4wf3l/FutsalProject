@@ -6,31 +6,83 @@
     <title>Teams</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .bg-bg {
+            background-color: {{ $primaryColor }};
+        }
+
+        .bg-coach {
+            background-color: {{ $primaryColor }};
+            padding: 40px;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            margin-top: 50px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .text-highlight {
+            color: #00ADEF;
+        }
+
+        .coach-photo {
+            max-width: 200px; /* Redimensionner la photo à une largeur maximale de 200px */
+            height: auto;
+            border-radius: 12px;
+            margin-left: 20px; /* Pour espacer la photo du texte */
+        }
+
+        .coach-details {
+            flex: 1;
+        }
+
+        .coach-info {
+            margin-top: 20px;
+        }
+
+        .coach-info strong {
+            font-weight: 600;
+        }
+
+        /* Styles généraux pour le conteneur des joueurs */
         .player-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Grille de 4 colonnes */
-            gap: 20px; /* Espacement entre les conteneurs */
-            justify-items: center; /* Centrer les conteneurs horizontalement */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            justify-items: center;
             margin: 0 auto;
-            max-width: 1600px; /* Limite la largeur totale à 1600px pour la grille */
+            max-width: 1600px;
             padding: 20px;
+            background-color: white;
         }
+
         .player-item {
-            width: 100%; /* Le conteneur prend toute la largeur disponible dans la colonne */
-            height: 500px; /* Augmenter la hauteur pour obtenir un rectangle */
+            width: 100%;
+            height: 500px;
             position: relative;
             overflow: hidden;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+
         .player-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Remplit entièrement le conteneur sans déformer l'image */
+            object-fit: cover;
             display: block;
         }
+
         .player-info {
             position: absolute;
             bottom: 0;
@@ -41,8 +93,9 @@
             text-align: center;
             padding: 10px;
             font-weight: bold;
-            font-size: 35px; 
+            font-size: 35px;
         }
+
         .player-number {
             position: absolute;
             top: 10px;
@@ -50,10 +103,11 @@
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
             padding: 20px;
-            font-size: 60px; /* Taille du numéro augmentée */
+            font-size: 60px;
             font-weight: bold;
             border-radius: 50%;
         }
+
         .player-overlay {
             position: absolute;
             top: 0;
@@ -69,16 +123,83 @@
             flex-direction: column;
             transition: opacity 0.3s ease;
         }
+
         .player-item:hover .player-overlay {
             opacity: 1;
         }
+
         .club-logo {
             position: absolute;
             top: 10px;
             left: 10px;
-            width: 10%; /* Ajuster la taille du logo à 10% de la largeur de l'image du joueur */
+            width: 10%;
             height: auto;
             z-index: 20;
+        }
+
+        .staff-section {
+            background-color: {{ $primaryColor }};
+            color: white;
+            padding: 40px 0;
+        }
+
+        .staff-title {
+            color: white;
+            font-size: 50px;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .staff-container {
+            max-width: 1600px;
+            margin: 50px auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .staff-item {
+            background-color: #1F2937;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .staff-item h3 {
+            color: white;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .staff-item p {
+            color: gray;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .staff-item button,
+        .staff-item a {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .staff-item button {
+            background-color: #DC2626;
+            color: white;
+        }
+
+        .staff-item a {
+            background-color: #2563EB;
+            color: white;
+            text-decoration: none;
+        }
+
+        .staff-item a:hover,
+        .staff-item button:hover {
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -98,7 +219,7 @@
     @if($players->isEmpty())
         <p class="text-gray-600 text-center">There are no players in the database.</p>
     @else
-        <div class="player-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div class="player-container">
             @foreach($players as $player)
             <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
                 <!-- Club Logo -->
@@ -153,45 +274,93 @@
             @endforeach
         </div>
     @endif
-</div>
 
-
-<section class="text-center my-12">
-    <h1 class="text-6xl font-bold text-gray-900">Technisch- & Medische Staff</h1>
-    <div class="flex justify-center items-center mt-4 mb-12">
-        <p class="text-xl text-gray-600">Discover additional information by hovering with your mouse.</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        @foreach($staff as $member)
-        <div class="bg-dark-blue p-6 rounded-lg shadow-lg">
-            <h3 class="text-xl font-bold text-white">{{ $member->first_name }} {{ $member->last_name }}</h3>
-            <p class="text-gray-400">{{ $member->position }}</p>
-
-            @auth
-            <div class="mt-4 flex justify-between">
-                <a href="{{ route('staff.edit', $member->id) }}" 
-                   class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none ml-2">
-                    Edit
-                </a>
-                <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this staff member?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700">Delete</button>
-                </form>
-            </div>
-            @endauth
+    <!-- Coach Section -->
+    <section class="bg-bg mt-12">
+    @if($coach)
+        <div class="bg-coach flex items-center justify-between" style="background-color: {{ $primaryColor }};">
+            <!-- Coach Information -->
+            <div class="coach-details">
+                <h2 class="staff-title">Headcoach</h2>
+                <div class="flex justify-center items-center">
+            <p class="text-xl text-gray-200" style="margin-bottom: 80px">Discover additional information by hovering with your mouse.</p>
         </div>
-        @endforeach
-    </div>
+                <h3 class="text-3xl font-bold mb-6">{{ $coach->first_name }} {{ $coach->last_name }}</h3>
+                <p class="text-lg mb-6">{!! nl2br(e($coach->description)) !!}</p>
+
+                <div class="text-lg coach-info">
+                    <p class="mb-2"><strong>Geboortedatum:</strong> {{ \Carbon\Carbon::parse($coach->birth_date)->format('d F Y') }}</p>
+                    <p class="mb-2"><strong>Geboorteplaats:</strong> {{ $coach->birth_city }}</p>
+                    <p><strong>Nationaliteit:</strong> {{ $coach->nationality }}</p>
+                    <p class="mb-2"><strong>Coaching since:</strong> {{ \Carbon\Carbon::parse($coach->coaching_since)->format('d F Y') }}</p>
+                </div>
+            </div>
+
+            <!-- Coach Photo and Buttons -->
+            <div class="text-center flex flex-col items-center justify-center">
+                @if($coach->photo)
+                    <img src="{{ asset('storage/' . $coach->photo) }}" alt="{{ $coach->first_name }} {{ $coach->last_name }}" class="coach-photo">
+                @else
+                    <img src="https://via.placeholder.com/256" alt="No photo available" class="coach-photo">
+                @endif
+
+                <!-- Buttons for Edit and Delete -->
+                @auth
+                    <div class="flex mt-6">
+                        <!-- Edit Button -->
+                        <a href="{{ route('coaches.edit', $coach->id) }}" 
+                           style="background-color: #2563EB; color: white; padding: 8px 16px; border-radius: 8px; text-align: center; margin-right: 8px;">
+                            Edit
+                        </a>
+
+                        <!-- Delete Button -->
+                        <form action="{{ route('coaches.destroy', $coach->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this coach?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                @endauth
+            </div>
+        </div>
+    @else
+        <p class="text-gray-600 text-center">No coach available.</p>
+    @endif
 </section>
 
-<style>
-    /* Ajoutez ces styles personnalisés pour correspondre au design */
-    .bg-dark-blue {
-        background-color: #0C2033; /* Couleur de fond sombre similaire à celle de l'exemple */
-    }
-</style>
+
+    <!-- Staff Section -->
+    <section class="staff-section">
+        <h1 class="staff-title">Technisch- & Medische Staff</h1>
+        <div class="flex justify-center items-center">
+            <p class="text-xl text-gray-200">Discover additional information by hovering with your mouse.</p>
+        </div>
+
+        <div class="staff-container">
+            @foreach($staff as $member)
+            <div class="staff-item">
+                <h3>{{ $member->first_name }} {{ $member->last_name }}</h3>
+                <p>{{ $member->position }}</p>
+
+                @auth
+                <div class="mt-4 flex justify-center space-x-4">
+    <!-- Delete Button -->
+    <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this staff member?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="bg-red-500 text-white font-bold py-2 px-4 rounded">Delete</button>
+    </form>
+
+    <!-- Edit Button -->
+    <a href="{{ route('staff.edit', $member->id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">Edit</a>
+</div>
+                @endauth
+            </div>
+            @endforeach
+        </div>
+    </section>
 
 </body>
 </html>
