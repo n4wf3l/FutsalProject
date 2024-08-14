@@ -6,145 +6,233 @@
     <title>Mon Site</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+    <style>
+        body {
+            background-color: #f3f4f6;
+        }
+        .container {
+            margin: 0 auto;
+        }
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            max-width: 1000px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+          background-color: {{ $primaryColor }};
+            color: white;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+        .club-name {
+            display: flex;
+            align-items: center;
+        }
+        .club-logo {
+            height: 24px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
   <x-navbar />
-  <header class="bg-red-500 py-8">
-        <div class="container mx-auto text-center">
-            <h1 class="text-4xl font-bold text-white">Classement Futsal D1</h1>
+  <header class="text-center my-12" style="margin-top: 20px;">
+        <h1 class="text-6xl font-bold text-gray-900" style="font-size:60px;">Classement Futsal D1</h1>
+        <div class="flex justify-center items-center mt-4">
+            <p class="text-xl text-gray-600" style="margin-bottom: 20px;">Discover additional information by hovering with your mouse.</p>
         </div>
     </header>
 
     <main class="py-12">
-        <div class="container mx-auto">
-            <table class="w-full text-left border-collapse">
+        <div class="container table-container">
+            <table>
                 <thead>
-                    <tr class="bg-red-500 text-white">
-                        <th class="p-3 text-center">#</th>
-                        <th class="p-3">Équipe</th>
-                        <th class="p-3 text-center">Pts</th>
-                        <th class="p-3 text-center">Jo</th>
-                        <th class="p-3 text-center">G</th>
-                        <th class="p-3 text-center">N</th>
-                        <th class="p-3 text-center">P</th>
-                        <th class="p-3 text-center">Diff</th>
+                    <tr>
+                        <th>#</th>
+                        <th>Club</th>
+                        <th>Pts</th>
+                        <th>Jo</th>
+                        <th>G</th>
+                        <th>N</th>
+                        <th>P</th>
+                        <th>Diff</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Exemple d'une ligne de classement -->
-                    <tr class="bg-white">
-                        <td class="p-3 text-center font-bold text-red-500">01</td>
-                        <td class="p-3 flex items-center">
-                            <img src="path-to-logo" alt="Logo" class="h-8 w-8 mr-3">
-                            <span class="font-bold">Équipe 1</span>
-                        </td>
-                        <td class="p-3 text-center font-bold">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
+                    <!-- Ajoutez les clubs ici -->
+                    <tr>
+                        <td>01</td>
+                        <td class="club-name"><span>SCC Mohammédia (SCCM)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
-
-                    <!-- Répétez les lignes pour chaque équipe -->
-                    <tr class="bg-gray-100">
-                        <td class="p-3 text-center font-bold text-red-500">02</td>
-                        <td class="p-3 flex items-center">
-                            <img src="path-to-logo" alt="Logo" class="h-8 w-8 mr-3">
-                            <span class="font-bold">Équipe 2</span>
-                        </td>
-                        <td class="p-3 text-center font-bold">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
+                    <tr>
+                        <td>02</td>
+                        <td class="club-name"><span>Loukkous Ksar El Kebir (CLKK)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
-                    <!-- Ajoutez plus de lignes ici pour les autres équipes -->
-
-                    <tr class="bg-gray-100">
-                        <td class="p-3 text-center font-bold text-red-500">02</td>
-                        <td class="p-3 flex items-center">
-                            <img src="path-to-logo" alt="Logo" class="h-8 w-8 mr-3">
-                            <span class="font-bold">Équipe 2</span>
-                        </td>
-                        <td class="p-3 text-center font-bold">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
+                    <tr>
+                        <td>03</td>
+                        <td class="club-name"><span>Dynamo Kenitra (ACDK)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
-
-                    <tr class="bg-gray-100">
-                        <td class="p-3 text-center font-bold text-red-500">02</td>
-                        <td class="p-3 flex items-center">
-                            <img src="path-to-logo" alt="Logo" class="h-8 w-8 mr-3">
-                            <span class="font-bold">Équipe 2</span>
-                        </td>
-                        <td class="p-3 text-center font-bold">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
+                    <tr>
+                        <td>04</td>
+                        <td class="club-name"><span>CFS Settat (CFSS)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
-
-                    <tr class="bg-gray-100">
-                        <td class="p-3 text-center font-bold text-red-500">02</td>
-                        <td class="p-3 flex items-center">
-                            <img src="path-to-logo" alt="Logo" class="h-8 w-8 mr-3">
-                            <span class="font-bold">Équipe 2</span>
-                        </td>
-                        <td class="p-3 text-center font-bold">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
+                    <tr>
+                        <td>05</td>
+                        <td class="club-name"><span>AS Faucon Agadir (ASFA)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
-
-
-                    <tr class="bg-gray-100">
-                        <td class="p-3 text-center font-bold text-red-500">02</td>
-                        <td class="p-3 flex items-center">
-                            <img src="path-to-logo" alt="Logo" class="h-8 w-8 mr-3">
-                            <span class="font-bold">Équipe 2</span>
-                        </td>
-                        <td class="p-3 text-center font-bold">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
+                    <tr>
+                        <td>06</td>
+                        <td class="club-name"><span>Oussoud Khabazat (AOKHK)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
-
-                    <tr class="bg-gray-100">
-                        <td class="p-3 text-center font-bold text-red-500">02</td>
-                        <td class="p-3 flex items-center">
-                            <img src="path-to-logo" alt="Logo" class="h-8 w-8 mr-3">
-                            <span class="font-bold">Équipe 2</span>
-                        </td>
-                        <td class="p-3 text-center font-bold">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
+                    <tr>
+                        <td>07</td>
+                        <td class="club-name"><span>CJ Khouribga (CJK)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
-
-                    <tr class="bg-gray-100">
-                        <td class="p-3 text-center font-bold text-red-500">02</td>
-                        <td class="p-3 flex items-center">
-                            <img src="path-to-logo" alt="Logo" class="h-8 w-8 mr-3">
-                            <span class="font-bold">Équipe 2</span>
-                        </td>
-                        <td class="p-3 text-center font-bold">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
-                        <td class="p-3 text-center">0</td>
+                    <tr>
+                        <td>08</td>
+                        <td class="club-name"><span>Raja CA (RCA)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>09</td>
+                        <td class="club-name"><span>Ajax Tetouan (FCAAT)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td class="club-name"><span>Amal Tit Mellil (ASA2)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td class="club-name"><span>Raja Agadir (RCMA)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td class="club-name"><span>Olympique Tétouan (AOT)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td class="club-name"><span>Dina Kénitra (DKFC)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td class="club-name"><span>AS Martil (ASM)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td class="club-name"><span>Nasr Settat (ANSS)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>16</td>
+                        <td class="club-name"><span>Lions de Chaouia (ALC)</span></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
                     </tr>
                 </tbody>
             </table>
