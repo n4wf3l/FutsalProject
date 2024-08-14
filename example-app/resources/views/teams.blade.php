@@ -13,14 +13,13 @@
         }
 
         .bg-bg {
-            background-color: {{ $primaryColor }};
+            background-color: {{ $secondaryColor }};
         }
 
         .bg-coach {
-            background-color: {{ $primaryColor }};
+            background-color: {{ $secondaryColor }};
             padding: 40px;
             border-radius: 8px;
-            color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -29,10 +28,6 @@
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
-        }
-
-        .text-highlight {
-            color: #00ADEF;
         }
 
         .coach-photo {
@@ -138,7 +133,7 @@
         }
 
         .staff-section {
-            background-color: {{ $primaryColor }};
+            background-color: {{ $secondaryColor }};
             color: white;
             padding: 40px 0;
         }
@@ -243,6 +238,7 @@
 
                     <!-- Player Info Overlay -->
                     <div class="player-overlay p-4">
+                    <p><strong>Birthdate:</strong> {{ $player->birthdate }}</p>
                         <p><strong>Position:</strong> {{ $player->position }}</p>
                         <p><strong>Nationality:</strong> {{ $player->nationality }}</p>
                         <p><strong>Height:</strong> {{ $player->height }} cm</p>
@@ -278,15 +274,15 @@
     <!-- Coach Section -->
     <section class="bg-bg mt-12">
     @if($coach)
-        <div class="bg-coach flex items-center justify-between" style="background-color: {{ $primaryColor }};">
+        <div class="bg-coach flex items-center justify-between text-gray-700" style="background-color: {{ $secondaryColor }};">
             <!-- Coach Information -->
-            <div class="coach-details">
-                <h2 class="staff-title">Headcoach</h2>
+            <div class="coach-details text-gray-700">
+                <h2 class="staff-title" style="color:black">Headcoach</h2>
                 <div class="flex justify-center items-center">
-            <p class="text-xl text-gray-200" style="margin-bottom: 80px">Discover additional information by hovering with your mouse.</p>
+            <p class="text-xl" style="margin-bottom: 80px">Discover additional information by hovering with your mouse.</p>
         </div>
                 <h3 class="text-3xl font-bold mb-6">{{ $coach->first_name }} {{ $coach->last_name }}</h3>
-                <p class="text-lg mb-6">{!! nl2br(e($coach->description)) !!}</p>
+                <p class="text-lg  mb-6">{!! $coach->description !!}</p>
 
                 <div class="text-lg coach-info">
                     <p class="mb-2"><strong>Geboortedatum:</strong> {{ \Carbon\Carbon::parse($coach->birth_date)->format('d F Y') }}</p>
@@ -361,6 +357,6 @@
             @endforeach
         </div>
     </section>
-
+    <x-footer />
 </body>
 </html>

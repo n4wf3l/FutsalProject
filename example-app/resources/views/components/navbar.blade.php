@@ -1,5 +1,4 @@
 @php
-    // Ces variables sont maintenant disponibles globalement et ne dépendent plus de l'utilisateur connecté
     $primaryColor = $primaryColor ?? '#1F2937'; // Gris par défaut
     $secondaryColor = $secondaryColor ?? '#FF0000'; // Rouge par défaut
     $logoPath = $logoPath ?? null;
@@ -38,7 +37,7 @@
             <a href="{{ route('clubinfo') }}" class="text-white nav-link transition duration-200">Clubinfo</a>
             <a href="{{ route('calendar') }}" class="text-white nav-link transition duration-200">Calendar</a>
             <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200">Teams</a>
-            <a href="{{ route('sponsors') }}" class="text-white nav-link transition duration-200">Sponsors</a>
+            <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
             <a href="{{ route('contact') }}" class="text-white nav-link transition duration-200">Contact</a>
             <a href="{{ route('fanshop') }}" class="text-white nav-link transition duration-200">Fanshop</a>
             @if (Route::has('login'))

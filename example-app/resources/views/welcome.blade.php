@@ -10,6 +10,6 @@
 <body class="bg-gray-100">
 <x-navbar />
 
-
+<x-footer />
 </body>
 </html>

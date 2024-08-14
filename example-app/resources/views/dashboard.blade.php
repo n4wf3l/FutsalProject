@@ -48,26 +48,20 @@
             <a href="{{ route('staff.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Add Staff
             </a>
-            <a href="{{ route('staff.index') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('teams') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
     Edit Staff
 </a>
-            <a href="#" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('sponsors.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Add Sponsor
             </a>
-            <a href="#" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Edit Sponsor
-            </a>
-            <a href="#" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('articles.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Add News
             </a>
-            <a href="#" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('clubinfo') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Edit News
             </a>
             <a href="{{ route('coaches.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
     Add Coach
-</a>
-<a href="{{ route('coaches.index') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-    Edit Coach
 </a>
         </div>
 
@@ -108,5 +102,7 @@
             </form>
         </div>
     </section>
+
+    <x-footer />
 </body>
 </html>

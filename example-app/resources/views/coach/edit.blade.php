@@ -75,15 +75,9 @@
 
             <!-- Description -->
             <div class="mb-4">
-    <label for="description" class="block text-sm font-medium text-gray-700">Description:</label>
-    <textarea 
-        name="description" 
-        id="description" 
-        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" 
-        rows="8" 
-        style="min-height: 300px; padding: 10px;"
-    >{{ old('description', $coach->description) }}</textarea>
-</div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description:</label>
+                <textarea name="description" id="description" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" rows="8" style="min-height: 300px; padding: 10px;">{{ old('description', $coach->description) }}</textarea>
+            </div>
 
             <!-- Photo -->
             <div class="mb-4">
@@ -106,5 +100,26 @@
             </div>
         </form>
     </div>
+    <x-footer />
+
+    <!-- CKEditor script -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+        .create(document.querySelector('#description'), {
+            toolbar: {
+                items: [
+                    'bold', 'italic', '|',
+                    'bulletedList', 'numberedList', '|',
+                    'undo', 'redo', '|',
+                    'blockQuote', 'insertTable', 'heading', '|',
+                    'link', 'textColor', 'highlight'
+                ]
+            },
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    </script>
 </body>
 </html>

@@ -56,5 +56,6 @@
         </button>
     </form>
 </div>
+<x-footer />
 </body>
 </html>

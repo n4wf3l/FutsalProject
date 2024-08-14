@@ -7,6 +7,9 @@ use App\Http\Controllers\UserSettingController;
 use App\Models\UserSetting;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\CoachController;
+use App\Http\Controllers\SponsorController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ArticleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,10 +43,6 @@ Route::get('/calendar', function () {
 // Routes CRUD pour le modèle Player
 
 
-Route::get('/sponsors', function () {
-    return view('sponsors');
-})->name('sponsors');
-
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
@@ -69,4 +68,11 @@ Route::resource('staff', StaffController::class);
 Route::put('/settings', [UserSettingController::class, 'update'])->name('user.settings.update');
 Route::resource('coaches', CoachController::class);
 
+Route::resource('sponsors', SponsorController::class)->middleware('auth');
+Route::get('/sponsors', [SponsorController::class, 'index'])->name('sponsors.index');
+
+
+Route::resource('articles', ArticleController::class)->middleware('auth');
+Route::get('/clubinfo', [ArticleController::class, 'index'])->name('clubinfo');
+Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
 require __DIR__.'/auth.php';

@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\UserSetting; // Assurez-vous d'importer correctement le modèle
+use App\Models\UserSetting;
 use Illuminate\Support\Facades\Auth;
 
 class UserSettingController extends Controller
 {
+    public function showDashboard()
+    {
+        $userSettings = UserSetting::where('user_id', Auth::id())->first();
+        return view('dashboard', compact('userSettings'));
+    }
+
     public function update(Request $request)
     {
         // Validation des données
@@ -22,7 +28,7 @@ class UserSettingController extends Controller
         $siteSettings = UserSetting::where('user_id', Auth::id())->first();
 
         if (!$siteSettings) {
-            $siteSettings = new UserSetting(); // Remplacez par UserSetting
+            $siteSettings = new UserSetting();
             $siteSettings->user_id = Auth::id(); // Associer l'utilisateur à ce paramètre
         }
 
@@ -42,6 +48,3 @@ class UserSettingController extends Controller
         return redirect()->back()->with('success', 'Settings updated successfully.');
     }
 }
-
-
-

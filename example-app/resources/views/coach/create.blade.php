@@ -15,7 +15,7 @@
         </div>
     </header>
 
-    <div class="container mx-auto mt-8 max-w-lg bg-white p-6 rounded-lg shadow-md">
+    <div class="container mx-auto mt-8 max-w-lg bg-white p-6 rounded-lg shadow-md mb-20">
         <h2 class="text-2xl font-semibold mb-6 text-center text-gray-800">Add New Coach</h2>
 
         @if ($errors->any())
@@ -91,5 +91,26 @@
             </div>
         </form>
     </div>
+    <x-footer />
+
+    <!-- CKEditor script -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+        .create(document.querySelector('#description'), {
+            toolbar: {
+                items: [
+                    'bold', 'italic', '|',
+                    'bulletedList', 'numberedList', '|',
+                    'undo', 'redo', '|',
+                    'blockQuote', 'insertTable', 'heading', '|',
+                    'link', 'textColor', 'highlight'
+                ]
+            },
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    </script>
 </body>
 </html>
