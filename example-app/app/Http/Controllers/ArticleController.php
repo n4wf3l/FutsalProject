@@ -9,9 +9,19 @@ use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::latest()->get();
+        $search = $request->input('search');
+        
+        if ($search) {
+            $articles = Article::where('title', 'LIKE', "%{$search}%")
+                ->orWhere('description', 'LIKE', "%{$search}%")
+                ->latest()
+                ->get();
+        } else {
+            $articles = Article::latest()->get();
+        }
+    
         return view('clubinfo', compact('articles'));
     }
 

@@ -15,6 +15,38 @@
     .nav-link:hover {
         color: {{ $secondaryColor }} !important;
     }
+
+    /* Dropdown Styles */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        text-align: left;
+    }
+
+    .dropdown-content a {
+        color: {{ $primaryColor }};
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: {{ $secondaryColor }};
+        color: white;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
 </style>
 
 <nav class="p-4" style="background-color: {{ $primaryColor }};">
@@ -34,7 +66,16 @@
         <!-- Navigation links -->
         <div class="flex space-x-8">
             <a href="/" class="text-white nav-link transition duration-200">Home</a>
-            <a href="{{ route('clubinfo') }}" class="text-white nav-link transition duration-200">Clubinfo</a>
+
+            <!-- Dropdown for Club -->
+            <div class="dropdown">
+                <a href="#" class="text-white nav-link transition duration-200">Club▼</a>
+                <div class="dropdown-content">
+                    <a href="{{ route('clubinfo') }}">News</a>
+                    <a href="{{ route('about.index') }}">About</a>
+                </div>
+            </div>
+
             <a href="{{ route('calendar') }}" class="text-white nav-link transition duration-200">Calendar</a>
             <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200">Teams</a>
             <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>

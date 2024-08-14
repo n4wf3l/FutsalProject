@@ -10,6 +10,7 @@ use App\Http\Controllers\CoachController;
 use App\Http\Controllers\SponsorController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AboutSectionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -75,4 +76,9 @@ Route::get('/sponsors', [SponsorController::class, 'index'])->name('sponsors.ind
 Route::resource('articles', ArticleController::class)->middleware('auth');
 Route::get('/clubinfo', [ArticleController::class, 'index'])->name('clubinfo');
 Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
+
+Route::resource('about', AboutSectionController::class)->parameters([
+    'about' => 'aboutSection'
+]);
+
 require __DIR__.'/auth.php';

@@ -15,7 +15,7 @@
             overflow: hidden;
             margin: 30px; /* Add margin around each card */
             width: 100%;
-            max-width: 300px; /* Set a maximum width for the card */
+            max-width: 400px; /* Set a maximum width for the card */
         }
         
         .article-card:hover {
@@ -105,6 +105,29 @@
                 Article</a>
                 @endauth
     </header>
+
+    <div class="flex justify-center mb-6">
+        <form action="{{ route('clubinfo') }}" method="GET" class="w-full max-w-md">
+            <div class="flex items-center border-b border-b-2 border-gray-500 py-2">
+                <input
+                    type="text"
+                    name="search"
+                    class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    placeholder="Search articles..."
+                    aria-label="Search"
+                >
+                <button
+                    type="submit"
+                    class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center"
+                    style=" background-color: {{ $primaryColor }};"
+                    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'"
+                >
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
 
 
     <div class="container mx-auto py-12">
