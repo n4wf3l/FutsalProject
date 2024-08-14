@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\AboutSection;
 use Illuminate\Http\Request;
+use App\Models\ClubInfo;
 
 class AboutSectionController extends Controller
 {
     public function index()
     {
         $sections = AboutSection::all();
-        return view('about.index', compact('sections'));
+        $clubInfo = ClubInfo::first(); // Récupérer les informations du club
+        $clubName = 'FTA Clubinfo'; 
+
+    return view('about.index', compact('sections', 'clubInfo', 'clubName'));
     }
 
     public function create()

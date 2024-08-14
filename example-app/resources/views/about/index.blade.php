@@ -119,16 +119,16 @@
 
     <div class="container mx-auto py-12">
         <div class="header-section">
-            <h1>FTA Clubinfo</h1>
-            <p>FTA'er ben je niet voor even maar voor het leven!</p>
+            <h1>Clubinfo</h1>
+            <p>{{ $clubName }} you're not here for a short time, but for life!</p>
         </div>
 
         <div class="section-content">
             <div class="club-info">
                 <h2>{{ $clubName }}</h2>
                 <p>
-                {{ $clubName }} is een zaalvoetbalclub met een duidelijke en gezonde visie, 
-                    zijnde attractief topzaalvoetbal leveren met zoveel mogelijk eigen opgeleide spelers en/of Antwerpenaars.
+                {{ $clubName }} is a futsal club with a clear and healthy vision, 
+                aiming to deliver attractive top-level futsal with as many homegrown players and/or people as possible.
                 </p>
 
                 <!-- Ajout de la carte ici -->
@@ -143,7 +143,7 @@
                 <div class="mt-4 text-gray-700 leading-relaxed">
                     {!! $section->content !!}
                 </div>
-
+                @auth
                 <div class="button-group">
                     <a href="{{ route('about.edit', $section->id) }}"
                         class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg"
@@ -165,11 +165,13 @@
                         </button>
                     </form>
                 </div>
+                @endauth
             </div>
             @endforeach
         </div>
 
         <!-- Button to add a new section -->
+        @auth
         <div class="text-center mt-8">
             <a href="{{ route('about.create') }}"
                 class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg"
@@ -179,6 +181,7 @@
                 Add New Section
             </a>
         </div>
+        @endauth
     </div>
 
     <!-- Include the Footer component -->
@@ -187,17 +190,24 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
-    <script>
-        var map = L.map('map').setView([51.2194, 4.4025], 13); // Coordonnées pour Anvers, BE
+     <script>
+    @if($clubInfo)
+        console.log('Latitude:', {{ $clubInfo->latitude }});
+        console.log('Longitude:', {{ $clubInfo->longitude }});
+
+        var map = L.map('map').setView([{{ $clubInfo->latitude }}, {{ $clubInfo->longitude }}], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        L.marker([51.2194, 4.4025]).addTo(map)
-            .bindPopup('FTA Club Location')
+        L.marker([{{ $clubInfo->latitude }}, {{ $clubInfo->longitude }}]).addTo(map)
+            .bindPopup('{{ $clubInfo->sportcomplex_location }}')
             .openPopup();
-    </script>
+    @else
+        console.log('No club info available');
+    @endif
+</script>
 
 </body>
 

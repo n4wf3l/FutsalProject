@@ -1,11 +1,3 @@
-@php
-    // Ces variables sont maintenant disponibles globalement et ne dépendent plus de l'utilisateur connecté
-    $primaryColor = $primaryColor ?? '#1F2937'; // Gris par défaut
-    $secondaryColor = $secondaryColor ?? '#FF0000'; // Rouge par défaut
-    $logoPath = $logoPath ?? null;
-    $clubName = $clubName ?? 'Default Club Name';
-@endphp
-
 <style>
     html, body {
         height: 100%;
@@ -34,19 +26,12 @@
         <div class="flex flex-wrap justify-between">
             <!-- Logo and Social Media -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0">
-                <img src="{{ $logoPath }}" alt="Club Logo" class="mb-6" style="height: 60px; width: auto;">
-                <div class="flex space-x-4">
-                    <a href="#" class="text-white hover:text-gray-300">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="text-white hover:text-gray-300">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" class="text-white hover:text-gray-300">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </div>
-            </div>
+    <!-- Utilisation de flex pour aligner les logos côte à côte -->
+    <div class="flex items-center space-x-4 mb-6">
+        <img src="{{ $logoPath }}" alt="Club Logo" style="height: 60px; width: auto;">
+        <img src="{{ $federationLogo }}" alt="Fed Logo" style="height: 60px; width: auto;">
+    </div>
+</div>
 
             <!-- Links -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0">
@@ -83,21 +68,33 @@
 
             <!-- Contact Information -->
             <div class="w-full md:w-1/4">
-                <h3 class="font-bold mb-4">CONTACT FTA</h3>
+                <h3 class="font-bold mb-4">CONTACT {{ $clubName }}</h3>
                 <ul class="space-y-2">
-                    <li>
-                        <i class="fas fa-map-marker-alt"></i> 
-                        Sportcomplex Het Rooi Berchemstadionstraat
-                    </li>
-                    <li>
-                        <i class="fas fa-phone-alt"></i> 
-                        GC: +32 488 87 34 00
-                    </li>
-                    <li>
-                        <i class="fas fa-envelope"></i> 
-                        info@ftantwerpen.be
-                    </li>
-                </ul>
+    <li class="flex items-center">
+        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
+        <span>{{ $clubLocation }}</span>
+    </li>
+    <li class="flex items-center">
+        <img src="{{ asset('tel.png') }}" alt="Tel" class="h-6 w-6 mr-2">
+        <span>GC: {{ $phone }}</span>
+    </li>
+    <li class="flex items-center">
+        <img src="{{ asset('email.png') }}" alt="Email" class="h-6 w-6 mr-2"> 
+        <span>{{ $email }}</span>
+    </li>
+</ul>
+
+<div class="flex space-x-4 mt-4">
+    <a href="{{ $facebook }}" class="text-white hover:text-gray-300 flex items-center">
+        <img src="{{ asset('facebook.png') }}" alt="Facebook" class="h-6 w-6 mr-2"> 
+        <span>Facebook</span>
+    </a>
+    <a href="{{ $instagram }}" class="text-white hover:text-gray-300 flex items-center">
+        <img src="{{ asset('instagram.png') }}" alt="Instagram" class="h-6 w-6 mr-2"> 
+        <span>Instagram</span>
+    </a>
+</div>
+
             </div>
         </div>
 

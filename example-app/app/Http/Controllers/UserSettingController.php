@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UserSetting;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserSettingController extends Controller
 {
@@ -15,36 +16,31 @@ class UserSettingController extends Controller
     }
 
     public function update(Request $request)
-    {
-        // Validation des données
-        $validatedData = $request->validate([
-            'theme_color_primary' => 'required|string|max:7',
-            'theme_color_secondary' => 'required|string|max:7',
-            'club_name' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+{
+    $user = Auth::user();
+    $userSettings = UserSetting::firstOrNew(['user_id' => $user->id]);
 
-        // Récupérer ou créer les paramètres de l'utilisateur
-        $siteSettings = UserSetting::where('user_id', Auth::id())->first();
+    $validatedData = $request->validate([
+        'theme_color_primary' => 'required|string|max:7',
+        'theme_color_secondary' => 'required|string|max:7',
+        'club_name' => 'required|string|max:255',
+        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
 
-        if (!$siteSettings) {
-            $siteSettings = new UserSetting();
-            $siteSettings->user_id = Auth::id(); // Associer l'utilisateur à ce paramètre
+    $userSettings->theme_color_primary = $validatedData['theme_color_primary'];
+    $userSettings->theme_color_secondary = $validatedData['theme_color_secondary'];
+    $userSettings->club_name = $validatedData['club_name'];
+
+    if ($request->hasFile('logo')) {
+        if ($userSettings->logo) {
+            Storage::delete('public/' . $userSettings->logo);
         }
-
-        // Mise à jour des couleurs
-        $siteSettings->theme_color_primary = $validatedData['theme_color_primary'];
-        $siteSettings->theme_color_secondary = $validatedData['theme_color_secondary'];
-        $siteSettings->club_name = $validatedData['club_name'];
-
-        // Mise à jour du logo si un fichier est téléchargé
-        if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('logos', 'public');
-            $siteSettings->logo = $logoPath;
-        }
-
-        $siteSettings->save();
-
-        return redirect()->back()->with('success', 'Settings updated successfully.');
+        $userSettings->logo = $request->file('logo')->store('logos', 'public');
     }
+
+    $userSettings->save();
+
+    return redirect()->back()->with('status', 'Settings updated successfully!');
+}
+
 }

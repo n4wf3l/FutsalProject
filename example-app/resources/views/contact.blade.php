@@ -10,6 +10,7 @@
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     @vite('resources/css/app.css')
     <style>
         .contact-container {
@@ -57,8 +58,10 @@
             margin-bottom: 1.5rem;
         }
 
-        .contact-info .info-item img {
+        .contact-info .info-item i {
             margin-right: 1rem;
+            font-size: 1.5rem;
+            color: {{ $primaryColor }};
         }
 
         .contact-form {
@@ -137,31 +140,31 @@
 
     <div class="contact-container">
         <div class="contact-info">
-            <h2>Contacteer ons</h2>
-            <h1>Kom in contact</h1>
-            <p>Vul het formulier in en wij nemen zo snel mogelijk contact met u op ivm uw vraag of opmerking.</p>
+            <h2>Contact Us</h2>
+            <h1>Get in Touch</h1>
+            <p>Fill out the form and we will get in touch with you as soon as possible regarding your inquiry or feedback.</p>
 
             <div class="info-item">
-                <img src="path-to-location-icon" alt="Location Icon" class="h-6 w-6">
+                <i class="fas fa-map-marker-alt"></i>
                 <div>
-                    <strong>Adres</strong>
-                    <p>Sportcomplex Het Rooi<br>Berchemstadionstraat</p>
+                    <strong>Address</strong>
+                    <p>{{ $clubLocation }}</p>
                 </div>
             </div>
 
             <div class="info-item">
-                <img src="path-to-phone-icon" alt="Phone Icon" class="h-6 w-6">
+                <i class="fas fa-phone-alt"></i>
                 <div>
-                    <strong>Telefoonnummer</strong>
-                    <p>GC: +32 488 87 34 00</p>
+                    <strong>Phone Number</strong>
+                    <p>GC: {{ $phone }}</p>
                 </div>
             </div>
 
             <div class="info-item">
-                <img src="path-to-email-icon" alt="Email Icon" class="h-6 w-6">
+                <i class="fas fa-envelope"></i>
                 <div>
-                    <strong>Emailadres</strong>
-                    <p>info@ftantwerpen.be</p>
+                    <strong>Email Address</strong>
+                    <p>{{ $email }}</p>
                 </div>
             </div>
         </div>
@@ -169,26 +172,26 @@
         <div class="contact-form">
             <form>
                 <div class="form-group">
-                    <label for="firstname">Voornaam *</label>
+                    <label for="firstname">First Name *</label>
                     <input type="text" id="firstname" required>
                 </div>
                 <div class="form-group">
-                    <label for="lastname">Achternaam *</label>
+                    <label for="lastname">Last Name *</label>
                     <input type="text" id="lastname" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Emailadres *</label>
+                    <label for="email">Email Address *</label>
                     <input type="email" id="email" required>
                 </div>
                 <div class="form-group">
-                    <label for="phone">Telefoonnummer *</label>
+                    <label for="phone">Phone Number *</label>
                     <input type="tel" id="phone" required>
                 </div>
                 <div class="form-group">
-                    <label for="message">Opmerking of Vragen *</label>
+                    <label for="message">Message or Questions *</label>
                     <textarea id="message" required></textarea>
                 </div>
-                <button type="submit" class="submit-button">Versturen</button>
+                <button type="submit" class="submit-button">Send</button>
             </form>
         </div>
     </div>

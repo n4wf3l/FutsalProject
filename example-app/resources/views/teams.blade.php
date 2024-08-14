@@ -205,6 +205,14 @@
         <div class="flex justify-center items-center mt-4">
             <p class="text-xl text-gray-600">Discover additional information by hovering with your mouse.</p>
         </div>
+        @auth
+
+        <a href="{{ route('players.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary"  style="font-size:20px; background-color: {{ $primaryColor }};"
+                   onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+                   onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+                Add Player
+            </a>
+            @endauth
     </header>
 
     @php
@@ -215,59 +223,61 @@
         <p class="text-gray-600 text-center">There are no players in the database.</p>
     @else
         <div class="player-container">
-            @foreach($players as $player)
-            <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
-                <!-- Club Logo -->
-                @if($userSettings && $userSettings->logo)
-                    <img src="{{ asset('storage/' . $userSettings->logo) }}" alt="Club Logo" class="club-logo" style="height: 60px; width: auto;">
-                @endif
-                    <!-- Player Image -->
-                    @if($player->photo)
-                        <img src="{{ asset('storage/' . $player->photo) }}" alt="{{ $player->first_name }} {{ $player->last_name }}" class="w-full h-48 object-cover">
-                        <!-- Player Number -->
-                        <div class="player-number absolute top-2 right-2 bg-black text-white text-lg font-bold rounded-full px-3 py-1 z-10">{{ $player->number }}</div>
-                        <!-- Player Name on Image -->
-                        <div class="player-info absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white p-2 z-10">
-                            <span>{{ $player->first_name }} {{ $player->last_name }}</span>
-                        </div>
-                    @else
-                        <div class="bg-gray-300 flex items-center justify-center h-48">
-                            <span class="text-gray-700">No Photo</span>
-                        </div>
-                    @endif
+        @foreach($players as $player)
+    <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
+        <!-- Club Logo -->
+        @if($userSettings && $userSettings->logo)
+            <img src="{{ asset('storage/' . $userSettings->logo) }}" alt="Club Logo" class="club-logo" style="height: 60px; width: auto;">
+        @endif
 
-                    <!-- Player Info Overlay -->
-                    <div class="player-overlay p-4">
-                    <p><strong>Birthdate:</strong> {{ $player->birthdate }}</p>
-                        <p><strong>Position:</strong> {{ $player->position }}</p>
-                        <p><strong>Nationality:</strong> {{ $player->nationality }}</p>
-                        <p><strong>Height:</strong> {{ $player->height }} cm</p>
-                        <p><strong>Contract Until:</strong> {{ \Carbon\Carbon::parse($player->contract_until)->format('d-m-Y') }}</p>
-                        
-                        <!-- Delete button, visible only to authenticated users -->
-                        @auth
-<div class="flex mt-4">
-    <!-- Delete Button -->
-    <form action="{{ route('players.destroy', $player->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this player?');">
-        @csrf
-        @method('DELETE')
-        <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; margin-right: 10px; text-align: center;">
-            Delete
-        </button>
-    </form>
+        <!-- Player Image -->
+        @if($player->photo)
+            <img src="{{ asset('storage/' . $player->photo) }}" alt="{{ $player->first_name }} {{ $player->last_name }}" class="w-full h-48 object-cover">
+        @else
+            <img src="{{ asset('avatar.png') }}" alt="Default Player" class="w-full h-48 object-cover">
+        @endif
 
-    <!-- Edit Button -->
-    <a href="{{ route('players.edit', $player->id) }}" 
-       style="background-color: #2563EB; color: white; padding: 8px 16px; border-radius: 8px; display: inline-block; text-align: center; text-decoration: none;"
-       onmouseover="this.style.backgroundColor='#1D4ED8';" 
-       onmouseout="this.style.backgroundColor='#2563EB';">
-        Edit
-    </a>
-</div>
-@endauth
-                    </div>
+        <!-- Player Number -->
+        <div class="player-number absolute top-2 right-2 bg-black text-white text-lg font-bold rounded-full px-3 py-1 z-10">{{ $player->number }}</div>
+
+        <!-- Player Name on Image -->
+        <div class="player-info absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white p-2 z-10">
+            <span>{{ $player->first_name }} {{ $player->last_name }}</span>
+        </div>
+
+        <!-- Player Info Overlay -->
+        <div class="player-overlay p-4">
+            <p><strong>Birthdate:</strong> {{ $player->birthdate }}</p>
+            <p><strong>Position:</strong> {{ $player->position }}</p>
+            <p><strong>Nationality:</strong> {{ $player->nationality }}</p>
+            <p><strong>Height:</strong> {{ $player->height }} cm</p>
+            <p><strong>Contract Until:</strong> {{ \Carbon\Carbon::parse($player->contract_until)->format('d-m-Y') }}</p>
+
+            <!-- Delete and Edit buttons, visible only to authenticated users -->
+            @auth
+                <div class="flex mt-4">
+                    <!-- Delete Button -->
+                    <form action="{{ route('players.destroy', $player->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this player?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; margin-right: 10px; text-align: center;">
+                            Delete
+                        </button>
+                    </form>
+
+                    <!-- Edit Button -->
+                    <a href="{{ route('players.edit', $player->id) }}" 
+                       style="background-color: #2563EB; color: white; padding: 8px 16px; border-radius: 8px; display: inline-block; text-align: center; text-decoration: none;"
+                       onmouseover="this.style.backgroundColor='#1D4ED8';" 
+                       onmouseout="this.style.backgroundColor='#2563EB';">
+                        Edit
+                    </a>
                 </div>
-            @endforeach
+            @endauth
+        </div>
+    </div>
+@endforeach
+
         </div>
     @endif
 
