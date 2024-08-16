@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tribune;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Tribune;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 
 class TribuneController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource.-
      */
     public function index()
     {
@@ -41,6 +44,7 @@ class TribuneController extends Controller
             'price' => 'required|numeric|min:0',
             'currency' => 'required|string|max:3',
             'photo' => 'nullable|image|max:2048',
+            'available_seats' => 'required|integer|min:0', // Validation for available seats
         ]);
 
         if ($request->hasFile('photo')) {
@@ -64,6 +68,7 @@ class TribuneController extends Controller
             'price' => $request->price,
             'currency' => $request->currency,
             'photo' => $photoPath ?? Tribune::first()->photo,
+            'available_seats' => $request->available_seats, // Adding available seats
         ]);
 
         return redirect()->route('fanshop.index')->with('success', 'Tribune created successfully!');
@@ -88,39 +93,41 @@ class TribuneController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Tribune $tribune)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'price' => 'required|numeric|min:0',
-        'currency' => 'required|string|max:3',
-        'photo' => 'nullable|image|max:2048',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'currency' => 'required|string|max:3',
+            'photo' => 'nullable|image|max:2048',
+            'available_seats' => 'required|integer|min:0', // Validation for available seats
+        ]);
 
-    if ($request->hasFile('photo')) {
-        // Supprime l'ancienne photo si elle existe
-        $oldPhoto = Tribune::first()->photo;
-        if ($oldPhoto) {
-            Storage::disk('public')->delete($oldPhoto);
+        if ($request->hasFile('photo')) {
+            // Supprime l'ancienne photo si elle existe
+            $oldPhoto = Tribune::first()->photo;
+            if ($oldPhoto) {
+                Storage::disk('public')->delete($oldPhoto);
+            }
+
+            // Stocke la nouvelle photo
+            $photoPath = $request->file('photo')->store('tribune_photos', 'public');
+
+            // Met à jour toutes les tribunes avec la nouvelle photo
+            Tribune::query()->update(['photo' => $photoPath]);
         }
 
-        // Stocke la nouvelle photo
-        $photoPath = $request->file('photo')->store('tribune_photos', 'public');
+        // Met à jour uniquement cette tribune avec les nouveaux détails, sauf la photo (qui a déjà été mise à jour globalement)
+        $tribune->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'currency' => $request->currency,
+            'available_seats' => $request->available_seats, // Updating available seats
+        ]);
 
-        // Met à jour toutes les tribunes avec la nouvelle photo
-        Tribune::query()->update(['photo' => $photoPath]);
+        return redirect()->route('fanshop.index')->with('success', 'Tribune updated successfully!');
     }
-
-    // Met à jour uniquement cette tribune avec les nouveaux détails, sauf la photo (qui a déjà été mise à jour globalement)
-    $tribune->update([
-        'name' => $request->name,
-        'description' => $request->description,
-        'price' => $request->price,
-        'currency' => $request->currency,
-    ]);
-
-    return redirect()->route('fanshop.index')->with('success', 'Tribune updated successfully!');
-}
 
     /**
      * Supprime une tribune de la base de données.

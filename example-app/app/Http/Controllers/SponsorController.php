@@ -24,18 +24,30 @@ class SponsorController extends Controller
     // Store a newly created sponsor in storage (store)
     public function store(Request $request)
     {
+        // Validation des données
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'website' => 'nullable|url|max:255',
+            'website' => 'nullable|max:255', // Validation de l'URL sans protocole
         ]);
-
+    
+        // Gestion du téléchargement de logo
         if ($request->hasFile('logo')) {
             $validatedData['logo'] = $request->file('logo')->store('sponsors', 'public');
         }
-
+    
+        // Ajout automatique du protocole si nécessaire
+        if ($request->filled('website')) {
+            $website = $request->input('website');
+            if (!preg_match('/^https?:\/\//', $website)) {
+                $website = 'http://' . ltrim($website, '/'); // Ajoute 'http://' si pas de protocole
+            }
+            $validatedData['website'] = $website;
+        }
+    
+        // Création du sponsor
         Sponsor::create($validatedData);
-
+    
         return redirect()->route('sponsors.index')->with('success', 'Sponsor created successfully.');
     }
 

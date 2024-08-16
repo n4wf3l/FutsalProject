@@ -65,6 +65,12 @@
             justify-content: center;
             gap: 16px; /* Add gap between the cards */
         }
+
+        .no-sponsors-message {
+            font-size: 1.5rem;
+            color: #555;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -99,33 +105,39 @@
             @endauth
 
             <div class="sponsors-container">
-                @foreach($sponsors as $sponsor)
-                    <div class="sponsor-card">
-                        @if($sponsor->logo)
-                            <div class="sponsor-logo p-4">
-                                <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
-                            </div>
-                        @endif
-                        <div class="sponsor-content">
-                            <h2 class="sponsor-name">{{ $sponsor->name }}</h2>
-                            @if($sponsor->website)
-                                <a href="{{ $sponsor->website }}" class="sponsor-website" target="_blank">Visit the website →</a>
-                            @endif
-                            <!-- Add Delete Button for authenticated users only -->
-                            @auth
-                            <form action="{{ route('sponsors.destroy', $sponsor->id) }}" method="POST" class="mt-4" onsubmit="return confirm('Are you sure you want to delete this sponsor?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center"
-                                        style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
-                                    Delete Sponsor
-                                </button>
-                            </form>
-                            @endauth
-                        </div>
+                @if($sponsors->isEmpty())
+                    <div class="no-sponsors-message">
+                        There are no sponsors at the moment.
                     </div>
-                @endforeach
+                @else
+                    @foreach($sponsors as $sponsor)
+                        <div class="sponsor-card">
+                            @if($sponsor->logo)
+                                <div class="sponsor-logo p-4">
+                                    <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
+                                </div>
+                            @endif
+                            <div class="sponsor-content">
+                                <h2 class="sponsor-name">{{ $sponsor->name }}</h2>
+                                @if($sponsor->website)
+                                    <a href="{{ $sponsor->website }}" class="sponsor-website" target="_blank">Visit the website →</a>
+                                @endif
+                                <!-- Add Delete Button for authenticated users only -->
+                                @auth
+                                <form action="{{ route('sponsors.destroy', $sponsor->id) }}" method="POST" class="mt-4" onsubmit="return confirm('Are you sure you want to delete this sponsor?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center"
+                                            style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
+                                        Delete Sponsor
+                                    </button>
+                                </form>
+                                @endauth
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
             </div>
         </div>
     </main>

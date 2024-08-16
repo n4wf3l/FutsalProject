@@ -151,7 +151,7 @@
             <p class="text-xl text-gray-600">Discover additional information by hovering with your mouse.</p>
         </div>
         @auth
-        <a href="{{ route('tribunes.create') }}" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg mb-6 inline-block" style="background-color: {{ $primaryColor }}; font-size: 20px;">
+        <a href="{{ route('tribunes.create') }}" class="checkout-button">
             Add Tribune
         </a>
         @endauth
@@ -173,30 +173,34 @@
 
             <!-- Liste des tribunes -->
             <div class="tribune-list">
-                @foreach($tribunes as $tribune)
-                    <div class="tribune-item">
-                        <h2>{{ $tribune->name }}</h2>
-                        <p>{{ $tribune->description }}</p>
-                        <div class="price">{{ number_format($tribune->price, 2) }} {{ $tribune->currency }}</div>
-                        <hr>
-                        <div class="quantity-controls">
-                            <button onclick="changeQuantity(this, {{ $tribune->price }})">-</button>
-                            <span>0</span>
-                            <button onclick="changeQuantity(this, {{ $tribune->price }})">+</button>
-                        </div>
-                        @auth
-                        <div class="edit-delete-buttons">
-                            <a href="{{ route('tribunes.edit', $tribune->id) }}" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: {{ $primaryColor }};">Edit</a>
-                            <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: #DC2626;">Delete</button>
-                            </form>
-                        </div>
-                        @endauth
-                    </div>
-                @endforeach
-            </div>
+    @foreach($tribunes as $tribune)
+        <div class="tribune-item">
+            <h2>{{ $tribune->name }}</h2>
+            <p>{{ $tribune->description }}</p>
+            <div class="price">{{ number_format($tribune->price, 2) }} {{ $tribune->currency }}</div>
+            <hr>
+            @if($tribune->available_seats > 0)
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity(this, {{ $tribune->price }})">-</button>
+                    <span>0</span>
+                    <button onclick="changeQuantity(this, {{ $tribune->price }})">+</button>
+                </div>
+            @else
+                <div class="text-red-500 font-bold text-lg">Sold Out</div>
+            @endif
+            @auth
+                <div class="edit-delete-buttons">
+                    <a href="{{ route('tribunes.edit', $tribune->id) }}" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: {{ $primaryColor }};">Edit</a>
+                    <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: #DC2626;">Delete</button>
+                    </form>
+                </div>
+            @endauth
+        </div>
+    @endforeach
+</div>
         </div>
 
         <div class="total-section" style="margin-bottom:50px; margin-top:50px;">

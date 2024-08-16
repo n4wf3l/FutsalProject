@@ -104,9 +104,9 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="website" class="form-label">Website:</label>
-                    <input type="url" name="website" id="website" class="form-input" value="{{ old('website') }}">
-                </div>
+    <label for="website" class="form-label">Website:</label>
+    <input type="text" name="website" id="website" class="form-input flex-grow" placeholder="www.example.com" value="{{ old('website') }}">
+</div>
             </div>
 
             <div class="button-group">

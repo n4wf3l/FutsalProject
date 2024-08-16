@@ -65,6 +65,7 @@ Route::post('/dashboard/club-info', [ClubInfoController::class, 'store'])->name(
 Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
 Route::get('/payment-success', [PaymentController::class, 'success'])->name('payment.success');
 Route::get('/payment-cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+Route::get('/reservation/{id}/pdf', [PaymentController::class, 'downloadPDF'])->name('reservation.pdf');
 
 // Inclusion des routes d'authentification générées par Laravel
 require __DIR__.'/auth.php';

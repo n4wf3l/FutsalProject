@@ -122,7 +122,7 @@
 
     <div class="container mx-auto py-12">
         <div class="header-section">
-            <h1>Clubinfo</h1>
+            <h1>About {{ $clubName }}</h1>
             <p>{{ $clubName }} you're not here for a short time, but for life!</p>
         </div>
 

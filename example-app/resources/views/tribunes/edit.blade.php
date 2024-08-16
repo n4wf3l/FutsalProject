@@ -49,6 +49,12 @@
                     </div>
                 </div>
 
+                <!-- Nombre de places disponibles -->
+                <div class="mb-6">
+                    <label for="available_seats" class="block text-sm font-medium text-gray-700 mb-2">Available Seats:</label>
+                    <input type="number" name="available_seats" id="available_seats" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" min="0" value="{{ old('available_seats', $tribune->available_seats) }}" required>
+                </div>
+
                 <!-- Photo de la Tribune -->
                 <div class="mb-6 flex flex-col items-center">
                     <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">Tribune Photo:</label>
