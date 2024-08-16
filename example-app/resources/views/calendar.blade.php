@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Site</title>
+    <title>Calendar | {{ $clubName }}</title>
+    @if($logoPath)
+        <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
+    @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     <style>
@@ -16,7 +19,6 @@
         .table-container {
             display: flex;
             justify-content: center;
-            margin-top: 2rem;
             max-width: 1000px;
         }
         table {
@@ -46,6 +48,13 @@
             height: 24px;
             margin-right: 10px;
         }
+        .calendar-title {
+            font-size: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: {{ $primaryColor }};
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -58,6 +67,7 @@
     </header>
 
     <main class="py-12">
+    <h2 class="calendar-title">Classement - Dina Kénitra</h2>
         <div class="container table-container">
             <table>
                 <thead>
@@ -73,6 +83,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Classement des clubs -->
                     <!-- Ajoutez les clubs ici -->
                     <tr>
                         <td>01</td>
@@ -237,9 +248,61 @@
                 </tbody>
             </table>
         </div>
+
+        <h2 class="calendar-title">Calendrier des Matchs - Dina Kénitra</h2>
+        <div class="container table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>Domicile</th>
+                        <th>Extérieur</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Exemple de calendrier des matchs -->
+                    <tr>
+                        <td>20/08/2024</td>
+                        <td>18:00</td>
+                        <td>Dina Kénitra</td>
+                        <td>Raja CA</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>27/08/2024</td>
+                        <td>18:00</td>
+                        <td>CJ Khouribga</td>
+                        <td>Dina Kénitra</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>03/09/2024</td>
+                        <td>18:00</td>
+                        <td>Dina Kénitra</td>
+                        <td>AS Faucon Agadir</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>10/09/2024</td>
+                        <td>18:00</td>
+                        <td>Loukkous Ksar El Kebir</td>
+                        <td>Dina Kénitra</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>17/09/2024</td>
+                        <td>18:00</td>
+                        <td>Dina Kénitra</td>
+                        <td>CFS Settat</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </main>
 
     <x-footer />
 </body>
 </html>
-

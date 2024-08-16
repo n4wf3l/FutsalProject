@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Article extends Model
 {
@@ -14,7 +15,19 @@ class Article extends Model
         'description',
         'image',
         'user_id',
+        'slug',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($article) {
+            if (empty($article->slug)) {
+                $article->slug = Str::slug($article->title);
+            }
+        });
+    }
 
     public function user()
     {

@@ -6,6 +6,7 @@ use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
@@ -42,6 +43,7 @@ class ArticleController extends Controller
         $article->title = $validatedData['title'];
         $article->description = $validatedData['description'];
         $article->user_id = auth()->id();
+        $article->slug = Str::slug($article->title); // Génération du slug
     
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('articles', 'public');
@@ -53,38 +55,43 @@ class ArticleController extends Controller
         return redirect()->route('clubinfo')->with('success', 'Article created successfully.');
     }
 
-
     public function edit(Article $article)
     {
         return view('articles.edit', compact('article'));
     }
 
     public function update(Request $request, Article $article)
-{
-    $request->validate([
-        'title' => 'required|max:255',
-        'description' => 'required',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    ]);
+    {
+        $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-    $data = $request->all();
+        $data = $request->all();
 
-    if ($request->hasFile('image')) {
-        if ($article->image) {
-            Storage::disk('public')->delete($article->image);
+        if ($request->hasFile('image')) {
+            if ($article->image) {
+                Storage::disk('public')->delete($article->image);
+            }
+            $data['image'] = $request->file('image')->store('articles', 'public');
         }
-        $data['image'] = $request->file('image')->store('articles', 'public');
+
+        // Met à jour le slug uniquement si le titre change
+        if ($data['title'] !== $article->title) {
+            $data['slug'] = Str::slug($data['title']);
+        }
+
+        $article->update($data);
+
+        return redirect()->route('articles.index')->with('success', 'Article updated successfully.');
     }
 
-    $article->update($data);
-
-    return redirect()->route('articles.index')->with('success', 'Article updated successfully.');
-}
-
-public function show(Article $article)
-{
-    return view('articles.show', compact('article'));
-}
+    public function show($slug)
+    {
+        $article = Article::where('slug', $slug)->firstOrFail();
+        return view('articles.show', compact('article'));
+    }
 
     public function destroy(Article $article)
     {

@@ -3,89 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clubinfo</title>
+    <title>News | {{ $clubName }}</title>
+    @if($logoPath)
+        <link rel="icon" href="{{ $logoPath }}" type="image/png">
+    @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     <style>
-        .article-card {
+        .main-article-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .main-article {
+            flex: 2;
             background-color: #ffffff;
             border-radius: 0.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease-in-out;
             overflow: hidden;
-            margin: 30px; /* Add margin around each card */
-            width: 100%;
-            max-width: 400px; /* Set a maximum width for the card */
+            transition: transform 0.2s ease;
         }
-        
-        .article-card:hover {
+
+        .main-article:hover {
             transform: translateY(-5px);
         }
 
-        .article-image {
-            height: 200px;
-            object-fit: cover;
-            width: 100%; /* Ensure the image takes the full width of the card */
-        }
-
-        .read-more-btn {
-            color: #1D4ED8;
-            font-weight: bold;
+        .main-article a {
+            display: block;
+            color: inherit;
             text-decoration: none;
+            height: 100%;
         }
 
-        .read-more-btn:hover {
+        .main-article img {
+            width: 100%;
+            object-fit: cover;
+            height: auto;
+            max-height: 500px;
+        }
+
+        .main-article-content {
+            padding: 20px;
+        }
+
+        .recent-articles {
+            flex: 1;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+            position: relative;
+        }
+
+        .recent-articles h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 3px solid {{ $secondaryColor }};
+            padding-bottom: 5px;
+        }
+
+        .recent-articles a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: {{ $secondaryColor }};
+            margin-bottom: 10px;
+            text-decoration: none;
+            padding-bottom: 5px;
+        }
+
+        .recent-articles a:hover {
             text-decoration: underline;
         }
 
-        /* Adjust grid container */
-        .articles-container {
-            display: grid;
-            grid-template-columns: repeat(1, 1fr);
+        .recent-articles hr {
+            border: none;
+            border-top: 1px solid #e2e8f0; /* Tailwind CSS gray-200 */
+            margin: 10px 0;
         }
 
-        @media(min-width: 768px) {
-            .articles-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .recent-article-date {
+            font-size: 0.875rem;
+            color: #4a5568; /* Tailwind CSS gray-700 */
+            white-space: nowrap;
         }
 
-        @media(min-width: 1024px) {
-            .articles-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
+        .recent-articles-container {
+            margin-top: 40px;
         }
 
-        /* Custom styles for the title and buttons */
-        .article-title {
-            color: var(--primary-color, #1D4ED8); /* Replace with your primary color */
-            padding-bottom: 10px;
+        .article-item {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            border: 1px solid transparent;
+            text-decoration: none;
+            color: inherit;
         }
 
-        .edit-btn {
-            background-color: #1D4ED8;
-            color: white;
-            padding: 5px 10px;
+        .article-item:hover {
+            transform: translateY(-5px);
+            border-color: {{ $primaryColor }};
+        }
+
+        .article-item img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
             border-radius: 5px;
-            transition: background-color 0.2s;
+            margin-right: 20px;
         }
 
-        .edit-btn:hover {
-            background-color: #135ba1;
+        .article-item-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .delete-btn {
-            background-color: #e3342f;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background-color 0.2s;
+        .article-item-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: {{ $primaryColor }};
+            text-decoration: none;
         }
 
-        .delete-btn:hover {
-            background-color: #cc1f1a;
+        .article-item-title:hover {
+            text-decoration: underline;
         }
 
+        .article-item-meta {
+            color: #4a5568; /* Tailwind CSS gray-700 */
+            font-size: 0.875rem;
+            margin-bottom: 10px;
+        }
+
+        .article-item-description {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -103,7 +168,7 @@
                    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Add
                 Article</a>
-                @endauth
+        @endauth
     </header>
 
     <div class="flex justify-center mb-6">
@@ -129,7 +194,6 @@
         </form>
     </div>
 
-
     <div class="container mx-auto py-12">
         @if(session('success'))
         <div class="bg-green-500 text-green p-4 rounded mb-6">
@@ -137,35 +201,56 @@
         </div>
         @endif
 
-        <div class="articles-container">
-            @foreach($articles as $article)
-            <div class="article-card">
-                @if($article->image)
-                <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="article-image">
-                @endif
-                <div class="p-6"> <!-- Increased padding -->
-                    <h2 class="text-xl font-bold mb-2 article-title" style="color: {{ $primaryColor }};"
-                   ><strong>{{ $article->title }}</strong></h2>
-                   <p class="text-gray-600 mb-4">
-                {!! \Illuminate\Support\Str::limit(strip_tags($article->description, '<b><i><strong><em><ul><li><ol>'), 100) !!}
-            </p>
-                    <a href="{{ route('articles.show', $article->id) }}" class="read-more-btn mb-4 block" style="color: {{ $secondaryColor }};"
-                   onmouseover="this.style.color='{{ $primaryColor }}'"
-                   onmouseout="this.style.color='{{ $secondaryColor }}'">More →</a>
-                    <p class="text-sm text-gray-500">Published on: {{ $article->created_at->format('d M Y, H:i') }} by
-                        {{ $article->user->name }}</p>
-                    @auth
-                    <div class="flex mt-4" style="justify-content: center; gap: 16px;">
-    <a href="{{ route('articles.edit', $article->id) }}" class="edit-btn">Edit</a>
-    <form action="{{ route('articles.destroy', $article->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="delete-btn">Delete</button>
-    </form>
-</div>
-                    @endauth
-                </div>
+        <div class="main-article-container">
+            <!-- Main Article -->
+            <div class="main-article">
+                <a href="{{ route('articles.show', $articles->first()->slug) }}">
+                    @if($articles->first()->image)
+                    <img src="{{ asset('storage/' . $articles->first()->image) }}" alt="{{ $articles->first()->title }}">
+                    @endif
+                    <div class="main-article-content">
+                        <h2 class="text-3xl font-bold mb-2 article-title" style="color: {{ $primaryColor }};">
+                            <strong>{{ $articles->first()->title }}</strong>
+                        </h2>
+                        <p class="text-gray-600 mb-4">
+                            {!! \Illuminate\Support\Str::limit(strip_tags($articles->first()->description, '<b><i><strong><em><ul><li><ol>'), 200) !!}
+                        </p>
+                        <p class="text-sm text-gray-500">Published on: {{ $articles->first()->created_at->format('d M Y, H:i') }} by
+                            {{ $articles->first()->user->name }}</p>
+                    </div>
+                </a>
             </div>
+
+            <!-- Recent Articles List -->
+            <div class="recent-articles">
+                <h3>📰 Recent Articles</h3>
+                @foreach($articles->skip(1) as $article)
+                <a href="{{ route('articles.show', $article->slug) }}">
+                    <span>{{ $article->title }}</span>
+                    <span class="recent-article-date">{{ $article->created_at->format('d/m') }}</span>
+                </a>
+                <hr>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Recent Articles Below the Main Article -->
+        <div class="recent-articles-container">
+            @foreach($articles->skip(1) as $article)
+            <a href="{{ route('articles.show', $article->slug) }}" class="article-item">
+                @if($article->image)
+                <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}">
+                @endif
+                <div class="article-item-content">
+                    <h2 class="article-item-title">{{ $article->title }}</h2>
+                    <div class="article-item-meta">
+                        <span>{{ $article->created_at->format('d/m') }} - </span>
+                        <span>
+                            {{ \Illuminate\Support\Str::limit(strip_tags($article->description), 100) }}
+                        </span>
+                    </div>
+                </div>
+            </a>
             @endforeach
         </div>
     </div>

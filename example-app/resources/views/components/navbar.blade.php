@@ -6,6 +6,10 @@
     $clubLocation = $clubInfo->sportcomplex_location ?? 'Default Location'; // Ajout de la location par défaut
 @endphp
 
+@php
+    use Illuminate\Support\Facades\Route;
+@endphp
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
@@ -116,8 +120,8 @@
                 </div>
             <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
             <a href="{{ route('contact') }}" class="text-white nav-link transition duration-200">Contact</a>
-            <a href="{{ route('fanshop') }}" class="text-white nav-link transition duration-200">Fanshop</a>
-            @if (Route::has('login'))
+            <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">Fanshop</a>
+            @if (route('login'))
                 @auth
                 <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
     Dashboard
@@ -127,28 +131,5 @@
         </div>
 
         <!-- Authentication links -->
-        <div class="flex space-x-4">
-            @if (Route::has('login'))
-                @auth
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="flex items-center text-white transition duration-200" style="color: white;" onmouseover="this.style.color='{{ $secondaryColor }}'" onmouseout="this.style.color='white'">
-                        <img src="{{ asset('logout.png') }}" alt="Logout Icon" class="h-4 w-4">
-                        <span class="ml-3">LOG OUT</span>
-                    </button>
-                </form>
-                @else
-                    <a href="{{ route('login') }}" class="text-white hover:text-white transition duration-200">
-                        Log in |
-                    </a>
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="text-white hover:text-white transition duration-200">
-                            Register
-                        </a>
-                    @endif
-                @endauth
-            @endif
-        </div>
     </div>
 </nav>

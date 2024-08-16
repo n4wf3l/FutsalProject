@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Contact | {{ $clubName }}</title>
+    @if($logoPath)
+        <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
+    @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -112,16 +115,6 @@
             background-color: {{ $secondaryColor }};
         }
 
-        #map {
-            width: 100%;
-            height: 400px;
-            margin-top: 20px;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 2;
-        }
-
         footer {
             position: relative;
             z-index: 1;
@@ -196,23 +189,7 @@
         </div>
     </div>
 
-    <div id="map"></div>
-
     <x-footer />
-
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-        var map = L.map('map').setView([51.505, -0.09], 13);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        L.marker([51.505, -0.09]).addTo(map)
-            .bindPopup('A pretty CSS popup.<br> Easily customizable.')
-            .openPopup();
-    </script>
-    
 </body>
 
 </html>

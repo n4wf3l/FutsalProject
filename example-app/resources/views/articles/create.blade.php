@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Article</title>
+    <title>Add New Article | {{ $clubName }}</title>
+    @if($logoPath)
+        <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
+    @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     <style>
@@ -34,33 +37,28 @@
         }
 
         .form-input,
-.form-textarea {
-    width: 100%;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) inset;
-    font-size: 1.1rem;
-    transition: border-color 0.3s ease;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-}
+        .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) inset;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+        }
 
-.form-input:focus,
-.form-textarea:focus {
-    border-color: #1D4ED8;
-    outline: none;
-}
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: #1D4ED8;
+            outline: none;
+        }
 
-.form-textarea {
-    min-height: 600px; /* Increased initial height */
-    resize: none; /* Prevent manual resizing */
-    overflow-y: auto;
-}
-
-.form-textarea:focus {
-    overflow-y: scroll;
-}
+        .form-textarea {
+            min-height: 200px; /* Changed initial height */
+            resize: vertical;
+        }
 
         .form-error {
             background-color: #f44336;
@@ -139,7 +137,7 @@
         </div>
         @endif
 
-        <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="article-form" action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="form-grid">
@@ -151,7 +149,7 @@
 
                     <div class="mb-4">
                         <label for="description" class="form-label">Description:</label>
-                        <textarea name="description" id="description" rows="5" class="form-textarea" required>{{ old('description') }}</textarea>
+                        <textarea name="description" id="description" class="form-textarea">{{ old('description') }}</textarea>
                     </div>
 
                     <div class="mb-4">
@@ -172,6 +170,8 @@
 
     <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
     <script>
+        let editor;
+
         ClassicEditor
         .create(document.querySelector('#description'), {
             toolbar: {
@@ -184,8 +184,16 @@
                 ]
             },
         })
+        .then(newEditor => {
+            editor = newEditor;
+        })
         .catch(error => {
             console.error(error);
+        });
+
+        document.getElementById('article-form').addEventListener('submit', function(event) {
+            // Synchronize CKEditor data with textarea
+            document.querySelector('#description').value = editor.getData();
         });
     </script>
 </body>

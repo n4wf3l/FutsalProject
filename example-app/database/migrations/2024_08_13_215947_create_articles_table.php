@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,14 +12,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articles', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->string('image')->nullable();
-            $table->timestamp('published_at')->nullable(); 
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('articles', function (Blueprint $table) {
+            $table->string('slug')->nullable()->after('title');
+        });
+
+        // Générer des slugs temporaires pour les articles existants
+        DB::table('articles')->get()->each(function ($article) {
+            $slug = \Illuminate\Support\Str::slug($article->title) ?: 'article-' . $article->id;
+            DB::table('articles')->where('id', $article->id)->update(['slug' => $slug]);
+        });
+
+        // Ajouter la contrainte d'unicité sur le champ slug
+        Schema::table('articles', function (Blueprint $table) {
+            $table->string('slug')->unique()->change();
         });
     }
 
@@ -27,6 +33,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articles');
+        Schema::table('articles', function (Blueprint $table) {
+            $table->dropColumn('slug');
+        });
     }
 };

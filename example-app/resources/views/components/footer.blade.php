@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\Route;
+@endphp
+
 <style>
     html, body {
         height: 100%;
@@ -42,6 +46,22 @@
                     <li><a href="#" class="hover:text-gray-300">Sports Hall</a></li>
                     <li><a href="#" class="hover:text-gray-300">Board</a></li>
                     <li><a href="#" class="hover:text-gray-300">Regulations</a></li>
+                    <li>
+    @if (Route::has('login'))
+        @auth
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="hover:text-gray-300 transition duration-200">
+                    Log Out
+                </button>
+            </form>
+        @else
+            <a href="{{ route('login') }}" class="hover:text-gray-300 transition duration-200">
+                Authentication
+            </a>
+        @endauth
+    @endif
+</li>
                 </ul>
             </div>
 

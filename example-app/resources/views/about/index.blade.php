@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Page</title>
+    <title>About | {{ $clubName }}</title>
+    @if($logoPath)
+        <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
+    @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -59,7 +62,7 @@
 
         p {
             font-size: 1rem;
-            margin-bottom: 1.5rem; 
+            margin-bottom: 0.3rem; /* Réduction de l'espace entre les paragraphes */
             line-height: 1.75;
             color: #555;
         }

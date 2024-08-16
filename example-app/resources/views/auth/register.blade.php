@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\Route;
+@endphp
+
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
