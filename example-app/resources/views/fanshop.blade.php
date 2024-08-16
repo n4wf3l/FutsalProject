@@ -62,6 +62,7 @@
             display: flex;
             align-items: center;
             margin-top: 10px;
+            gap: 10px;
         }
 
         .quantity-controls button {
@@ -110,6 +111,12 @@
             margin-bottom: 20px;
         }
 
+        .total-individual {
+            font-size: 18px;
+            font-weight: bold;
+            color: {{ $secondaryColor }};
+        }
+
         .checkout-button {
             display: inline-block;
             background-color: {{ $primaryColor }};
@@ -124,6 +131,11 @@
 
         .checkout-button:hover {
             background-color: {{ $secondaryColor }};
+        }
+
+        .checkout-button[disabled] {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
 
         .location-info {
@@ -173,62 +185,71 @@
 
             <!-- Liste des tribunes -->
             <div class="tribune-list">
-    @foreach($tribunes as $tribune)
-        <div class="tribune-item">
-            <h2>{{ $tribune->name }}</h2>
-            <p>{{ $tribune->description }}</p>
-            <div class="price">{{ number_format($tribune->price, 2) }} {{ $tribune->currency }}</div>
-            <hr>
-            @if($tribune->available_seats > 0)
-                <div class="quantity-controls">
-                    <button onclick="changeQuantity(this, {{ $tribune->price }})">-</button>
-                    <span>0</span>
-                    <button onclick="changeQuantity(this, {{ $tribune->price }})">+</button>
-                </div>
-            @else
-                <div class="text-red-500 font-bold text-lg">Sold Out</div>
-            @endif
-            @auth
-                <div class="edit-delete-buttons">
-                    <a href="{{ route('tribunes.edit', $tribune->id) }}" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: {{ $primaryColor }};">Edit</a>
-                    <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: #DC2626;">Delete</button>
-                    </form>
-                </div>
-            @endauth
-        </div>
-    @endforeach
-</div>
-        </div>
+            @foreach($tribunes as $tribune)
+                <div class="tribune-item">
+                    <h2>{{ $tribune->name }}</h2>
+                    <p>{{ $tribune->description }}</p>
+                    <div class="price">
+                        @if($tribune->price == 0)
+                            Free Ticket
+                        @else
+                            {{ number_format($tribune->price, 2) }} {{ $tribune->currency }}
+                        @endif
+                    </div>
+                    <hr>
 
-        <div class="total-section" style="margin-bottom:50px; margin-top:50px;">
-            <div class="total-price">
-                Total: <span id="totalAmount">0.00</span> {{ $tribunes->first()->currency ?? '€' }}
+                    @if($tribune->available_seats > 0)
+                        @auth
+                            <p>{{ $tribune->available_seats }} seats left</p>
+                        @endauth
+                        <div class="quantity-controls">
+    <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">-</button>
+    <span id="quantity-{{ $tribune->id }}">0</span>
+    <span class="total-individual" id="total-{{ $tribune->id }}">0.00 {{ $tribune->currency }}</span>
+    <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">+</button>
+    <form action="{{ route('checkout') }}" method="POST" class="inline-block ml-4">
+        @csrf
+        <input type="hidden" name="tribune_id" value="{{ $tribune->id }}">
+        <input type="hidden" name="tribune_name" value="{{ $tribune->name }}">
+        <input type="hidden" name="total_amount" id="totalAmountInput-{{ $tribune->id }}" value="0">
+        <input type="hidden" name="quantity" id="quantityInput-{{ $tribune->id }}" value="0">
+        <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>Payer</button>
+    </form>
+</div>
+                    @else
+                        <p class="text-red-500 font-bold">Sold Out</p>
+                    @endif
+
+                    @auth
+                    <div class="edit-delete-buttons mt-4">
+                        <a href="{{ route('tribunes.edit', $tribune->id) }}" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: {{ $primaryColor }};">Edit</a>
+                        <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: #DC2626;">Delete</button>
+                        </form>
+                    </div>
+                    @endauth
+                </div>
+            @endforeach
             </div>
-            <form action="{{ route('checkout') }}" method="POST">
-                @csrf
-                <input type="hidden" name="total_amount" id="totalAmountInput" value="0">
-                <input type="hidden" name="tribune_name" id="tribuneNameInput" value="">
-                <button type="submit" class="checkout-button">Payer</button>
-            </form>
         </div>
     </div>
 
     <x-footer />
     <script src="https://js.stripe.com/v3/"></script>
     <script>
-        let total = 0;
-        const totalElement = document.getElementById('totalAmount');
-
-        function changeQuantity(button, price) {
-            const quantityElement = button.parentElement.querySelector('span');
+        function changeQuantity(button, price, availableSeats, tribuneId) {
+            const quantityElement = document.getElementById('quantity-' + tribuneId);
+            const totalElement = document.getElementById('total-' + tribuneId);
             let quantity = parseInt(quantityElement.innerText);
+            let total = parseFloat(totalElement.innerText);
 
             if (button.innerText === '+') {
-                quantity++;
-                total += price;
+                if (quantity < availableSeats) {
+                    quantity++;
+                    total += price;
+                }
             } else if (button.innerText === '-') {
                 if (quantity > 0) {
                     quantity--;
@@ -237,16 +258,21 @@
             }
 
             quantityElement.innerText = quantity;
-            totalElement.innerText = total.toFixed(2);
+            totalElement.innerText = total.toFixed(2) + ' {{ $tribune->currency }}';
+
+            const checkoutButton = document.getElementById('checkout-button-' + tribuneId);
+            const totalAmountInput = document.getElementById('totalAmountInput-' + tribuneId);
+            const quantityInput = document.getElementById('quantityInput-' + tribuneId);
+
+            totalAmountInput.value = total.toFixed(2);
+            quantityInput.value = quantity;
+
+            if (quantity > 0) {
+                checkoutButton.removeAttribute('disabled');
+            } else {
+                checkoutButton.setAttribute('disabled', 'disabled');
+            }
         }
-
-        document.querySelector('.checkout-button').addEventListener('click', function(e) {
-            const totalAmount = document.getElementById('totalAmount').innerText;
-            const tribuneName = "Your Tribune Name"; // Replace with the actual name or pass dynamically
-
-            document.getElementById('totalAmountInput').value = parseFloat(totalAmount) * 100; // Convert to cents
-            document.getElementById('tribuneNameInput').value = tribuneName;
-        });
     </script>
 </body>
 </html>
