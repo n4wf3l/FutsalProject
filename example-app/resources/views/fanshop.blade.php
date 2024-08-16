@@ -12,18 +12,23 @@
     <style>
         .fanshop-container {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            justify-content: center; /* Centre le conteneur horizontalement */
+            align-items: center; /* Centre le contenu verticalement */
             gap: 20px;
         }
 
         .stadium-plan {
-            flex: 0 0 40%;
-            max-width: 40%;
+            flex: 0 0 30%; /* L'image occupe 30% de la largeur totale */
+            max-width: 30%;
+            align-self: center; /* Centre l'image verticalement dans le conteneur */
         }
 
         .tribune-list {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centre les tribunes verticalement */
+            gap: 20px; /* Espacement entre les tribunes */
             margin-left: 20px;
         }
 
@@ -90,12 +95,12 @@
         .total-section {
             margin-top: 40px;
             text-align: center;
-            max-width: 300px; /* Largeur du conteneur */
-            background-color: #f9f9f9; /* Couleur de fond douce */
-            padding: 20px; /* Espace interne pour aérer le contenu */
-            border-radius: 8px; /* Coins arrondis pour un aspect plus doux */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre douce pour donner de la profondeur */
-            margin: 0 auto; /* Centrer le conteneur */
+            max-width: 300px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
         }
 
         .total-price {
@@ -140,7 +145,6 @@
 <body class="bg-gray-100">
     <x-navbar />
 
-    
     <header class="text-center my-12" style="margin-top: 20px; font-size:60px;">
         <h1 class="text-6xl font-bold text-gray-900">Fanshop</h1>
         <div class="flex justify-center items-center mt-4">
@@ -153,32 +157,16 @@
         @endauth
     </header>
 
-
     <div class="container mx-auto py-12">
-
-        <div class="total-section" style="margin-bottom:50px;">
-            <div class="total-price">
-                Total: <span id="totalAmount">0.00</span> {{ $tribunes->first()->currency ?? '€' }}
-            </div>
-            <form action="{{ route('checkout') }}" method="POST" >
-    @csrf
-    <input type="hidden" name="total_amount" id="totalAmountInput" value="0">
-    <input type="hidden" name="tribune_name" id="tribuneNameInput" value="">
-
-    <button type="submit" class="checkout-button">
-        Payer
-    </button>
-</form>
-        </div>
 
         <div class="fanshop-container">
             <!-- Image du plan des tribunes -->
             @if($tribunes->isNotEmpty() && $tribunes->first()->photo)
                 <div class="stadium-plan">
-                <li class="location-info">
-        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
-        <span>Matches are played at {{ $clubLocation }}</span>
-    </li>
+                    <li class="location-info">
+                        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
+                        <span>Matches are played at {{ $clubLocation }}</span>
+                    </li>
                     <img src="{{ asset('storage/' . $tribunes->first()->photo) }}" alt="Stadium Plan" class="w-full h-auto rounded-lg shadow-lg">
                 </div>
             @endif
@@ -191,13 +179,11 @@
                         <p>{{ $tribune->description }}</p>
                         <div class="price">{{ number_format($tribune->price, 2) }} {{ $tribune->currency }}</div>
                         <hr>
-
                         <div class="quantity-controls">
                             <button onclick="changeQuantity(this, {{ $tribune->price }})">-</button>
                             <span>0</span>
                             <button onclick="changeQuantity(this, {{ $tribune->price }})">+</button>
                         </div>
-
                         @auth
                         <div class="edit-delete-buttons">
                             <a href="{{ route('tribunes.edit', $tribune->id) }}" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: {{ $primaryColor }};">Edit</a>
@@ -211,6 +197,18 @@
                     </div>
                 @endforeach
             </div>
+        </div>
+
+        <div class="total-section" style="margin-bottom:50px; margin-top:50px;">
+            <div class="total-price">
+                Total: <span id="totalAmount">0.00</span> {{ $tribunes->first()->currency ?? '€' }}
+            </div>
+            <form action="{{ route('checkout') }}" method="POST">
+                @csrf
+                <input type="hidden" name="total_amount" id="totalAmountInput" value="0">
+                <input type="hidden" name="tribune_name" id="tribuneNameInput" value="">
+                <button type="submit" class="checkout-button">Payer</button>
+            </form>
         </div>
     </div>
 
@@ -239,12 +237,12 @@
         }
 
         document.querySelector('.checkout-button').addEventListener('click', function(e) {
-        const totalAmount = document.getElementById('totalAmount').innerText;
-        const tribuneName = "Your Tribune Name"; // Replace with the actual name or pass dynamically
+            const totalAmount = document.getElementById('totalAmount').innerText;
+            const tribuneName = "Your Tribune Name"; // Replace with the actual name or pass dynamically
 
-        document.getElementById('totalAmountInput').value = parseFloat(totalAmount) * 100; // Convert to cents
-        document.getElementById('tribuneNameInput').value = tribuneName;
-    });
+            document.getElementById('totalAmountInput').value = parseFloat(totalAmount) * 100; // Convert to cents
+            document.getElementById('tribuneNameInput').value = tribuneName;
+        });
     </script>
 </body>
 </html>
