@@ -60,27 +60,29 @@ class TeamController extends Controller
 
     // Mettre à jour une équipe existante (Vue d'administration)
     public function update(Request $request, Team $team)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:teams,name,' . $team->id,
-            'logo' => 'nullable|image|max:2048',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'logo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        // Gérer le téléversement du logo
-        if ($request->hasFile('logo')) {
-            // Supprimer l'ancien logo s'il existe
-            if ($team->logo_path) {
-                \Storage::disk('public')->delete($team->logo_path);
-            }
-            $logoPath = $request->file('logo')->store('logos', 'public');
-            $team->logo_path = $logoPath;
+    $team->name = $request->name;
+
+    if ($request->hasFile('logo_path')) {
+        // Supprimer l'ancien logo s'il existe
+        if ($team->logo_path) {
+            Storage::delete($team->logo_path);
         }
 
-        $team->name = $request->input('name');
-        $team->save();
-
-        return redirect()->route('calendar.show')->with('success', 'Team created successfully.');
+        // Enregistrer le nouveau logo
+        $path = $request->file('logo_path')->store('logos');
+        $team->logo_path = $path;
     }
+
+    $team->save();
+
+    return redirect()->route('calendar.show')->with('success', 'Team updated successfully.');
+}
 
     // Supprimer une équipe (Vue d'administration)
     public function destroy(Team $team)

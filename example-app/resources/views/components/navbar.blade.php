@@ -80,6 +80,49 @@
     .dropdown-content a:not(:last-child) {
         border-bottom: 1px solid #e5e5e5;
     }
+
+    #mobile-menu-modal {
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size:25px;
+}
+
+#mobile-menu-modal .w-64 {
+    background-color: {{ $primaryColor }} !important;
+    color: white !important;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+#mobile-menu-modal .w-64 a {
+    color: white !important;
+}
+
+#mobile-menu-modal .w-64 a:hover {
+    color: {{ $secondaryColor }} !important;
+}
+
+#mobile-menu-modal.open {
+    transform: translateX(0);
+}
+
+#hamburger-button {
+    font-size: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#close-button {
+    font-size: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
 </style>
 
 
@@ -93,15 +136,13 @@
                 <p>Logo non disponible</p>
             @endif
             <div class="ml-3 text-white px-2 py-1 border-4" style="border-color: {{ $secondaryColor }};">
-    {{ $clubName }}
-</div>
+                {{ $clubName }}
+            </div>
         </div>
 
-        <!-- Navigation links -->
-        <div class="flex space-x-8">
+        <!-- Navigation links (hidden on mobile) -->
+        <div class="hidden md:flex space-x-8">
             <a href="/" class="text-white nav-link transition duration-200">Home</a>
-
-            <!-- Dropdown for Club -->
             <div class="dropdown">
                 <a href="#" class="text-white nav-link transition duration-200">Club▼</a>
                 <div class="dropdown-content">
@@ -109,27 +150,136 @@
                     <a href="{{ route('about.index') }}">About</a>
                 </div>
             </div>
-
             <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">Calendar</a>
             <div class="dropdown">
-            <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200">Teams▼</a>
-            <div class="dropdown-content">
+                <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200">Teams▼</a>
+                <div class="dropdown-content">
                     <a href="{{ route('teams') }}">Senior</a>
                     <a href="#">U21</a>
                 </div>
-                </div>
+            </div>
             <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
             <a href="{{ route('contact') }}" class="text-white nav-link transition duration-200">Contact</a>
             <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">Fanshop</a>
             @if (route('login'))
                 @auth
                 <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
-    Dashboard
-</a>
+                    Dashboard
+                </a>
                 @endauth
             @endif
         </div>
 
-        <!-- Authentication links -->
+        <!-- Hamburger menu (visible on mobile) -->
+        <div class="md:hidden">
+            <button id="hamburger-button" class="text-white">
+                &#9776;
+            </button>
+        </div>
     </div>
 </nav>
+
+<div id="mobile-menu-modal" class="fixed inset-0 z-50 bg-gray-800 bg-opacity-75 flex items-start">
+    <div class="w-64 h-full bg-white p-4">
+        <!-- Logo et Nom du Club -->
+        <div class="flex items-center mb-6">
+            @if($logoPath)
+                <img src="{{ $logoPath }}" alt="Club Logo" style="height: 50px; width: auto;">
+            @endif
+            <div class="ml-3 text-white px-2 py-1 border-4" style="border-color: {{ $secondaryColor }}; font-size: 20px;">
+                {{ $clubName }}
+            </div>
+        </div>
+        
+        <!-- Bouton de fermeture -->
+        <button id="close-button" class="text-white">&times;</button>
+        
+        <!-- Menu -->
+        <a href="/" class="block text-white py-2">Home</a>
+
+        <!-- Club Dropdown -->
+        <a href="#" class="block text-white py-2" onclick="toggleDropdown('clubDropdown')">Club ▼</a>
+        <div id="clubDropdown" class="hidden pl-4">
+            <a href="{{ route('clubinfo') }}" class="block text-white py-2">News</a>
+            <a href="{{ route('about.index') }}" class="block text-white py-2">About</a>
+        </div>
+
+        <!-- Calendar -->
+        <a href="{{ route('calendar.show') }}" class="block text-white py-2">Calendar</a>
+
+        <!-- Teams Dropdown -->
+        <a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')">Teams ▼</a>
+        <div id="teamsDropdown" class="hidden pl-4">
+            <a href="{{ route('teams') }}" class="block text-white py-2">Senior</a>
+            <a href="#" class="block text-white py-2">U21</a>
+        </div>
+
+        <a href="{{ route('sponsors.index') }}" class="block text-white py-2">Sponsors</a>
+        <a href="{{ route('contact') }}" class="block text-white py-2">Contact</a>
+        <a href="{{ route('fanshop.index') }}" class="block text-white py-2">Fanshop</a>
+        <a href="{{ url('/dashboard') }}" class="block text-white py-2">Dashboard</a>
+    </div>
+</div>
+
+@if(session('success'))
+    <div id="success-alert" class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+<script>
+    // Attendre que le document soit prêt
+    document.addEventListener('DOMContentLoaded', function () {
+        // Sélectionner l'élément d'alerte
+        var successAlert = document.getElementById('success-alert');
+        
+        // Vérifier si l'alerte existe
+        if (successAlert) {
+            // Faire disparaître l'alerte après 3 secondes
+            setTimeout(function () {
+                successAlert.style.transition = 'opacity 0.5s ease';
+                successAlert.style.opacity = '0';
+                
+                // Supprimer complètement l'élément après l'animation
+                setTimeout(function() {
+                    successAlert.remove();
+                }, 500);
+            }, 3000);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const hamburgerButton = document.getElementById('hamburger-button');
+    const mobileMenuModal = document.getElementById('mobile-menu-modal');
+    const closeButton = document.getElementById('close-button');
+
+    hamburgerButton.addEventListener('click', function () {
+        mobileMenuModal.classList.remove('hidden');
+        mobileMenuModal.classList.add('open');
+    });
+
+    closeButton.addEventListener('click', function () {
+        mobileMenuModal.classList.remove('open');
+        setTimeout(() => {
+            mobileMenuModal.classList.add('hidden');
+        }, 300); // Match this with your transition duration
+    });
+});
+
+function toggleDropdown(dropdownId) {
+        console.log('Toggling: ', dropdownId); // Pour débogage
+        var dropdown = document.getElementById(dropdownId);
+        dropdown.classList.toggle('hidden');
+    }
+
+     // Fermer le modal si on clique en dehors
+     document.getElementById('mobile-menu-modal').addEventListener('click', function(e) {
+        if (e.target.id === 'mobile-menu-modal') {
+            closeMobileMenu();
+        }
+    });
+
+    function closeMobileMenu() {
+        document.getElementById('mobile-menu-modal').classList.remove('open');
+    }
+</script>

@@ -71,30 +71,28 @@ Route::get('/payment-success', [PaymentController::class, 'success'])->name('pay
 Route::get('/payment-cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
 Route::get('/reservation/{id}/pdf', [PaymentController::class, 'downloadPDF'])->name('reservation.pdf');
 
-
-
 // Routes pour la gestion des équipes (Vues)
 Route::get('/manage-teams/create', [TeamController::class, 'create'])->name('manage_teams.create');
-Route::post('/manage-teams', [TeamController::class, 'store'])->name('manage_teams.store');
 Route::get('/manage-teams/{team}/edit', [TeamController::class, 'edit'])->name('manage_teams.edit');
 Route::put('/manage-teams/{team}', [TeamController::class, 'update'])->name('manage_teams.update');
+Route::post('/manage-teams', [TeamController::class, 'store'])->name('manage_teams.store');
 Route::delete('/manage-teams/{team}', [TeamController::class, 'destroy'])->name('manage_teams.destroy');
+Route::get('/calendar', [GameController::class, 'showCalendar'])->name('calendar.show');
+Route::post('/championship/store', [GameController::class, 'storeChampionship'])->name('championship.store');
 
 // Route pour la gestion des scores des matchs
 Route::post('games/{game}/scores', [GameController::class, 'updateScores'])->name('games.updateScores');
 Route::post('/reset-scores', [GameController::class, 'resetScores'])->name('reset.scores');
-
-// Route pour le calendrier
-Route::get('/calendar', [GameController::class, 'showCalendar'])->name('calendar.show');
+Route::post('/games/store-multiple', [GameController::class, 'storeMultiple'])->name('games.storeMultiple');
 
 // Gestion des matches (ressource complète pour le CRUD des matchs)
 Route::resource('games', GameController::class)->except(['show']);
 
 // Routes API
-Route::prefix('api')->group(function () {
-    Route::apiResource('games', ApiGameController::class);
-    Route::apiResource('teams', ApiTeamController::class);
-});
+//Route::prefix('api')->group(function () {
+//    Route::apiResource('games', ApiGameController::class);
+//    Route::apiResource('teams', ApiTeamController::class);
+//});
 
 // Inclusion des routes d'authentification générées par Laravel
 require __DIR__.'/auth.php';

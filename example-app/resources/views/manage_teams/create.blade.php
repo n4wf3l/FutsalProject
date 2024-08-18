@@ -28,7 +28,7 @@
 
                 <div class="flex items-center justify-between">
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">Create Team</button>
-                    <a href="{{ route('teams.index') }}" class="text-blue-500 hover:underline">Cancel</a>
+                    <a href="{{ route('calendar.show') }}" class="text-blue-500 hover:underline">Cancel</a>
                 </div>
             </form>
         </div>
