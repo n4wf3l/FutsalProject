@@ -122,6 +122,11 @@
             </div>
 
             <div class="mb-6 flex flex-col items-center">
+        <label for="city" class="block text-sm font-medium text-gray-700 mb-2">Ville:</label>
+        <input type="text" name="city" id="city" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('city', $clubInfo->city ?? '') }}">
+    </div>
+
+            <div class="mb-6 flex flex-col items-center">
                 <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Numéro de téléphone:</label>
                 <input type="text" name="phone" id="phone" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('phone', $clubInfo->phone ?? '') }}">
             </div>
@@ -173,6 +178,36 @@
     </div>
 </div>
 
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    @foreach($backgroundImages as $image)
+    <div class="relative">
+        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Background" class="w-full h-48 object-cover rounded-lg">
+        
+        <form action="{{ route('dashboard.assignBackground') }}" method="POST" class="mt-2">
+            @csrf
+            <div class="flex justify-between items-center">
+                <select name="page" class="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="" @if(is_null($image->assigned_page)) selected @endif>Aucune page</option>
+                    <option value="welcome" @if($image->assigned_page == 'welcome') selected @endif>Welcome Page</option>
+                    <!-- Ajoutez d'autres pages ici -->
+                </select>
+                <input type="hidden" name="image_id" value="{{ $image->id }}">
+                <button type="submit" class="ml-2 text-white font-bold py-1 px-4 rounded-full transition duration-200 shadow-lg text-center" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">
+                    Apply
+                </button>
+            </div>
+        </form>
+
+        <form action="{{ route('dashboard.deleteBackgroundImage', $image->id) }}" method="POST" class="mt-2" onsubmit="return confirm('Are you sure you want to delete this image?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="absolute top-2 right-2 text-red-600 bg-white rounded-full p-1 shadow hover:bg-red-100">
+                &times;
+            </button>
+        </form>
+    </div>
+    @endforeach
+</div>
     </section>
 
     <x-footer />

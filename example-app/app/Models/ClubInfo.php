@@ -21,5 +21,6 @@ class ClubInfo extends Model
         'president',
         'latitude',
         'longitude',
+        'city',
     ];
 }

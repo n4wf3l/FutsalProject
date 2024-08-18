@@ -18,19 +18,22 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\Api\GameController as ApiGameController;
 use App\Http\Controllers\Api\TeamController as ApiTeamController;
+use App\Http\Controllers\HomeController;
 
 // Route d'accueil
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Routes protégées par middleware auth et verified
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('/settings', [UserSettingController::class, 'update'])->name('user.settings.update');
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+    Route::post('/dashboard/background-image', [DashboardController::class, 'storeBackgroundImage'])->name('dashboard.storeBackgroundImage');
+    Route::delete('/dashboard/delete-background-image/{id}', [DashboardController::class, 'deleteBackgroundImage'])->name('dashboard.deleteBackgroundImage');
+    Route::post('/dashboard/assign-background', [DashboardController::class, 'assignBackground'])->name('dashboard.assignBackground');
 });
 
 // Routes resource pour différents contrôleurs
@@ -88,6 +91,7 @@ Route::post('/games/store-multiple', [GameController::class, 'storeMultiple'])->
 // Gestion des matches (ressource complète pour le CRUD des matchs)
 Route::resource('games', GameController::class)->except(['show']);
 
+Route::get('/', [HomeController::class, 'index'])->name('home');
 // Routes API
 //Route::prefix('api')->group(function () {
 //    Route::apiResource('games', ApiGameController::class);

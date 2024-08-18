@@ -26,15 +26,16 @@
         position: relative;
         display: inline-block;
         transition: transform 0.3s ease-in-out;
+        z-index: 1050;
     }
 
     .dropdown-content {
         display: none;
         position: absolute;
         background-color: white;
+        z-index: 1100; 
         min-width: 160px;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 1;
         text-align: left;
         opacity: 0;
         transform: translateY(10px);
@@ -86,12 +87,14 @@
     transform: translateX(-100%);
     font-family: 'Bebas Neue', sans-serif;
     font-size:25px;
+    z-index: 1050;
 }
 
 #mobile-menu-modal .w-64 {
     background-color: {{ $primaryColor }} !important;
     color: white !important;
     font-family: 'Bebas Neue', sans-serif;
+    z-index: 1050;
 }
 
 #mobile-menu-modal .w-64 a {
