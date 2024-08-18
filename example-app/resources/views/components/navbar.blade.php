@@ -110,7 +110,7 @@
                 </div>
             </div>
 
-            <a href="{{ route('calendar') }}" class="text-white nav-link transition duration-200">Calendar</a>
+            <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">Calendar</a>
             <div class="dropdown">
             <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200">Teams▼</a>
             <div class="dropdown-content">

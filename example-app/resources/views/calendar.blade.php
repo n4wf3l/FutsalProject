@@ -20,6 +20,7 @@
             display: flex;
             justify-content: center;
             max-width: 1000px;
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
@@ -31,7 +32,7 @@
             text-align: center;
         }
         th {
-          background-color: {{ $primaryColor }};
+            background-color: {{ $primaryColor }};
             color: white;
         }
         tbody tr:nth-child(even) {
@@ -55,11 +56,47 @@
             color: {{ $primaryColor }};
             font-weight: bold;
         }
+        .admin-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .admin-buttons a {
+            display: inline-block;
+            background-color: {{ $secondaryColor }};
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .admin-buttons a:hover {
+            background-color: darken({{ $secondaryColor }}, 10%);
+        }
+        .score-input {
+            width: 60px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .update-scores-button {
+            background-color: {{ $primaryColor }};
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .update-scores-button:hover {
+            background-color: darken({{ $primaryColor }}, 10%);
+        }
     </style>
 </head>
 <body class="bg-gray-100">
-  <x-navbar />
-  <header class="text-center my-12" style="margin-top: 20px;">
+    <x-navbar />
+    <header class="text-center my-12" style="margin-top: 20px;">
         <h1 class="text-6xl font-bold text-gray-900" style="font-size:60px;">Classement Futsal D1</h1>
         <div class="flex justify-center items-center mt-4">
             <p class="text-xl text-gray-600" style="margin-bottom: 20px;">Discover additional information by hovering with your mouse.</p>
@@ -67,187 +104,89 @@
     </header>
 
     <main class="py-12">
-    <h2 class="calendar-title">Classement - Dina Kénitra</h2>
+        <h2 class="calendar-title">Classement - Dina Kénitra</h2>
+
+        @auth
+<div class="admin-buttons">
+    <a href="{{ route('manage_teams.create') }}" class="btn btn-primary">Ajouter une équipe</a>
+    <a href="{{ route('games.create') }}" class="btn btn-primary">Créer un match</a>
+    <a href="#" 
+   onclick="event.preventDefault(); confirmReset();" 
+   class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700">
+   Reset Scores
+</a>
+
+<form id="reset-scores-form" action="{{ route('reset.scores') }}" method="POST" style="display: none;">
+    @csrf
+</form>
+
+<script>
+function confirmReset() {
+    // Premier message d'alerte
+    let firstConfirmation = confirm("This action will reset all scores and standings. Are you sure you want to proceed?");
+    
+    if (firstConfirmation) {
+        // Deuxième message d'alerte
+        let secondConfirmation = confirm("This is your final confirmation. Are you absolutely sure?");
+        
+        if (secondConfirmation) {
+            // Soumettre le formulaire si les deux confirmations sont positives
+            document.getElementById('reset-scores-form').submit();
+        }
+    }
+}
+</script>
+</div>
+@endauth
+
         <div class="container table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Club</th>
-                        <th>Pts</th>
-                        <th>Jo</th>
-                        <th>G</th>
-                        <th>N</th>
-                        <th>P</th>
-                        <th>Diff</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Classement des clubs -->
-                    <!-- Ajoutez les clubs ici -->
-                    <tr>
-                        <td>01</td>
-                        <td class="club-name"><span>SCC Mohammédia (SCCM)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>02</td>
-                        <td class="club-name"><span>Loukkous Ksar El Kebir (CLKK)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>03</td>
-                        <td class="club-name"><span>Dynamo Kenitra (ACDK)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>04</td>
-                        <td class="club-name"><span>CFS Settat (CFSS)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>05</td>
-                        <td class="club-name"><span>AS Faucon Agadir (ASFA)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>06</td>
-                        <td class="club-name"><span>Oussoud Khabazat (AOKHK)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>07</td>
-                        <td class="club-name"><span>CJ Khouribga (CJK)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>08</td>
-                        <td class="club-name"><span>Raja CA (RCA)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>09</td>
-                        <td class="club-name"><span>Ajax Tetouan (FCAAT)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td class="club-name"><span>Amal Tit Mellil (ASA2)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>11</td>
-                        <td class="club-name"><span>Raja Agadir (RCMA)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>12</td>
-                        <td class="club-name"><span>Olympique Tétouan (AOT)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>13</td>
-                        <td class="club-name"><span>Dina Kénitra (DKFC)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>14</td>
-                        <td class="club-name"><span>AS Martil (ASM)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>15</td>
-                        <td class="club-name"><span>Nasr Settat (ANSS)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>16</td>
-                        <td class="club-name"><span>Lions de Chaouia (ALC)</span></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Club</th>
+                <th>Pts</th>
+                <th>Jo</th>
+                <th>G</th>
+                <th>N</th>
+                <th>P</th>
+                <th>Diff</th>
+                <th>Actions</th> <!-- Nouvelle colonne pour les actions -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Classement des clubs -->
+            @foreach($teams as $team)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td class="club-name">
+                    <!-- Affichage du logo -->
+                    @if($team->logo_path)
+                        <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} Logo" style="height: 24px; margin-right: 10px;">
+                    @endif
+                    <span>{{ $team->name }}</span>
+                </td>
+                <td>{{ $team->points }}</td>
+                <td>{{ $team->games_played }}</td> <!-- Affichage des matches joués -->
+                <td>{{ $team->wins }}</td>
+                <td>{{ $team->draws }}</td>
+                <td>{{ $team->losses }}</td>
+                <td>{{ $team->goal_difference }}</td>
+                <td>
+                    <!-- Formulaire pour supprimer une équipe -->
+                    <form action="{{ route('manage_teams.destroy', $team->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" style="background:none; border:none; color:red; cursor:pointer;" onclick="return confirm('Are you sure you want to delete this team?');">
+                            X
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
 
         <h2 class="calendar-title">Calendrier des Matchs - Dina Kénitra</h2>
         <div class="container table-container">
@@ -262,42 +201,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Exemple de calendrier des matchs -->
+                    @foreach($games as $game)
                     <tr>
-                        <td>20/08/2024</td>
-                        <td>18:00</td>
-                        <td>Dina Kénitra</td>
-                        <td>Raja CA</td>
-                        <td>-</td>
+                        <td>{{ $game->match_date }}</td>
+                        <td>{{ $game->match_time }}</td>
+                        <td>{{ $game->homeTeam->name }}</td>
+                        <td>{{ $game->awayTeam->name }}</td>
+                        <td>
+                            @auth
+                            <form action="{{ route('games.updateScores', $game->id) }}" method="POST">
+                                @csrf
+                                <input type="number" name="home_team_score" value="{{ old('home_team_score', $game->home_score) }}" min="0" class="score-input">
+                                <span> - </span>
+                                <input type="number" name="away_team_score" value="{{ old('away_team_score', $game->away_score) }}" min="0" class="score-input">
+                                <button type="submit" class="update-scores-button">Update Scores</button>
+                            </form>
+                            @else
+                            {{ $game->home_score }} - {{ $game->away_score }}
+                            @endauth
+                        </td>
                     </tr>
-                    <tr>
-                        <td>27/08/2024</td>
-                        <td>18:00</td>
-                        <td>CJ Khouribga</td>
-                        <td>Dina Kénitra</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>03/09/2024</td>
-                        <td>18:00</td>
-                        <td>Dina Kénitra</td>
-                        <td>AS Faucon Agadir</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>10/09/2024</td>
-                        <td>18:00</td>
-                        <td>Loukkous Ksar El Kebir</td>
-                        <td>Dina Kénitra</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>17/09/2024</td>
-                        <td>18:00</td>
-                        <td>Dina Kénitra</td>
-                        <td>CFS Settat</td>
-                        <td>-</td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
