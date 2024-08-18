@@ -120,9 +120,24 @@
     cursor: pointer;
 }
 
-.hidden {
-    display: none;
+@media (max-width: 1336px) {
+    .desktop-nav {
+        display: none;
+    }
+    .mobile-nav {
+        display: block;
+    }
 }
+
+@media (min-width: 1337px) {
+    .desktop-nav {
+        display: flex;
+    }
+    .mobile-nav {
+        display: none;
+    }
+}
+
 </style>
 
 
@@ -140,8 +155,8 @@
             </div>
         </div>
 
-        <!-- Navigation links (hidden on mobile) -->
-        <div class="hidden md:flex space-x-8">
+        <!-- Navigation links (hidden on mobile, shown on desktop) -->
+        <div class="desktop-nav space-x-8">
             <a href="/" class="text-white nav-link transition duration-200">Home</a>
             <div class="dropdown">
                 <a href="#" class="text-white nav-link transition duration-200">Club▼</a>
@@ -161,17 +176,15 @@
             <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
             <a href="{{ route('contact') }}" class="text-white nav-link transition duration-200">Contact</a>
             <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">Fanshop</a>
-            @if (route('login'))
-                @auth
+            @auth
                 <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
                     Dashboard
                 </a>
-                @endauth
-            @endif
+            @endauth
         </div>
 
-        <!-- Hamburger menu (visible on mobile) -->
-        <div class="md:hidden">
+        <!-- Hamburger menu (shown on mobile, hidden on desktop) -->
+        <div class="mobile-nav">
             <button id="hamburger-button" class="text-white">
                 &#9776;
             </button>
