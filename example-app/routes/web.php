@@ -75,9 +75,9 @@ Route::get('/reservation/{id}/pdf', [PaymentController::class, 'downloadPDF'])->
 
 // Routes pour la gestion des équipes (Vues)
 Route::get('/manage-teams/create', [TeamController::class, 'create'])->name('manage_teams.create');
+Route::post('/manage-teams', [TeamController::class, 'store'])->name('manage_teams.store');
 Route::get('/manage-teams/{team}/edit', [TeamController::class, 'edit'])->name('manage_teams.edit');
 Route::put('/manage-teams/{team}', [TeamController::class, 'update'])->name('manage_teams.update');
-Route::post('/manage-teams', [TeamController::class, 'store'])->name('manage_teams.store');
 Route::delete('/manage-teams/{team}', [TeamController::class, 'destroy'])->name('manage_teams.destroy');
 
 // Route pour la gestion des scores des matchs

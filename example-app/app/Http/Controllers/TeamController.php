@@ -43,7 +43,7 @@ class TeamController extends Controller
             'goal_difference' => 0,
         ]);
 
-        return redirect()->route('manage_teams.index')->with('success', 'Team created successfully.');
+        return redirect()->route('calendar.show')->with('success', 'Team created successfully.');
     }
 
     // Afficher les détails d'une équipe spécifique (Vue d'administration)
@@ -79,7 +79,7 @@ class TeamController extends Controller
         $team->name = $request->input('name');
         $team->save();
 
-        return redirect()->route('manage_teams.index')->with('success', 'Team updated successfully.');
+        return redirect()->route('calendar.show')->with('success', 'Team created successfully.');
     }
 
     // Supprimer une équipe (Vue d'administration)
