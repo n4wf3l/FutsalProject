@@ -93,7 +93,7 @@ Route::resource('games', GameController::class)->except(['show']);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::put('/flashmessage/update', [HomeController::class, 'updateFlashMessage'])->name('flashmessage.update');
-
+Route::post('/welcome-image/store', [HomeController::class, 'storeWelcomeImage'])->name('welcome-image.store');
 
 // Routes API
 //Route::prefix('api')->group(function () {

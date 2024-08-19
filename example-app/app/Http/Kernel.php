@@ -24,6 +24,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         // Ajout du middleware pour partager les paramètres utilisateur
         \App\Http\Middleware\ShareUserSettings::class,
+        \App\Http\Middleware\ShareClubInfo::class,
     ];
 
     /**

@@ -22,44 +22,58 @@
 
     <style>
             @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-        /* Background container that takes up 60% of the viewport height */
+
+/* Assurez-vous que le modal a un z-index plus élevé */
+.modal {
+    z-index: 1500 !important;
+}
+
+.modal-backdrop {
+    z-index: 1400;
+}
+
         .background-container {
             position: relative;
-            width: 100%;
-            min-height: 60vh; /* Adjusted height to leave space for the cover container */
-            @if($backgroundImage)
-                background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center;
-                background-size: cover;
-            @else
-                background-color: #f8f9fa; /* Default background color if no image is available */
-            @endif
+    width: 100%;
+    min-height: 60vh;
+    @if($backgroundImage)
+        background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center;
+        background-size: cover;
+    @else
+        background-color: #f8f9fa;
+    @endif
         }
 
-        /* Cover container that sits under the background */
+        .background-container,
+.cover-container,
+.info-container {
+    z-index: 1100; /* S'assurer que c'est en dessous des modals */
+}
+
+
         .cover-container {
             position: relative;
-            width: 100%;
-            min-height: 40vh; /* Takes the remaining height */
-            background-color: #f1f1f1; /* Light gray color */
-            z-index: 1; /* Ensures it sits below the info-container */
+    width: 100%;
+    min-height: 40vh;
+    background-color: #f1f1f1;
         }
 
         /* White container positioned at the center */
         .info-container {
-            background-color: white;
-            width: 40%; /* Adjusted width */
-            padding: 20px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            border-radius: 8px;
-            position: absolute;
-            top: 60%; /* Positions the container 60% down the viewport */
-            left: 50%; /* Centers the container horizontally */
-            transform: translate(-50%, -50%); /* Centers the container horizontally and vertically */
-            z-index: 1100; /* Ensures it stays on top of the cover-container */
+            border: 4px solid {{ $primaryColor }};
+    border-radius: 15px;
+    background-color: white;
+    width: 40%;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
         }
 
         .team-logo {
@@ -129,7 +143,6 @@
         .weather-info {
             background-color: {{ $secondaryColor }};
             padding: 10px;
-            font-weight: bold;
             z-index: 1001;
         }
 
@@ -148,6 +161,7 @@
             background-color: {{ $secondaryColor }};
             color: white;
         }
+        
     </style>
 </head>
 <body class="bg-gray-100">
@@ -156,15 +170,50 @@
 
     <div class="flash-message-container">
     <div class="weather-info">
-        {{ $city }}: {{ $weatherData['main']['temp'] ?? 'N/A' }}°C
+    <li class="d-flex align-items-center justify-content-center">
+    <img src="{{ asset('weather.png') }}" alt="Position" class="h-6 w-6 mr-2 ml-2"> 
+    <div class="mr-2">{{ $city }}: <span style="font-weight: bold;">{{ $weatherData['main']['temp'] ?? 'N/A' }}°C</span></div>
         @auth
-            <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#editFlashMessageModal">
+            <button type="button" class="btn btn-sm btn-light mr-2" data-bs-toggle="modal" data-bs-target="#editFlashMessageModal">
                 EDIT
             </button>
+            <!-- Button trigger modal -->
+<button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addImageModal">
+    Add Image
+</button>
+</li>
+
+
+<!-- Modal pour ajouter une image -->
+
         @endauth
     </div>
     <div class="flash-message">
         {{ $flashMessage->message ?? 'Bienvenue sur notre site web !' }}
+    </div>
+</div>
+
+<div class="modal fade" id="addImageModal" tabindex="-1" aria-labelledby="addImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="{{ route('welcome-image.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addImageModalLabel">Add PNG Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Select PNG Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/png" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Upload Image</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -194,48 +243,252 @@
     </div>
 </div>
 
-    <!-- Background Container with Match Info -->
-    <div class="background-container">
-        <!-- Titre publicitaire en grandes lettres aligné à gauche -->
-        <div style="position: absolute; top: 20%; left: 5%; color: {{ $secondaryColor }}; font-family: 'Bebas Neue', sans-serif; font-size: 6rem; font-weight: bold; text-align: left; text-shadow: 2px 2px 5px rgba(0,0,0,0.7);">
-            DINA KÉNITRA FC<br>
-            RISE UP & DOMINATE<br>
-            THE GAME!
+<div class="background-container" style="position: relative; width: 100%; height: 60vh; background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover; z-index: 1200;">
+    @if($welcomeImage)
+        <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; bottom: 40px; right: 100px; width: 700px; height: auto;">
+    @endif
+    <div id="typing-text" style="position: absolute; top: 10%; left: 10%; color: {{ $secondaryColor }}; font-family: 'Bebas Neue', sans-serif; font-size: 6rem; font-weight: bold; text-align: left; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); z-index: 1300;">
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const text = "DINA KÉNITRA FC\nRISE UP & DOMINATE\nTHE GAME!";
+    const typingElement = document.getElementById("typing-text");
+    let index = 0;
+    const speed = 100;  // Vitesse d'écriture (ms)
+
+    function typeWriter() {
+        if (index < text.length) {
+            const char = text.charAt(index);
+            if (char === '\n') {
+                typingElement.innerHTML += '<br>';
+            } else {
+                typingElement.innerHTML += char;
+            }
+            index++;
+            setTimeout(typeWriter, speed);
+        } else {
+            typingElement.style.borderRight = "none";
+
+            const logo = document.createElement("img");
+            logo.src = "{{ $logoPath ? asset($logoPath) : '' }}"; // Récupérer et utiliser $logoPath ici
+            logo.alt = "Club Logo";
+            logo.style.width = "150px"; // Taille du logo
+            logo.style.position = "absolute";
+            logo.style.left = "50%";
+            logo.style.transform = "translateX(-50%)";
+            logo.style.marginTop = "10vh";
+            logo.style.opacity = "0";  // Commence transparent
+            logo.style.transition = "opacity 2s ease-in-out";
+
+            // Vérifiez que le logoPath est valide avant de l'ajouter
+            if (logo.src && logo.src !== '') {
+                typingElement.parentNode.appendChild(logo);
+
+                // Déclencher l'animation de fondu
+                setTimeout(() => {
+                    logo.style.opacity = "1";
+                }, 100);
+                
+                // Ajouter le bouton après un délai pour afficher le logo d'abord
+                setTimeout(function() {
+                    const button = document.createElement("a");
+                    button.id = "reserve-button";
+                    button.href = "{{ route('fanshop.index') }}";
+                    button.innerHTML = "Reserve your ticket";
+                    button.style.display = "inline-block";
+                    button.style.padding = "15px 30px";
+                    button.style.backgroundColor = "{{ $secondaryColor }}";
+                    button.style.color = "white";
+                    button.style.fontFamily = "'Bebas Neue', sans-serif";
+                    button.style.fontSize = "1.5rem";
+                    button.style.border = "none";
+                    button.style.borderRadius = "5px";
+                    button.style.cursor = "pointer";
+                    button.style.textDecoration = "none";
+                    button.style.position = "absolute";
+                    button.style.left = "50%";
+                    button.style.transform = "translateX(-50%)";
+                    button.style.marginTop = "30vh";
+                    button.style.opacity = "0"; 
+                    button.style.transition = "opacity 2s ease-in-out";
+
+                    button.addEventListener("mouseover", function() {
+                        button.style.backgroundColor = "{{ $primaryColor }}";
+                    });
+
+                    button.addEventListener("mouseout", function() {
+                        button.style.backgroundColor = "{{ $secondaryColor }}";
+                    });
+
+                    typingElement.parentNode.appendChild(button);
+
+// Déclencher l'animation de fondu pour le bouton
+setTimeout(() => {
+    button.style.opacity = "1";
+}, 100); // Légère pause pour que le bouton s'ajoute avant la transition
+
+}, 1000); // Le bouton apparaît 1 seconde après le logo
+            }
+        }
+    }
+
+    typeWriter();
+});
+</script>
+
+<style>
+/* Effet d'écriture avec curseur clignotant */
+#typing-text {
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 4px solid rgba(255, 255, 255, 0.75);
+    animation: cursor-blink 0.7s infinite;
+}
+
+@keyframes cursor-blink {
+    0% { border-right-color: rgba(255, 255, 255, 0.75); }
+    50% { border-right-color: transparent; }
+    100% { border-right-color: rgba(255, 255, 255, 0.75); }
+}
+
+/* Style du bouton */
+#reserve-button {
+    margin-top: 30vh;
+    padding: 15px 30px;
+    background-color: {{ $secondaryColor }};
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#reserve-button:hover {
+    background-color: {{ $primaryColor }};
+}
+
+/* Animation de bascule de l'image */
+@keyframes rotate-image {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(2deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-2deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.welcome-image {
+    animation: rotate-image 4s infinite;
+}
+</style>
+
+
+    <div class="info-container mt-60" style="z-index: 1300;">
+        <div class="title">NEXT GAME</div>
+        @if($nextGame)
+        <div class="match-info">
+            <!-- Affichage du lieu du match -->
+            @if(Str::startsWith($nextGame->homeTeam->name, $clubPrefix))
+            <li class="d-flex align-items-center justify-content-center">
+    <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
+    <div class="match-location">{{ $clubLocation }}, {{ $city }}</div>
+</li>
+            @else
+            <li class="d-flex align-items-center justify-content-center">
+    <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
+    <div class="match-location">Away</div>
+</li>
+            @endif
+
+            <div class="d-flex align-items-center justify-content-center mt-4">
+                <img src="{{ asset('storage/' . $nextGame->homeTeam->logo_path) }}" alt="Home Team Logo" class="team-logo">
+                <div class="vs-text">VS</div>
+                <img src="{{ asset('storage/' . $nextGame->awayTeam->logo_path) }}" alt="Away Team Logo" class="team-logo">
+            </div>
+            <div class="d-flex align-items-center justify-content-center mt-3">
+                <span>{{ $nextGame->homeTeam->name }}</span>
+                <span class="vs-text">-</span>
+                <span>{{ $nextGame->awayTeam->name }}</span>
+            </div>
+            <li class="d-flex align-items-center justify-content-center">
+    <img src="{{ asset('date.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
+    <div class="match-location">{{ \Carbon\Carbon::parse($nextGame->match_date)->format('d-m-Y') }}</div>
+</li>
+        </div>
+        @else
+            <div class="no-match">
+                <p>No upcoming games scheduled.</p>
+            </div>
+        @endif
+    </div>
+</div>
+
+<!-- Cover Container with Main Article -->
+<div class="cover-container mt-20" style="position: relative; width: 100%; min-height: 70vh; background-color: #f1f1f1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 1000;">
+    <div class="main-article-container" style="width: 100%; max-width: 1200px; display: flex; flex-direction: row; align-items: flex-start;">
+        <!-- Main Article Image -->
+        <div class="main-article-image" style="flex: 1; margin-right: 20px;">
+            <a href="{{ route('articles.show', $articles->first()->slug) }}">
+                @if($articles->first()->image)
+                    <img src="{{ asset('storage/' . $articles->first()->image) }}" alt="{{ $articles->first()->title }}" style="width: 100%; height: auto; border-radius: 8px;">
+                @endif
+            </a>
         </div>
 
-        <div class="info-container mt-60">
-            <div class="title">NEXT GAME</div>
-            @if($nextGame)
-            <div class="match-info">
-                <!-- Affichage du lieu du match -->
-                @if(Str::startsWith($nextGame->homeTeam->name, $clubPrefix))
-                    <div class="match-location">{{ $clubLocation }}, {{ $city }}</div>
-                @else
-                    <div class="match-location">Away</div>
-                @endif
+        <!-- Main Article Content -->
+        <div class="main-article-content" style="flex: 2; padding-left: 20px; display: flex; flex-direction: column; justify-content: center;">
+            <p style="font-size: 1rem; color: #6b7280; font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; margin-bottom: 10px;">
+                {{ $clubName }} - Recent News
+            </p>
+            <h2 class="text-3xl font-bold mb-2 article-title" style="font-size: 2.5rem; color: {{ $primaryColor }}; font-family: 'Bebas Neue', sans-serif; margin-bottom: 20px;">
+                <strong>{{ $articles->first()->title }}</strong>
+            </h2>
+            <p class="text-sm text-gray-500" style="font-size: 1rem; color: #6b7280; margin-bottom: 15px;">
+                Published on: {{ $articles->first()->created_at->format('d M Y, H:i') }} by {{ $articles->first()->user->name }}
+            </p>
+            <p class="text-gray-600 mb-4" style="color: #6b7280; margin-top: 20px;">
+                {!! \Illuminate\Support\Str::limit(strip_tags($articles->first()->description, '<b><i><strong><em><ul><li><ol>'), 400) !!}
+            </p>
 
-                <div class="d-flex align-items-center justify-content-center mt-4">
-                    <img src="{{ asset('storage/' . $nextGame->homeTeam->logo_path) }}" alt="Home Team Logo" class="team-logo">
-                    <div class="vs-text">VS</div>
-                    <img src="{{ asset('storage/' . $nextGame->awayTeam->logo_path) }}" alt="Away Team Logo" class="team-logo">
-                </div>
-                <div class="d-flex align-items-center justify-content-center mt-3">
-                    <span>{{ $nextGame->homeTeam->name }}</span>
-                    <span class="vs-text">-</span>
-                    <span>{{ $nextGame->awayTeam->name }}</span>
-                </div>
-                <div class="match-date">{{ \Carbon\Carbon::parse($nextGame->match_date)->format('d-m-Y') }}</div>
+            <!-- Buttons Container -->
+            <div class="buttons-container" style="margin-top: 30px; display: flex; justify-content: flex-start; gap: 20px;">
+                <a href="{{ route('clubinfo') }}" class="btn btn-primary" style="background-color: {{ $primaryColor }}; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; transition: transform 0.3s, background-color 0.3s;">
+                    News
+                </a>
+                <a href="{{ route('articles.show', $articles->first()->slug) }}" class="btn btn-secondary" style="background-color: {{ $secondaryColor }}; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; transition: transform 0.3s, background-color 0.3s;">
+                    Read More
+                </a>
             </div>
-            @else
-                <div class="no-match">
-                    <p>No upcoming games scheduled.</p>
-                </div>
-            @endif
+
+            <div style="display: none;">
+                <style>
+                    .buttons-container .btn-primary:hover {
+                        transform: scale(1.1);
+                        background-color: {{ $secondaryColor }};
+                    }
+
+                    .buttons-container .btn-secondary:hover {
+                        transform: scale(1.1);
+                        background-color: {{ $primaryColor }};
+                    }
+                </style>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- Cover Container -->
-    <div class="cover-container"></div>
+</div>
+<hr>
+    <div class="cover-container">
+    </div>
 
     <!-- Footer -->
     <x-footer />

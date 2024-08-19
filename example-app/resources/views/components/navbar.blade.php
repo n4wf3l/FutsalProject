@@ -87,7 +87,7 @@
     transform: translateX(-100%);
     font-family: 'Bebas Neue', sans-serif;
     font-size:25px;
-    z-index: 1050;
+    z-index: 1400;
 }
 
 #mobile-menu-modal .w-64 {
