@@ -163,29 +163,30 @@
         </div>
 
         <div class="contact-form">
-            <form>
-                <div class="form-group">
-                    <label for="firstname">First Name *</label>
-                    <input type="text" id="firstname" required>
-                </div>
-                <div class="form-group">
-                    <label for="lastname">Last Name *</label>
-                    <input type="text" id="lastname" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" required>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message or Questions *</label>
-                    <textarea id="message" required></textarea>
-                </div>
-                <button type="submit" class="submit-button">Send</button>
-            </form>
+        <form action="{{ route('contact.send') }}" method="POST">
+    @csrf
+    <div class="form-group">
+        <label for="firstname">First Name *</label>
+        <input type="text" name="firstname" id="firstname" required>
+    </div>
+    <div class="form-group">
+        <label for="lastname">Last Name *</label>
+        <input type="text" name="lastname" id="lastname" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email Address *</label>
+        <input type="email" name="email" id="email" required>
+    </div>
+    <div class="form-group">
+        <label for="phone">Phone Number *</label>
+        <input type="tel" name="phone" id="phone" required>
+    </div>
+    <div class="form-group">
+        <label for="message">Message or Questions *</label>
+        <textarea name="message" id="message" required></textarea>
+    </div>
+    <button type="submit" class="submit-button">Send</button>
+</form>
         </div>
     </div>
 

@@ -25,19 +25,27 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $userSettings = UserSetting::firstOrNew(['user_id' => $user->id]);
-
+    
         $userSettings->theme_color_primary = $request->input('theme_color_primary');
         $userSettings->theme_color_secondary = $request->input('theme_color_secondary');
-
+    
         if ($request->hasFile('logo')) {
             if ($userSettings->logo) {
                 \Storage::delete('public/' . $userSettings->logo);
             }
             $userSettings->logo = $request->file('logo')->store('logos', 'public');
         }
-
+    
         $userSettings->save();
-
+    
+        // Sauvegarder l'email dans le modèle ClubInfo
+        $clubInfo = ClubInfo::first();
+        if (!$clubInfo) {
+            $clubInfo = new ClubInfo();
+        }
+        $clubInfo->email = $request->input('email');
+        $clubInfo->save();
+    
         return redirect()->back()->with('status', 'Settings updated successfully!');
     }
 

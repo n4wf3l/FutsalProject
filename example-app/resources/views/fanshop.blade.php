@@ -18,8 +18,8 @@
         }
 
         .stadium-plan {
-            flex: 0 0 30%; /* L'image occupe 30% de la largeur totale */
-            max-width: 30%;
+            flex: 0 0 50%; /* L'image occupe 30% de la largeur totale */
+            max-width: 50%;
             align-self: center; /* Centre l'image verticalement dans le conteneur */
         }
 
@@ -160,8 +160,12 @@
     <header class="text-center my-12" style="margin-top: 20px; font-size:60px;">
         <h1 class="text-6xl font-bold text-gray-900">Fanshop</h1>
         <div class="flex justify-center items-center mt-4">
-            <p class="text-xl text-gray-600">Discover additional information by hovering with your mouse.</p>
-        </div>
+        @if($nextGame)
+            <p class="text-xl text-gray-600">Book your tickets for the upcoming match against {{ $nextGame->awayTeam->name }}.</p>
+        @else
+            <p class="text-xl text-gray-600">No upcoming home matches available.</p>
+        @endif
+    </div>
         @auth
         <a href="{{ route('tribunes.create') }}" class="checkout-button">
             Add Tribune
@@ -186,24 +190,35 @@
             <!-- Liste des tribunes -->
             <div class="tribune-list">
             @foreach($tribunes as $tribune)
-                <div class="tribune-item">
-                    <h2>{{ $tribune->name }}</h2>
-                    <p>{{ $tribune->description }}</p>
-                    <div class="price">
-                        @if($tribune->price == 0)
-                            Free Ticket
-                        @else
-                            {{ number_format($tribune->price, 2) }} {{ $tribune->currency }}
-                        @endif
-                    </div>
-                    <hr>
+            <div class="tribune-item">
+    <h2>{{ $tribune->name }}</h2>
+    <p>{{ $tribune->description }}</p>
+    
+    @if($nextGame)
+        <div class="next-game-info">
+            <p><strong>Next Match:</strong> 
+            {{ $nextGame->homeTeam->name }} vs {{ $nextGame->awayTeam->name }} 
+            on {{ \Carbon\Carbon::parse($nextGame->match_date)->format('d-m-Y') }}</p>
+        </div>
+    @else
+        <p>No upcoming matches scheduled.</p>
+    @endif
 
-                    @if($tribune->available_seats > 0)
-                        @auth
-                            <p>{{ $tribune->available_seats }} seats left</p>
-                        @endauth
-                        <div class="quantity-controls">
-    <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">-</button>
+    <div class="price">
+        @if($tribune->price == 0)
+            Free Ticket
+        @else
+            {{ number_format($tribune->price, 2) }} {{ $tribune->currency }}
+        @endif
+    </div>
+    <hr>
+
+    @if($tribune->available_seats > 0)
+        @auth
+            <p>{{ $tribune->available_seats }} seats left</p>
+        @endauth
+        <div class="quantity-controls">
+        <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">-</button>
     <span id="quantity-{{ $tribune->id }}">0</span>
     <span class="total-individual" id="total-{{ $tribune->id }}">0.00 {{ $tribune->currency }}</span>
     <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">+</button>
@@ -215,22 +230,22 @@
         <input type="hidden" name="quantity" id="quantityInput-{{ $tribune->id }}" value="0">
         <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>Payer</button>
     </form>
-</div>
-                    @else
-                        <p class="text-red-500 font-bold">Sold Out</p>
-                    @endif
+        </div>
+    @else
+        <p class="text-red-500 font-bold">Sold Out</p>
+    @endif
 
-                    @auth
-                    <div class="edit-delete-buttons mt-4">
-                        <a href="{{ route('tribunes.edit', $tribune->id) }}" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: {{ $primaryColor }};">Edit</a>
-                        <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: #DC2626;">Delete</button>
-                        </form>
-                    </div>
-                    @endauth
-                </div>
+    @auth
+    <div class="edit-delete-buttons mt-4">
+        <a href="{{ route('tribunes.edit', $tribune->id) }}" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: {{ $primaryColor }};">Edit</a>
+        <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: #DC2626;">Delete</button>
+        </form>
+    </div>
+    @endauth
+</div>
             @endforeach
             </div>
         </div>
@@ -239,40 +254,41 @@
     <x-footer />
     <script src="https://js.stripe.com/v3/"></script>
     <script>
-        function changeQuantity(button, price, availableSeats, tribuneId) {
-            const quantityElement = document.getElementById('quantity-' + tribuneId);
-            const totalElement = document.getElementById('total-' + tribuneId);
-            let quantity = parseInt(quantityElement.innerText);
-            let total = parseFloat(totalElement.innerText);
+      function changeQuantity(button, price, availableSeats, tribuneId) {
+    const quantityElement = document.getElementById('quantity-' + tribuneId);
+    const totalElement = document.getElementById('total-' + tribuneId);
+    const quantityInput = document.getElementById('quantityInput-' + tribuneId);
+    const totalAmountInput = document.getElementById('totalAmountInput-' + tribuneId);
 
-            if (button.innerText === '+') {
-                if (quantity < availableSeats) {
-                    quantity++;
-                    total += price;
-                }
-            } else if (button.innerText === '-') {
-                if (quantity > 0) {
-                    quantity--;
-                    total -= price;
-                }
-            }
+    let quantity = parseInt(quantityElement.innerText);
+    let total = parseFloat(totalElement.innerText);
 
-            quantityElement.innerText = quantity;
-            totalElement.innerText = total.toFixed(2) + ' {{ $tribune->currency }}';
-
-            const checkoutButton = document.getElementById('checkout-button-' + tribuneId);
-            const totalAmountInput = document.getElementById('totalAmountInput-' + tribuneId);
-            const quantityInput = document.getElementById('quantityInput-' + tribuneId);
-
-            totalAmountInput.value = total.toFixed(2);
-            quantityInput.value = quantity;
-
-            if (quantity > 0) {
-                checkoutButton.removeAttribute('disabled');
-            } else {
-                checkoutButton.setAttribute('disabled', 'disabled');
-            }
+    if (button.innerText === '+') {
+        if (quantity < availableSeats) {
+            quantity++;
+            total += price;
         }
+    } else if (button.innerText === '-') {
+        if (quantity > 0) {
+            quantity--;
+            total -= price;
+        }
+    }
+
+    quantityElement.innerText = quantity;
+    totalElement.innerText = total.toFixed(2) + ' ' + '{{ $tribune->currency }}';
+
+    // Update the hidden input fields
+    quantityInput.value = quantity;
+    totalAmountInput.value = total.toFixed(2);
+
+    const checkoutButton = document.getElementById('checkout-button-' + tribuneId);
+    if (quantity > 0) {
+        checkoutButton.removeAttribute('disabled');
+    } else {
+        checkoutButton.setAttribute('disabled', 'disabled');
+    }
+}
     </script>
 </body>
 </html>

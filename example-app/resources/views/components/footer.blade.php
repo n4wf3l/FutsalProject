@@ -66,7 +66,7 @@
             </div>
 
             <div class="w-full md:w-1/4 mb-6 md:mb-0">
-                <h3 class="font-bold mb-4">TEAM FTA</h3>
+                <h3 class="font-bold mb-4">TEAM</h3>
                 <ul class="space-y-2">
                     <li><a href="#" class="hover:text-gray-300">Elite</a></li>
                     <li><a href="#" class="hover:text-gray-300">Women</a></li>

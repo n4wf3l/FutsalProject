@@ -7,7 +7,8 @@ use App\Models\Tribune;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
+use App\Models\Game;
+use App\Models\ClubInfo;
 
 class TribuneController extends Controller
 {
@@ -17,7 +18,21 @@ class TribuneController extends Controller
     public function index()
     {
         $tribunes = Tribune::all();
-        return view('fanshop', compact('tribunes'));
+
+        // Récupérer les informations du club pour déterminer le prochain match pertinent
+        $clubInfo = ClubInfo::first();
+        $clubName = $clubInfo->club_name ?? 'Dina Kénitra FC';
+        $clubPrefix = substr($clubName, 0, 4);
+    
+        // Récupérer le prochain match à domicile
+        $nextGame = Game::where('match_date', '>=', now()->startOfDay())
+            ->whereHas('homeTeam', function ($query) use ($clubPrefix) {
+                $query->where('name', 'LIKE', "$clubPrefix%");
+            })
+            ->orderBy('match_date', 'asc')
+            ->first();
+    
+        return view('fanshop', compact('tribunes', 'nextGame'));
     }
     
     /**
@@ -153,4 +168,6 @@ class TribuneController extends Controller
     
         return redirect()->route('fanshop.index')->with('success', 'Tribune deleted successfully!');
     }
+
+    
 }

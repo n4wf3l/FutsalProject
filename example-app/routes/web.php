@@ -19,7 +19,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\Api\GameController as ApiGameController;
 use App\Http\Controllers\Api\TeamController as ApiTeamController;
 use App\Http\Controllers\HomeController;
-
+use App\Http\Controllers\ContactController;
 // Route d'accueil
 Route::get('/', function () {
     return view('welcome');
@@ -73,6 +73,7 @@ Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout
 Route::get('/payment-success', [PaymentController::class, 'success'])->name('payment.success');
 Route::get('/payment-cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
 Route::get('/reservation/{id}/pdf', [PaymentController::class, 'downloadPDF'])->name('reservation.pdf');
+Route::get('/download-pdf/{id}', [PaymentController::class, 'downloadPDF'])->name('download-pdf');
 
 // Routes pour la gestion des équipes (Vues)
 Route::get('/manage-teams/create', [TeamController::class, 'create'])->name('manage_teams.create');
@@ -93,6 +94,9 @@ Route::resource('games', GameController::class)->except(['show']);
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::put('/flashmessage/update', [HomeController::class, 'updateFlashMessage'])->name('flashmessage.update');
 Route::post('/welcome-image/store', [HomeController::class, 'storeWelcomeImage'])->name('welcome-image.store');
+
+Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'sendEmail'])->name('contact.send');
 
 // Routes API
 //Route::prefix('api')->group(function () {

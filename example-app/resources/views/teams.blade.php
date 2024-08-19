@@ -18,12 +18,9 @@ use Illuminate\Support\Facades\Auth;
             font-family: 'Poppins', sans-serif;
         }
 
-        .bg-bg {
-            background-color: {{ $secondaryColor }};
-        }
 
         .bg-coach {
-            background-color: {{ $secondaryColor }};
+            background-color: white;
             padding: 40px;
             border-radius: 8px;
             display: flex;
@@ -139,13 +136,12 @@ use Illuminate\Support\Facades\Auth;
         }
 
         .staff-section {
-            background-color: {{ $secondaryColor }};
-            color: white;
+            color: black;
             padding: 40px 0;
+    
         }
 
         .staff-title {
-            color: white;
             font-size: 50px;
             margin-top: 50px;
             text-align: center;
@@ -157,10 +153,11 @@ use Illuminate\Support\Facades\Auth;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
+            
         }
 
         .staff-item {
-            background-color: #1F2937;
+            background-color: {{ $primaryColor}};
             padding: 20px;
             border-radius: 8px;
             text-align: center;
@@ -173,7 +170,7 @@ use Illuminate\Support\Facades\Auth;
         }
 
         .staff-item p {
-            color: gray;
+            color: white;
             font-size: 20px;
             margin-bottom: 15px;
         }
@@ -193,7 +190,6 @@ use Illuminate\Support\Facades\Auth;
         }
 
         .staff-item a {
-            background-color: #2563EB;
             color: white;
             text-decoration: none;
         }
@@ -290,7 +286,7 @@ use Illuminate\Support\Facades\Auth;
     <!-- Coach Section -->
     <section class="bg-bg mt-12">
     @if($coach)
-        <div class="bg-coach flex items-center justify-between text-gray-700" style="background-color: {{ $secondaryColor }};">
+        <div class="bg-coach flex items-center justify-between text-gray-700">
             <!-- Coach Information -->
             <div class="coach-details text-gray-700">
                 <h2 class="staff-title" style="color:black">Headcoach</h2>
@@ -303,7 +299,7 @@ use Illuminate\Support\Facades\Auth;
                 <div class="text-lg coach-info">
                     <p class="mb-2"><strong>Geboortedatum:</strong> {{ \Carbon\Carbon::parse($coach->birth_date)->format('d F Y') }}</p>
                     <p class="mb-2"><strong>Geboorteplaats:</strong> {{ $coach->birth_city }}</p>
-                    <p><strong>Nationaliteit:</strong> {{ $coach->nationality }}</p>
+                    <p class="mb-2"><strong>Nationaliteit:</strong> {{ $coach->nationality }}</p>
                     <p class="mb-2"><strong>Coaching since:</strong> {{ \Carbon\Carbon::parse($coach->coaching_since)->format('d F Y') }}</p>
                 </div>
             </div>
@@ -347,7 +343,7 @@ use Illuminate\Support\Facades\Auth;
     <section class="staff-section">
         <h1 class="staff-title">Technisch- & Medische Staff</h1>
         <div class="flex justify-center items-center">
-            <p class="text-xl text-gray-200">Discover additional information by hovering with your mouse.</p>
+            <p class="text-xl">Discover additional information by hovering with your mouse.</p>
         </div>
 
         <div class="staff-container">

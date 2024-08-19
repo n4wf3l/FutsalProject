@@ -177,7 +177,7 @@
                 </div>
             </div>
             <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
-            <a href="{{ route('contact') }}" class="text-white nav-link transition duration-200">Contact</a>
+            <a href="{{ route('contact.show') }}" class="text-white nav-link transition duration-200">Contact</a>
             <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">Fanshop</a>
             @auth
                 <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
@@ -231,7 +231,7 @@
         </div>
 
         <a href="{{ route('sponsors.index') }}" class="block text-white py-2">Sponsors</a>
-        <a href="{{ route('contact') }}" class="block text-white py-2">Contact</a>
+        <a href="{{ route('contact.show') }}" class="block text-white py-2">Contact</a>
         <a href="{{ route('fanshop.index') }}" class="block text-white py-2">Fanshop</a>
         <a href="{{ url('/dashboard') }}" class="block text-white py-2">Dashboard</a>
     </div>

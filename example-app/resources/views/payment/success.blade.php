@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Success</title>
+    <title>Payment Success | {{ $clubName }}</title>
+    @if($logoPath)
+        <link rel="icon" href="{{ $logoPath }}" type="image/png">
+    @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     <style>
@@ -59,6 +62,28 @@
         .back-button:hover {
             background-color: {{ $secondaryColor }};
         }
+
+        @keyframes blink {
+        0% {
+            background-color: {{ $primaryColor }};
+        }
+        50% {
+            background-color: {{ $secondaryColor }};
+        }
+        100% {
+            background-color: {{ $primaryColor }};
+        }
+    }
+
+    .pdf-button {
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        animation: blink 1.5s infinite;
+        transition: background-color 0.3s;
+    }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -81,16 +106,27 @@
             <p><strong>Amount Paid:</strong> {{ number_format($reservationDetails['amount'], 2) }} {{ $reservationDetails['currency'] }}</p>
             <p><strong>Date:</strong> {{ $reservationDetails['date'] }}</p>
             <p><strong>Reservation ID:</strong> {{ $reservationDetails['reservation_id'] }}</p>
+            @if($reservationDetails['game'])
+                <p><strong>Match:</strong> {{ $reservationDetails['game']->homeTeam->name }} vs {{ $reservationDetails['game']->awayTeam->name }}</p>
+                <p><strong>Date of Match:</strong> {{ \Carbon\Carbon::parse($reservationDetails['game']->match_date)->format('d-m-Y') }}</p>
+            @endif
+            <p><strong>Seats Reserved:</strong> {{ $reservationDetails['seats_reserved'] }}</p>
         </div>
 
         <div class="qr-code-container">
             <div class="qr-code-wrapper">
                 <h3 class="text-xl font-semibold mb-2">Scan this QR code for your reservation details:</h3>
-                {!! $qrCode !!}
+                <img src="data:image/svg+xml;base64,{{ $qrCode }}" alt="QR Code">
             </div>
         </div>
 
-        <div class="mt-6">
+        @if($pdfPath)
+    <div class="mt-4">
+        <a href="{{ Storage::url($pdfPath) }}" class="pdf-button" download>Download PDF</a>
+    </div>
+@endif
+
+        <div class="mt-20">
             <a href="{{ route('fanshop.index') }}" class="back-button">Back to Fanshop</a>
         </div>
     </div>
