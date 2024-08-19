@@ -178,7 +178,27 @@
     </div>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="flex flex-wrap justify-center mt-28 w-full">
+    <!-- Formulaire pour ajouter des images de fond -->
+    <div class="p-8 rounded-lg shadow-md bg-white max-w-md w-full md:w-1/2 lg:w-1/3">
+        <form action="{{ route('dashboard.storeBackgroundImage') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+            @csrf
+
+            <div class="mb-6 flex flex-col items-center">
+                <label for="background_image" class="block text-sm font-medium text-gray-700 mb-2">Ajouter une image de fond:</label>
+                <input type="file" name="background_image" id="background_image" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div class="flex justify-center">
+                <button type="submit" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }}; margin-bottom:20px;" class="text-white font-bold py-2 px-6 rounded-full hover:opacity-80 transition duration-200 shadow-lg text-center">
+                    Ajouter
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Liste des images -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     @foreach($backgroundImages as $image)
     <div class="relative">
         <img src="{{ asset('storage/' . $image->image_path) }}" alt="Background" class="w-full h-48 object-cover rounded-lg">

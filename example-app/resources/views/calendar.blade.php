@@ -186,10 +186,11 @@
         <div class="flex justify-center items-center mt-4">
             <p class="text-xl text-gray-600" style="margin-bottom: 20px;">Discover additional information by hovering with your mouse.</p>
         </div>
-        
+        @auth
         <div class="admin-buttons">
     <a href="#" data-bs-toggle="modal" data-bs-target="#championshipModal">Settings</a>
 </div>
+@endauth
     </header>
 
     <!-- Modale pour configurer le championnat et la saison -->
@@ -249,7 +250,9 @@
                         <th>N</th>
                         <th>P</th>
                         <th>Diff</th>
+                        @auth
                         <th>Actions</th>
+                        @endauth
                     </tr>
                 </thead>
                 <tbody>
@@ -276,6 +279,7 @@
         <td>{{ $team->draws }}</td>
         <td>{{ $team->losses }}</td>
         <td>{{ $team->goal_difference }}</td>
+        @auth
         <td>
             <button type="button" data-bs-toggle="modal" data-bs-target="#editTeamModal-{{ $team->id }}">
             🛠️
@@ -322,6 +326,7 @@
                 </button>
             </form>
         </td>
+        @endauth
     </tr>
     @endforeach
 </tbody>
@@ -330,9 +335,11 @@
 
         <h2 class="calendar-title">Calendrier des Matchs - Dina Kénitra</h2>
         <p class="text-center text-gray-600 italic mb-4">All home matches take place at {{ $clubLocation }}.</p>
+        @auth
         <div class="admin-buttons">
             <a href="{{ route('games.create') }}" class="btn btn-primary">Créer un match</a>
         </div>
+        @endauth
         <div class="container table-container">
             <table class="rounded-table">
                 <thead>
@@ -341,7 +348,9 @@
                         <th>Domicile</th>
                         <th>Extérieur</th>
                         <th>Score</th>
+                        @auth
                         <th>Actions</th>
+                        @endauth
                     </tr>
                 </thead>
                 <tbody>
@@ -385,6 +394,7 @@
             {{ $game->home_score }} - {{ $game->away_score }}
             @endauth
         </td>
+        @auth
         <td>
             <!-- Bouton Edit pour le modal -->
             <button type="button" data-bs-toggle="modal" data-bs-target="#editGameModal-{{ $game->id }}">
@@ -443,11 +453,13 @@
                 </button>
             </form>
         </td>
+        @endauth
     </tr>
     @endforeach
 </tbody>
             </table>
         </div>
+        @auth
         <div class="admin-buttons">
             <a href="#" onclick="event.preventDefault(); document.getElementById('reset-scores-form').submit();" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700">Reset</a>
 
@@ -455,6 +467,7 @@
                 @csrf
             </form>
         </div>
+        @endauth
     </main>
 
     <x-footer />

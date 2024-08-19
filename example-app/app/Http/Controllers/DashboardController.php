@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\UserSetting;
 use App\Models\ClubInfo;
 use App\Models\BackgroundImage;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {

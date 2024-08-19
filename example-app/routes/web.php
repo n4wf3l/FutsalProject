@@ -92,6 +92,9 @@ Route::post('/games/store-multiple', [GameController::class, 'storeMultiple'])->
 Route::resource('games', GameController::class)->except(['show']);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::put('/flashmessage/update', [HomeController::class, 'updateFlashMessage'])->name('flashmessage.update');
+
+
 // Routes API
 //Route::prefix('api')->group(function () {
 //    Route::apiResource('games', ApiGameController::class);
