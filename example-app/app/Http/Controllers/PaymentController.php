@@ -12,6 +12,8 @@ use Stripe\Checkout\Session as StripeSession;
 use Stripe\Stripe;
 use Illuminate\Support\Facades\Log;
 use App\Models\Game;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationConfirmation; 
 
 class PaymentController extends Controller
 {
@@ -117,6 +119,8 @@ class PaymentController extends Controller
 
             // Générer le PDF avec le QR code et les détails de la réservation
             $pdfPath = $this->generatePDF($reservationDetails, $qrCode);
+
+            Mail::to($reservationDetails['email'])->send(new ReservationConfirmation($reservationDetails, $pdfPath, $qrCode));
 
             // Rediriger vers la page de succès avec les détails et le lien vers le PDF
             return view('payment.success', compact('qrCode', 'reservationDetails', 'pdfPath', 'clubName'));

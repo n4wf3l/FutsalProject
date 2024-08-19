@@ -168,7 +168,7 @@
                     <a href="{{ route('about.index') }}">About</a>
                 </div>
             </div>
-            <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">Calendar</a>
+            <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">Competition</a>
             <div class="dropdown">
                 <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200">Teams▼</a>
                 <div class="dropdown-content">
@@ -221,7 +221,7 @@
         </div>
 
         <!-- Calendar -->
-        <a href="{{ route('calendar.show') }}" class="block text-white py-2">Calendar</a>
+        <a href="{{ route('calendar.show') }}" class="block text-white py-2">Competition</a>
 
         <!-- Teams Dropdown -->
         <a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')">Teams ▼</a>
