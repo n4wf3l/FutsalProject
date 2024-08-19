@@ -209,6 +209,8 @@
                 <select name="page" class="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     <option value="" @if(is_null($image->assigned_page)) selected @endif>Aucune page</option>
                     <option value="welcome" @if($image->assigned_page == 'welcome') selected @endif>Welcome Page</option>
+                    <option value="calendar" @if($image->assigned_page == 'calendar') selected @endif>Calendar Page</option>
+                    <option value="about" @if($image->assigned_page == 'about') selected @endif>About Page</option>
                     <!-- Ajoutez d'autres pages ici -->
                 </select>
                 <input type="hidden" name="image_id" value="{{ $image->id }}">

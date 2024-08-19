@@ -6,31 +6,30 @@ use App\Models\Game;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Models\Championship;
+use App\Models\BackgroundImage;
 
 class GameController extends Controller
 {
-    // Afficher le calendrier et le classement (Vue)
     public function showCalendar()
     {
-        // Récupérer les informations du championnat
+
         $championship = Championship::first();
     
-        // Vérifier si un championnat existe
         if (!$championship) {
             return redirect()->back()->with('error', 'No championship data available.');
         }
     
-        // Récupérer les matchs avec les relations des équipes à domicile et à l'extérieur
         $games = Game::with(['homeTeam', 'awayTeam'])->get();
     
-        // Récupérer la liste des équipes triées par points, différence de buts et buts marqués
         $teams = Team::orderBy('points', 'desc')
             ->orderBy('goal_difference', 'desc')
             ->orderBy('goals_for', 'desc')
             ->get();
     
-        // Passer les données du championnat, des matchs et des équipes à la vue
-        return view('calendar', compact('championship', 'games', 'teams'));
+        $backgroundImage = BackgroundImage::where('assigned_page', 'calendar')->latest()->first();
+    
+
+        return view('calendar', compact('championship', 'games', 'teams', 'backgroundImage'));
     }
 
     public function storeChampionship(Request $request)

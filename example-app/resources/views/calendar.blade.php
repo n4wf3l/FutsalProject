@@ -178,7 +178,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover;" @endif>
     <x-navbar />
 
     <header class="text-center my-12" style="margin-top: 20px;">
@@ -188,9 +188,9 @@
         </div>
         @auth
         <div class="admin-buttons">
-    <a href="#" data-bs-toggle="modal" data-bs-target="#championshipModal">Settings</a>
-</div>
-@endauth
+            <a href="#" data-bs-toggle="modal" data-bs-target="#championshipModal">Settings</a>
+        </div>
+        @endauth
     </header>
 
     <!-- Modale pour configurer le championnat et la saison -->

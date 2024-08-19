@@ -82,7 +82,6 @@ Route::post('/manage-teams', [TeamController::class, 'store'])->name('manage_tea
 Route::delete('/manage-teams/{team}', [TeamController::class, 'destroy'])->name('manage_teams.destroy');
 Route::get('/calendar', [GameController::class, 'showCalendar'])->name('calendar.show');
 Route::post('/championship/store', [GameController::class, 'storeChampionship'])->name('championship.store');
-
 // Route pour la gestion des scores des matchs
 Route::post('games/{game}/scores', [GameController::class, 'updateScores'])->name('games.updateScores');
 Route::post('/reset-scores', [GameController::class, 'resetScores'])->name('reset.scores');

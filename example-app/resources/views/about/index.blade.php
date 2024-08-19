@@ -115,7 +115,7 @@
     </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover;" @endif>
 
     <!-- Include the Navbar component -->
     <x-navbar />
@@ -130,8 +130,8 @@
             <div class="club-info">
                 <h2>{{ $clubName }}</h2>
                 <p>
-                {{ $clubName }} is a futsal club with a clear and healthy vision, 
-                aiming to deliver attractive top-level futsal with as many homegrown players and/or people as possible.
+                    {{ $clubName }} is a futsal club with a clear and healthy vision, 
+                    aiming to deliver attractive top-level futsal with as many homegrown players and/or people as possible.
                 </p>
 
                 <!-- Ajout de la carte ici -->
@@ -139,6 +139,7 @@
             </div>
 
             <div class="section-divider"></div>
+
 
             @foreach($sections as $section)
             <div class="mb-8">

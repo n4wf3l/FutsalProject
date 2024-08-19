@@ -5,16 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\AboutSection;
 use Illuminate\Http\Request;
 use App\Models\ClubInfo;
+use App\Models\BackgroundImage;
+
 
 class AboutSectionController extends Controller
 {
     public function index()
     {
         $sections = AboutSection::all();
-        $clubInfo = ClubInfo::first(); // Récupérer les informations du club
+        $clubInfo = ClubInfo::first(); 
         $clubName = 'FTA Clubinfo'; 
-
-    return view('about.index', compact('sections', 'clubInfo', 'clubName'));
+    
+        $backgroundImage = BackgroundImage::where('assigned_page', 'about')->latest()->first();
+    
+        return view('about.index', compact('sections', 'clubInfo', 'clubName', 'backgroundImage'));
     }
 
     public function create()
