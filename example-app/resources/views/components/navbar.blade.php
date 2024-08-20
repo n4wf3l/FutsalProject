@@ -26,7 +26,7 @@
         position: relative;
         display: inline-block;
         transition: transform 0.3s ease-in-out;
-        z-index: 1050;
+        z-index: 600;
     }
 
     .dropdown-content {
@@ -165,7 +165,9 @@
                 <a href="#" class="text-white nav-link transition duration-200">Club▼</a>
                 <div class="dropdown-content">
                     <a href="{{ route('clubinfo') }}">News</a>
+                    <a href="{{ route('press_releases.index') }}">Press Releases</a>
                     <a href="{{ route('about.index') }}">About</a>
+                    <a href="{{ route('galleries.index') }}">Gallery</a>
                 </div>
             </div>
             <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">Competition</a>
@@ -218,6 +220,8 @@
         <div id="clubDropdown" class="hidden pl-4">
             <a href="{{ route('clubinfo') }}" class="block text-white py-2">News</a>
             <a href="{{ route('about.index') }}" class="block text-white py-2">About</a>
+            <a href="{{ route('press_releases.index') }}" class="block text-white py-2">Press Releases</a>
+            <a href="{{ route('galleries.index') }}" class="block text-white py-2">Gallery</a>
         </div>
 
         <!-- Calendar -->

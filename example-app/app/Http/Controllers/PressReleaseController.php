@@ -1,71 +1,101 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\PressRelease;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PressReleaseController extends Controller
 {
     public function index()
     {
-        $pressReleases = PressRelease::all();
-        return view('press-releases.index', compact('pressReleases'));
+        $pressReleases = PressRelease::orderBy('created_at', 'desc')->paginate(4);
+        return view('press_releases.index', compact('pressReleases'));
     }
 
     public function create()
     {
-        return view('press-releases.create');
+        return view('press_releases.create');
     }
 
     public function store(Request $request)
     {
-        $pressRelease = new PressRelease();
-        $pressRelease->title = $request->input('title');
-        $pressRelease->content = $request->input('content');
-        $pressRelease->date = $request->input('date');
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'image' => 'nullable|image|max:2048', // Validation de l'image
+        ]);
+
+        $slug = Str::slug($request->title);
+        $imagePath = null;
+
+        // Gestion du téléchargement de l'image
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time(). '.'. $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-            $pressRelease->image = $imageName;
+            $imagePath = $request->file('image')->store('press_releases', 'public');
         }
-        $pressRelease->save();
-        return redirect()->route('press-releases.index');
+
+        PressRelease::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'image' => $imagePath, // Stocker le chemin de l'image
+            'slug' => $slug,
+        ]);
+
+        return redirect()->route('press_releases.index')->with('success', 'Press release created successfully.');
     }
 
-    public function show($id)
+    public function edit(PressRelease $pressRelease)
     {
-        $pressRelease = PressRelease::find($id);
-        return view('press-releases.show', compact('pressRelease'));
+        return view('press_releases.edit', compact('pressRelease'));
     }
 
-    public function edit($id)
+    public function update(Request $request, PressRelease $pressRelease)
     {
-        $pressRelease = PressRelease::find($id);
-        return view('press-releases.edit', compact('pressRelease'));
-    }
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'image' => 'nullable|image|max:2048', // Validation de l'image
+        ]);
 
-    public function update(Request $request, $id)
-    {
-        $pressRelease = PressRelease::find($id);
-        $pressRelease->title = $request->input('title');
-        $pressRelease->content = $request->input('content');
-        $pressRelease->date = $request->input('date');
+        $slug = Str::slug($request->title);
+
+        // Gestion du téléchargement de l'image
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time(). '.'. $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-            $pressRelease->image = $imageName;
+            // Supprimer l'ancienne image si elle existe
+            if ($pressRelease->image) {
+                Storage::disk('public')->delete($pressRelease->image);
+            }
+            $imagePath = $request->file('image')->store('press_releases', 'public');
+        } else {
+            $imagePath = $pressRelease->image; // Garder l'ancienne image si pas de nouvelle image
         }
-        $pressRelease->save();
-        return redirect()->route('press-releases.index');
+
+        $pressRelease->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'image' => $imagePath, // Mettre à jour le chemin de l'image
+            'slug' => $slug,
+        ]);
+
+        return redirect()->route('press_releases.index')->with('success', 'Press release updated successfully.');
     }
 
-    public function destroy($id)
+    public function show($slug)
     {
-        $pressRelease = PressRelease::find($id);
+        $pressRelease = PressRelease::where('slug', $slug)->firstOrFail();
+        return view('press_releases.show', compact('pressRelease'));
+    }
+
+    public function destroy(PressRelease $pressRelease)
+    {
+        // Supprimer l'image associée si elle existe
+        if ($pressRelease->image) {
+            Storage::disk('public')->delete($pressRelease->image);
+        }
+
         $pressRelease->delete();
-        return redirect()->route('press-releases.index');
+        return redirect()->route('press_releases.index')->with('success', 'Press release deleted successfully.');
     }
 }
-		

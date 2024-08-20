@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Press Releases | {{ $clubName }}</title>
+    @if($logoPath)
+        <link rel="icon" href="{{ $logoPath }}" type="image/png">
+    @endif
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @vite('resources/css/app.css')
+    <style>
+        .press-release-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s ease-in-out;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .press-release-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .press-release-image img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .press-release-content {
+            padding: 1rem;
+        }
+
+        .press-release-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .press-release-date {
+            color: #555;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .press-release-category {
+            background-color: {{ $primaryColor }};
+            color: #ffffff;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 4px 8px;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .press-release-view {
+            color: #1D4ED8;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .press-release-view:hover {
+            text-decoration: underline;
+        }
+
+        .press-release-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            padding: 32px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            color: {{ $primaryColor }};
+            padding: 8px 16px;
+            text-decoration: none;
+            margin: 0 4px;
+            border: 1px solid {{ $primaryColor }};
+            border-radius: 4px;
+        }
+
+        .pagination a:hover {
+            background-color: {{ $primaryColor }};
+            color: #ffffff;
+        }
+
+        .pagination .active {
+            background-color: {{ $primaryColor }};
+            color: #ffffff;
+            border: 1px solid {{ $primaryColor }};
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .edit-button {
+            background-color: #fbbf24;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .delete-button {
+            background-color: #dc2626;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* Style for the enlarged textarea */
+        #editContent, #createContent {
+            min-height: 200px;
+            height: auto;
+            resize: vertical;
+            padding: 12px;
+            font-size: 1rem;
+        }
+
+        .create-button {
+            background-color: {{ $primaryColor }};
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .create-button:hover {
+            background-color: {{ $secondaryColor }};
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <x-navbar />
+
+    <header class="text-center my-12">
+        <h1 class="text-6xl font-bold text-gray-900">Press Releases</h1>
+        <div class="flex justify-center items-center mt-4">
+            <p class="text-xl text-gray-600">📢 View the latest press releases.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+    @auth
+        <div class="flex justify-center mb-6">
+            <button onclick="openModal('createPressReleaseModal')" class="create-button text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg">
+                Create Press Release
+            </button>
+        </div>
+    @endauth
+
+        <div class="press-release-container">
+            @if($pressReleases->isEmpty())
+                <div class="no-press-releases-message">
+                    No press releases available at the moment.
+                </div>
+            @else
+                @foreach($pressReleases as $pressRelease)
+                    <div class="press-release-card">
+                        @if($pressRelease->image)
+                            <div class="press-release-image">
+                                <a href="{{ route('press_releases.show', $pressRelease->slug) }}">
+                                    <img src="{{ asset('storage/' . $pressRelease->image) }}" alt="{{ $pressRelease->title }}">
+                                </a>
+                            </div>
+                        @endif
+                        <div class="press-release-content">
+                            <div class="press-release-category">COMMUNIQUÉS</div>
+                            <h2 class="press-release-title">{{ $pressRelease->title }}</h2>
+                            <div class="press-release-date">{{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</div>
+                            <a href="{{ route('press_releases.show', $pressRelease->slug) }}" class="press-release-view">Read more →</a>
+                            
+                            @auth
+                            <div class="button-group">
+                                <button onclick="openEditModal('{{ $pressRelease->id }}', '{{ $pressRelease->title }}', '{{ $pressRelease->content }}')" class="edit-button">Edit</button>
+                                
+                                <form action="{{ route('press_releases.destroy', $pressRelease->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this press release?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="delete-button">Delete</button>
+                                </form>
+                            </div>
+                            @endauth
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+
+        <!-- Ajoutez la pagination ici -->
+        <div class="pagination mb-20">
+            {{ $pressReleases->links('vendor.pagination.simple') }}
+        </div>
+    </main>
+
+    <x-footer />
+
+    <!-- Create Press Release Modal -->
+    <div id="createPressReleaseModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
+            <h2 class="text-2xl font-semibold mb-4">Create Press Release</h2>
+            <form action="{{ route('press_releases.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-4">
+                    <label for="createTitle" class="block text-sm font-medium text-gray-700">Title</label>
+                    <input type="text" name="title" id="createTitle" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="createContent" class="block text-sm font-medium text-gray-700">Content</label>
+                    <textarea name="content" id="createContent" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="createImage" class="block text-sm font-medium text-gray-700">Image</label>
+                    <input type="file" name="image" id="createImage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('createPressReleaseModal')">Cancel</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Press Release Modal -->
+    <div id="editPressReleaseModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
+            <h2 class="text-2xl font-semibold mb-4">Edit Press Release</h2>
+            <form action="" method="POST" id="editPressReleaseForm">
+                @csrf
+                @method('PUT')
+                <div class="mb-4">
+                    <label for="editTitle" class="block text-sm font-medium text-gray-700">Title</label>
+                    <input type="text" name="title" id="editTitle" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="editContent" class="block text-sm font-medium text-gray-700">Content</label>
+                    <textarea name="content" id="editContent" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('editPressReleaseModal')">Cancel</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal(id, title, content) {
+            const form = document.getElementById('editPressReleaseForm');
+            form.action = `/press_releases/${id}`;
+            document.getElementById('editTitle').value = title;
+            document.getElementById('editContent').value = content;
+            openModal('editPressReleaseModal');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -119,7 +119,7 @@
     background-color: {{ $secondaryColor }};
     color: white;
     padding: 20px 0;
-    z-index: 900;
+    z-index: 300;
     display: flex;
     align-items: center;
 }
@@ -143,7 +143,7 @@
         .weather-info {
             background-color: {{ $secondaryColor }};
             padding: 10px;
-            z-index: 1001;
+            z-index: 300;
         }
 
         .edit-button {
@@ -243,9 +243,9 @@
     </div>
 </div>
 
-<div class="background-container" style="position: relative; width: 100%; height: 60vh; background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover; z-index: 900;">
+<div class="background-container" style="position: relative; width: 100%; height: 60vh; background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover; z-index: 500;">
     @if($welcomeImage)
-        <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; bottom: 40px; right: 100px; width: 700px; height: auto;">
+        <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; bottom: 40px; right: 100px; width: 550px; height: 500px;">
     @endif
     <div id="typing-text" style="position: absolute; top: 10%; left: 10%; color: {{ $secondaryColor }}; font-family: 'Bebas Neue', sans-serif; font-size: 6rem; font-weight: bold; text-align: left; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); z-index: 1300;">
     </div>
@@ -432,7 +432,7 @@ setTimeout(() => {
 </div>
 
 <!-- Cover Container with Main Article -->
-<div class="cover-container mt-20" style="position: relative; width: 100%; min-height: 70vh; background-color: #f1f1f1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 1000;">
+<div class="cover-container mt-40" style="position: relative; width: 100%; min-height: 70vh; background-color: #f1f1f1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 1000;">
     <div class="main-article-container" style="width: 100%; max-width: 1200px; display: flex; flex-direction: row; align-items: flex-start;">
         <!-- Main Article Image -->
         <div class="main-article-image" style="flex: 1; margin-right: 20px;">

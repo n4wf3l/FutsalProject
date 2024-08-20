@@ -20,6 +20,10 @@ use App\Http\Controllers\Api\GameController as ApiGameController;
 use App\Http\Controllers\Api\TeamController as ApiTeamController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PressReleaseController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\PhotoController;
+
 // Route d'accueil
 Route::get('/', function () {
     return view('welcome');
@@ -98,6 +102,10 @@ Route::post('/welcome-image/store', [HomeController::class, 'storeWelcomeImage']
 Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'sendEmail'])->name('contact.send');
 
+Route::resource('press_releases', PressReleaseController::class);
+Route::resource('galleries', GalleryController::class);
+Route::resource('galleries.photos', PhotoController::class)->except(['show']);
+Route::post('/galleries/{gallery}/photos/store-multiple', [PhotoController::class, 'storeMultiple'])->name('galleries.photos.storeMultiple');
 // Routes API
 //Route::prefix('api')->group(function () {
 //    Route::apiResource('games', ApiGameController::class);
