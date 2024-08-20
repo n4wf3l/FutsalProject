@@ -83,9 +83,19 @@ class PlayerController extends Controller
         return redirect()->route('players.index')->with('success', 'Player updated successfully');
     }
 
-    public function destroy(Player $player)
-    {
-        $player->delete();
-        return redirect()->route('players.index')->with('success', 'Player deleted successfully');
+    public function destroy(PlayerU21 $playerU21)
+{
+    \Log::info('Received request to delete Player ID:', [$playerU21 ? $playerU21->id : 'null']);
+
+    if ($playerU21->photo) {
+        \Log::info('Deleting photo for Player ID:', [$playerU21->id]);
+        Storage::disk('public')->delete($playerU21->photo);
     }
+
+    $playerU21->delete();
+
+    \Log::info('Player deleted successfully:', [$playerU21->id]);
+
+    return redirect()->route('playersu21.index')->with('success', 'U21 Player deleted successfully.');
+}
 }

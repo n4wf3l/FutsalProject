@@ -488,7 +488,7 @@ setTimeout(() => {
 </div>
 <hr>
  <!-- Section pour les 5 prochains matchs -->
- <div class="containerization mt-5">
+ <div class="containerization">
     <h2 class="upcoming-title">Upcoming Matches</h2>
     @if($nextGames->isNotEmpty())
         @foreach($nextGames as $index => $game)
@@ -531,7 +531,8 @@ setTimeout(() => {
     margin: auto;
     border: 4px solid {{ $primaryColor }};
     border-radius: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 100px;
+    margin-top: 100px;
 }
 
 .upcoming-title {
@@ -626,8 +627,367 @@ setTimeout(() => {
 .see-all-btn:hover {
     background-color: {{ $secondaryColor }};
 }
-</style>
 
+.section-title {
+    font-size: 2.5rem;
+    color: {{ $primaryColor }};
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+.section-title::after {
+    content: '';
+    width: 80px;
+    height: 4px;
+    background-color: {{ $secondaryColor }};
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Nos Albums link styling */
+.albums-link-container {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom:50px;
+}
+
+.albums-link {
+    font-size: 1.5rem;
+    color: {{ $primaryColor }};
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid {{ $primaryColor }};
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.albums-link:hover {
+    background-color: {{ $primaryColor }};
+    color: white;
+    border-color: {{ $secondaryColor }};
+}
+
+
+.latest-photos .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Ensure items fill available space */
+    gap: 10px;
+    grid-auto-flow: dense; /* Fill gaps effectively */
+    margin-bottom:50px;
+}
+
+/* Individual gallery item style for latest photos */
+.latest-photos .gallery-item {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1; /* Ensure items are squares */
+}
+
+.latest-photos .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the images cover the entire area */
+    display: block;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.latest-photos .gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Delete button style for each photo (if applicable) */
+.latest-photos .delete-photo {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Modal overlay style */
+.latest-photos .modal {
+    display: none;
+    position: fixed;
+    z-index: 1200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal content style */
+.latest-photos .modal-content-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Close button style for modals */
+.latest-photos .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 400; /* Ensure it is above other elements */
+}
+
+.latest-photos .close:hover,
+.latest-photos .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal content style */
+.latest-photos .modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+    display: block;
+}
+
+/* Navigation buttons for image modal */
+.latest-photos .prev,
+.latest-photos .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.6s ease;
+    user-select: none;
+    transform: translateY(-50%);
+    z-index: 400; /* Ensure buttons are above images but below the close button */
+}
+
+.latest-photos .prev {
+    left: 10px;
+    border-radius: 0 3px 3px 0;
+}
+
+.latest-photos .next {
+    right: 10px;
+    border-radius: 3px 0 0 3px;
+}
+
+.latest-photos .prev:hover,
+.latest-photos .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Preview image styles for upload modal */
+.latest-photos .preview-image {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.latest-photos .photo-item {
+    margin-bottom: 1rem;
+}
+
+.latest-photos .image-caption {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal content style */
+.modal-content-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Close button style for modals */
+.close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 400; /* Ensure it is above other elements */
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal content style */
+.modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+    display: block;
+}
+
+/* Navigation buttons for image modal */
+.prev,
+.next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.6s ease;
+    user-select: none;
+    transform: translateY(-50%);
+    z-index: 400; /* Ensure buttons are above images but below the close button */
+}
+
+.prev {
+    left: 10px;
+    border-radius: 0 3px 3px 0;
+}
+
+.next {
+    right: 10px;
+    border-radius: 3px 0 0 3px;
+}
+
+.prev:hover,
+.next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Caption style */
+.image-caption {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 300; /* Ensure caption is above image */
+}
+</style>
+<hr>
+<section class="latest-photos">
+    <div class="container">
+        <h2 class="section-title">Explore Our Latest Photos</h2>
+        <div class="gallery-grid">
+            @foreach($latestPhotos as $photo)
+                <div class="gallery-item">
+                    <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->caption }}" onclick="openImageModal({{ $loop->index }})">
+                    @if($photo->caption)
+                        <div class="image-caption">{{ $photo->caption }}</div>
+                    @endif
+                    @auth
+                    <button class="delete-photo" onclick="deletePhoto('{{ route('galleries.photos.destroy', [$photo->gallery_id, $photo->id]) }}')">×</button>
+                    @endauth
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Nos Albums link -->
+        <div class="albums-link-container">
+            <a href="{{ route('galleries.index') }}" class="albums-link">Nos Albums</a>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeImageModal()">&times;</span>
+        <div class="modal-content-wrapper">
+            <img class="modal-content" id="modalImage">
+            <div id="caption" class="image-caption"></div>
+        </div>
+        <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+        <a class="next" onclick="changeSlide(1)">&#10095;</a>
+    </div>
+</section>
+
+<script>
+    let slideIndex = 0;
+    let photos = @json($latestPhotos);
+
+    function openImageModal(index) {
+        slideIndex = index;
+        showSlide(slideIndex);
+        document.getElementById("imageModal").style.display = "flex";
+    }
+
+    function closeImageModal() {
+        document.getElementById("imageModal").style.display = "none";
+    }
+
+    function changeSlide(n) {
+        slideIndex += n;
+        if (slideIndex >= photos.length) slideIndex = 0;
+        if (slideIndex < 0) slideIndex = photos.length - 1;
+        showSlide(slideIndex);
+    }
+
+    function showSlide(index) {
+        let photo = photos[index];
+        document.getElementById("modalImage").src = `/storage/${photo.image}`;
+        document.getElementById("caption").innerText = photo.caption ? photo.caption : '';
+    }
+</script>
 
     <!-- Footer -->
     <x-footer />

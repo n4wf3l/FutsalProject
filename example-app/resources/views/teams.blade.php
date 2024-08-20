@@ -95,16 +95,20 @@ use Illuminate\Support\Facades\Auth;
         }
 
         .player-number {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 20px;
-            font-size: 60px;
-            font-weight: bold;
-            border-radius: 50%;
-        }
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* Réduit l'opacité à 50% */
+    color: white;
+    width: 60px; /* Réduit la largeur */
+    height: 60px; /* Réduit la hauteur */
+    font-size: 40px; /* Ajuste la taille de la police */
+    font-weight: bold;
+    border-radius: 50%; /* Assure un cercle parfait */
+    display: flex; /* Centre le contenu */
+    align-items: center; /* Centre verticalement le contenu */
+    justify-content: center; /* Centre horizontalement le contenu */
+}
 
         .player-overlay {
             position: absolute;

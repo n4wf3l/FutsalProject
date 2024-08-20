@@ -175,7 +175,7 @@
                 <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200">Teams▼</a>
                 <div class="dropdown-content">
                     <a href="{{ route('teams') }}">Senior</a>
-                    <a href="#">U21</a>
+                    <a href="{{ route('playersu21.index') }}">U21</a>
                 </div>
             </div>
             <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
@@ -231,7 +231,7 @@
         <a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')">Teams ▼</a>
         <div id="teamsDropdown" class="hidden pl-4">
             <a href="{{ route('teams') }}" class="block text-white py-2">Senior</a>
-            <a href="#" class="block text-white py-2">U21</a>
+            <a href="{{ route('playersu21.index') }}" class="block text-white py-2">U21</a>
         </div>
 
         <a href="{{ route('sponsors.index') }}" class="block text-white py-2">Sponsors</a>

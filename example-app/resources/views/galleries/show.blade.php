@@ -194,7 +194,9 @@
                     @if($photo->caption)
                         <p class="text-center mt-2">{{ $photo->caption }}</p>
                     @endif
+                    @auth
                     <button class="delete-photo" onclick="deletePhoto('{{ route('galleries.photos.destroy', [$gallery->id, $photo->id]) }}')">×</button>
+                @endauth
                 </div>
             @endforeach
         </div>

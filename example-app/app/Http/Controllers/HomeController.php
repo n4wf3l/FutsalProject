@@ -12,6 +12,7 @@ use App\Models\WelcomeImage; // Importez le modèle WelcomeImage
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Photo;
 
 class HomeController extends Controller
 {
@@ -60,7 +61,10 @@ class HomeController extends Controller
         // Récupérer la dernière image ajoutée
         $welcomeImage = WelcomeImage::latest()->first();
     
-        return view('welcome', compact('weatherData', 'city', 'flashMessage', 'nextGame', 'nextGames', 'clubLocation', 'clubPrefix', 'clubName', 'articles', 'welcomeImage', 'logoPath'));
+        // Récupérer les 8 dernières images de la galerie
+        $latestPhotos = Photo::latest()->take(8)->get();
+    
+        return view('welcome', compact('weatherData', 'city', 'flashMessage', 'nextGame', 'nextGames', 'clubLocation', 'clubPrefix', 'clubName', 'articles', 'welcomeImage', 'logoPath', 'latestPhotos'));
     }
     
     private function getWeatherData($city, $apiKey)

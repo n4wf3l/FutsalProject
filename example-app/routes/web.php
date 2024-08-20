@@ -23,6 +23,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PressReleaseController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\PlayerU21Controller;
 
 // Route d'accueil
 Route::get('/', function () {
@@ -106,6 +107,7 @@ Route::resource('press_releases', PressReleaseController::class);
 Route::resource('galleries', GalleryController::class);
 Route::resource('galleries.photos', PhotoController::class)->except(['show']);
 Route::post('/galleries/{gallery}/photos/store-multiple', [PhotoController::class, 'storeMultiple'])->name('galleries.photos.storeMultiple');
+Route::resource('playersu21', PlayerU21Controller::class);
 // Routes API
 //Route::prefix('api')->group(function () {
 //    Route::apiResource('games', ApiGameController::class);
