@@ -172,18 +172,22 @@
     <!-- Navigation Bar -->
     <x-navbar />
 
+    <header class="text-center my-12">
+    <x-page-title subtitle="{{ $gallery->description }}">
+    {{ $gallery->name }}
+</x-page-title>
+    </header>
+
     <!-- Button for adding photos (visible only to authenticated users) -->
     @auth
         <div class="mt-8 text-center">
-            <button onclick="openAddPhotosModal()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Add Photos</button>
+            
+            <button onclick="openAddPhotosModal()" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center" style="margin-bottom:50px; background-color: {{ $primaryColor }};"
+                    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Add Photos</button>
         </div>
     @endauth
 
-    <!-- Header section with gallery title and description -->
-    <header class="text-center my-12">
-        <h1 class="text-6xl font-bold text-gray-900">{{ $gallery->name }}</h1>
-        <p class="text-xl text-gray-600 mt-4">{{ $gallery->description }}</p>
-    </header>
 
     <!-- Main content section with gallery grid -->
     <main class="container mx-auto px-4 mb-20">

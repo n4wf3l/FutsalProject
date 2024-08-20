@@ -18,6 +18,9 @@ class AboutSectionController extends Controller
     
         $backgroundImage = BackgroundImage::where('assigned_page', 'about')->latest()->first();
     
+        foreach ($sections as $section) {
+            $section->content = html_entity_decode($section->content);
+        }
         return view('about.index', compact('sections', 'clubInfo', 'clubName', 'backgroundImage'));
     }
 
@@ -43,6 +46,7 @@ class AboutSectionController extends Controller
 
 public function edit(AboutSection $aboutSection)
 {
+    $aboutSection->content = html_entity_decode($aboutSection->content);
     return view('about.edit', compact('aboutSection'));
 }
 

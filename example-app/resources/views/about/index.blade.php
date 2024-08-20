@@ -40,26 +40,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
-            font-size: 2rem; 
-            font-weight: bold;
-            margin-bottom: 1.5rem; 
-            color: {{ $primaryColor }};
-            position: relative;
-            padding-left: 20px; 
-        }
-
-        h2::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 5px; 
-            background-color: {{ $primaryColor }};
-            border-radius: 2px; 
-        }
-
         p {
             font-size: 1rem;
             margin-bottom: 0.3rem; /* Réduction de l'espace entre les paragraphes */
@@ -120,12 +100,13 @@
     <!-- Include the Navbar component -->
     <x-navbar />
 
+    <header class="text-center my-12">
+    <x-page-title subtitle="ℹ️ Learn more about who we are and what we stand for, providing you with the story behind our mission and values.">
+    About
+</x-page-title>
+    </header>
+    
     <div class="container mx-auto py-12">
-        <div class="header-section">
-            <h1>About {{ $clubName }}</h1>
-            <p>{{ $clubName }} you're not here for a short time, but for life!</p>
-        </div>
-
         <div class="section-content">
             <div class="club-info">
                 <h2>{{ $clubName }}</h2>
@@ -143,7 +124,7 @@
 
             @foreach($sections as $section)
             <div class="mb-8">
-                <h2>{{ $section->title }}</h2>
+            <x-page-subtitle text="{{ $section->title }}" />
                 <div class="mt-4 text-gray-700 leading-relaxed">
                     {!! $section->content !!}
                 </div>
@@ -154,7 +135,7 @@
                         style="background-color: {{ $primaryColor }};"
                         onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                         onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                        Edit
+                        🛠️
                     </a>
                     <form action="{{ route('about.destroy', $section->id) }}" method="POST" class="inline-block"
                         onsubmit="return confirm('Are you sure?');">
@@ -165,7 +146,7 @@
                             style="background-color: {{ $primaryColor }};"
                             onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                             onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                            Delete
+                            X
                         </button>
                     </form>
                 </div>

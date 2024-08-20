@@ -110,12 +110,13 @@ use Illuminate\Support\Facades\Auth;
 </head>
 <body class="bg-gray-100">
     <x-navbar />
-    <header class="text-center my-12" style="margin-top: 20px; font-size:60px;">
-        <h1 class="text-6xl font-bold text-gray-900">U21 Players</h1>
-        <div class="flex justify-center items-center mt-4">
-            <p class="text-xl text-gray-600">Discover additional information by hovering with your mouse.</p>
-        </div>
-        @auth
+
+    <header class="text-center my-12">
+    <x-page-title subtitle="🌟 Explore the rising stars of our U21 team, showcasing the next generation of talent ready to make their mark on the field. The future of football starts here! ">
+    U21 Squad {{ $championship->season }}
+</x-page-title>
+
+@auth
         <a href="{{ route('playersu21.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary"  style="font-size:20px; background-color: {{ $primaryColor }};"
                    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">

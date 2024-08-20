@@ -460,12 +460,18 @@ setTimeout(() => {
 
             <!-- Buttons Container -->
             <div class="buttons-container" style="margin-top: 30px; display: flex; justify-content: flex-start; gap: 20px;">
-                <a href="{{ route('clubinfo') }}" class="btn btn-primary" style="background-color: {{ $primaryColor }}; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; transition: transform 0.3s, background-color 0.3s;">
-                    News
-                </a>
-                <a href="{{ route('articles.show', $articles->first()->slug) }}" class="btn btn-secondary" style="background-color: {{ $secondaryColor }}; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; transition: transform 0.3s, background-color 0.3s;">
-                    Read More
-                </a>
+                <x-button 
+    route="{{ route('clubinfo') }}"
+    buttonText="News" 
+    primaryColor="#DC2626" 
+    secondaryColor="#B91C1C" 
+/>
+                <x-button 
+    route="{{ route('articles.show', $articles->first()->slug) }}"
+    buttonText="Read More" 
+    primaryColor="#B91C1C" 
+    secondaryColor="#DC2626" 
+/>
             </div>
 
             <div style="display: none;">
@@ -488,8 +494,10 @@ setTimeout(() => {
 </div>
 <hr>
  <!-- Section pour les 5 prochains matchs -->
+ <x-page-title subtitle="⚽️ Get ready for thrilling action and unforgettable moments on the field!">
+    Upcoming Matches
+</x-page-title>
  <div class="containerization">
-    <h2 class="upcoming-title">Upcoming Matches</h2>
     @if($nextGames->isNotEmpty())
         @foreach($nextGames as $index => $game)
             <div class="match-card {{ $index % 2 == 0 ? 'even' : 'odd' }}">
@@ -532,20 +540,11 @@ setTimeout(() => {
     border: 4px solid {{ $primaryColor }};
     border-radius: 15px;
     margin-bottom: 100px;
-    margin-top: 100px;
-}
-
-.upcoming-title {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-    color: {{ $primaryColor }};
-    margin-top: 15px;  /* Réduit l'espace au-dessus du titre */
-    margin-bottom: 15px; /* Réduit l'espace en dessous du titre */
-    font-family: 'Arial', sans-serif;
+    margin-top: 30px;
 }
 
 .match-card {
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -626,28 +625,6 @@ setTimeout(() => {
 
 .see-all-btn:hover {
     background-color: {{ $secondaryColor }};
-}
-
-.section-title {
-    font-size: 2.5rem;
-    color: {{ $primaryColor }};
-    text-align: center;
-    margin-bottom: 20px;
-    position: relative;
-    display: inline-block;
-    padding-bottom: 10px;
-    font-weight: bold;
-}
-
-.section-title::after {
-    content: '';
-    width: 80px;
-    height: 4px;
-    background-color: {{ $secondaryColor }};
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 /* Nos Albums link styling */
@@ -928,8 +905,10 @@ setTimeout(() => {
 <hr>
 <section class="latest-photos">
     <div class="container">
-        <h2 class="section-title">Explore Our Latest Photos</h2>
-        <div class="gallery-grid">
+    <x-page-title subtitle="Explore the latest moments captured in our gallery.">
+    Explore Our Latest Photos
+</x-page-title>
+        <div class="gallery-grid mt-10">
             @foreach($latestPhotos as $photo)
                 <div class="gallery-item">
                     <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->caption }}" onclick="openImageModal({{ $loop->index }})">
@@ -945,7 +924,12 @@ setTimeout(() => {
 
         <!-- Nos Albums link -->
         <div class="albums-link-container">
-            <a href="{{ route('galleries.index') }}" class="albums-link">Nos Albums</a>
+        <x-button 
+    route="{{ route('galleries.index') }}"
+    buttonText="Our Albums" 
+    primaryColor="#B91C1C" 
+    secondaryColor="#DC2626" 
+/>
         </div>
     </div>
 

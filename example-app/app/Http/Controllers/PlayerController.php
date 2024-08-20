@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Staff;
 use App\Models\Coach;
+use App\Models\Championship;
 
 class PlayerController extends Controller
 {
@@ -15,9 +16,9 @@ class PlayerController extends Controller
         $players = Player::all();
         $staff = Staff::all(); 
         $coach = Coach::first(); // Supposons que vous n'avez qu'un seul coach principal
-    
+        $championship = Championship::first(); 
         // Passer les données à la vue
-        return view('teams', compact('players', 'staff', 'coach'));
+        return view('teams', compact('players', 'staff', 'coach', 'championship'));
     }
 
     public function create()

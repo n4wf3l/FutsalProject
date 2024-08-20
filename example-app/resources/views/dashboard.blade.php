@@ -23,15 +23,15 @@
 <body>
     <x-navbar />
 
-    <header class="text-center my-12" style="margin-top: 20px; font-size:60px;">
-        <h1 class="text-6xl font-bold text-gray-900">MyADMIN</h1>
-        <div class="flex justify-center items-center mt-4" style="margin-bottom: 50px;">
-            <p class="text-xl text-gray-600">Welcome to your dashboard, {{ Auth::user()->name }}!</p>
-            <a href="{{ route('profile.edit') }}" class="ml-6 text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary" style="margin-left:5px; font-size:15px;">
+    <header class="text-center my-12">
+    <x-page-title subtitle="📊 Welcome to your dashboard, {{ Auth::user()->name }}!">
+        Dashboard
+    </x-page-title>
+
+    <a href="{{ route('profile.edit') }}" class="ml-6 text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary" style="margin-left:5px; font-size:15px;">
                 My Profile
             </a>
-        </div>
-    </header>
+</header>
 
     @if ($errors->any())
         <div class="alert alert-danger">

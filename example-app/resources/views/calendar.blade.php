@@ -181,17 +181,17 @@
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover;" @endif>
     <x-navbar />
 
-    <header class="text-center my-12" style="margin-top: 20px;">
-        <h1 class="text-6xl font-bold text-gray-900" style="font-size:60px;">Calendar and Ranking {{ $championship->name }}</h1>
-        <div class="flex justify-center items-center mt-4">
-            <p class="text-xl text-gray-600" style="margin-bottom: 20px;">Discover additional information by hovering with your mouse.</p>
-        </div>
+    <header class="text-center my-12">
+    <x-page-title subtitle=" 🗓️ Stay up to date with our comprehensive calendar, featuring all the upcoming futsal matches and key events.">
+    {{ $championship->name }}
+</x-page-title>
+    </header>
+
         @auth
         <div class="admin-buttons">
             <a href="#" data-bs-toggle="modal" data-bs-target="#championshipModal">Settings</a>
         </div>
         @endauth
-    </header>
 
     <!-- Modale pour configurer le championnat et la saison -->
 <div class="modal fade" id="championshipModal" tabindex="-1" aria-labelledby="championshipModalLabel" aria-hidden="true">
@@ -225,9 +225,9 @@
     <main class="py-12">
     
     @if($championship)
-    <h2 class="calendar-title">Classement - {{ $championship->name }} {{ $championship->season }}</h2>
+    <x-page-subtitle text="Ranking - {{ $championship->name }} {{ $championship->season }}" />
 @else
-    <h2 class="calendar-title">No championship data available</h2>
+<x-page-subtitle text="No championship data available" />
 @endif
         <p class="text-center text-gray-600 italic">Green: Season champion of {{ $championship->name }}</p>
         <p class="text-center text-gray-600 italic">Yellow: Compete in playoffs against the top two from D2</p>
@@ -332,8 +332,8 @@
 </tbody>
             </table>
         </div>
-
-        <h2 class="calendar-title">Calendrier des Matchs - Dina Kénitra</h2>
+<hr class="mt-20 mb-20">
+        <x-page-subtitle text="Calendrier des Matchs - {{ $clubName }}" />
         <p class="text-center text-gray-600 italic mb-4">All home matches take place at {{ $clubLocation }}.</p>
         @auth
         <div class="admin-buttons">

@@ -156,18 +156,17 @@
 <body class="bg-gray-100">
     <x-navbar />
 
-    <header class="text-center my-12" style="margin-top: 20px;">
-        <h1 class="text-6xl font-bold text-gray-900" style="font-size:60px;">News</h1>
-        <div class="flex justify-center items-center mt-4">
-            <p class="text-xl text-gray-600" style="margin-bottom: 20px;">Discover additional information by hovering with your mouse.</p>
-        </div>
+    <header class="text-center my-12" style="margin-top: 20px; margin-bottom: 20px;">
+    <x-page-title subtitle="🔔 Stay informed with all the breaking stories and headlines you need to know!">
+    Recent News
+</x-page-title>
         @auth
-        <a href="{{ route('articles.create') }}"
-            class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center"
-                   style=" background-color: {{ $primaryColor }};"
-                   onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                   onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Add
-                Article</a>
+        <x-button 
+    route="{{ route('articles.create') }}"
+    buttonText="Add Article" 
+    primaryColor="#B91C1C" 
+    secondaryColor="#DC2626" 
+/>
         @endauth
     </header>
 

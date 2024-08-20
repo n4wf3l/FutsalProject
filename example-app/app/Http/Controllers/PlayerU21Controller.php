@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PlayerU21;
+use App\Models\Championship;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,8 +12,9 @@ class PlayerU21Controller extends Controller
     // Display a listing of the U21 players
     public function index()
     {
+        $championship = Championship::first(); 
         $players = PlayerU21::orderBy('last_name')->get();
-        return view('playersu21.index', compact('players'));
+        return view('playersu21.index', compact('players', 'championship'));
     }
 
     // Show the form for creating a new U21 player

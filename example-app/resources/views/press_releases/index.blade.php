@@ -154,10 +154,9 @@
     <x-navbar />
 
     <header class="text-center my-12">
-        <h1 class="text-6xl font-bold text-gray-900">Press Releases</h1>
-        <div class="flex justify-center items-center mt-4">
-            <p class="text-xl text-gray-600">📢 View the latest press releases.</p>
-        </div>
+    <x-page-title subtitle="📢 Stay informed with all the breaking stories and headlines you need to know!">
+    Press Releases
+</x-page-title>
     </header>
 
     <main class="container mx-auto px-4">

@@ -10,35 +10,35 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     <style>
-        .fanshop-container {
-            display: flex;
-            justify-content: center; /* Centre le conteneur horizontalement */
-            align-items: center; /* Centre le contenu verticalement */
-            gap: 20px;
-        }
+.fanshop-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre le contenu horizontalement */
+    gap: 40px; /* Espace entre l'image et les tribunes */
+}
 
-        .stadium-plan {
-            flex: 0 0 50%; /* L'image occupe 30% de la largeur totale */
-            max-width: 50%;
-            align-self: center; /* Centre l'image verticalement dans le conteneur */
-        }
+.stadium-plan {
+    width: 80%; /* L'image occupe 80% de la largeur du conteneur */
+    max-width: 600px; /* Limite la largeur maximale de l'image */
+    margin: 0 auto; /* Centre l'image */
+}
 
-        .tribune-list {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Centre les tribunes verticalement */
-            gap: 20px; /* Espacement entre les tribunes */
-            margin-left: 20px;
-        }
+.tribune-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Deux colonnes */
+    gap: 20px; /* Espace entre les tribunes */
+    width: 80%; /* Les tribunes occupent 80% de la largeur du conteneur */
+    max-width: 1000px; /* Limite la largeur maximale de la liste des tribunes */
+    margin: 0 auto; /* Centre la liste des tribunes */
+}
 
-        .tribune-item {
-            margin-bottom: 20px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+.tribune-item {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative; 
+}
 
         .tribune-item h2 {
             font-size: 1.5rem;
@@ -87,11 +87,6 @@
             font-weight: bold;
         }
 
-        .edit-delete-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
 
         .total-section {
             margin-top: 40px;
@@ -152,35 +147,59 @@
             font-size: 20px;
             color: {{ $secondaryColor }};
         }
+
+        .edit-icon {
+    cursor: pointer;
+    font-size: 1rem;
+    color: {{ $primaryColor }};
+    transition: color 0.3s;
+}
+
+.edit-icon:hover {
+    color: {{ $secondaryColor }};
+}
+
+.delete-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1rem;
+    color: red;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.delete-icon:hover {
+    color: darkred;
+}
     </style>
 </head>
 <body class="bg-gray-100">
     <x-navbar />
 
-    <header class="text-center my-12" style="margin-top: 20px; font-size:60px;">
-        <h1 class="text-6xl font-bold text-gray-900">Fanshop</h1>
-        <div class="flex justify-center items-center mt-4">
-        @if($nextGame)
-            <p class="text-xl text-gray-600">Book your tickets for the upcoming match against {{ $nextGame->awayTeam->name }}.</p>
-        @else
-            <p class="text-xl text-gray-600">No upcoming home matches available.</p>
-        @endif
-    </div>
+    <header class="text-center my-12">
+        <x-page-title 
+            :subtitle="$nextGame ? '🎟️ Grab your tickets and gear up for the next big match against ' . $nextGame->awayTeam->name . '.' : 'No upcoming home matches available.'">
+            Fanshop
+        </x-page-title>
+
         @auth
-        <a href="{{ route('tribunes.create') }}" class="checkout-button">
-            Add Tribune
-        </a>
+            <x-button 
+                route="{{ route('tribunes.create') }}" 
+                buttonText="Add Tribune" 
+                primaryColor="#DC2626" 
+                secondaryColor="#B91C1C" 
+            />
         @endauth
     </header>
 
     <div class="container mx-auto py-12">
-
         <div class="fanshop-container">
             <!-- Image du plan des tribunes -->
             @if($tribunes->isNotEmpty() && $tribunes->first()->photo)
                 <div class="stadium-plan">
-                    <li class="location-info">
-                        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
+                <li class="location-info">
+                        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 "> 
                         <span>Matches are played at {{ $clubLocation }}</span>
                     </li>
                     <img src="{{ asset('storage/' . $tribunes->first()->photo) }}" alt="Stadium Plan" class="w-full h-auto rounded-lg shadow-lg">
@@ -189,106 +208,115 @@
 
             <!-- Liste des tribunes -->
             <div class="tribune-list">
-            @foreach($tribunes as $tribune)
-            <div class="tribune-item">
-    <h2>{{ $tribune->name }}</h2>
-    <p>{{ $tribune->description }}</p>
-    
-    @if($nextGame)
-        <div class="next-game-info">
-            <p><strong>Next Match:</strong> 
-            {{ $nextGame->homeTeam->name }} vs {{ $nextGame->awayTeam->name }} 
-            on {{ \Carbon\Carbon::parse($nextGame->match_date)->format('d-m-Y') }}</p>
-        </div>
-    @else
-        <p>No upcoming matches scheduled.</p>
-    @endif
+    @foreach($tribunes as $tribune)
+        <div class="tribune-item">
+            <!-- X pour supprimer, placé en haut à droite -->
+            @auth
+            <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" class="delete-icon" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" style="background: none; border: none; padding: 0;">
+                    ❌
+                </button>
+            </form>
+            @endauth
 
-    <div class="price">
-        @if($tribune->price == 0)
-            Free Ticket
-        @else
-            {{ number_format($tribune->price, 2) }} {{ $tribune->currency }}
-        @endif
-    </div>
-    <hr>
+            <!-- Titre de la tribune avec l'icône d'édition -->
+            <h2>
+                {{ $tribune->name }}
+                @auth
+                <a href="{{ route('tribunes.edit', $tribune->id) }}" class="edit-icon">🛠️</a>
+                @endauth
+            </h2>
+            <p>{{ $tribune->description }}</p>
 
-    @if($tribune->available_seats > 0)
-        @auth
-            <p>{{ $tribune->available_seats }} seats left</p>
-        @endauth
-        <div class="quantity-controls">
-        <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">-</button>
-    <span id="quantity-{{ $tribune->id }}">0</span>
-    <span class="total-individual" id="total-{{ $tribune->id }}">0.00 {{ $tribune->currency }}</span>
-    <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">+</button>
-    <form action="{{ route('checkout') }}" method="POST" class="inline-block ml-4">
-        @csrf
-        <input type="hidden" name="tribune_id" value="{{ $tribune->id }}">
-        <input type="hidden" name="tribune_name" value="{{ $tribune->name }}">
-        <input type="hidden" name="total_amount" id="totalAmountInput-{{ $tribune->id }}" value="0">
-        <input type="hidden" name="quantity" id="quantityInput-{{ $tribune->id }}" value="0">
-        <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>Payer</button>
-    </form>
-        </div>
-    @else
-        <p class="text-red-500 font-bold">Sold Out</p>
-    @endif
+            <!-- Affichage des détails du match à venir -->
+            @if($nextGame)
+                <div class="next-game-info">
+                    <p><strong>Next Match:</strong> 
+                    {{ $nextGame->homeTeam->name }} vs {{ $nextGame->awayTeam->name }} 
+                    on {{ \Carbon\Carbon::parse($nextGame->match_date)->format('d-m-Y') }}</p>
+                </div>
+            @else
+                <p>No upcoming matches scheduled.</p>
+            @endif
 
-    @auth
-    <div class="edit-delete-buttons mt-4">
-        <a href="{{ route('tribunes.edit', $tribune->id) }}" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: {{ $primaryColor }};">Edit</a>
-        <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg" style="background-color: #DC2626;">Delete</button>
-        </form>
-    </div>
-    @endauth
-</div>
-            @endforeach
+            <!-- Affichage du prix -->
+            <div class="price">
+                @if($tribune->price == 0)
+                    Free Ticket
+                @else
+                    {{ number_format($tribune->price, 2) }} {{ $tribune->currency }}
+                @endif
             </div>
+            <hr>
+
+            <!-- Gestion de la quantité -->
+            @if($tribune->available_seats > 0)
+                @auth
+                    <p>{{ $tribune->available_seats }} seats left</p>
+                @endauth
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">-</button>
+                    <span id="quantity-{{ $tribune->id }}">0</span>
+                    <span class="total-individual" id="total-{{ $tribune->id }}">0.00 {{ $tribune->currency }}</span>
+                    <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">+</button>
+                    <form action="{{ route('checkout') }}" method="POST" class="inline-block ml-4">
+                        @csrf
+                        <input type="hidden" name="tribune_id" value="{{ $tribune->id }}">
+                        <input type="hidden" name="tribune_name" value="{{ $tribune->name }}">
+                        <input type="hidden" name="total_amount" id="totalAmountInput-{{ $tribune->id }}" value="0">
+                        <input type="hidden" name="quantity" id="quantityInput-{{ $tribune->id }}" value="0">
+                        <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>Payer</button>
+                    </form>
+                </div>
+            @else
+                <p class="text-red-500 font-bold">Sold Out</p>
+            @endif
+        </div>
+    @endforeach
+</div>
         </div>
     </div>
 
     <x-footer />
     <script src="https://js.stripe.com/v3/"></script>
     <script>
-      function changeQuantity(button, price, availableSeats, tribuneId) {
-    const quantityElement = document.getElementById('quantity-' + tribuneId);
-    const totalElement = document.getElementById('total-' + tribuneId);
-    const quantityInput = document.getElementById('quantityInput-' + tribuneId);
-    const totalAmountInput = document.getElementById('totalAmountInput-' + tribuneId);
+        function changeQuantity(button, price, availableSeats, tribuneId) {
+            const quantityElement = document.getElementById('quantity-' + tribuneId);
+            const totalElement = document.getElementById('total-' + tribuneId);
+            const quantityInput = document.getElementById('quantityInput-' + tribuneId);
+            const totalAmountInput = document.getElementById('totalAmountInput-' + tribuneId);
 
-    let quantity = parseInt(quantityElement.innerText);
-    let total = parseFloat(totalElement.innerText);
+            let quantity = parseInt(quantityElement.innerText);
+            let total = parseFloat(totalElement.innerText);
 
-    if (button.innerText === '+') {
-        if (quantity < availableSeats) {
-            quantity++;
-            total += price;
+            if (button.innerText === '+') {
+                if (quantity < availableSeats) {
+                    quantity++;
+                    total += price;
+                }
+            } else if (button.innerText === '-') {
+                if (quantity > 0) {
+                    quantity--;
+                    total -= price;
+                }
+            }
+
+            quantityElement.innerText = quantity;
+            totalElement.innerText = total.toFixed(2) + ' ' + '{{ $tribune->currency }}';
+
+            // Update the hidden input fields
+            quantityInput.value = quantity;
+            totalAmountInput.value = total.toFixed(2);
+
+            const checkoutButton = document.getElementById('checkout-button-' + tribuneId);
+            if (quantity > 0) {
+                checkoutButton.removeAttribute('disabled');
+            } else {
+                checkoutButton.setAttribute('disabled', 'disabled');
+            }
         }
-    } else if (button.innerText === '-') {
-        if (quantity > 0) {
-            quantity--;
-            total -= price;
-        }
-    }
-
-    quantityElement.innerText = quantity;
-    totalElement.innerText = total.toFixed(2) + ' ' + '{{ $tribune->currency }}';
-
-    // Update the hidden input fields
-    quantityInput.value = quantity;
-    totalAmountInput.value = total.toFixed(2);
-
-    const checkoutButton = document.getElementById('checkout-button-' + tribuneId);
-    if (quantity > 0) {
-        checkoutButton.removeAttribute('disabled');
-    } else {
-        checkoutButton.setAttribute('disabled', 'disabled');
-    }
-}
     </script>
 </body>
 </html>

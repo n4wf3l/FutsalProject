@@ -76,12 +76,10 @@
 <body class="bg-gray-100">
     <x-navbar />
 
-    <header class="text-center my-12" style="margin-top: 20px; font-size:60px;">
-        <h1 class="text-6xl font-bold text-gray-900">Sponsors</h1>
-        <div class="flex justify-center items-center mt-4">
-            <p class="text-xl text-gray-600">Discover additional information by hovering with your mouse.</p>
-        </div>
-    </header>
+    <header class="text-center my-12">
+    <x-page-title subtitle="🤝 Discover the valued partners who support and power our journey. A big thank you to our sponsors for their unwavering commitment to our success!">
+    Sponsors
+</x-page-title>
 
     <main class="py-12 flex flex-col items-center">
         <div class="container mx-auto px-4 text-center">
@@ -94,13 +92,12 @@
 
             @auth
             <div class="mb-6">
-                <a href="{{ route('sponsors.create') }}"
-                   class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center"
-                   style="background-color: {{ $primaryColor }};"
-                   onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                   onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                    Add Sponsor
-                </a>
+            <x-button 
+    route="{{ route('sponsors.create') }}"
+    buttonText="Add Sponsor" 
+    primaryColor="#DC2626" 
+    secondaryColor="#B91C1C" 
+/>
             </div>
             @endauth
 
@@ -130,7 +127,7 @@
                                     <button type="submit"
                                             class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center"
                                             style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
-                                        Delete Sponsor
+                                        X
                                     </button>
                                 </form>
                                 @endauth

@@ -17,6 +17,7 @@
     @vite('resources/css/app.css')
     <style>
         .contact-container {
+            text-align: left;
             display: flex;
             justify-content: space-between;
             max-width: 1200px;
@@ -124,12 +125,11 @@
 
 <body class="bg-gray-100">
     <x-navbar />
-    <header class="text-center my-12" style="margin-top: 20px;">
-        <h1 class="text-6xl font-bold text-gray-900" style="font-size:60px;">Contact</h1>
-        <div class="flex justify-center items-center mt-4">
-            <p class="text-xl text-gray-600" style="margin-bottom: 20px;">Discover additional information by hovering with your mouse.</p>
-        </div>
-    </header>
+   
+    <header class="text-center my-12">
+    <x-page-title subtitle="📞 Get in touch with us! We're here to answer your questions and provide the information you need. Reach out to connect with our team today.">
+    Contact
+</x-page-title>
 
     <div class="contact-container">
         <div class="contact-info">

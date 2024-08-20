@@ -77,10 +77,9 @@
     <x-navbar />
 
     <header class="text-center my-12">
-        <h1 class="text-6xl font-bold text-gray-900">Gallery</h1>
-        <div class="flex justify-center items-center mt-4">
-            <p class="text-xl text-gray-600">View the latest photo albums.</p>
-        </div>
+    <x-page-title subtitle="📸 Dive into our collection of photo albums capturing the excitement and energy of past futsal events.">
+    Gallery
+</x-page-title>
     </header>
 
     <main class="container mx-auto px-4">

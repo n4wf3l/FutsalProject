@@ -20,6 +20,7 @@ class ClubInfoController extends Controller
             'email' => $clubInfo->email ?? 'No email available',
             'federationLogo' => $clubInfo->federation_logo ? asset('storage/' . $clubInfo->federation_logo) : null,
             'facebook' => $clubInfo->facebook ?? '#',
+            'city' => $clubInfo->city ?? 'Default City',
             'instagram' => $clubInfo->instagram ?? '#',
         ]);
     }
@@ -37,6 +38,7 @@ class ClubInfoController extends Controller
         'president' => 'required|string|max:255',
         'latitude' => 'required|numeric',
         'longitude' => 'required|numeric',
+        'city' => 'required|string|max:255',
     ]);
 
     // Cherchez la première entrée ou créez-en une nouvelle sans enregistrer
@@ -52,6 +54,7 @@ class ClubInfoController extends Controller
         'president',
         'latitude',
         'longitude',
+        'city',
     ]));
 
     // Gérer le téléchargement du logo de la fédération, s'il y en a un
