@@ -487,8 +487,147 @@ setTimeout(() => {
 
 </div>
 <hr>
-    <div class="cover-container">
-    </div>
+ <!-- Section pour les 5 prochains matchs -->
+ <div class="containerization mt-5">
+    <h2 class="upcoming-title">Upcoming Matches</h2>
+    @if($nextGames->isNotEmpty())
+        @foreach($nextGames as $index => $game)
+            <div class="match-card {{ $index % 2 == 0 ? 'even' : 'odd' }}">
+                <div class="match-date">
+                    {{ \Carbon\Carbon::parse($game->match_date)->format('d F Y') }}
+                </div>
+                <div class="match-location">
+                    @if(Str::startsWith($game->homeTeam->name, $clubPrefix))
+                        {{ $clubLocation }} (Home)
+                    @else
+                        Away
+                    @endif
+                </div>
+                <div class="match-details">
+                    <div class="team-logo">
+                        <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} Logo">
+                    </div>
+                    <div class="match-info">
+                        <p>{{ $game->homeTeam->name }} <strong>vs</strong> {{ $game->awayTeam->name }}</p>
+                    </div>
+                    <div class="team-logo">
+                        <img src="{{ asset('storage/' . $game->awayTeam->logo_path) }}" alt="{{ $game->awayTeam->name }} Logo">
+                    </div>
+                </div>
+            </div>
+        @endforeach
+        <div class="see-all-container">
+            <a href="{{ route('calendar.show') }}" class="see-all-btn">See All Matches</a>
+        </div>
+    @else
+        <p>Aucun match à venir.</p>
+    @endif
+</div>
+
+<style>
+.containerization {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    border: 4px solid {{ $primaryColor }};
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.upcoming-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: {{ $primaryColor }};
+    margin-top: 15px;  /* Réduit l'espace au-dessus du titre */
+    margin-bottom: 15px; /* Réduit l'espace en dessous du titre */
+    font-family: 'Arial', sans-serif;
+}
+
+.match-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2px; /* Réduit le padding vertical */
+    text-align: center;
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid #ddd; /* Séparation entre les cartes */
+}
+
+.match-card.even {
+    background-color: #f9f9f9;
+}
+
+.match-card.odd {
+    background-color: #e9e9e9;
+}
+
+.match-card:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.match-date {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 2px; /* Réduit l'espace en dessous de la date */
+    font-weight: bold;
+}
+
+.match-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2px; /* Réduit l'espace en dessous des détails du match */
+    padding: 0 20px; /* Réduit le padding latéral pour centrer le texte entre les logos */
+}
+
+.team-logo img {
+    width: 75px; /* Ajuste légèrement la taille des logos */
+    height: 75px;
+    object-fit: contain;
+    transition: transform 0.3s ease; /* Ajoute une transition au survol */
+}
+
+.match-info {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    flex-grow: 1; /* Fait que le texte occupe l'espace restant */
+    line-height: 1.2; /* Réduit l'espacement vertical du texte */
+}
+
+.match-location {
+    font-size: 16px;
+    color: #555;
+    font-weight: bold;
+    margin-top: 5px; /* Réduit l'espace au-dessus de l'emplacement */
+}
+
+.see-all-container {
+    text-align: center;
+    margin: 15px 0; /* Réduit l'espace autour du bouton "See All Matches" */
+}
+
+.see-all-btn {
+    display: inline-block;
+    padding: 8px 16px; /* Réduit le padding pour un bouton plus compact */
+    background-color: {{ $primaryColor }};
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.see-all-btn:hover {
+    background-color: {{ $secondaryColor }};
+}
+</style>
+
 
     <!-- Footer -->
     <x-footer />

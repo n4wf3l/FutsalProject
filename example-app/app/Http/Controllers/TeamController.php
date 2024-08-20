@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TeamController extends Controller
 {
@@ -60,29 +61,29 @@ class TeamController extends Controller
 
     // Mettre à jour une équipe existante (Vue d'administration)
     public function update(Request $request, Team $team)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'logo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    $team->name = $request->name;
-
-    if ($request->hasFile('logo_path')) {
-        // Supprimer l'ancien logo s'il existe
-        if ($team->logo_path) {
-            Storage::delete($team->logo_path);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'logo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        $team->name = $request->name;
+    
+        if ($request->hasFile('logo_path')) {
+            // Supprimer l'ancien logo s'il existe
+            if ($team->logo_path) {
+                Storage::disk('public')->delete($team->logo_path);
+            }
+    
+            // Enregistrer le nouveau logo
+            $path = $request->file('logo_path')->store('logos', 'public');
+            $team->logo_path = $path;
         }
-
-        // Enregistrer le nouveau logo
-        $path = $request->file('logo_path')->store('logos');
-        $team->logo_path = $path;
+    
+        $team->save();
+    
+        return redirect()->route('calendar.show')->with('success', 'Team updated successfully.');
     }
-
-    $team->save();
-
-    return redirect()->route('calendar.show')->with('success', 'Team updated successfully.');
-}
 
     // Supprimer une équipe (Vue d'administration)
     public function destroy(Team $team)

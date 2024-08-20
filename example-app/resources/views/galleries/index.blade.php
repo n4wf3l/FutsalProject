@@ -18,6 +18,7 @@
             transition: transform 0.2s ease-in-out;
             margin-bottom: 24px;
             width: 100%;
+            position: relative;
         }
 
         .gallery-card:hover {
@@ -39,6 +40,17 @@
             font-weight: bold;
             color: #333;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .edit-button-emoji {
+            margin-left: 8px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #fbbf24;
         }
 
         .gallery-description {
@@ -47,29 +59,18 @@
             margin-bottom: 0.5rem;
         }
 
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
+        .delete-button-x {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: rgba(220, 38, 38, 0.8);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            padding: 4px 8px;
+            cursor: pointer;
         }
 
-        .edit-button {
-            background-color: #fbbf24;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .delete-button {
-            background-color: #dc2626;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            text-decoration: none;
-        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -95,33 +96,35 @@
                 <div class="gallery-card">
                     @if($gallery->cover_image)
                         <div class="gallery-image">
-                            <img src="{{ asset('storage/' . $gallery->cover_image) }}" alt="{{ $gallery->name }}">
-                        </div>
-                    @endif
-                    <div class="gallery-content">
-                        <h2 class="gallery-title">{{ $gallery->name }}</h2>
-                        <p class="gallery-description">{{ $gallery->description }}</p>
-                        <a href="{{ route('galleries.show', $gallery->id) }}" class="text-blue-500 font-bold">View Album</a>
-                        
-                        @auth
-                        <div class="button-group mt-4">
-                            <button onclick="openEditModal('{{ $gallery->id }}', '{{ $gallery->name }}', '{{ $gallery->description }}')" class="edit-button">Edit</button>
-                            
+                            <a href="{{ route('galleries.show', $gallery->id) }}">
+                                <img src="{{ asset('storage/' . $gallery->cover_image) }}" alt="{{ $gallery->name }}">
+                            </a>
+                            @auth
                             <form action="{{ route('galleries.destroy', $gallery->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this gallery?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="delete-button">Delete</button>
+                                <button type="submit" class="delete-button-x">X</button>
                             </form>
+                            @endauth
                         </div>
-                        @endauth
+                    @endif
+                    <div class="gallery-content">
+                        <h2 class="gallery-title">
+                            {{ $gallery->name }}
+                            @auth
+                                <button onclick="openEditModal('{{ $gallery->id }}', '{{ $gallery->name }}', '{{ $gallery->description }}')" class="edit-button-emoji">🛠️</button>
+                            @endauth
+                        </h2>
+                        <p class="gallery-description">{{ $gallery->description }}</p>
+                        <a href="{{ route('galleries.show', $gallery->id) }}" class="text-blue-500 font-bold">View Album</a>
                     </div>
                 </div>
             @endforeach
         </div>
 
         <div class="pagination">
-    {{ $galleries->links() }}
-</div>
+            {{ $galleries->links() }}
+        </div>
     </main>
 
     <x-footer />
@@ -180,65 +183,21 @@
     </div>
 
     <script>
-    Dropzone.options.photoDropzone = {
-        paramName: "photos", // The name that will be used to transfer the files
-        maxFilesize: 2, // MB
-        maxFiles: 10, // Limiting the maximum number of files
-        acceptedFiles: "image/*",
-        addRemoveLinks: true,
-        dictDefaultMessage: "Drag your photos here or click to upload",
-        init: function () {
-            this.on("success", function (file, response) {
-                console.log("Upload success for file:", file);
-                console.log("Server response:", response);
-
-                // Traite la réponse pour chaque photo
-                response.forEach(function(photoData) {
-                    console.log("Processing photo data:", photoData);
-                    if (photoData.image) {
-                        addPhotoToGallery(photoData);
-                    } else {
-                        console.error("No image data found in photoData:", photoData);
-                    }
-                });
-            });
-            this.on("error", function (file, response) {
-                console.log("Failed to upload:", file.name);
-                console.error("Error response from server:", response);
-            });
+        function openEditModal(id, name, description) {
+            const form = document.getElementById('editGalleryForm');
+            form.action = `/galleries/${id}`;
+            document.getElementById('editName').value = name;
+            document.getElementById('editDescription').value = description;
+            openModal('editGalleryModal');
         }
-    };
 
-    function addPhotoToGallery(photoData) {
-        console.log("Adding photo to gallery:", photoData);
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
 
-        var galleryContainer = document.getElementById('galleryPhotosContainer');
-        var photoItem = document.createElement('div');
-        photoItem.className = 'photo-item';
-
-        var img = document.createElement('img');
-        img.src = '/storage/' + photoData.image; // S'assure que le chemin est correct
-        img.alt = photoData.caption || 'Photo';
-        img.className = 'w-full h-auto';
-
-        var caption = document.createElement('p');
-        caption.className = 'text-center mt-2';
-        caption.textContent = photoData.caption || '';
-
-        photoItem.appendChild(img);
-        photoItem.appendChild(caption);
-
-        galleryContainer.appendChild(photoItem);
-        console.log("Photo added successfully to the gallery.");
-    }
-
-    function openModal(modalId) {
-        document.getElementById(modalId).classList.remove('hidden');
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.add('hidden');
-    }
-</script>
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+    </script>
 </body>
 </html>

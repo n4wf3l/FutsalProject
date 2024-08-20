@@ -18,6 +18,7 @@
             transition: transform 0.2s ease-in-out;
             margin-bottom: 24px;
             width: 100%;
+            position: relative;
         }
 
         .press-release-card:hover {
@@ -39,6 +40,17 @@
             font-weight: bold;
             color: #333;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .edit-button-emoji {
+            margin-left: 8px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #fbbf24;
         }
 
         .press-release-date {
@@ -103,28 +115,16 @@
             border: 1px solid {{ $primaryColor }};
         }
 
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
-        }
-
-        .edit-button {
-            background-color: #fbbf24;
+        .delete-button-x {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: rgba(220, 38, 38, 0.8);
             color: #fff;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .delete-button {
-            background-color: #dc2626;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            text-decoration: none;
+            border: none;
+            border-radius: 50%;
+            padding: 4px 8px;
+            cursor: pointer;
         }
 
         /* Style for the enlarged textarea */
@@ -182,25 +182,23 @@
                                 <a href="{{ route('press_releases.show', $pressRelease->slug) }}">
                                     <img src="{{ asset('storage/' . $pressRelease->image) }}" alt="{{ $pressRelease->title }}">
                                 </a>
+                                <form action="{{ route('press_releases.destroy', $pressRelease->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this press release?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="delete-button-x">X</button>
+                                </form>
                             </div>
                         @endif
                         <div class="press-release-content">
                             <div class="press-release-category">COMMUNIQUÉS</div>
-                            <h2 class="press-release-title">{{ $pressRelease->title }}</h2>
+                            <h2 class="press-release-title">
+                                {{ $pressRelease->title }}
+                                @auth
+                                    <button onclick="openEditModal('{{ $pressRelease->id }}', '{{ $pressRelease->title }}', '{{ $pressRelease->content }}')" class="edit-button-emoji">🛠️</button>
+                                @endauth
+                            </h2>
                             <div class="press-release-date">{{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</div>
                             <a href="{{ route('press_releases.show', $pressRelease->slug) }}" class="press-release-view">Read more →</a>
-                            
-                            @auth
-                            <div class="button-group">
-                                <button onclick="openEditModal('{{ $pressRelease->id }}', '{{ $pressRelease->title }}', '{{ $pressRelease->content }}')" class="edit-button">Edit</button>
-                                
-                                <form action="{{ route('press_releases.destroy', $pressRelease->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this press release?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="delete-button">Delete</button>
-                                </form>
-                            </div>
-                            @endauth
                         </div>
                     </div>
                 @endforeach

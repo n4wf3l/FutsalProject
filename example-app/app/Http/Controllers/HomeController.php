@@ -27,8 +27,8 @@ class HomeController extends Controller
         
         $apiKey = '005385f3666cb67a6f99bc58b9a3e4b9';
         $weatherData = $this->getWeatherData($city, $apiKey);
-
-        // Récupérer le prochain match
+    
+        // Récupérer le prochain match unique
         $nextGame = Game::where('match_date', '>=', now()->startOfDay())
             ->where(function($query) use ($clubPrefix) {
                 $query->whereHas('homeTeam', function($q) use ($clubPrefix) {
@@ -40,13 +40,27 @@ class HomeController extends Controller
             })
             ->orderBy('match_date', 'asc')
             ->first();
-
+    
+        // Récupérer les cinq prochains matchs maximum
+        $nextGames = Game::where('match_date', '>=', now()->startOfDay())
+            ->where(function($query) use ($clubPrefix) {
+                $query->whereHas('homeTeam', function($q) use ($clubPrefix) {
+                    $q->where('name', 'LIKE', "$clubPrefix%");
+                })
+                ->orWhereHas('awayTeam', function($q) use ($clubPrefix) {
+                    $q->where('name', 'LIKE', "$clubPrefix%");
+                });
+            })
+            ->orderBy('match_date', 'asc')
+            ->take(5)
+            ->get();
+    
         $articles = Article::latest()->take(5)->get();
-
+    
         // Récupérer la dernière image ajoutée
         $welcomeImage = WelcomeImage::latest()->first();
     
-        return view('welcome', compact('weatherData', 'city', 'flashMessage', 'nextGame', 'clubLocation', 'clubPrefix', 'clubName', 'articles', 'welcomeImage', 'logoPath'));
+        return view('welcome', compact('weatherData', 'city', 'flashMessage', 'nextGame', 'nextGames', 'clubLocation', 'clubPrefix', 'clubName', 'articles', 'welcomeImage', 'logoPath'));
     }
     
     private function getWeatherData($city, $apiKey)

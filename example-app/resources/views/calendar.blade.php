@@ -286,37 +286,37 @@
             </button>
 
             <div class="modal fade" id="editTeamModal-{{ $team->id }}" tabindex="-1" aria-labelledby="editTeamModalLabel-{{ $team->id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editTeamModalLabel-{{ $team->id }}">Edit Team</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form action="{{ route('manage_teams.update', $team->id) }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-body">
-                                <div class="mb-4">
-                                    <label for="team_name" class="block text-sm font-medium text-gray-700">Team Name</label>
-                                    <input type="text" name="name" id="team_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $team->name }}" required>
-                                </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editTeamModalLabel-{{ $team->id }}">Edit Team</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('manage_teams.update', $team->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <label for="team_name" class="block text-sm font-medium text-gray-700">Team Name</label>
+                        <input type="text" name="name" id="team_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $team->name }}" required>
+                    </div>
 
-                                <div class="mb-4">
-                                    <label for="logo_path" class="block text-sm font-medium text-gray-700">Team Logo</label>
-                                    <input type="file" name="logo_path" id="logo_path" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    @if($team->logo_path)
-                                        <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} Logo" style="height: 50px; margin-top: 10px;">
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </form>
+                    <div class="mb-4">
+                        <label for="logo_path" class="block text-sm font-medium text-gray-700">Team Logo</label>
+                        <input type="file" name="logo_path" id="logo_path" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                        @if($team->logo_path)
+                            <img src="{{ Storage::url($team->logo_path) }}" alt="{{ $team->name }} Logo" style="height: 50px; margin-top: 10px;">
+                        @endif
                     </div>
                 </div>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
             <form action="{{ route('manage_teams.destroy', $team->id) }}" method="POST" style="display:inline;">
                 @csrf
