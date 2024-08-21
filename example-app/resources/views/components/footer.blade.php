@@ -69,7 +69,6 @@
                 <h3 class="font-bold mb-4">TEAM</h3>
                 <ul class="space-y-2">
                     <li><a href="#" class="hover:text-gray-300">Elite</a></li>
-                    <li><a href="#" class="hover:text-gray-300">Women</a></li>
                     <li><a href="#" class="hover:text-gray-300">U21</a></li>
                     <li><a href="#" class="hover:text-gray-300">Technical & Medical Staff</a></li>
                     <li><a href="#" class="hover:text-gray-300">Employees</a></li>
@@ -82,7 +81,7 @@
                 <ul class="space-y-2">
                     <li><a href="#" class="hover:text-gray-300">Next Matches</a></li>
                     <li><a href="#" class="hover:text-gray-300">Results</a></li>
-                    <li><a href="#" class="hover:text-gray-300">General Calendar</a></li>
+                    <li><a href="{{ route('calendar.show') }}" class="hover:text-gray-300">General Calendar</a></li>
                 </ul>
             </div>
 

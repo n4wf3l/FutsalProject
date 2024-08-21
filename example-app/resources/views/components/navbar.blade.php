@@ -21,66 +21,92 @@
         color: {{ $secondaryColor }} !important;
     }
 
-    /* Dropdown Styles */
-    .dropdown {
-        position: relative;
-        display: inline-block;
-        transition: transform 0.3s ease-in-out;
-        z-index: 600;
-    }
+    .nav-link-container {
+    position: relative;
+    display: inline-block;
+}
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: white;
-        z-index: 1100; 
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        text-align: left;
-        opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        border-radius: 8px;
-        overflow: hidden;
-    }
+.nav-link-hr {
+    position: absolute;
+    bottom: -2px; /* Ajuster la position du hr sous le lien */
+    left: 0;
+    width: 0;
+    height: 2px; /* Vous pouvez ajuster cette hauteur */
+    background-color: {{ $secondaryColor }};
+    transition: width 0.3s ease-in-out;
+}
 
-    .dropdown-content a {
-        color: {{ $primaryColor }};
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
+.nav-link-container:hover .nav-link-hr {
+    width: 100%;
+}
 
-    .dropdown-content a:hover {
-        background-color: {{ $secondaryColor }};
-        color: white;
-    }
+.dropdown {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+    z-index: 600;
+}
 
-    .dropdown:hover .dropdown-content {
-        display: block;
-        opacity: 1;
-        transform: translateY(0);
-    }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: {{ $primaryColor }};
+    z-index: 1100; 
+    width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    text-align: left;
+    opacity: 0;
+    transform: translateY(0); 
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    margin-top: 3px;
+    border: 1px solid {{ $secondaryColor }};
+}
 
-    /* Add a subtle shadow to the dropdown */
-    .dropdown-content::before {
-        content: '';
-        position: absolute;
-        top: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 10px solid white;
-        z-index: -1;
-    }
+.dropdown-content a {
+    color: white;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 0.875rem;
+}
 
-    .dropdown-content a:not(:last-child) {
-        border-bottom: 1px solid #e5e5e5;
-    }
+.dropdown-content a:hover {
+    background-color: {{ $secondaryColor }};
+    color: white;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid {{ $primaryColor }};
+    z-index: -1;
+}
+
+.dropdown-content a:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
 
     #mobile-menu-modal {
     transition: transform 0.3s ease-in-out;
@@ -160,31 +186,53 @@
 
         <!-- Navigation links (hidden on mobile, shown on desktop) -->
         <div class="desktop-nav space-x-8">
+        <div class="nav-link-container">
             <a href="/" class="text-white nav-link transition duration-200">Home</a>
-            <div class="dropdown">
-                <a href="#" class="text-white nav-link transition duration-200">Club▼</a>
-                <div class="dropdown-content">
-                    <a href="{{ route('clubinfo') }}">News</a>
-                    <a href="{{ route('press_releases.index') }}">Press Releases</a>
-                    <a href="{{ route('about.index') }}">About</a>
-                    <a href="{{ route('galleries.index') }}">Gallery</a>
-                </div>
+            <div class="nav-link-hr"></div>
             </div>
+            <div class="nav-link-container dropdown">
+        <a href="#" class="text-white nav-link transition duration-200">Club▼</a>
+        <div class="nav-link-hr"></div>
+        <div class="dropdown-content">
+            <a href="{{ route('clubinfo') }}">News</a>
+            <a href="{{ route('press_releases.index') }}">Press Releases</a>
+            <a href="{{ route('about.index') }}">About</a>
+            <a href="{{ route('galleries.index') }}">Gallery</a>
+        </div>
+    </div>
+            <div class="nav-link-container">
             <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">Competition</a>
+            <div class="nav-link-hr"></div>
+            </div>
             <div class="dropdown">
+            <div class="dropdown nav-link-container">
                 <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200">Teams▼</a>
+                <div class="nav-link-hr"></div>
+                </div>
                 <div class="dropdown-content">
                     <a href="{{ route('teams') }}">Senior</a>
                     <a href="{{ route('playersu21.index') }}">U21</a>
                 </div>
             </div>
+            <div class="nav-link-container">
             <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
+            <div class="nav-link-hr"></div>
+            </div>
+            <div class="nav-link-container">
             <a href="{{ route('contact.show') }}" class="text-white nav-link transition duration-200">Contact</a>
+            <div class="nav-link-hr"></div>
+            </div>
+            <div class="nav-link-container">
             <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">Fanshop</a>
+            <div class="nav-link-hr"></div>
+            </div>
             @auth
+            <div class="nav-link-container">
                 <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
                     Dashboard
                 </a>
+                <div class="nav-link-hr"></div>
+                </div>
             @endauth
         </div>
 
