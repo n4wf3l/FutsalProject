@@ -7,19 +7,63 @@ use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Models\Championship;
 use App\Models\BackgroundImage;
+use App\Models\ClubInfo;
+use App\Models\SiteSetting; 
 
 class GameController extends Controller
 {
-    public function showCalendar()
+    
+    public function showCalendar(Request $request)
     {
-
         $championship = Championship::first();
     
         if (!$championship) {
             return redirect()->back()->with('error', 'No championship data available.');
         }
     
-        $games = Game::with(['homeTeam', 'awayTeam'])->get();
+        $siteSetting = SiteSetting::first();
+    
+        if (!$siteSetting || !$siteSetting->club_name) {
+            return redirect()->back()->with('error', 'Aucun nom de club trouvé dans les paramètres.');
+        }
+    
+        $clubName = $siteSetting->club_name;
+        $clubNamePrefix = trim(substr($clubName, 0, 4)); 
+    
+        $teamFilter = $request->input('team_filter', 'all_teams');
+        $dateFilter = $request->input('date_filter', 'results_and_upcoming');
+        $today = now()->startOfDay();
+    
+        // Requête de base pour les matchs
+        $gamesQuery = Game::with(['homeTeam', 'awayTeam']);
+    
+        // Filtrage par équipe
+        if ($teamFilter === 'specific_team') {
+            $gamesQuery->where(function ($query) use ($clubNamePrefix) {
+                $query->whereHas('homeTeam', function ($q) use ($clubNamePrefix) {
+                    $q->where('name', 'like', $clubNamePrefix . '%');
+                })->orWhereHas('awayTeam', function ($q) use ($clubNamePrefix) {
+                    $q->where('name', 'like', $clubNamePrefix . '%');
+                });
+            });
+        }
+    
+        // Filtrage par date et score
+        if ($dateFilter === 'upcoming') {
+            // Prochains matchs (matchs à venir sans score)
+            $gamesQuery->where('match_date', '>=', $today)
+                       ->whereNull('home_score')
+                       ->whereNull('away_score');
+        } elseif ($dateFilter === 'results') {
+            // Résultats (matchs où les scores ont été introduits)
+            $gamesQuery->whereNotNull('home_score')
+                       ->whereNotNull('away_score');
+        }
+    
+        // Résultats + Prochains matchs : pas de filtre supplémentaire
+        // On affiche tout dans ce cas
+    
+        $games = $gamesQuery->orderBy('match_date')->get();
     
         $teams = Team::orderBy('points', 'desc')
             ->orderBy('goal_difference', 'desc')
@@ -28,28 +72,10 @@ class GameController extends Controller
     
         $backgroundImage = BackgroundImage::where('assigned_page', 'calendar')->latest()->first();
     
-
-        return view('calendar', compact('championship', 'games', 'teams', 'backgroundImage'));
+        return view('calendar', compact('championship', 'games', 'teams', 'backgroundImage', 'clubName', 'clubNamePrefix'));
     }
-
-    public function storeChampionship(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'season' => 'required|string|max:255',
-    ]);
-
-    // Créez ou mettez à jour le championnat
-    $championship = Championship::updateOrCreate(
-        ['id' => 1], // Ou la logique que vous souhaitez pour identifier un championnat
-        [
-            'name' => $request->input('name'),
-            'season' => $request->input('season'),
-        ]
-    );
-
-    return redirect()->route('calendar.show')->with('success', 'Championship settings saved successfully.');
-}
+    
+    
 
     // Afficher le calendrier et le classement (API)
     public function apiShowCalendar()

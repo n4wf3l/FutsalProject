@@ -340,6 +340,68 @@
             <a href="{{ route('games.create') }}" class="btn btn-primary">Créer un match</a>
         </div>
         @endauth
+
+
+        <style>
+    /* Centrage et stylisation du formulaire */
+    .filter-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-form .filter-group {
+        margin: 0 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .filter-form label {
+        margin-right: 8px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .filter-form select {
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+
+    .filter-form select:hover {
+        border-color: #999;
+        background-color: #e9e9e9;
+    }
+</style>
+
+<form method="GET" action="{{ route('calendar.show') }}" class="filter-form">
+    <div class="filter-group">
+        <!-- Filtre par équipe -->
+        <label for="team_filter">Afficher les matchs de :</label>
+        <select name="team_filter" id="team_filter" onchange="this.form.submit()">
+            <option value="all_teams" {{ request('team_filter') == 'all_teams' ? 'selected' : '' }}>Toutes les équipes</option>
+            <option value="specific_team" {{ request('team_filter') == 'specific_team' ? 'selected' : '' }}>
+                {{ $clubName }}  <!-- Afficher le nom complet du club ici -->
+            </option>
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <!-- Filtre par date -->
+        <label for="date_filter">Afficher :</label>
+        <select name="date_filter" id="date_filter" onchange="this.form.submit()">
+            <option value="results_and_upcoming" {{ request('date_filter') == 'results_and_upcoming' ? 'selected' : '' }}>Résultats + Prochains matchs</option>
+            <option value="upcoming" {{ request('date_filter') == 'upcoming' ? 'selected' : '' }}>Prochains matchs</option>
+            <option value="results" {{ request('date_filter') == 'results' ? 'selected' : '' }}>Résultats</option>
+        </select>
+    </div>
+</form>
+
+
         <div class="container table-container">
             <table class="rounded-table">
                 <thead>

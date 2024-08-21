@@ -161,20 +161,20 @@ use Illuminate\Support\Facades\Auth;
         }
 
         .staff-item {
-            background-color: {{ $primaryColor}};
+            background-color: white;
             padding: 20px;
             border-radius: 8px;
             text-align: center;
         }
 
         .staff-item h3 {
-            color: white;
+            color: black;
             font-size: 30px;
             margin-bottom: 10px;
         }
 
         .staff-item p {
-            color: white;
+            color: black;
             font-size: 20px;
             margin-bottom: 15px;
         }
