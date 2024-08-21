@@ -289,12 +289,6 @@
     </div>
 </div>
 
-@if(session('success'))
-    <div id="success-alert" class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
 <script>
     // Attendre que le document soit prêt
     document.addEventListener('DOMContentLoaded', function () {

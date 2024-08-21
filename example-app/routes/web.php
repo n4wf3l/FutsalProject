@@ -24,6 +24,7 @@ use App\Http\Controllers\PressReleaseController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PlayerU21Controller;
+use App\Http\Controllers\RegulationController;
 
 // Route d'accueil
 Route::get('/', function () {
@@ -88,6 +89,7 @@ Route::post('/manage-teams', [TeamController::class, 'store'])->name('manage_tea
 Route::delete('/manage-teams/{team}', [TeamController::class, 'destroy'])->name('manage_teams.destroy');
 Route::get('/calendar', [GameController::class, 'showCalendar'])->name('calendar.show');
 Route::post('/championship/store', [GameController::class, 'storeChampionship'])->name('championship.store');
+
 // Route pour la gestion des scores des matchs
 Route::post('games/{game}/scores', [GameController::class, 'updateScores'])->name('games.updateScores');
 Route::post('/reset-scores', [GameController::class, 'resetScores'])->name('reset.scores');
@@ -108,6 +110,14 @@ Route::resource('galleries', GalleryController::class);
 Route::resource('galleries.photos', PhotoController::class)->except(['show']);
 Route::post('/galleries/{gallery}/photos/store-multiple', [PhotoController::class, 'storeMultiple'])->name('galleries.photos.storeMultiple');
 Route::resource('playersu21', PlayerU21Controller::class);
+
+Route::get('/about', [RegulationController::class, 'index'])->name('about.index');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/regulations/create', [RegulationController::class, 'create'])->name('regulations.create');
+    Route::post('/regulations', [RegulationController::class, 'store'])->name('regulations.store');
+    Route::delete('/regulations/{regulation}', [RegulationController::class, 'destroy'])->name('regulations.destroy');
+});
 // Routes API
 //Route::prefix('api')->group(function () {
 //    Route::apiResource('games', ApiGameController::class);

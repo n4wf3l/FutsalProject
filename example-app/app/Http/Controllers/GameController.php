@@ -416,6 +416,18 @@ public function storeMultiple(Request $request)
     $matches = $request->input('matches', []);
 
     foreach ($matches as $match) {
+        if (!$match['home_team_id'] || !$match['away_team_id']) {
+            return redirect()->back()->withErrors(['Please select both a home team and an away team.']);
+        }
+
+        if ($match['home_team_id'] === $match['away_team_id']) {
+            return redirect()->back()->withErrors(['A team cannot play against itself.']);
+        }
+
+        if (!$match['match_date']) {
+            return redirect()->back()->withErrors(['Please select a date for the match.']);
+        }
+
         Game::create([
             'home_team_id' => $match['home_team_id'],
             'away_team_id' => $match['away_team_id'],
@@ -424,5 +436,33 @@ public function storeMultiple(Request $request)
     }
 
     return redirect()->route('calendar.show')->with('success', 'Matches created successfully.');
+}
+
+
+public function storeChampionship(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'season' => 'required|string|max:255',
+    ]);
+
+    // Vérifier si un championnat existe déjà
+    $championship = Championship::first();
+
+    if ($championship) {
+        // Si un championnat existe, mettez-le à jour
+        $championship->update([
+            'name' => $request->input('name'),
+            'season' => $request->input('season'),
+        ]);
+        return redirect()->route('calendar.show')->with('success', 'Championship updated successfully.');
+    } else {
+        // Si aucun championnat n'existe, créez-en un nouveau
+        Championship::create([
+            'name' => $request->input('name'),
+            'season' => $request->input('season'),
+        ]);
+        return redirect()->route('calendar.show')->with('success', 'Championship created successfully.');
+    }
 }
 }

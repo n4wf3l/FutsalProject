@@ -185,6 +185,7 @@
     <x-page-title subtitle=" 🗓️ Stay up to date with our comprehensive calendar, featuring all the upcoming futsal matches and key events.">
     {{ $championship->name }}
 </x-page-title>
+<x-validation-messages />
     </header>
 
         @auth
@@ -202,28 +203,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('championship.store') }}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Championship Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="season" class="form-label">Season</label>
-                        <input type="text" class="form-control" id="season" name="season" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
+    @csrf
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="name" class="form-label">Championship Name</label>
+            <input type="text" class="form-control" id="name" name="name" 
+                value="{{ $championship->name ?? '' }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="season" class="form-label">Season</label>
+            <input type="text" class="form-control" id="season" name="season" 
+                value="{{ $championship->season ?? '' }}" required>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </div>
+</form>
         </div>
     </div>
 </div>
 
     <main class="py-12">
     
+    <a id="ranking-section"></a>
     @if($championship)
     <x-page-subtitle text="Ranking - {{ $championship->name }} {{ $championship->season }}" />
 @else
@@ -333,13 +337,14 @@
             </table>
         </div>
 <hr class="mt-20 mb-20">
-        <x-page-subtitle text="Calendrier des Matchs - {{ $clubName }}" />
-        <p class="text-center text-gray-600 italic mb-4">All home matches take place at {{ $clubLocation }}.</p>
-        @auth
-        <div class="admin-buttons">
-            <a href="{{ route('games.create') }}" class="btn btn-primary">Créer un match</a>
-        </div>
-        @endauth
+<a id="calendar-section"></a>
+<x-page-subtitle text="Calendrier des Matchs - {{ $clubName }}" />
+<p class="text-center text-gray-600 italic mb-4">All home matches take place at {{ $clubLocation }}.</p>
+@auth
+<div class="admin-buttons">
+    <a href="{{ route('games.create') }}" class="btn btn-primary">Créer un match</a>
+</div>
+@endauth
 
 
         <style>

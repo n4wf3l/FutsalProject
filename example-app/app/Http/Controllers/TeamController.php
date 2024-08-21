@@ -25,25 +25,24 @@ class TeamController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:teams',
-            'logo' => 'nullable|image|max:2048', // optionnel, mais si fourni, doit être une image
+            'name' => 'required|string|max:255|unique:teams,name',
+            'logo' => 'nullable|image|max:2048|unique:teams,logo_path', // Validation pour s'assurer que le logo est unique
         ]);
-
-        // Gérer le téléversement du logo
+    
         $logoPath = null;
         if ($request->hasFile('logo')) {
             $logoPath = $request->file('logo')->store('logos', 'public');
         }
-
+    
         Team::create([
             'name' => $request->input('name'),
-            'logo_path' => $logoPath, // Changement ici pour correspondre à la base de données
+            'logo_path' => $logoPath, 
             'points' => 0,
             'goals_for' => 0,
             'goals_against' => 0,
             'goal_difference' => 0,
         ]);
-
+    
         return redirect()->route('calendar.show')->with('success', 'Team created successfully.');
     }
 

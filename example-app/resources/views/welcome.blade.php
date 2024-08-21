@@ -525,8 +525,8 @@ setTimeout(() => {
             </div>
         @endforeach
         <div class="see-all-container">
-            <a href="{{ route('calendar.show') }}" class="see-all-btn">See All Matches</a>
-        </div>
+    <a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'upcoming']) }}#calendar-section" class="see-all-btn">See All Matches</a>
+</div>
     @else
         <p>Aucun match à venir.</p>
     @endif

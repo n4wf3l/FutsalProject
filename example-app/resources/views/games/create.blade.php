@@ -12,11 +12,18 @@
 
     <div class="container mx-auto py-12">
         <div class="max-w-md mx-auto bg-white p-8 shadow-lg rounded-lg">
-            <h2 class="text-2xl font-bold mb-6">Create New Match</h2>
-
+        <x-page-subtitle text="Create New Match" />
             <form id="add-match-form">
                 @csrf
-
+                @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <ul class="list-disc list-inside">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
                 <div class="mb-4">
                     <label for="home_team_id" class="block text-sm font-medium text-gray-700">Home Team</label>
                     <select name="home_team_id" id="home_team_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
@@ -50,7 +57,7 @@
         </div>
 
         <div class="max-w-md mx-auto bg-white p-8 shadow-lg rounded-lg mt-6">
-            <h2 class="text-2xl font-bold mb-6">Match Queue</h2>
+        <x-page-subtitle text="Match Queue" />
             <ul id="match-queue" class="list-disc list-inside">
                 <!-- Matches will be added here dynamically -->
             </ul>
@@ -64,24 +71,42 @@
         let matchQueue = [];
 
         function addMatchToQueue() {
-            const homeTeamId = document.getElementById('home_team_id').value;
-            const homeTeamName = document.getElementById('home_team_id').options[document.getElementById('home_team_id').selectedIndex].text;
-            const awayTeamId = document.getElementById('away_team_id').value;
-            const awayTeamName = document.getElementById('away_team_id').options[document.getElementById('away_team_id').selectedIndex].text;
-            const matchDate = document.getElementById('match_date').value;
+    const homeTeamId = document.getElementById('home_team_id').value;
+    const homeTeamName = document.getElementById('home_team_id').options[document.getElementById('home_team_id').selectedIndex].text;
+    const awayTeamId = document.getElementById('away_team_id').value;
+    const awayTeamName = document.getElementById('away_team_id').options[document.getElementById('away_team_id').selectedIndex].text;
+    const matchDate = document.getElementById('match_date').value;
 
-            if (homeTeamId && awayTeamId && matchDate) {
-                matchQueue.push({ homeTeamId, homeTeamName, awayTeamId, awayTeamName, matchDate });
+    // Vérifier si une équipe est sélectionnée
+    if (!homeTeamId || !awayTeamId) {
+        alert('Please select both a home team and an away team.');
+        return; // Empêche l'ajout au tableau de matchs
+    }
 
-                const matchQueueElement = document.getElementById('match-queue');
-                const listItem = document.createElement('li');
-                listItem.textContent = `${matchDate}: ${homeTeamName} vs ${awayTeamName}`;
-                matchQueueElement.appendChild(listItem);
+    // Vérifier si les équipes sont identiques
+    if (homeTeamId === awayTeamId) {
+        alert('A team cannot play against itself. Please select different teams.');
+        return; // Empêche l'ajout au tableau de matchs
+    }
 
-                // Reset form fields
-                document.getElementById('add-match-form').reset();
-            }
-        }
+    // Vérifier si une date est sélectionnée
+    if (!matchDate) {
+        alert('Please select a date for the match.');
+        return; // Empêche l'ajout au tableau de matchs
+    }
+
+    if (homeTeamId && awayTeamId && matchDate) {
+        matchQueue.push({ homeTeamId, homeTeamName, awayTeamId, awayTeamName, matchDate });
+
+        const matchQueueElement = document.getElementById('match-queue');
+        const listItem = document.createElement('li');
+        listItem.textContent = `${matchDate}: ${homeTeamName} vs ${awayTeamName}`;
+        matchQueueElement.appendChild(listItem);
+
+        // Reset form fields
+        document.getElementById('add-match-form').reset();
+    }
+}
 
         function submitAllMatches() {
             const form = document.createElement('form');
