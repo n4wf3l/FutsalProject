@@ -19,6 +19,7 @@ class PaymentController extends Controller
 {
     public function checkout(Request $request)
     {
+        \Stripe\Stripe::setApiKey('sk_test_51PoCDwHaSFkMdGfiwpyIeLHHVcxuhO2vCyLCLZafHac5qs4UvVyWYjUJMkLnoVDJV6smFGYVc1zefK6QJy8FVD1400o504aQsu');
         $tribuneId = $request->get('tribune_id');
         $totalAmount = $request->get('total_amount') * 100;
 
@@ -61,17 +62,19 @@ class PaymentController extends Controller
 
     public function success(Request $request)
 {
+    // Récupérer les informations du club pour déterminer le prochain match pertinent
     $clubInfo = ClubInfo::first();
-    $clubName = $clubInfo->club_name;
+    $clubName = $clubInfo->club_name ?? 'Dina Kénitra FC';
     $clubPrefix = substr($clubName, 0, 4);
     
-    // Déboguer pour vérifier le clubName et le clubPrefix
-    Log::info("Club Prefix: $clubPrefix");
-
-    // Récupérer le prochain match
+    // Récupérer le prochain match, soit à domicile soit à l'extérieur
     $nextGame = Game::where('match_date', '>=', now()->startOfDay())
-        ->whereHas('homeTeam', function ($query) use ($clubPrefix) {
-            $query->where('name', 'LIKE', "$clubPrefix%");
+        ->where(function ($query) use ($clubPrefix) {
+            $query->whereHas('homeTeam', function ($subQuery) use ($clubPrefix) {
+                $subQuery->where('name', 'LIKE', "$clubPrefix%");
+            })->orWhereHas('awayTeam', function ($subQuery) use ($clubPrefix) {
+                $subQuery->where('name', 'LIKE', "$clubPrefix%");
+            });
         })
         ->orderBy('match_date', 'asc')
         ->first();
@@ -107,7 +110,7 @@ class PaymentController extends Controller
                 'currency' => strtoupper($session->currency),
                 'date' => now()->format('d-m-Y'),
                 'reservation_id' => uniqid('res_', true),
-                'game' => $nextGame, 
+                'game' => $nextGame,
                 'seats_reserved' => $quantityReserved,
                 'clubName' => $clubName,
             ];

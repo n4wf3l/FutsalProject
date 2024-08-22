@@ -346,7 +346,7 @@ use Illuminate\Support\Facades\Auth;
 
     <!-- Staff Section -->
     <section class="staff-section">
-        <h1 class="staff-title">Technisch- & Medische Staff</h1>
+        <h1 class="staff-title">Staff technique & medicale</h1>
         <div class="flex justify-center items-center">
             <p class="text-xl">Discover additional information by hovering with your mouse.</p>
         </div>

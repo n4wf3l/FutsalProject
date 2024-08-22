@@ -15,12 +15,10 @@
 
     <!-- CSS Bootstrap pour les Modals -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <!-- CSS App -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
-
+    @vite('resources/js/app.js')
     <style>
             @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
@@ -389,13 +387,15 @@ setTimeout(() => {
 .welcome-image {
     animation: rotate-image 4s infinite;
 }
+
 </style>
 
 
     <div class="info-container mt-60" style="z-index: 1300;">
-        <div class="title">NEXT GAME</div>
+
+        <div class="title" data-aos="zoom-in">NEXT GAME</div>
         @if($nextGame)
-        <div class="match-info">
+        <div class="match-info" data-aos="zoom-in">
             <!-- Affichage du lieu du match -->
             @if(Str::startsWith($nextGame->homeTeam->name, $clubPrefix))
             <li class="d-flex align-items-center justify-content-center">
@@ -433,7 +433,7 @@ setTimeout(() => {
 </div>
 
 <!-- Cover Container with Main Article -->
-<div class="cover-container mt-40" style="position: relative; width: 100%; min-height: 70vh; background-color: #f1f1f1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 1000;">
+<div class="cover-container mt-40" data-aos="fade-right" style="position: relative; width: 100%; min-height: 70vh; background-color: #f1f1f1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 1000;">
     <div class="main-article-container" style="width: 100%; max-width: 1200px; display: flex; flex-direction: row; align-items: flex-start;">
         <!-- Main Article Image -->
         <div class="main-article-image" style="flex: 1; margin-right: 20px;">
@@ -445,7 +445,7 @@ setTimeout(() => {
         </div>
 
         <!-- Main Article Content -->
-        <div class="main-article-content" style="flex: 2; padding-left: 20px; display: flex; flex-direction: column; justify-content: center;">
+        <div class="main-article-content" data-aos="fade-right" style="flex: 2; padding-left: 20px; display: flex; flex-direction: column; justify-content: center;">
             <p style="font-size: 1rem; color: #6b7280; font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; margin-bottom: 10px;">
                 {{ $clubName }} - Recent News
             </p>
@@ -498,7 +498,7 @@ setTimeout(() => {
  <x-page-title subtitle="⚽️ Get ready for thrilling action and unforgettable moments on the field!">
     Upcoming Matches
 </x-page-title>
- <div class="containerization">
+ <div class="containerization" data-aos="fade-right">
     @if($nextGames->isNotEmpty())
         @foreach($nextGames as $index => $game)
             <div class="match-card {{ $index % 2 == 0 ? 'even' : 'odd' }}">
@@ -513,13 +513,13 @@ setTimeout(() => {
                     @endif
                 </div>
                 <div class="match-details">
-                    <div class="team-logo">
+                    <div class="team-logo" data-aos="fade-right">
                         <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} Logo">
                     </div>
                     <div class="match-info">
                         <p>{{ $game->homeTeam->name }} <strong>vs</strong> {{ $game->awayTeam->name }}</p>
                     </div>
-                    <div class="team-logo">
+                    <div class="team-logo" data-aos="fade-left">
                         <img src="{{ asset('storage/' . $game->awayTeam->logo_path) }}" alt="{{ $game->awayTeam->name }} Logo">
                     </div>
                 </div>
@@ -909,7 +909,7 @@ setTimeout(() => {
     <x-page-title subtitle="Explore the latest moments captured in our gallery.">
     Explore Our Latest Photos
 </x-page-title>
-        <div class="gallery-grid mt-10">
+        <div class="gallery-grid mt-10" data-aos="fade-up">
             @foreach($latestPhotos as $photo)
                 <div class="gallery-item">
                     <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->caption }}" onclick="openImageModal({{ $loop->index }})">
@@ -979,5 +979,6 @@ setTimeout(() => {
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
 </body>
 </html>

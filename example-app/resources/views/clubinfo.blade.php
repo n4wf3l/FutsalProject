@@ -221,7 +221,7 @@
             </div>
 
             <!-- Recent Articles List -->
-            <div class="recent-articles">
+            <div class="recent-articles" data-aos="zoom-in"'>
                 <h3>📰 Recent Articles</h3>
                 @foreach($articles->skip(1) as $article)
                 <a href="{{ route('articles.show', $article->slug) }}">
