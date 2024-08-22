@@ -15,7 +15,8 @@
 
     <!-- CSS Bootstrap pour les Modals -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     <!-- CSS App -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
@@ -974,7 +975,7 @@ setTimeout(() => {
 </script>
 
     <!-- Footer -->
-    <x-footer />
+    <x-footerforhome />
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

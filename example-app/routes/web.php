@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Models\UserSetting;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\UserSettingController;
-use App\Models\UserSetting;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\CoachController;
 use App\Http\Controllers\SponsorController;
@@ -25,6 +25,9 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PlayerU21Controller;
 use App\Http\Controllers\RegulationController;
+use App\Http\Middleware\CheckRegistrationStatus;
+
+
 
 // Route d'accueil
 Route::get('/', function () {
@@ -36,10 +39,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('/settings', [UserSettingController::class, 'update'])->name('user.settings.update');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/background-image', [DashboardController::class, 'storeBackgroundImage'])->name('dashboard.storeBackgroundImage');
     Route::delete('/dashboard/delete-background-image/{id}', [DashboardController::class, 'deleteBackgroundImage'])->name('dashboard.deleteBackgroundImage');
     Route::post('/dashboard/assign-background', [DashboardController::class, 'assignBackground'])->name('dashboard.assignBackground');
+    Route::post('/dashboard/update-registration-status', [DashboardController::class, 'updateRegistrationStatus'])->name('dashboard.updateRegistrationStatus');
+    
 });
 
 // Routes resource pour différents contrôleurs
@@ -49,7 +54,7 @@ Route::resource('coaches', CoachController::class);
 Route::resource('sponsors', SponsorController::class);
 
 // Routes pour les articles
-Route::resource('articles', ArticleController::class)->except(['show'])->middleware('auth');
+Route::resource('articles', ArticleController::class)->except(['show']);
 
 // Route pour afficher un article par son slug
 Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
@@ -118,6 +123,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/regulations', [RegulationController::class, 'store'])->name('regulations.store');
     Route::delete('/regulations/{regulation}', [RegulationController::class, 'destroy'])->name('regulations.destroy');
 });
+
+Route::middleware(['guest', CheckRegistrationStatus::class])->group(function () {
+    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::post('register', [RegisteredUserController::class, 'store']);
+});
+
+
+
 // Routes API
 //Route::prefix('api')->group(function () {
 //    Route::apiResource('games', ApiGameController::class);

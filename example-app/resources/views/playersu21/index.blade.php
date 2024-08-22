@@ -245,6 +245,6 @@ use Illuminate\Support\Facades\Auth;
         </div>
     @endif
 
-    <x-footer />
+    <x-footerforhome />
 </body>
 </html>

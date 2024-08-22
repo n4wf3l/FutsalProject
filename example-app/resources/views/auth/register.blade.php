@@ -1,8 +1,68 @@
-@php
-    use Illuminate\Support\Facades\Route;
-@endphp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | {{ $clubName }}</title>
+    @if($logoPath)
+        <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
+    @endif
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @vite('resources/css/app.css')
+    <style>
+        body {
+            background-color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .register-container img {
+            display: block;
+            margin: 0 auto 1.5rem;
+            max-width: 150px;
+        }
+        .register-container button {
+            width: 100%;
+            background-color: {{ $primaryColor }};
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .register-container button:hover {
+            background-color: {{ $secondaryColor }};
+        }
+        .register-container a {
+            color: #6366f1;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        .register-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
 
-<x-guest-layout>
+<div class="register-container">
+    <!-- Logo Centré -->
+    @if($logoPath)
+        <img src="{{ asset($logoPath) }}" alt="Site Logo">
+    @endif
+
+    @if(config('app.registration_open') === true)
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -53,4 +113,13 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+@else
+    <div class="text-center">
+        <h2>Inscriptions fermées</h2>
+        <p>Les inscriptions sont actuellement fermées. Veuillez revenir plus tard.</p>
+    </div>
+@endif
+</div>
+
+</body>
+</html>

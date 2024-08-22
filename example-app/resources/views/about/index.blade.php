@@ -145,12 +145,13 @@
     @foreach($regulations as $regulation)
         <div class="regulation-item p-4 bg-white border border-gray-200 rounded-lg shadow-sm relative">
             <!-- Bouton de suppression -->
+             @auth
             <form action="{{ route('regulations.destroy', $regulation->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce PDF ?');" class="absolute top-2 right-2">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="text-red-500 hover:text-red-700 text-lg">X</button>
             </form>
-
+@endauth
             <h4 class="text-lg font-semibold text-gray-800 mb-2 text-center">📄 {{ $regulation->title }}</h4>
             <a href="{{ asset('storage/' . $regulation->pdf_path) }}" target="_blank" class="inline-block w-full py-2 px-4 rounded text-center text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Voir le PDF</a>
         </div>
@@ -160,36 +161,36 @@
 
 
             @foreach($sections as $section)
-            <div class="mb-8">
-            <x-page-subtitle text="{{ $section->title }}" />
-                <div class="mt-4 text-gray-700 leading-relaxed">
-                    {!! $section->content !!}
-                </div>
-                @auth
-                <div class="button-group">
-                    <a href="{{ route('about.edit', $section->id) }}"
-                        class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg"
-                        style="background-color: {{ $primaryColor }};"
-                        onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                        onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                        🛠️
-                    </a>
-                    <form action="{{ route('about.destroy', $section->id) }}" method="POST" class="inline-block"
-                        onsubmit="return confirm('Are you sure?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg"
-                            style="background-color: {{ $primaryColor }};"
-                            onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                            onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                            X
-                        </button>
-                    </form>
-                </div>
-                @endauth
-            </div>
-            @endforeach
+    <div class="mb-8">
+        <x-page-subtitle text="{{ htmlspecialchars_decode($section->title, ENT_QUOTES) }}" />
+        <div class="mt-4 text-gray-700 leading-relaxed">
+            {!! $section->content !!}
+        </div>
+        @auth
+        <div class="button-group">
+            <a href="{{ route('about.edit', $section->id) }}"
+                class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg"
+                style="background-color: {{ $primaryColor }};"
+                onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+                onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+                🛠️
+            </a>
+            <form action="{{ route('about.destroy', $section->id) }}" method="POST" class="inline-block"
+                onsubmit="return confirm('Are you sure?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                    class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg"
+                    style="background-color: {{ $primaryColor }};"
+                    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+                    X
+                </button>
+            </form>
+        </div>
+        @endauth
+    </div>
+@endforeach
         </div>
 
         <!-- Button to add a new section -->

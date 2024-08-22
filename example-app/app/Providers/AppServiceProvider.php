@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\UserSetting;
 use App\Models\ClubInfo;
+use App\Models\Sponsor;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,7 +30,23 @@ class AppServiceProvider extends ServiceProvider
             $facebook = $clubInfo->facebook ?? '#';
             $instagram = $clubInfo->instagram ?? '#';
 
-            $view->with(compact('primaryColor', 'secondaryColor', 'logoPath', 'clubName', 'clubLocation', 'phone', 'email', 'federationLogo', 'facebook', 'instagram'));
+            // Récupérer les sponsors
+            $sponsors = Sponsor::all();
+
+            // Partager les variables avec toutes les vues
+            $view->with(compact(
+                'primaryColor', 
+                'secondaryColor', 
+                'logoPath', 
+                'clubName', 
+                'clubLocation', 
+                'phone', 
+                'email', 
+                'federationLogo', 
+                'facebook', 
+                'instagram',
+                'sponsors' // Ajout de la variable sponsors
+            ));
         });
     }
 
@@ -38,4 +55,3 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 }
-

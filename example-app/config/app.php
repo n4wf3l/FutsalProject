@@ -13,6 +13,8 @@ return [
     |
     */
 
+    'registration_open' => env('REGISTRATION_OPEN', false),
+
     'name' => env('APP_NAME', 'Laravel'),
 
     'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,

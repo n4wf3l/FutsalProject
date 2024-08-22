@@ -1,12 +1,10 @@
 @props(['text'])
 
 <div class="subtitle-container flex justify-center items-center mt-2 mb-4">
-    <!-- Les deux barres verticales -->
     <div class="vertical-line double-bar"></div>
     
-    <!-- Le sous-titre -->
     <p class="text-xl text-gray-600 subtitle-text">
-        {{ $text }}
+        {!! $text !!}
     </p>
 </div>
 
@@ -15,15 +13,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px; /* Marge au-dessus */
-    margin-bottom: 20px; /* Marge en dessous */
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .vertical-line {
     width: 4px;
-    height: 40px; /* Hauteur des barres verticales */
+    height: 40px;
     background-color: var(--secondary-color);
-    margin-right: 4px; /* Espace entre les deux barres */
+    margin-right: 4px;
 }
 
 .double-bar {
@@ -34,22 +32,20 @@
 .double-bar::before {
     content: '';
     position: absolute;
-    left: 8px; /* Espacement entre les deux barres verticales */
+    left: 8px;
     width: 4px;
     height: 40px;
     background-color: var(--secondary-color);
 }
 
-/* Texte du sous-titre */
 .subtitle-text {
     font-size: 1.25rem;
     color: var(--primary-color);
-    margin-left: 16px; /* Espace entre les barres et le texte */
+    margin-left: 16px;
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 1px;
 }
 
-/* Couleurs pour remplacer les variables */
 :root {
     --primary-color: {{ $primaryColor }};
     --secondary-color: {{ $secondaryColor }};

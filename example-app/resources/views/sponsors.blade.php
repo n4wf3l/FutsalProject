@@ -5,71 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sponsors | {{ $clubName }}</title>
     @if($logoPath)
-        <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
+        <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     @vite('resources/css/app.css')
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+        .custom-font {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 2px;
+        }
+
         .sponsor-card {
             background-color: #ffffff;
-            border-radius: 0.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: transform 0.2s ease-in-out;
-            margin: 16px; /* Add margin between cards */
+            margin: 10px;
+            width: 30%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        
+
         .sponsor-card:hover {
             transform: translateY(-5px);
         }
 
+        .delete-form {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .delete-button {
+            background-color: #DC2626;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .delete-button:hover {
+            background-color: #B91C1C;
+        }
+
+        .sponsor-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            height: 150px;
+        }
+
         .sponsor-logo img {
             max-height: 100px;
-            margin: 0 auto;
-            display: block;
+            max-width: 100px;
         }
 
         .sponsor-content {
-            padding: 1rem;
-            text-align: center;
+            padding: 1.5rem;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .sponsor-name {
             font-size: 1.25rem;
             font-weight: bold;
             color: #333;
+            text-align: right;
         }
 
         .sponsor-partner {
+            font-size: 1.25rem;
             color: #555;
-            margin-top: 0.5rem;
-            font-size: 1rem;
+            text-align: left;
+        }
+
+        .sponsor-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .sponsor-hr {
+            border-top: 1px solid #e5e5e5;
+            margin: 1rem 0;
         }
 
         .sponsor-website {
-            margin-top: 1rem;
             color: #1D4ED8;
             font-weight: bold;
             text-decoration: none;
-            display: inline-block;
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
         }
 
         .sponsor-website:hover {
             text-decoration: underline;
         }
 
-        /* Flexbox container for cards with spacing */
         .sponsors-container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            gap: 16px; /* Add gap between the cards */
+            justify-content: space-around;
+            gap: 10px;
         }
 
         .no-sponsors-message {
             font-size: 1.5rem;
             color: #555;
             margin-top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .partner-section {
+            background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $secondaryColor }} 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            position: relative;
+        }
+
+        .partner-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .partner-subtitle {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .partner-text {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+        }
+
+        .partner-button {
+            background-color: white;
+            color: #333;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .partner-button:hover {
+            background-color: #e5e5e5;
+            color: #333;
         }
     </style>
 </head>
@@ -77,27 +177,22 @@
     <x-navbar />
 
     <header class="text-center my-12">
-    <x-page-title subtitle="🤝 Discover the valued partners who support and power our journey. A big thank you to our sponsors for their unwavering commitment to our success!">
-    Sponsors
-</x-page-title>
+        <x-page-title subtitle="🤝 Discover the valued partners who support and power our journey. A big thank you to our sponsors for their unwavering commitment to our success!">
+        Sponsors
+    </x-page-title>
+    </header>
 
     <main class="py-12 flex flex-col items-center">
         <div class="container mx-auto px-4 text-center">
-
-            @if(session('success'))
-                <div class="bg-green-500 text-white p-4 rounded mb-6">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             @auth
             <div class="mb-6">
-            <x-button 
-    route="{{ route('sponsors.create') }}"
-    buttonText="Add Sponsor" 
-    primaryColor="#DC2626" 
-    secondaryColor="#B91C1C" 
-/>
+                <x-button 
+                    route="{{ route('sponsors.create') }}"
+                    buttonText="Add Sponsor" 
+                    primaryColor="#DC2626" 
+                    secondaryColor="#B91C1C"
+                    class="custom-font"
+                />
             </div>
             @endauth
 
@@ -108,36 +203,50 @@
                     </div>
                 @else
                     @foreach($sponsors as $sponsor)
-                        <div class="sponsor-card">
-                            @if($sponsor->logo)
-                                <div class="sponsor-logo p-4">
-                                    <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
-                                </div>
-                            @endif
-                            <div class="sponsor-content">
-                                <h2 class="sponsor-name">{{ $sponsor->name }}</h2>
-                                @if($sponsor->website)
-                                    <a href="{{ $sponsor->website }}" class="sponsor-website" target="_blank">Visit the website →</a>
-                                @endif
-                                <!-- Add Delete Button for authenticated users only -->
-                                @auth
-                                <form action="{{ route('sponsors.destroy', $sponsor->id) }}" method="POST" class="mt-4" onsubmit="return confirm('Are you sure you want to delete this sponsor?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center"
-                                            style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
-                                        X
-                                    </button>
-                                </form>
-                                @endauth
-                            </div>
+                    <div class="sponsor-card">
+                        @auth
+                        <form action="{{ route('sponsors.destroy', $sponsor->id) }}" method="POST" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this sponsor?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="delete-button">X</button>
+                        </form>
+                        @endauth
+
+                        @if($sponsor->logo)
+                        <div class="sponsor-logo">
+                            <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
                         </div>
+                        @endif
+                        <div class="sponsor-content">
+                            <div class="sponsor-details">
+                                <span class="sponsor-partner custom-font">Partner:</span>
+                                <span class="sponsor-name custom-font">{{ $sponsor->name }}</span>
+                            </div>
+                            <div class="sponsor-hr"></div>
+                            @if($sponsor->website)
+                            <a href="{{ $sponsor->website }}" class="sponsor-website custom-font" style="font-size:20px; color: {{ $primaryColor }};" target="_blank">Visit the website →</a>
+                            @endif
+                        </div>
+                    </div>
                     @endforeach
                 @endif
             </div>
         </div>
     </main>
+    <div class="partner-section">
+        <div class="partner-content">
+            <h2 class="partner-title custom-font">PARTNERS & SPONSORS</h2>
+            <h3 class="partner-subtitle custom-font">Do you want to be a partner?</h3>
+            <p class="partner-text">We are always looking for new partners & sponsors to help us, and we put you in the spotlight! If you and your company are interested, contact us today.</p>
+            <x-button 
+                route="{{ route('contact.show') }}"
+                buttonText="Contact Us" 
+                primaryColor="#B91C1C" 
+                secondaryColor="#DC2626"
+                class="custom-font"
+            />
+        </div>
+    </div>
 
     <x-footer />
 </body>

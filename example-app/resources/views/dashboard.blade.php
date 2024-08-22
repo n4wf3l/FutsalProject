@@ -232,6 +232,32 @@
 </div>
     </section>
 
+    <section class="max-w-5xl mx-auto mb-20 mt-20">
+    <div class="flex flex-wrap justify-center space-x-20">
+        <!-- Conteneur pour les paramètres d'inscription -->
+        <div class="p-8 rounded-lg shadow-md bg-white max-w-md w-full">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Registration Settings</h3>
+            <form action="{{ route('dashboard.updateRegistrationStatus') }}" method="POST">
+                @csrf
+
+                <div class="mb-4">
+                    <label for="registration_open" class="block text-sm font-medium text-gray-700">Open Registration</label>
+                    <select name="registration_open" id="registration_open" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="1" {{ $registrationOpen == 'true' ? 'selected' : '' }}>Yes</option>
+        <option value="0" {{ $registrationOpen == 'false' ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="text-white font-bold py-2 px-4 rounded-full" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
     <x-footer />
 </body>
 </html>

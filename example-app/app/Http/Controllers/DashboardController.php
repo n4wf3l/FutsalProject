@@ -8,6 +8,11 @@ use App\Models\UserSetting;
 use App\Models\ClubInfo;
 use App\Models\BackgroundImage;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use App\Models\AccessCode;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 
 class DashboardController extends Controller
 {
@@ -17,8 +22,11 @@ class DashboardController extends Controller
         $clubInfo = ClubInfo::first();
         $userSettings = UserSetting::where('user_id', $user->id)->first();
         $backgroundImages = BackgroundImage::all(); // Récupérer les images de fond
-
-        return view('dashboard', compact('clubInfo', 'userSettings', 'backgroundImages'));
+    
+        $registrationOpen = config('app.registration_open', false) ? 'true' : 'false';
+        
+        // Passer toutes les variables à la vue, y compris $registrationOpen
+        return view('dashboard', compact('clubInfo', 'userSettings', 'backgroundImages', 'registrationOpen'));
     }
 
     public function update(Request $request)
@@ -111,4 +119,55 @@ class DashboardController extends Controller
     
         return redirect()->back()->with('success', 'L\'image de fond a été mise à jour avec succès.');
     }
+
+
+    public function updateRegistrationStatus(Request $request)
+    {
+        Log::info('Starting registration status update...');
+        
+        try {
+            $request->validate([
+                'registration_open' => 'required|boolean',
+            ]);
+    
+            $registrationOpen = filter_var($request->input('registration_open'), FILTER_VALIDATE_BOOLEAN);
+    
+            Log::info('Registration status: ' . ($registrationOpen ? 'true' : 'false'));
+    
+            // Mettre à jour la valeur dans le fichier .env
+            $this->setEnvironmentValue('REGISTRATION_OPEN', $registrationOpen ? 'true' : 'false');
+    
+            Log::info('Environment value set successfully.');
+    
+            return redirect()->route('dashboard')->with('success', 'Registration status updated successfully.');
+    
+        } catch (\Exception $e) {
+            Log::error('Error updating registration status: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to update registration status.');
+        }
+    }
+
+    protected function setEnvironmentValue($key, $value)
+{
+    $path = base_path('.env');
+    if (file_exists($path)) {
+        // Lire le contenu du fichier .env
+        $envContent = file_get_contents($path);
+        
+        // Trouver la ligne contenant la clé
+        if (preg_match("/^{$key}=.*/m", $envContent)) {
+            // Remplacer la valeur existante
+            $envContent = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $envContent);
+        } else {
+            // Ajouter la nouvelle clé si elle n'existe pas
+            $envContent .= "\n{$key}={$value}";
+        }
+
+        // Écrire les modifications dans le fichier .env
+        file_put_contents($path, $envContent);
+    }
+
+    // Recharger les variables d'environnement
+    Artisan::call('config:cache');
+}
 }

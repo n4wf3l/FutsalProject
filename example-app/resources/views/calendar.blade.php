@@ -10,6 +10,8 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     @vite('resources/css/app.css')
     
     <style>
@@ -202,7 +204,7 @@
                 <h5 class="modal-title" id="championshipModalLabel">Championship Settings</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('championship.store') }}" method="POST">
+<form action="{{ route('championship.store') }}" method="POST">
     @csrf
     <div class="modal-body">
         <div class="mb-3">
@@ -272,11 +274,11 @@
     >
         <td>{{ $loop->iteration }}</td>
         <td class="club-name">
-            @if($team->logo_path)
-                <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} Logo" style="height: 24px; margin-right: 10px;">
-            @endif
-            <span>{{ $team->name }}</span>
-        </td>
+    @if($team->logo_path)
+        <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} Logo" style="height: 24px; margin-right: 10px;" onload="console.log('Logo loaded:', this.src, this.style.transform)">
+    @endif
+    <span>{{ $team->name }}</span>
+</td>
         <td>{{ $team->points }}</td>
         <td>{{ $team->games_played }}</td>
         <td>{{ $team->wins }}</td>
@@ -425,12 +427,12 @@
     <tr>
         <td>{{ \Carbon\Carbon::parse($game->match_date)->format('d-m-Y') }}</td>
         <td>
-            <div style="display: flex; align-items: center;">
-                @if($game->homeTeam->logo_path)
-                    <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} Logo" style="height: 24px; margin-right: 10px;">
-                @endif
-                {{ $game->homeTeam->name }}
-            </div>
+        <div style="display: flex; align-items: center;">
+    @if($game->homeTeam->logo_path)
+        <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} Logo" style="height: 24px; margin-right: 10px;" onload="console.log('Home Team Logo loaded:', this.src, this.style.transform)">
+    @endif
+    {{ $game->homeTeam->name }}
+</div>
         </td>
         <td>
             <div style="display: flex; align-items: center;">
@@ -537,6 +539,6 @@
         @endauth
     </main>
 
-    <x-footer />
+    <x-footerforhome />
 </body>
 </html>

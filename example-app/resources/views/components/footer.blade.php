@@ -2,6 +2,10 @@
     use Illuminate\Support\Facades\Route;
 @endphp
 
+<head>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+</head>
 <style>
     html, body {
         height: 100%;
@@ -23,7 +27,89 @@
     footer {
         margin-top: auto;
     }
+
+    .sponsor-carousel-container {
+            width: 40%; /* Réduire la largeur à 60% de la page */
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 80px;
+    
+        }
+
+        .sponsor-carousel-container h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+            width: 100%; 
+        }
+
+        .carousel-item {
+            min-width: 33.33%; 
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .carousel-item img {
+            max-height: 100px;
+            width: auto;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .carousel-button.prev {
+            left: 0;
+        }
+
+        .carousel-button.next {
+            right: 0;
+        }
 </style>
+
+<div class="sponsor-carousel-container">
+    <x-page-title>
+        Sponsors and partners
+    </x-page-title>
+            <div class="carousel-wrapper">
+                <div class="carousel">
+                    @foreach($sponsors as $sponsor)
+                        <div class="carousel-item">
+                            <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
+                        </div>
+                    @endforeach
+                    <!-- Duplicate the items for the infinite loop effect -->
+                    @foreach($sponsors as $sponsor)
+                        <div class="carousel-item">
+                            <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
+                        </div>
+                    @endforeach
+                </div>
+                <button class="carousel-button prev">&#10094;</button>
+                <button class="carousel-button next">&#10095;</button>
+            </div>
+        </div>
 
 <footer class="text-white py-12 mt-auto" style="background-color: {{ $primaryColor }};">
     <div class="container mx-auto px-6">
@@ -118,12 +204,91 @@
         </div>
 
         <div class="mt-8 border-t border-gray-500 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-300">
-            <p>&copy; 2024 {{ $clubName }} - Website by NA Innovations</p>
-            <div class="mt-4 md:mt-0 space-x-4">
-                <a href="#" class="hover:text-white">Privacy</a>
-                <a href="#" class="hover:text-white">Terms & Conditions</a>
-                <a href="#" class="hover:text-white">Cookies</a>
-            </div>
-        </div>
+    <p>&copy; 2024 {{ $clubName }} - Website by <a href="https://nainnovations.be/" class="hover:text-white" target="_blank">NA Innovations</a></p>
+    <div class="mt-4 md:mt-0 space-x-4">
+        <a href="#" class="hover:text-white">Privacy</a>
+        <a href="#" class="hover:text-white">Terms & Conditions</a>
+        <a href="#" class="hover:text-white">Cookies</a>
+    </div>
+</div>
     </div>
 </footer>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script type="text/javascript">
+ document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.querySelector('.carousel');
+    const carouselItems = document.querySelectorAll('.carousel-item');
+    const prevButton = document.querySelector('.carousel-button.prev');
+    const nextButton = document.querySelector('.carousel-button.next');
+    const itemWidth = carouselItems[0].offsetWidth;
+    let currentIndex = 0;
+    let autoPlayInterval;
+
+    // Dupliquer les premiers et derniers éléments pour créer l'effet de boucle infinie
+    const firstClone = carouselItems[0].cloneNode(true);
+    const lastClone = carouselItems[carouselItems.length - 1].cloneNode(true);
+
+    carousel.appendChild(firstClone);
+    carousel.insertBefore(lastClone, carouselItems[0]);
+
+    const totalItems = carousel.querySelectorAll('.carousel-item').length;
+
+    // Initialiser la position du carrousel pour ne pas afficher le clone de fin en premier
+    carousel.style.transform = `translateX(${-itemWidth}px)`;
+
+    function updateCarousel() {
+        const translateX = -(currentIndex + 1) * itemWidth;
+        carousel.style.transition = 'transform 0.3s ease-in-out';
+        carousel.style.transform = `translateX(${translateX}px)`;
+    }
+
+    function showNext() {
+        currentIndex++;
+        updateCarousel();
+        if (currentIndex === totalItems - 2) {
+            // Transition vers le premier élément
+            setTimeout(() => {
+                carousel.style.transition = 'none';
+                currentIndex = 0;
+                carousel.style.transform = `translateX(${-itemWidth}px)`;
+            }, 300); // Correspond au temps de transition défini
+        }
+    }
+
+    function showPrev() {
+        currentIndex--;
+        updateCarousel();
+        if (currentIndex < 0) {
+            // Transition vers le dernier élément
+            setTimeout(() => {
+                carousel.style.transition = 'none';
+                currentIndex = totalItems - 3;
+                carousel.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
+            }, 300); // Correspond au temps de transition défini
+        }
+    }
+
+    function startAutoPlay() {
+        autoPlayInterval = setInterval(showNext, 2000);
+    }
+
+    function stopAutoPlay() {
+        clearInterval(autoPlayInterval);
+    }
+
+    nextButton.addEventListener('click', () => {
+        stopAutoPlay();
+        showNext();
+        startAutoPlay();
+    });
+
+    prevButton.addEventListener('click', () => {
+        stopAutoPlay();
+        showPrev();
+        startAutoPlay();
+    });
+
+    startAutoPlay();
+});
+    </script>

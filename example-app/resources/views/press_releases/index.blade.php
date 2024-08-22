@@ -181,10 +181,12 @@
                                 <a href="{{ route('press_releases.show', $pressRelease->slug) }}">
                                     <img src="{{ asset('storage/' . $pressRelease->image) }}" alt="{{ $pressRelease->title }}">
                                 </a>
+                                @auth
                                 <form action="{{ route('press_releases.destroy', $pressRelease->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this press release?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="delete-button-x">X</button>
+                                    @endauth
                                 </form>
                             </div>
                         @endif
