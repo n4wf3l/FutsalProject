@@ -44,34 +44,17 @@
     @endif
 
     <section class="max-w-5xl mx-auto mb-20 mt-20">
-        <!-- Boutons pour gérer les entités du site -->
-        <div class="flex flex-wrap justify-center gap-6" style="margin-bottom:70px;">
-            <a href="{{ route('players.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Add Player
-            </a>
-            <a href="{{ route('teams') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Edit Player
-            </a>
-            <a href="{{ route('staff.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Add Staff
-            </a>
-            <a href="{{ route('teams') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Edit Staff
-            </a>
-            <a href="{{ route('sponsors.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Add Sponsor
-            </a>
-            <a href="{{ route('articles.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Add News
-            </a>
-            <a href="{{ route('clubinfo') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Edit News
-            </a>
-            <a href="{{ route('coaches.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Add Coach
-            </a>
-        </div>
-
+    <h2 class="text-center text-2xl font-bold mb-8">Manage Staff</h2>
+    <div class="flex flex-wrap justify-center gap-6" style="margin-bottom:70px;">
+        <a href="{{ route('staff.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            Add Staff
+        </a>
+        <a href="{{ route('teams') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            Edit Staff
+        </a>
+    </div>
+</section>
+<section>
         <!-- Conteneur pour les personnalisations du site -->
         <div class="flex flex-wrap justify-center space-x-20 mt-28" style="width:100%;">
     <!-- Conteneur pour les paramètres utilisateur -->
@@ -178,19 +161,21 @@
     </div>
 </div>
 
-<div class="flex flex-wrap justify-center mt-28 w-full">
+
+<div class="flex flex-wrap justify-center mt-20 w-full space-y-10">
     <!-- Formulaire pour ajouter des images de fond -->
-    <div class="p-8 rounded-lg shadow-md bg-white max-w-md w-full md:w-1/2 lg:w-1/3">
-        <form action="{{ route('dashboard.storeBackgroundImage') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+    <div class="p-8 rounded-lg shadow-lg bg-white max-w-lg w-full md:w-1/2 lg:w-1/3">
+        <h2 class="text-xl font-semibold text-center mb-6" style="color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">
+            Ajouter une Image de Fond
+        </h2>
+        <form action="{{ route('dashboard.storeBackgroundImage') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
-
-            <div class="mb-6 flex flex-col items-center">
-                <label for="background_image" class="block text-sm font-medium text-gray-700 mb-2">Ajouter une image de fond:</label>
-                <input type="file" name="background_image" id="background_image" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            <div class="mb-6">
+                <label for="background_image" class="block text-sm font-medium text-gray-700 mb-2">Sélectionner une image :</label>
+                <input type="file" name="background_image" id="background_image" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-{{ $userSettings->theme_color_primary ?? 'blue' }}-500 focus:border-{{ $userSettings->theme_color_primary ?? 'blue' }}-500">
             </div>
-
             <div class="flex justify-center">
-                <button type="submit" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }}; margin-bottom:20px;" class="text-white font-bold py-2 px-6 rounded-full hover:opacity-80 transition duration-200 shadow-lg text-center">
+                <button type="submit" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};" class="text-white font-bold py-2 px-6 rounded-full hover:opacity-90 transition duration-200 shadow-lg text-center">
                     Ajouter
                 </button>
             </div>
@@ -198,39 +183,46 @@
     </div>
 
     <!-- Liste des images -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    @foreach($backgroundImages as $image)
-    <div class="relative">
-        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Background" class="w-full h-48 object-cover rounded-lg">
-        
-        <form action="{{ route('dashboard.assignBackground') }}" method="POST" class="mt-2">
-            @csrf
-            <div class="flex justify-between items-center">
-                <select name="page" class="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <option value="" @if(is_null($image->assigned_page)) selected @endif>Aucune page</option>
-                    <option value="welcome" @if($image->assigned_page == 'welcome') selected @endif>Welcome Page</option>
-                    <option value="calendar" @if($image->assigned_page == 'calendar') selected @endif>Calendar Page</option>
-                    <option value="about" @if($image->assigned_page == 'about') selected @endif>About Page</option>
-                    <!-- Ajoutez d'autres pages ici -->
-                </select>
-                <input type="hidden" name="image_id" value="{{ $image->id }}">
-                <button type="submit" class="ml-2 text-white font-bold py-1 px-4 rounded-full transition duration-200 shadow-lg text-center" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">
-                    Apply
-                </button>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        @foreach($backgroundImages as $image)
+            <div class="relative rounded-lg overflow-hidden shadow-lg">
+                <img src="{{ asset('storage/' . $image->image_path) }}" alt="Background" class="w-full h-48 object-cover">
+                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
+                    <form action="{{ route('dashboard.assignBackground') }}" method="POST" class="mt-2">
+                        @csrf
+                        <div class="flex justify-between items-center">
+                            <select name="page" class="border-gray-300 rounded-md shadow-sm focus:ring-{{ $userSettings->theme_color_primary ?? 'blue' }}-500 focus:border-{{ $userSettings->theme_color_primary ?? 'blue' }}-500 bg-white text-gray-800 py-1 px-2">
+                                <option value="" @if(is_null($image->assigned_page)) selected @endif>Aucune page</option>
+                                <option value="welcome" @if($image->assigned_page == 'welcome') selected @endif>Welcome Page</option>
+                                <option value="calendar" @if($image->assigned_page == 'calendar') selected @endif>Calendar Page</option>
+                                <option value="about" @if($image->assigned_page == 'about') selected @endif>About Page</option>
+                                <option value="clubinfo" @if($image->assigned_page == 'clubinfo') selected @endif>News Page</option>
+                                <option value="press_releases" @if($image->assigned_page == 'press_releases') selected @endif>Press Releases</option>
+                                <option value="team" @if($image->assigned_page == 'team') selected @endif>Senior Team</option>
+                                <option value="teamu21" @if($image->assigned_page == 'teamu21') selected @endif>U21 Team</option>
+                                <option value="sponsor" @if($image->assigned_page == 'sponsor') selected @endif>Sponsor</option>
+                                <option value="contact" @if($image->assigned_page == 'contact') selected @endif>Contact</option>
+                                <option value="fanshop" @if($image->assigned_page == 'fanshop') selected @endif>Fanshop Page</option>
+                                <!-- Ajoutez d'autres pages ici -->
+                            </select>
+                            <input type="hidden" name="image_id" value="{{ $image->id }}">
+                            <button type="submit" class="ml-2 text-white font-bold py-1 px-4 rounded-full transition duration-200 shadow-lg text-center" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">
+                                Appliquer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <form action="{{ route('dashboard.deleteBackgroundImage', $image->id) }}" method="POST" class="absolute top-2 right-2" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-red-600 bg-white rounded-full p-1 shadow hover:bg-red-100">
+                        &times;
+                    </button>
+                </form>
             </div>
-        </form>
-
-        <form action="{{ route('dashboard.deleteBackgroundImage', $image->id) }}" method="POST" class="mt-2" onsubmit="return confirm('Are you sure you want to delete this image?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="absolute top-2 right-2 text-red-600 bg-white rounded-full p-1 shadow hover:bg-red-100">
-                &times;
-            </button>
-        </form>
+        @endforeach
     </div>
-    @endforeach
 </div>
-    </section>
 
     <section class="max-w-5xl mx-auto mb-20 mt-20">
     <div class="flex flex-wrap justify-center space-x-20">

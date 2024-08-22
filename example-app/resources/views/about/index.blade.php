@@ -95,7 +95,7 @@
     </style>
 </head>
 
-<body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover;" @endif>
+<body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
 
     <!-- Include the Navbar component -->
     <x-navbar />
@@ -190,6 +190,7 @@
         </div>
         @endauth
     </div>
+    <hr>
 @endforeach
         </div>
 
@@ -207,6 +208,7 @@
         @endauth
     </div>
 
+    <hr>
     <!-- Include the Footer component -->
     <x-footer />
 

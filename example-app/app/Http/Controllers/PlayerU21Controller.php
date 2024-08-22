@@ -6,6 +6,7 @@ use App\Models\PlayerU21;
 use App\Models\Championship;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\BackgroundImage;
 
 class PlayerU21Controller extends Controller
 {
@@ -14,7 +15,8 @@ class PlayerU21Controller extends Controller
     {
         $championship = Championship::first(); 
         $players = PlayerU21::orderBy('last_name')->get();
-        return view('playersu21.index', compact('players', 'championship'));
+        $backgroundImage = BackgroundImage::where('assigned_page', 'teamu21')->latest()->first();
+        return view('playersu21.index', compact('players', 'championship', 'backgroundImage'));
     }
 
     // Show the form for creating a new U21 player

@@ -9,6 +9,7 @@ use Stripe\Checkout\Session;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Game;
 use App\Models\ClubInfo;
+use App\Models\BackgroundImage;
 
 class TribuneController extends Controller
 {
@@ -18,7 +19,7 @@ class TribuneController extends Controller
     public function index()
     {
         $tribunes = Tribune::all();
-
+        $backgroundImage = BackgroundImage::where('assigned_page', 'fanshop')->latest()->first();
         // Récupérer les informations du club pour déterminer le prochain match pertinent
         $clubInfo = ClubInfo::first();
         $clubName = $clubInfo->club_name ?? 'Dina Kénitra FC';
@@ -32,7 +33,7 @@ class TribuneController extends Controller
             ->orderBy('match_date', 'asc')
             ->first();
     
-        return view('fanshop', compact('tribunes', 'nextGame'));
+        return view('fanshop', compact('tribunes', 'nextGame', 'backgroundImage'));
     }
     
     /**

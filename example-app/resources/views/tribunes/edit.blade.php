@@ -15,7 +15,9 @@
 
     <div class="container mx-auto py-12">
         <div class="bg-white rounded-lg shadow-lg p-8 max-w-3xl mx-auto">
-            <h1 class="text-4xl font-bold text-center mb-8" style="color: {{ $primaryColor }};">Edit Tribune</h1>
+        <x-page-title subtitle="">
+    Edit Tribune
+</x-page-title>
             <form action="{{ route('tribunes.update', $tribune->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -68,9 +70,21 @@
 
                 <!-- Bouton avec couleurs du thème -->
                 <div class="flex justify-center mt-8">
-                    <button type="submit" class="bg-{{ $primaryColor }} text-white font-bold py-2 px-6 rounded-full hover:bg-{{ $secondaryColor }} transition duration-200 shadow-lg">
-                        Save Changes
-                    </button>
+                    <button type="submit" 
+        style="background-color: {{ $primaryColor }}; 
+               color: white; 
+               font-family: 'Bebas Neue', sans-serif;
+               font-weight: bold; 
+               padding: 5px 10px; 
+               border: none; 
+               border-radius: 50px; 
+               cursor: pointer; 
+               transition: background-color 0.3s ease, transform 0.2s ease; 
+               box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);"
+        onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
+        onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';">
+        Save Changes
+</button>
                 </div>
             </form>
         </div>

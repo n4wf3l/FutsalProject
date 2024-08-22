@@ -6,13 +6,15 @@ use App\Models\PressRelease;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\BackgroundImage;
 
 class PressReleaseController extends Controller
 {
     public function index()
     {
         $pressReleases = PressRelease::orderBy('created_at', 'desc')->paginate(4);
-        return view('press_releases.index', compact('pressReleases'));
+        $backgroundImage = BackgroundImage::where('assigned_page', 'press_releases')->latest()->first();
+        return view('press_releases.index', compact('pressReleases', 'backgroundImage'));
     }
 
     public function create()

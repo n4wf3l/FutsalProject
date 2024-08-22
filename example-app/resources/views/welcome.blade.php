@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const text = "DINA KÉNITRA FC\nRISE UP & DOMINATE\nTHE GAME!";
     const typingElement = document.getElementById("typing-text");
     let index = 0;
-    const speed = 100;  // Vitesse d'écriture (ms)
+    const speed = 50;  // Vitesse d'écriture (ms)
 
     function typeWriter() {
         if (index < text.length) {
@@ -279,7 +279,7 @@ document.addEventListener("DOMContentLoaded", function() {
             logo.style.transform = "translateX(-50%)";
             logo.style.marginTop = "10vh";
             logo.style.opacity = "0";  // Commence transparent
-            logo.style.transition = "opacity 2s ease-in-out";
+            logo.style.transition = "opacity 1s ease-in-out";
 
             // Vérifiez que le logoPath est valide avant de l'ajouter
             if (logo.src && logo.src !== '') {
@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     button.style.transform = "translateX(-50%)";
                     button.style.marginTop = "30vh";
                     button.style.opacity = "0"; 
-                    button.style.transition = "opacity 2s ease-in-out";
+                    button.style.transition = "opacity 1s ease-in-out"; 
 
                     button.addEventListener("mouseover", function() {
                         button.style.backgroundColor = "{{ $primaryColor }}";
@@ -328,7 +328,7 @@ setTimeout(() => {
     button.style.opacity = "1";
 }, 100); // Légère pause pour que le bouton s'ajoute avant la transition
 
-}, 1000); // Le bouton apparaît 1 seconde après le logo
+}, 500); // Le bouton apparaît 1 seconde après le logo
             }
         }
     }

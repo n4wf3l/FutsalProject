@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\BackgroundImage;
 
 class ArticleController extends Controller
 {
     public function index(Request $request)
     {
         $search = $request->input('search');
-        
+        $backgroundImage = BackgroundImage::where('assigned_page', 'clubinfo')->latest()->first();
+
         if ($search) {
             $articles = Article::where('title', 'LIKE', "%{$search}%")
                 ->orWhere('description', 'LIKE', "%{$search}%")
@@ -23,7 +25,7 @@ class ArticleController extends Controller
             $articles = Article::latest()->get();
         }
     
-        return view('clubinfo', compact('articles'));
+        return view('clubinfo', compact('articles', 'backgroundImage'));
     }
 
     public function create()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sponsor;
 use Illuminate\Support\Facades\Storage;
+use App\Models\BackgroundImage;
 
 class SponsorController extends Controller
 {
@@ -12,7 +13,8 @@ class SponsorController extends Controller
     public function index()
     {
         $sponsors = Sponsor::all();
-        return view('sponsors', compact('sponsors')); // Assuming you have sponsors/index.blade.php
+        $backgroundImage = BackgroundImage::where('assigned_page', 'sponsor')->latest()->first();
+        return view('sponsors', compact('sponsors', 'backgroundImage')); // Assuming you have sponsors/index.blade.php
     }
 
     // Show the form for creating a new sponsor (create)

@@ -173,7 +173,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
     <x-navbar />
 
     <header class="text-center my-12">
