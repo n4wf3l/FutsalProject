@@ -807,28 +807,28 @@ setTimeout(() => {
     font-weight: bold;
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1200;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
+modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+    display: block;
+    object-fit: contain; /* Assure que l'image conserve ses proportions sans être déformée */
 }
 
-/* Modal content style */
+/* Ajouter ces propriétés pour gérer l'image dans la modal */
 .modal-content-wrapper {
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
+}
+
+.modal-content {
+    width: auto; /* Permet à l'image de s'adapter à sa taille d'origine */
+    height: auto; /* Permet à l'image de s'adapter à sa taille d'origine */
+    max-width: 90%; /* Limite la largeur maximale à 90% de la modal */
+    max-height: 90%; /* Limite la hauteur maximale à 90% de la modal */
 }
 
 /* Close button style for modals */
@@ -848,14 +848,6 @@ setTimeout(() => {
     color: #bbb;
     text-decoration: none;
     cursor: pointer;
-}
-
-/* Modal content style */
-.modal-content {
-    max-width: 90%;
-    max-height: 90%;
-    margin: auto;
-    display: block;
 }
 
 /* Navigation buttons for image modal */
@@ -916,9 +908,6 @@ setTimeout(() => {
                     @if($photo->caption)
                         <div class="image-caption">{{ $photo->caption }}</div>
                     @endif
-                    @auth
-                    <button class="delete-photo" onclick="deletePhoto('{{ route('galleries.photos.destroy', [$photo->gallery_id, $photo->id]) }}')">×</button>
-                    @endauth
                 </div>
             @endforeach
         </div>
@@ -928,6 +917,110 @@ setTimeout(() => {
         <x-button 
     route="{{ route('galleries.index') }}"
     buttonText="Our Albums" 
+    primaryColor="#B91C1C" 
+    secondaryColor="#DC2626" 
+/>
+        </div>
+    </div>
+
+    <style>
+.video-item {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    transition: transform 0.3s ease; /* Ajoute une transition pour l'effet de zoom */
+}
+
+.video-item:hover {
+    transform: scale(1.05); /* Effet de zoom au survol */
+}
+
+.video-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+/* Nouveau conteneur pour centrer l'icône */
+.play-icon-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.play-icon {
+    width: 90px; /* Taille du cercle */
+    height: 90px; /* Taille du cercle */
+    background-color: {{ $primaryColor }};
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.play-icon::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 24px solid white; /* Triangle "play" */
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    transition: border-left-color 0.3s ease;
+}
+
+.video-item:hover .play-icon::before {
+    border-left-color: {{ $secondaryColor }}; /* Change la couleur du triangle au survol */
+}
+    </style>
+
+    <!-- Section des deux dernières vidéos -->
+    <section class="latest-videos mt-12 mb-20" data-aos="fade-right">
+    <div class="container mx-auto">
+        <h2 class="text-2xl font-bold mb-4 text-center">🎥 Latest Videos</h2>
+
+        @if($videos->isEmpty())
+            <p class="text-center text-gray-600">No videos have been published yet.</p>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @foreach($videos as $video)
+                    <div class="video-item bg-white shadow-md rounded-lg overflow-hidden">
+                        <a href="{{ $video->url }}" target="_blank" class="block relative">
+                            @if($video->image)
+                                <img src="{{ asset('storage/' . $video->image) }}" alt="{{ $video->title }}" class="w-full h-auto object-cover">
+                                <!-- Nouveau conteneur pour centrer l'icône -->
+                                <div class="play-icon-container">
+                                    <div class="play-icon"></div>
+                                </div>
+                            @endif
+                            <div class="p-4">
+                                <h3 class="text-lg font-semibold text-gray-800">{{ $video->title }}</h3>
+                                <p class="text-gray-600 mt-2">
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($video->description), 100) }}
+                                </p>
+                                <p class="text-sm text-gray-500 mt-2">{{ $video->created_at->format('d/m/Y') }}</p>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</section>
+
+<div class="albums-link-container">
+        <x-button 
+    route="{{ route('videos.index') }}"
+    buttonText="Our Videos" 
     primaryColor="#B91C1C" 
     secondaryColor="#DC2626" 
 />

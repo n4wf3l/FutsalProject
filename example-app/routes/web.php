@@ -26,7 +26,7 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PlayerU21Controller;
 use App\Http\Controllers\RegulationController;
 use App\Http\Middleware\CheckRegistrationStatus;
-
+use App\Http\Controllers\VideoController;
 
 
 // Route d'accueil
@@ -129,7 +129,7 @@ Route::middleware(['guest', CheckRegistrationStatus::class])->group(function () 
     Route::post('register', [RegisteredUserController::class, 'store']);
 });
 
-
+Route::resource('videos', VideoController::class);
 
 // Routes API
 //Route::prefix('api')->group(function () {

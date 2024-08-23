@@ -1,6 +1,6 @@
 @props(['subtitle' => null])
 
-<div class="section-title-container text-center my-12 flex justify-center items-center" style="margin-top: 40px; margin-bottom: 40px;">
+<div class="section-title-container text-center my-12 flex justify-center items-center" style="margin-top: 10px; margin-bottom: 10px;">
     <!-- La ligne verticale -->
     <div class="vertical-line"></div>
 
@@ -22,8 +22,6 @@
   .section-title-container {
     justify-content: center;
     align-items: center;
-    margin-top: 40px; /* Marge au-dessus du titre */
-    margin-bottom: 40px; /* Marge en dessous du titre */
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing:2px;
 }

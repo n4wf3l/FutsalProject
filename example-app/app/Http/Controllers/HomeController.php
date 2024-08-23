@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Photo;
+use App\Models\Video;
 
 class HomeController extends Controller
 {
@@ -57,6 +58,7 @@ class HomeController extends Controller
             ->get();
     
         $articles = Article::latest()->take(5)->get();
+        $videos = Video::latest()->take(2)->get();
     
         // Récupérer la dernière image ajoutée
         $welcomeImage = WelcomeImage::latest()->first();
@@ -64,7 +66,7 @@ class HomeController extends Controller
         // Récupérer les 8 dernières images de la galerie
         $latestPhotos = Photo::latest()->take(8)->get();
     
-        return view('welcome', compact('weatherData', 'city', 'flashMessage', 'nextGame', 'nextGames', 'clubLocation', 'clubPrefix', 'clubName', 'articles', 'welcomeImage', 'logoPath', 'latestPhotos'));
+        return view('welcome', compact('weatherData', 'city', 'flashMessage', 'nextGame', 'nextGames', 'clubLocation', 'clubPrefix', 'clubName', 'articles', 'videos', 'welcomeImage', 'logoPath', 'latestPhotos'));
     }
     
     private function getWeatherData($city, $apiKey)

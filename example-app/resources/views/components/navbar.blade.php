@@ -198,6 +198,7 @@
             <a href="{{ route('press_releases.index') }}">Press Releases</a>
             <a href="{{ route('about.index') }}">About</a>
             <a href="{{ route('galleries.index') }}">Gallery</a>
+            <a href="{{ route('videos.index') }}">Videos</a>
         </div>
     </div>
             <div class="nav-link-container">
@@ -231,7 +232,6 @@
                 <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
                     Dashboard
                 </a>
-                <div class="nav-link-hr"></div>
                 </div>
             @endauth
         </div>
@@ -285,7 +285,9 @@
         <a href="{{ route('sponsors.index') }}" class="block text-white py-2">Sponsors</a>
         <a href="{{ route('contact.show') }}" class="block text-white py-2">Contact</a>
         <a href="{{ route('fanshop.index') }}" class="block text-white py-2">Fanshop</a>
+        @auth
         <a href="{{ url('/dashboard') }}" class="block text-white py-2">Dashboard</a>
+        @endauth
     </div>
 </div>
 

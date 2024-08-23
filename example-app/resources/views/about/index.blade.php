@@ -115,48 +115,6 @@
                     aiming to deliver attractive top-level futsal with as many homegrown players and/or people as possible.
                 </p>
 
-                <!-- Ajout de la carte ici -->
-                <div id="map"></div>
-            </div>
-
-<!-- Section d'Upload de PDF (pour les utilisateurs authentifiés) -->
-@auth
-<div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;">
-    <h3 class="text-lg font-bold mb-4 text-center">Uploader un nouveau PDF</h3>
-    <form action="{{ route('regulations.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
-        @csrf
-        <div class="form-group mb-4 w-full">
-            <label for="title" class="block text-sm font-medium text-gray-700">Titre du PDF</label>
-            <input type="text" name="title" id="title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-        </div>
-
-        <div class="form-group mb-4 w-full">
-            <label for="pdf" class="block text-sm font-medium text-gray-700">Sélectionner un PDF</label>
-            <input type="file" name="pdf" id="pdf" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-semibold" style="color: {{ $primaryColor }};" required>
-        </div>
-
-        <button type="submit" class="w-full py-2 px-4 rounded text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Publier</button>
-    </form>
-</div>
-@endauth
-
-<!-- Section Liste des PDFs -->
-<div class="regulations-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8 justify-center mt-20">
-    @foreach($regulations as $regulation)
-        <div class="regulation-item p-4 bg-white border border-gray-200 rounded-lg shadow-sm relative">
-            <!-- Bouton de suppression -->
-             @auth
-            <form action="{{ route('regulations.destroy', $regulation->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce PDF ?');" class="absolute top-2 right-2">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="text-red-500 hover:text-red-700 text-lg">X</button>
-            </form>
-@endauth
-            <h4 class="text-lg font-semibold text-gray-800 mb-2 text-center">📄 {{ $regulation->title }}</h4>
-            <a href="{{ asset('storage/' . $regulation->pdf_path) }}" target="_blank" class="inline-block w-full py-2 px-4 rounded text-center text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Voir le PDF</a>
-        </div>
-    @endforeach
-</div>
             <div class="section-divider"></div>
 
 
@@ -206,6 +164,47 @@
             </a>
         </div>
         @endauth
+        <!-- Section d'Upload de PDF (pour les utilisateurs authentifiés) -->
+@auth
+<div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;">
+    <h3 class="text-lg font-bold mb-4 text-center">Uploader un nouveau PDF</h3>
+    <form action="{{ route('regulations.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
+        @csrf
+        <div class="form-group mb-4 w-full">
+            <label for="title" class="block text-sm font-medium text-gray-700">Titre du PDF</label>
+            <input type="text" name="title" id="title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+        </div>
+
+        <div class="form-group mb-4 w-full">
+            <label for="pdf" class="block text-sm font-medium text-gray-700">Sélectionner un PDF</label>
+            <input type="file" name="pdf" id="pdf" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-semibold" style="color: {{ $primaryColor }};" required>
+        </div>
+
+        <button type="submit" class="w-full py-2 px-4 rounded text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Publier</button>
+    </form>
+</div>
+@endauth
+
+<!-- Section Liste des PDFs -->
+<div class="regulations-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8 justify-center mt-20">
+    @foreach($regulations as $regulation)
+        <div class="regulation-item p-4 bg-white border border-gray-200 rounded-lg shadow-sm relative">
+            <!-- Bouton de suppression -->
+             @auth
+            <form action="{{ route('regulations.destroy', $regulation->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce PDF ?');" class="absolute top-2 right-2">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-red-500 hover:text-red-700 text-lg">X</button>
+            </form>
+@endauth
+            <h4 class="text-lg font-semibold text-gray-800 mb-2 text-center">📄 {{ $regulation->title }}</h4>
+            <a href="{{ asset('storage/' . $regulation->pdf_path) }}" target="_blank" class="inline-block w-full py-2 px-4 rounded text-center text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Voir le PDF</a>
+        </div>
+    @endforeach
+</div>
+
+        <div id="map"></div>
+    </div>
     </div>
 
     <hr>
