@@ -186,12 +186,15 @@
 
         <!-- Navigation links (hidden on mobile, shown on desktop) -->
         <div class="desktop-nav space-x-8">
-        <div class="nav-link-container">
-            <a href="/" class="text-white nav-link transition duration-200">Home</a>
-            <div class="nav-link-hr"></div>
-            </div>
-            <div class="nav-link-container dropdown">
-        <a href="#" class="text-white nav-link transition duration-200">Club▼</a>
+    <div class="nav-link-container">
+        <a href="/" class="text-white nav-link transition duration-200">Home</a>
+        <div class="nav-link-hr"></div>
+    </div>
+
+    <div class="nav-link-container dropdown">
+        <a href="#" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
+            Club <img src="bas.png" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+        </a>
         <div class="nav-link-hr"></div>
         <div class="dropdown-content">
             <a href="{{ route('clubinfo') }}">News</a>
@@ -201,39 +204,45 @@
             <a href="{{ route('videos.index') }}">Videos</a>
         </div>
     </div>
-            <div class="nav-link-container">
-            <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">Competition</a>
-            <div class="nav-link-hr"></div>
-            </div>
-            <div class="dropdown">
-            <div class="dropdown nav-link-container">
-                <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200">Teams▼</a>
-                <div class="nav-link-hr"></div>
-                </div>
-                <div class="dropdown-content">
-                    <a href="{{ route('teams') }}">Senior</a>
-                    <a href="{{ route('playersu21.index') }}">U21</a>
-                </div>
-            </div>
-            <div class="nav-link-container">
-            <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
-            <div class="nav-link-hr"></div>
-            </div>
-            <div class="nav-link-container">
-            <a href="{{ route('contact.show') }}" class="text-white nav-link transition duration-200">Contact</a>
-            <div class="nav-link-hr"></div>
-            </div>
-            <div class="nav-link-container">
-            <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">Fanshop</a>
-            <div class="nav-link-hr"></div>
-            </div>
-            @auth
-            <div class="nav-link-container">
-                <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
-                    Dashboard
-                </a>
-                </div>
-            @endauth
+
+    <div class="nav-link-container">
+        <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">Competition</a>
+        <div class="nav-link-hr"></div>
+    </div>
+
+    <div class="dropdown nav-link-container">
+        <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
+            Teams <img src="bas.png" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+        </a>
+        <div class="nav-link-hr"></div>
+        <div class="dropdown-content">
+            <a href="{{ route('teams') }}">Senior</a>
+            <a href="{{ route('playersu21.index') }}">U21</a>
+        </div>
+    </div>
+
+    <div class="nav-link-container">
+        <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
+        <div class="nav-link-hr"></div>
+    </div>
+
+    <div class="nav-link-container">
+        <a href="{{ route('contact.show') }}" class="text-white nav-link transition duration-200">Contact</a>
+        <div class="nav-link-hr"></div>
+    </div>
+
+    <div class="nav-link-container">
+        <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">Fanshop</a>
+        <div class="nav-link-hr"></div>
+    </div>
+
+    @auth
+    <div class="nav-link-container">
+        <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
+            Dashboard
+        </a>
+    </div>
+    @endauth
         </div>
 
         <!-- Hamburger menu (shown on mobile, hidden on desktop) -->
@@ -264,34 +273,63 @@
         <a href="/" class="block text-white py-2">Home</a>
 
         <!-- Club Dropdown -->
-        <a href="#" class="block text-white py-2" onclick="toggleDropdown('clubDropdown')">Club ▼</a>
-        <div id="clubDropdown" class="hidden pl-4">
-            <a href="{{ route('clubinfo') }}" class="block text-white py-2">News</a>
-            <a href="{{ route('about.index') }}" class="block text-white py-2">About</a>
-            <a href="{{ route('press_releases.index') }}" class="block text-white py-2">Press Releases</a>
-            <a href="{{ route('galleries.index') }}" class="block text-white py-2">Gallery</a>
-        </div>
+        <a href="#" class="block text-white py-2" onclick="toggleDropdown('clubDropdown')" style="display: flex; align-items: center;">
+    Club <img src="bas.png" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+</a>
+<div id="clubDropdown" class="hidden pl-4">
+    <a href="{{ route('clubinfo') }}" class="block text-white py-2">News</a>
+    <a href="{{ route('about.index') }}" class="block text-white py-2">About</a>
+    <a href="{{ route('press_releases.index') }}" class="block text-white py-2">Press Releases</a>
+    <a href="{{ route('galleries.index') }}" class="block text-white py-2">Gallery</a>
+</div>
 
-        <!-- Calendar -->
-        <a href="{{ route('calendar.show') }}" class="block text-white py-2">Competition</a>
+<!-- Calendar -->
+<a href="{{ route('calendar.show') }}" class="block text-white py-2">Competition</a>
 
-        <!-- Teams Dropdown -->
-        <a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')">Teams ▼</a>
-        <div id="teamsDropdown" class="hidden pl-4">
-            <a href="{{ route('teams') }}" class="block text-white py-2">Senior</a>
-            <a href="{{ route('playersu21.index') }}" class="block text-white py-2">U21</a>
-        </div>
+<!-- Teams Dropdown -->
+<a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')" style="display: flex; align-items: center;">
+    Teams <img src="bas.png" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+</a>
+<div id="teamsDropdown" class="hidden pl-4">
+    <a href="{{ route('teams') }}" class="block text-white py-2">Senior</a>
+    <a href="{{ route('playersu21.index') }}" class="block text-white py-2">U21</a>
+</div>
 
-        <a href="{{ route('sponsors.index') }}" class="block text-white py-2">Sponsors</a>
-        <a href="{{ route('contact.show') }}" class="block text-white py-2">Contact</a>
-        <a href="{{ route('fanshop.index') }}" class="block text-white py-2">Fanshop</a>
-        @auth
-        <a href="{{ url('/dashboard') }}" class="block text-white py-2">Dashboard</a>
-        @endauth
+<a href="{{ route('sponsors.index') }}" class="block text-white py-2">Sponsors</a>
+<a href="{{ route('contact.show') }}" class="block text-white py-2">Contact</a>
+<a href="{{ route('fanshop.index') }}" class="block text-white py-2">Fanshop</a>
+@auth
+<a href="{{ url('/dashboard') }}" class="block text-white py-2">Dashboard</a>
+@endauth
     </div>
 </div>
 
+<div id="scroll-to-top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1000; cursor: pointer;">
+    <img src="haut.png" alt="" width="35px">
+</div>
+
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const scrollToTopButton = document.getElementById('scroll-to-top');
+
+    // Afficher le bouton lorsque l'utilisateur défile vers le bas
+    window.addEventListener('scroll', function () {
+        if (window.scrollY > 200) {
+            scrollToTopButton.style.display = 'block';
+        } else {
+            scrollToTopButton.style.display = 'none';
+        }
+    });
+
+    // Remonter en haut de la page lorsque l'utilisateur clique sur le bouton
+    scrollToTopButton.addEventListener('click', function () {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});
+
     // Attendre que le document soit prêt
     document.addEventListener('DOMContentLoaded', function () {
         // Sélectionner l'élément d'alerte
