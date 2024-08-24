@@ -57,7 +57,7 @@ class HomeController extends Controller
             ->take(5)
             ->get();
     
-        $articles = Article::latest()->take(5)->get();
+        $articles = Article::latest()->take(4)->get();
         $videos = Video::latest()->take(2)->get();
     
         // Récupérer la dernière image ajoutée

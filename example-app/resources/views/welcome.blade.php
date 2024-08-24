@@ -34,7 +34,7 @@
         .background-container {
             position: relative;
     width: 100%;
-    min-height: 60vh;
+    min-height: 100%;
     @if($backgroundImage)
         background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center;
         background-size: cover;
@@ -161,6 +161,141 @@
             color: white;
         }
         
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            padding-top: 20px;
+        }
+
+        .carousel-slide {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item {
+
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            opacity: 0.5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+        }
+
+        .carousel-item img {
+            object-fit: cover;
+            height: auto;
+            max-height: 70vh;
+            border-radius: 8px;
+        }
+
+        .main-article-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            position: absolute;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom:15%;
+        }
+
+        .main-article-content p,
+        .main-article-content h2 {
+            margin: 0;
+        }
+
+        .article-title {
+            font-size: 2.5rem;
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .buttons-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 20px;
+        }
+
+        .buttons-container a {
+            padding: 10px 20px;
+            background-color: #DC2626;
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .buttons-container a:hover {
+            transform: scale(1.1);
+            background-color: #B91C1C;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .carousel-controls button {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        .carousel-indicators .dot {
+    height: 15px;
+    width: 15px;
+    margin: 0 5px;
+    background-color: #bbb; /* Couleur par défaut des dots */
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.carousel-indicators .dot.active {
+    background-color: red; /* Couleur pour le dot actif */
+}
+
+.carousel .main-article-container img {
+    filter: grayscale(100%);
+    transition: filter 0.5s ease;
+}
+
+.carousel .main-article-container.active img {
+    filter: grayscale(0%);
+}
     </style>
 </head>
 <body class="bg-gray-100">
@@ -431,67 +566,63 @@ setTimeout(() => {
         @endif
     </div>
 </div>
-
-<!-- Cover Container with Main Article -->
-<div class="cover-container mt-40" data-aos="fade-right" style="position: relative; width: 100%; min-height: 70vh; background-color: #f1f1f1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 1000;">
-    <div class="main-article-container" style="width: 100%; max-width: 1200px; display: flex; flex-direction: row; align-items: flex-start;">
-        <!-- Main Article Image -->
-        <div class="main-article-image" style="flex: 1; margin-right: 20px;">
-            <a href="{{ route('articles.show', $articles->first()->slug) }}">
-                @if($articles->first()->image)
-                    <img src="{{ asset('storage/' . $articles->first()->image) }}" alt="{{ $articles->first()->title }}" style="width: 100%; height: auto; border-radius: 8px;">
-                @endif
-            </a>
-        </div>
-
-        <!-- Main Article Content -->
-        <div class="main-article-content" data-aos="fade-right" style="flex: 2; padding-left: 20px; display: flex; flex-direction: column; justify-content: center;">
-            <p style="font-size: 1rem; color: #6b7280; font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; margin-bottom: 10px;">
-                {{ $clubName }} - Recent News
-            </p>
-            <h2 class="text-3xl font-bold mb-2 article-title" style="font-size: 2.5rem; color: {{ $primaryColor }}; font-family: 'Bebas Neue', sans-serif; margin-bottom: 20px;">
-                <strong>{{ $articles->first()->title }}</strong>
-            </h2>
-            <p class="text-sm text-gray-500" style="font-size: 1rem; color: #6b7280; margin-bottom: 15px;">
-                Published on: {{ $articles->first()->created_at->format('d M Y, H:i') }} by {{ $articles->first()->user->name }}
-            </p>
-            <p class="text-gray-600 mb-4" style="color: #6b7280; margin-top: 20px;">
-                {!! \Illuminate\Support\Str::limit(strip_tags($articles->first()->description, '<b><i><strong><em><ul><li><ol>'), 400) !!}
-            </p>
-
-            <!-- Buttons Container -->
-            <div class="buttons-container" style="margin-top: 30px; display: flex; justify-content: flex-start; gap: 20px;">
-                <x-button 
-    route="{{ route('clubinfo') }}"
-    buttonText="News" 
-    primaryColor="#DC2626" 
-    secondaryColor="#B91C1C" 
-/>
-                <x-button 
-    route="{{ route('articles.show', $articles->first()->slug) }}"
-    buttonText="Read More" 
-    primaryColor="#B91C1C" 
-    secondaryColor="#DC2626" 
-/>
+<x-page-title subtitle="🔔 Stay informed with all the breaking stories and headlines you need to know!">
+    Last News
+</x-page-title>
+<div class="carousel-container" data-aos="fade-right" style="position: relative; width: 100%; min-height: 70vh; display: flex; justify-content: center; align-items: center;  z-index: 1000;">
+    <div class="carousel" style="display: flex; transition: transform 0.5s ease-in-out; width: 80%;">
+        @foreach($articles as $index => $article)
+        <div class="main-article-container" style="flex: 0 0 100%; display: flex; flex-direction: row; align-items: flex-start; position: relative;">
+            <!-- Main Article Image -->
+            <div class="main-article-image" style="width: 100%;">
+                <a href="{{ route('articles.show', $article->slug) }}">
+                    @if($article->image)
+                        <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}">
+                    @endif
+                </a>
             </div>
 
-            <div style="display: none;">
-                <style>
-                    .buttons-container .btn-primary:hover {
-                        transform: scale(1.1);
-                        background-color: {{ $secondaryColor }};
-                    }
-
-                    .buttons-container .btn-secondary:hover {
-                        transform: scale(1.1);
-                        background-color: {{ $primaryColor }};
-                    }
-                </style>
+            <!-- Main Article Content -->
+            <div class="main-article-content" data-aos="fade-right" style="padding-left: 20px; display: flex; flex-direction: column; justify-content: center; position: absolute; bottom: 30px; left: 30px; color: white; max-width: 50%; background-color: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 8px;">
+                <p style="background-color: {{ $primaryColor }};
+            color: #ffffff;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 4px 8px;
+            display: inline-block;
+            border-radius: 4px;">
+                   News
+                </p>
+                <h2 class="text-3xl font-bold mb-2 article-title" style="font-size: 2.5rem; margin-bottom: 20px;">
+                    <strong>{{ $article->title }}</strong>
+                </h2>
+                <p class="text-sm text-gray-500" style="font-size: 1rem; margin-bottom: 15px;">
+                    Published on: {{ $article->created_at->format('d M Y, H:i') }} by {{ $article->user->name }}
+                </p>
+                <!-- Buttons Container -->
+                <div class="buttons-container" style="margin-top: 30px; display: flex; justify-content: flex-start; gap: 20px;">
+                    <x-button 
+                        route="{{ route('articles.show', $article->slug) }}"
+                        buttonText="Read More" 
+                        primaryColor="#B91C1C" 
+                        secondaryColor="#DC2626" 
+                    />
+                </div>
             </div>
         </div>
+        @endforeach
     </div>
-</div>
 
+    <!-- Navigation Dots -->
+    <div class="navigation-dots" style="position: absolute; bottom: 20px; display: flex; justify-content: center; width: 100%;">
+    @foreach($articles as $index => $article)
+        <div id="dot-{{ $index }}" class="dot" onclick="goToSlide({{ $index }})" style="margin: 0 5px; cursor: pointer;">
+            <span id="emoji-{{ $index }}">{{ $index === 0 ? '⚫️' : '⚪' }}</span>
+        </div>
+    @endforeach
+    </div>
 </div>
 <hr>
  <!-- Section pour les 5 prochains matchs -->
@@ -1065,6 +1196,57 @@ modal-content {
         document.getElementById("modalImage").src = `/storage/${photo.image}`;
         document.getElementById("caption").innerText = photo.caption ? photo.caption : '';
     }
+
+    let currentIndex = 0;
+const slides = document.querySelectorAll('.carousel .main-article-container');
+const dots = document.querySelectorAll('.dot span');
+const intervalTime = 5000;
+
+function goToSlide(index) {
+    // Assurez-vous que l'index est dans les limites
+    if (index < 0) {
+        index = slides.length - 1; // Aller au dernier article si on dépasse à gauche
+    } else if (index >= slides.length) {
+        index = 0; // Retourner au premier article si on dépasse à droite
+    }
+
+    // Supprimer la classe active de tous les slides
+    slides.forEach(slide => slide.classList.remove('active'));
+
+    // Ajouter la classe active au slide actuel
+    slides[index].classList.add('active');
+
+    // Déplacer le carousel
+    document.querySelector('.carousel').style.transform = `translateX(-${index * 100}%)`;
+
+    // Mise à jour des dots
+    dots.forEach((dot, i) => {
+        dot.textContent = i === index ? '⚫️' : '⚪'; // Mettre à jour le dot actif
+    });
+
+    // Mettre à jour l'index actuel
+    currentIndex = index;
+}
+
+function startAutoSlide() {
+    setInterval(() => {
+        currentIndex++;
+        goToSlide(currentIndex);
+    }, intervalTime);
+}
+
+// Attacher les événements de clic aux dots
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        goToSlide(index); // Associer chaque dot à son slide correspondant
+    });
+});
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function () {
+    goToSlide(currentIndex); // Afficher la première slide
+    startAutoSlide(); // Démarrer le défilement automatique
+});
 </script>
 
     <!-- Footer -->
