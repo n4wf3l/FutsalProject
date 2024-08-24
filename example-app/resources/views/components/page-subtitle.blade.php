@@ -1,6 +1,6 @@
 @props(['text'])
 
-<div class="subtitle-container flex justify-center items-center mt-2 mb-4">
+<div class="subtitle-container flex justify-center items-center mt-10 mb-4">
     <div class="vertical-line double-bar"></div>
     
     <p class="text-xl text-gray-600 subtitle-text">
@@ -13,7 +13,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
     margin-bottom: 20px;
 }
 

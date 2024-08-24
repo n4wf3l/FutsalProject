@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\BackgroundImage;
+use App\Models\Article;
 
 class PressReleaseController extends Controller
 {
@@ -85,10 +86,14 @@ class PressReleaseController extends Controller
     }
 
     public function show($slug)
-    {
-        $pressRelease = PressRelease::where('slug', $slug)->firstOrFail();
-        return view('press_releases.show', compact('pressRelease'));
-    }
+{
+    $pressRelease = PressRelease::where('slug', $slug)->firstOrFail();
+
+    // Récupérer les 5 articles les plus récents
+    $recentArticles = \App\Models\Article::orderBy('created_at', 'desc')->take(5)->get();
+
+    return view('press_releases.show', compact('pressRelease', 'recentArticles'));
+}
 
     public function destroy(PressRelease $pressRelease)
     {

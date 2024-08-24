@@ -294,10 +294,9 @@ use Illuminate\Support\Facades\Auth;
         <div class="bg-coach flex items-center justify-between text-gray-700">
             <!-- Coach Information -->
             <div class="coach-details text-gray-700">
-                <h2 class="staff-title" style="color:black">Headcoach</h2>
-                <div class="flex justify-center items-center">
-            <p class="text-xl" style="margin-bottom: 80px">Discover additional information by hovering with your mouse.</p>
-        </div>
+            <x-page-title subtitle="L'entraîneur est le cœur battant qui insuffle motivation et discipline">
+    Headcoach
+</x-page-title>
                 <h3 class="text-3xl font-bold mb-6">{{ $coach->first_name }} {{ $coach->last_name }}</h3>
                 <p class="text-lg  mb-6">{!! $coach->description !!}</p>
 
@@ -346,10 +345,9 @@ use Illuminate\Support\Facades\Auth;
 
     <!-- Staff Section -->
     <section class="staff-section">
-        <h1 class="staff-title">Staff technique & medicale</h1>
-        <div class="flex justify-center items-center">
-            <p class="text-xl">Discover additional information by hovering with your mouse.</p>
-        </div>
+    <x-page-title subtitle="Ils veillent à ce que chaque joueur soit à son meilleur, sur le terrain et en dehors">
+    Staff technique et médical
+</x-page-title>
 
         <div class="staff-container">
             @foreach($staff as $member)

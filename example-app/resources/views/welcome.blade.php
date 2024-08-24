@@ -128,7 +128,7 @@
     white-space: nowrap;
     position: absolute;
     left: 100%; /* Commence en dehors de l'écran, à droite */
-    animation: marquee 10s linear infinite;
+    animation: marquee 20s linear infinite;
 }
 
 @keyframes marquee {
@@ -566,6 +566,9 @@ setTimeout(() => {
         @endif
     </div>
 </div>
+
+<hr style="margin-bottom:50px;">
+
 <x-page-title subtitle="🔔 Stay informed with all the breaking stories and headlines you need to know!">
     Last News
 </x-page-title>
@@ -624,7 +627,9 @@ setTimeout(() => {
     @endforeach
     </div>
 </div>
-<hr>
+
+<hr style="margin-bottom:50px;">
+
  <!-- Section pour les 5 prochains matchs -->
  <x-page-title subtitle="⚽️ Get ready for thrilling action and unforgettable moments on the field!">
     Upcoming Matches
@@ -1026,7 +1031,9 @@ modal-content {
     z-index: 300; /* Ensure caption is above image */
 }
 </style>
-<hr>
+
+<hr style="margin-bottom:50px;">
+
 <section class="latest-photos">
     <div class="container">
     <x-page-title subtitle="Explore the latest moments captured in our gallery.">
@@ -1114,11 +1121,14 @@ modal-content {
 }
     </style>
 
+<hr style="margin-bottom:50px;">
+
     <!-- Section des deux dernières vidéos -->
     <section class="latest-videos mt-12 mb-20" data-aos="fade-right">
     <div class="container mx-auto">
-        <h2 class="text-2xl font-bold mb-4 text-center">🎥 Latest Videos</h2>
-
+    <x-page-title subtitle="🎥 Check out our latest videos!">
+    Latest Videos
+</x-page-title>
         @if($videos->isEmpty())
             <p class="text-center text-gray-600">No videos have been published yet.</p>
         @else
@@ -1147,6 +1157,7 @@ modal-content {
         @endif
     </div>
 </section>
+
 
 <div class="albums-link-container">
         <x-button 

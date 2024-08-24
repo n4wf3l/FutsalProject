@@ -209,7 +209,7 @@
                     <img src="{{ asset('storage/' . $articles->first()->image) }}" alt="{{ $articles->first()->title }}">
                     @endif
                     <div class="main-article-content">
-                        <h2 class="text-3xl font-bold mb-2 article-title" style="color: {{ $primaryColor }};">
+                        <h2 class="text-3xl font-bold mb-2 article-title" >
                             <strong>{{ $articles->first()->title }}</strong>
                         </h2>
                         <p class="text-gray-600 mb-4">

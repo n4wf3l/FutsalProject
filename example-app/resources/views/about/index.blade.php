@@ -15,23 +15,7 @@
     @vite('resources/css/app.css')
     <style>
         /* Styles existants */
-        .header-section {
-            text-align: center;
-            margin-bottom: 3rem; 
-        }
-
-        .header-section h1 {
-            font-size: 3rem; 
-            font-weight: bold;
-            margin-bottom: 1.5rem; 
-            color: {{ $primaryColor }};
-        }
-
-        .header-section p {
-            font-size: 1.25rem;
-            color: #555;
-            margin-bottom: 2.5rem; 
-        }
+      
 
         .section-content {
             padding: 3rem 2rem; 
@@ -45,11 +29,6 @@
             margin-bottom: 0.3rem; /* Réduction de l'espace entre les paragraphes */
             line-height: 1.75;
             color: #555;
-        }
-
-        .section-divider {
-            border-top: 1px solid #e5e5e5;
-            margin: 3rem 0; 
         }
 
         .club-info {
@@ -115,11 +94,11 @@
                     aiming to deliver attractive top-level futsal with as many homegrown players and/or people as possible.
                 </p>
 
-            <div class="section-divider"></div>
+            <hr>
 
 
             @foreach($sections as $section)
-    <div class="mb-8">
+    <div class="">
         <x-page-subtitle text="{{ htmlspecialchars_decode($section->title, ENT_QUOTES) }}" />
         <div class="mt-4 text-gray-700 leading-relaxed">
             {!! $section->content !!}
@@ -148,12 +127,9 @@
         </div>
         @endauth
     </div>
-    <hr>
+    <hr style="margin-top:50px; margin-bottom:50px;">
 @endforeach
-        </div>
-
-        <!-- Button to add a new section -->
-        @auth
+@auth
         <div class="text-center mt-8">
             <a href="{{ route('about.create') }}"
                 class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg"
@@ -164,6 +140,10 @@
             </a>
         </div>
         @endauth
+        </div>
+
+        <!-- Button to add a new section -->
+    
         <!-- Section d'Upload de PDF (pour les utilisateurs authentifiés) -->
 @auth
 <div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;">
@@ -231,6 +211,24 @@
     @else
         console.log('No club info available');
     @endif
+
+     document.addEventListener("DOMContentLoaded", function() {
+        var oembeds = document.querySelectorAll('oembed[url]');
+        oembeds.forEach(function(oembed) {
+            var iframe = document.createElement('iframe');
+
+            // Set the iframe attributes to match the oEmbed's URL
+            iframe.setAttribute('width', '100%');
+            iframe.setAttribute('height', '315');
+            iframe.setAttribute('src', oembed.getAttribute('url').replace('watch?v=', 'embed/'));
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('allowfullscreen', 'true');
+
+            // Replace the <oembed> element with the new iframe
+            oembed.parentNode.replaceChild(iframe, oembed);
+        });
+    });
+
 </script>
 
 </body>

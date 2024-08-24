@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $article->title }}</title>
     @if($logoPath)
-        <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
+        <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
@@ -14,18 +14,33 @@
         .article-container {
             max-width: 1200px;
             margin: 50px auto;
+            display: flex;
+            gap: 20px; /* Spacing between the main article and recent articles */
+        }
+
+        .main-article-section {
+            flex: 2;
             padding: 2rem;
             background-color: #ffffff;
             border-radius: 0.5rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .recent-articles-section {
+            flex: 1;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-height: fit-content;
+        }
+
         .article-title {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #1D4ED8;
+            color: {{ $primaryColor }};
             text-align: center;
-            margin: 1.5rem 0;
+            margin-bottom: 1.5rem;
         }
 
         .article-description {
@@ -43,7 +58,7 @@
         }
 
         .article-image {
-            max-width: 100%;
+            max-width: 50%; /* Réduction de la taille de l'image à 50% */
             height: auto;
             border-radius: 0.5rem;
             display: block;
@@ -84,54 +99,40 @@
             margin-top: 20px;
         }
 
-        /* Styles for the arrow inside a circle at the start of the line */
-        .arrow-line-container {
+        .recent-articles-section h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 3px solid {{ $secondaryColor }};
+            padding-bottom: 5px;
+        }
+
+        .recent-articles-section a {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .arrow-circle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            border: 2px solid {{ $primaryColor }};
-            border-radius: 50%;
-            background-color: white;
-            position: absolute;
-            top: -15px;
-            left: -15px;
-            z-index: 1;
-            transition: all 0.3s ease;
-        }
-
-        .arrow-circle:hover {
-            background-color: {{ $primaryColor }};
-            width: 35px;
-            height: 35px;
-            cursor: pointer;
-        }
-
-        .arrow-circle a {
-            color: gray;
-            font-size: 16px;
+            color: {{ $secondaryColor }};
+            margin-bottom: 10px;
             text-decoration: none;
-            transition: color 0.3s ease;
+            padding-bottom: 5px;
         }
 
-        .arrow-circle:hover a {
-            color: white;
+        .recent-articles-section a:hover {
+            text-decoration: underline;
         }
 
-        hr {
-            flex-grow: 1;
+        .recent-articles-section hr {
             border: none;
-            border-top: 2px solid {{ $primaryColor }};
-            margin-left: 20px;
+            border-top: 1px solid #e2e8f0; /* Tailwind CSS gray-200 */
+            margin: 10px 0;
         }
+
+        .recent-article-date {
+            font-size: 0.875rem;
+            color: #4a5568; /* Tailwind CSS gray-700 */
+            white-space: nowrap;
+        }
+
     </style>
 </head>
 
@@ -139,33 +140,65 @@
     <x-navbar />
 
     <div class="article-container">
-    <!-- Arrow and Line -->
-    <div class="arrow-line-container">
-        <div class="arrow-circle">
-            <a href="{{ route('clubinfo') }}">&larr;</a>
-        </div>
-        <hr>
-    </div>
-        @if($article->image)
-        <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="article-image">
-        @endif
-        <h1 class="article-title" style="color: {{ $primaryColor }};">{{ $article->title }}</h1>
-        <p class="article-meta">Published on: {{ $article->created_at->format('d M Y, H:i') }} by {{ $article->user->name }}</p>
-        <p class="article-description">{!! $article->description !!}</p>
+        <!-- Main Article Section -->
+        <div class="main-article-section">
+            <div class="arrow-line-container">
+                <div class="arrow-circle">
+                    <a href="{{ route('clubinfo') }}">&larr;</a>
+                </div>
+                <hr>
+            </div>
+            <h1 class="article-title">{{ $article->title }}</h1>
+            @if($article->image)
+            <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="article-image">
+            @endif
+            <p class="article-meta">Published on: {{ $article->created_at->format('d M Y, H:i') }} by {{ $article->user->name }}</p>
+            <p class="article-description">{!! $article->description !!}</p>
 
-        @auth
-        <div class="button-container">
-            <a href="{{ route('articles.edit', $article->id) }}" class="edit-btn">Edit</a>
-            <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this article?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="delete-btn">Delete</button>
-            </form>
+            @auth
+            <div class="button-container">
+                <a href="{{ route('articles.edit', $article->id) }}" class="edit-btn">Edit</a>
+                <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this article?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </div>
+            @endauth
         </div>
-        @endauth
+
+        <!-- Recent Articles Section -->
+        <div class="recent-articles-section">
+            <h3>📰 Recent Articles</h3>
+            @foreach($recentArticles as $recentArticle)
+            <a href="{{ route('articles.show', $recentArticle->slug) }}">
+                <span>{{ $recentArticle->title }}</span>
+                <span class="recent-article-date">{{ $recentArticle->created_at->format('d/m') }}</span>
+            </a>
+            <hr>
+            @endforeach
+        </div>
     </div>
 
     <x-footer />
+    <script>
+     document.addEventListener("DOMContentLoaded", function() {
+        var oembeds = document.querySelectorAll('oembed[url]');
+        oembeds.forEach(function(oembed) {
+            var iframe = document.createElement('iframe');
+
+            // Set the iframe attributes to match the oEmbed's URL
+            iframe.setAttribute('width', '100%');
+            iframe.setAttribute('height', '315');
+            iframe.setAttribute('src', oembed.getAttribute('url').replace('watch?v=', 'embed/'));
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('allowfullscreen', 'true');
+
+            // Replace the <oembed> element with the new iframe
+            oembed.parentNode.replaceChild(iframe, oembed);
+        });
+    });
+</script>
 </body>
 
 </html>

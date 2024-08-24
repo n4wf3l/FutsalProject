@@ -195,7 +195,8 @@
                             <h2 class="press-release-title">
                                 {{ $pressRelease->title }}
                                 @auth
-                                    <button onclick="openEditModal('{{ $pressRelease->id }}', '{{ $pressRelease->title }}', '{{ $pressRelease->content }}')" class="edit-button-emoji">🛠️</button>
+                                <button onclick="openEditModal('{{ $pressRelease->id }}', '{{ addslashes($pressRelease->title) }}', `{{ addslashes($pressRelease->content) }}`)" class="edit-button-emoji">🛠️</button>
+
                                 @endauth
                             </h2>
                             <div class="press-release-date">{{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</div>
@@ -244,7 +245,7 @@
     <div id="editPressReleaseModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
             <h2 class="text-2xl font-semibold mb-4">Edit Press Release</h2>
-            <form action="" method="POST" id="editPressReleaseForm">
+            <form action="" method="POST" id="editPressReleaseForm" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-4">
@@ -254,6 +255,10 @@
                 <div class="mb-4">
                     <label for="editContent" class="block text-sm font-medium text-gray-700">Content</label>
                     <textarea name="content" id="editContent" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="editImage" class="block text-sm font-medium text-gray-700">Image</label>
+                    <input type="file" name="image" id="editImage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 <div class="flex justify-end">
                     <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('editPressReleaseModal')">Cancel</button>

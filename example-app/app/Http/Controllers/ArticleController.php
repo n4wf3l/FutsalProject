@@ -92,7 +92,14 @@ class ArticleController extends Controller
     public function show($slug)
     {
         $article = Article::where('slug', $slug)->firstOrFail();
-        return view('articles.show', compact('article'));
+        
+        // Récupère les articles récents, en excluant l'article actuellement affiché
+        $recentArticles = Article::where('id', '!=', $article->id)
+                                  ->latest()
+                                  ->take(5) // Limite à 5 articles récents
+                                  ->get();
+    
+        return view('articles.show', compact('article', 'recentArticles'));
     }
 
     public function destroy(Article $article)

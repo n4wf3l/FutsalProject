@@ -193,7 +193,7 @@
 
     <div class="nav-link-container dropdown">
         <a href="#" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
-            Club <img src="bas.png" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+            Club <img src="{{ asset('bas.png') }}" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
         </a>
         <div class="nav-link-hr"></div>
         <div class="dropdown-content">
@@ -212,7 +212,7 @@
 
     <div class="dropdown nav-link-container">
         <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
-            Teams <img src="bas.png" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+            Teams <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
         </a>
         <div class="nav-link-hr"></div>
         <div class="dropdown-content">
@@ -274,7 +274,7 @@
 
         <!-- Club Dropdown -->
         <a href="#" class="block text-white py-2" onclick="toggleDropdown('clubDropdown')" style="display: flex; align-items: center;">
-    Club <img src="bas.png" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+    Club <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
 </a>
 <div id="clubDropdown" class="hidden pl-4">
     <a href="{{ route('clubinfo') }}" class="block text-white py-2">News</a>
@@ -288,7 +288,7 @@
 
 <!-- Teams Dropdown -->
 <a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')" style="display: flex; align-items: center;">
-    Teams <img src="bas.png" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+    Teams <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
 </a>
 <div id="teamsDropdown" class="hidden pl-4">
     <a href="{{ route('teams') }}" class="block text-white py-2">Senior</a>
@@ -305,7 +305,7 @@
 </div>
 
 <div id="scroll-to-top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1000; cursor: pointer;">
-    <img src="haut.png" alt="" width="35px">
+    <img src="{{ asset('haut.png') }}"  alt="" width="35px">
 </div>
 
 <script>
