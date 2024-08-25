@@ -59,46 +59,65 @@ class PlayerU21Controller extends Controller
     }
 
     // Show the form for editing a specific U21 player
-    public function edit(PlayerU21 $playerU21)
+    public function edit(PlayerU21 $playersu21) // Route parameter name should match the model binding
     {
-        return view('playersu21.edit', compact('playerU21'));
+        return view('playersu21.edit', ['playerU21' => $playersu21]);
+    }
+    
+    public function update(Request $request, PlayerU21 $playersu21)
+{
+    // Log the incoming data
+    \Log::info('Update data received:', $request->all());
+
+    // Validate the incoming data
+    $request->validate([
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'photo' => 'nullable|image|max:2048',
+        'birthdate' => 'required|date',
+        'position' => 'required|string|max:255',
+        'number' => 'required|integer',
+        'nationality' => 'required|string|max:255',
+        'height' => 'required|integer',
+    ]);
+
+    // Check if a photo is being updated
+    if ($request->hasFile('photo')) {
+        \Log::info('Photo update detected.');
+
+        // Delete the old photo if it exists
+        if ($playersu21->photo) {
+            Storage::disk('public')->delete($playersu21->photo);
+        }
+
+        // Store the new photo
+        $photoPath = $request->file('photo')->store('photos', 'public');
+        $playersu21->photo = $photoPath;
     }
 
-    // Update the specified U21 player in the database
-    public function update(Request $request, $id)
-    {
-        // Trouver le joueur via l'ID
-        $playerU21 = PlayerU21::findOrFail($id);
-        
-        // Log pour vérifier que le joueur est trouvé
-    
-        // Mise à jour des champs
-        $playerU21->update($request->only([
-            'first_name', 'last_name', 'birthdate', 'position', 'number', 'nationality', 'height'
-        ]));
-    
-        // Vérifier après la sauvegarde
-    
-        return redirect()->route('playersu21.index')->with('success', 'Player updated successfully.');
-    }
+    // Update the player with the new data
+    $playersu21->update($request->only([
+        'first_name', 'last_name', 'birthdate', 'position', 'number', 'nationality', 'height'
+    ]));
+
+    // Log to confirm the update
+    \Log::info('Player updated successfully:', $playersu21->toArray());
+
+    // Redirect back to the index with a success message
+    return redirect()->route('playersu21.index')->with('success', 'Player updated successfully.');
+}
+
 
     // Remove the specified U21 player from the database
-    public function destroy($id)
-{
-    $playerU21 = PlayerU21::find($id);
+    public function destroy(PlayerU21 $playersu21) // Utilisation correcte du modèle
+    {
+        if ($playersu21->photo) {
+            Storage::disk('public')->delete($playersu21->photo);
+        }
 
-    if (!$playerU21) {
-        \Log::error('Player not found with ID:', [$id]);
-        return redirect()->route('playersu21.index')->with('error', 'Player not found.');
+        $playersu21->delete();
+
+        return redirect()->route('playersu21.index')->with('success', 'U21 Player deleted successfully.');
     }
-
-    if ($playerU21->photo) {
-        \Log::info('Deleting photo for Player ID:', [$playerU21->id]);
-        Storage::disk('public')->delete($playerU21->photo);
-    }
-
-    $playerU21->delete();
-
-    return redirect()->route('playersu21.index')->with('success', 'U21 Player deleted successfully.');
 }
-}
+

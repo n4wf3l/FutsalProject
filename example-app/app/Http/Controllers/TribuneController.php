@@ -10,6 +10,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Game;
 use App\Models\ClubInfo;
 use App\Models\BackgroundImage;
+use Illuminate\Support\Facades\Storage;
 
 class TribuneController extends Controller
 {

@@ -185,77 +185,87 @@
     </header>
 
     <div class="container mx-auto py-12">
-        <div class="main-video-container">
-            @if($videos->isNotEmpty())
-                <!-- Main Video -->
-                <div class="main-video">
-                    <a href="{{ $videos->first()->url }}" target="_blank">
-                        @if($videos->first()->image)
-                            <img src="{{ asset('storage/' . $videos->first()->image) }}" alt="{{ $videos->first()->title }}">
-                        @endif
-                        <div class="main-video-content">
-                            <h2 class="text-3xl font-bold mb-2" style="color: {{ $primaryColor }};">
-                                <strong>{{ $videos->first()->title }}</strong>
-                            </h2>
-                            <p class="text-gray-600 mb-4">
-                                {!! \Illuminate\Support\Str::limit(strip_tags($videos->first()->description, '<b><i><strong><em><ul><li><ol>'), 200) !!}
-                            </p>
-                        </div>
-                    </a>
+    <div class="main-video-container">
+        @if($videos->isNotEmpty())
+            <!-- Main Video -->
+            <div class="main-video">
+                <a href="{{ $videos->first()->url }}" target="_blank">
+                    @if($videos->first()->image)
+                        <img src="{{ asset('storage/' . $videos->first()->image) }}" alt="{{ $videos->first()->title }}">
+                    @endif
+                    <div class="main-video-content">
+                        <h2 class="text-3xl font-bold mb-2" style="color: {{ $primaryColor }};">
+                            <strong>{{ $videos->first()->title }}</strong>
+                        </h2>
+                        <p class="text-gray-600 mb-4">
+                            {!! \Illuminate\Support\Str::limit(strip_tags($videos->first()->description, '<b><i><strong><em><ul><li><ol>'), 200) !!}
+                        </p>
+                    </div>
+                </a>
 
-                    <!-- Delete Button for Main Video -->
-                    <form action="{{ route('videos.destroy', $videos->first()->id) }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="delete-button">&times;</button>
-                    </form>
-                </div>
+                <!-- Delete Button for Main Video -->
+                <form action="{{ route('videos.destroy', $videos->first()->id) }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="delete-button">&times;</button>
+                </form>
+            </div>
 
-                <!-- Recent Videos List -->
-                <div class="recent-videos">
-                    <h3>🎬 Recent Videos</h3>
-                    @foreach($videos->skip(1) as $video)
-                        <a href="{{ $video->url }}" target="_blank">
-                            <span>{{ $video->title }}</span>
-                            <span class="recent-video-date">{{ $video->created_at->format('d/m') }}</span>
-                        </a>
-                        <hr>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-center text-gray-600">No videos available.</p>
-            @endif
-        </div>
-
-        <!-- Recent Videos Below the Main Video -->
-        <div class="recent-videos-container">
-            @foreach($videos->skip(1) as $video)
-                <div class="video-item">
+            <!-- Recent Videos List -->
+            <div class="recent-videos">
+                <h3>🎬 Recent Videos</h3>
+                @foreach($videos->skip(1) as $video)
                     <a href="{{ $video->url }}" target="_blank">
-                        @if($video->image)
-                            <img src="{{ asset('storage/' . $video->image) }}" alt="{{ $video->title }}">
-                        @endif
-                        <div class="video-item-content">
-                            <h2 class="video-item-title">{{ $video->title }}</h2>
-                            <div class="video-item-meta">
-                                <span>{{ $video->created_at->format('d/m') }} - </span>
-                                <span>
-                                    {{ \Illuminate\Support\Str::limit(strip_tags($video->description), 100) }}
-                                </span>
-                            </div>
-                        </div>
+                        <span>{{ $video->title }}</span>
+                        <span class="recent-video-date">{{ $video->created_at->format('d/m') }}</span>
                     </a>
+                    <hr>
+                @endforeach
 
-                    <!-- Delete Button for Recent Videos -->
-                    <form action="{{ route('videos.destroy', $video->id) }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="delete-button">&times;</button>
-                    </form>
+                <!-- Pagination Links -->
+                <div class="mt-4">
+                    {{ $videos->links('vendor.pagination.simple') }}
                 </div>
-            @endforeach
+            </div>
+        @else
+            <p class="text-center text-gray-600">No videos available.</p>
+        @endif
+    </div>
+
+    <!-- Recent Videos Below the Main Video -->
+    <div class="recent-videos-container">
+        @foreach($videos->skip(1) as $video)
+            <div class="video-item">
+                <a href="{{ $video->url }}" target="_blank">
+                    @if($video->image)
+                        <img src="{{ asset('storage/' . $video->image) }}" alt="{{ $video->title }}">
+                    @endif
+                    <div class="video-item-content">
+                        <h2 class="video-item-title">{{ $video->title }}</h2>
+                        <div class="video-item-meta">
+                            <span>{{ $video->created_at->format('d/m') }} - </span>
+                            <span>
+                                {{ \Illuminate\Support\Str::limit(strip_tags($video->description), 100) }}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Delete Button for Recent Videos -->
+                <form action="{{ route('videos.destroy', $video->id) }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="delete-button">&times;</button>
+                </form>
+            </div>
+        @endforeach
+
+        <!-- Pagination Links -->
+        <div class="mt-4">
+            {{ $videos->links('vendor.pagination.simple') }}
         </div>
     </div>
+</div>
 
     <!-- Add Video Modal -->
     <div class="modal fade" id="addVideoModal" tabindex="-1" aria-labelledby="addVideoModalLabel" aria-hidden="true">

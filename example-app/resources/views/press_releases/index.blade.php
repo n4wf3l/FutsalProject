@@ -148,6 +148,33 @@
         .create-button:hover {
             background-color: {{ $secondaryColor }};
         }
+
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination a {
+        color: {{ $primaryColor }};
+        padding: 8px 16px;
+        text-decoration: none;
+        margin: 0 4px;
+        border: 1px solid {{ $primaryColor }};
+        border-radius: 4px;
+    }
+
+    .pagination a:hover {
+        background-color: {{ $primaryColor }};
+        color: #ffffff;
+    }
+
+    .pagination .active {
+        background-color: beige; /* Couleur beige pour la page active */
+        color: #ffffff;
+        border: 1px solid {{ $primaryColor }};
+    }
     </style>
 </head>
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>

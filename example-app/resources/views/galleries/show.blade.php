@@ -104,11 +104,13 @@
 
         /* Modal content style */
         .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            margin: auto;
-            display: block;
-        }
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+    display: block;
+    opacity: 0; /* Initialement transparent */
+    transition: opacity 0.5s ease; /* Transition sur l'opacité */
+}
 
         /* Navigation buttons for image modal */
         .prev,
@@ -264,13 +266,21 @@
         }
 
         function showSlide(index) {
-            const modalImg = document.getElementById('modalImage');
-            const captionText = document.getElementById('caption');
+    const modalImg = document.getElementById('modalImage');
+    const captionText = document.getElementById('caption');
 
-            // Met à jour l'image et le texte de la légende
-            modalImg.src = '{{ asset('storage/') }}/' + photos[index].image;
-            captionText.textContent = photos[index].caption ? `© ${photos[index].caption}` : '';
-        }
+    // Masque l'image actuelle en définissant l'opacité à 0
+    modalImg.style.opacity = 0;
+
+    // Après un court délai pour permettre à l'image actuelle de disparaître, charge la nouvelle image
+    setTimeout(() => {
+        modalImg.src = '{{ asset('storage/') }}/' + photos[index].image;
+        captionText.textContent = photos[index].caption ? `© ${photos[index].caption}` : '';
+
+        // Affiche la nouvelle image en définissant l'opacité à 1
+        modalImg.style.opacity = 1;
+    }, 200); // Correspond au temps de transition défini dans CSS
+}
 
         function changeSlide(direction) {
             currentSlide += direction;

@@ -10,11 +10,12 @@ use App\Models\BackgroundImage;
 class VideoController extends Controller
 {
     public function index()
-    {
-        $videos = Video::all();
-        $backgroundImage = BackgroundImage::where('assigned_page', 'videos')->latest()->first();
-        return view('videos.index', compact('videos', 'backgroundImage'));
-    }
+{
+    // Utiliser paginate(10) pour récupérer les vidéos avec pagination
+    $videos = Video::latest()->paginate(10); 
+    $backgroundImage = BackgroundImage::where('assigned_page', 'videos')->latest()->first();
+    return view('videos.index', compact('videos', 'backgroundImage'));
+}
 
     public function store(Request $request)
     {

@@ -2,7 +2,7 @@
     $backgroundImage = \App\Models\BackgroundImage::where('assigned_page', 'welcome')->first();
 @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ App::getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -379,15 +379,15 @@
 
 <div class="background-container" style="position: relative; width: 100%; height: 60vh; background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover; z-index: 500;">
     @if($welcomeImage)
-        <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; bottom: 40px; right: 100px; width: 550px; height: 500px;">
+        <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; top:18vh; right: 100px; width: 550px; height: 500px;">
     @endif
-    <div id="typing-text" style="position: absolute; top: 10%; left: 10%; color: {{ $secondaryColor }}; font-family: 'Bebas Neue', sans-serif; font-size: 6rem; font-weight: bold; text-align: left; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); z-index: 1300;">
+    <div id="typing-text" style="position: absolute;  left: 50%; transform: translateX(-50%); color: {{ $secondaryColor }}; font-family: 'Bebas Neue', sans-serif; font-size: 6rem; font-weight: bold; text-align: center; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); z-index: 1300;">
     </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const text = "DINA KÉNITRA FC\nRISE UP & DOMINATE\nTHE GAME!";
+    const text = "DINA KÉNITRA FC\nVivez le futsal comme jamais!\n";
     const typingElement = document.getElementById("typing-text");
     let index = 0;
     const speed = 50;  // Vitesse d'écriture (ms)
@@ -412,7 +412,7 @@ document.addEventListener("DOMContentLoaded", function() {
             logo.style.position = "absolute";
             logo.style.left = "50%";
             logo.style.transform = "translateX(-50%)";
-            logo.style.marginTop = "10vh";
+            logo.style.marginTop = "30vh";
             logo.style.opacity = "0";  // Commence transparent
             logo.style.transition = "opacity 1s ease-in-out";
 
@@ -444,7 +444,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     button.style.position = "absolute";
                     button.style.left = "50%";
                     button.style.transform = "translateX(-50%)";
-                    button.style.marginTop = "30vh";
+                    button.style.marginTop = "50vh";
                     button.style.opacity = "0"; 
                     button.style.transition = "opacity 1s ease-in-out"; 
 
@@ -526,11 +526,11 @@ setTimeout(() => {
 </style>
 
 
-    <div class="info-container mt-60" style="z-index: 1300;">
+    <div class="info-container" style="top:100vh; z-index: 1300;">
 
-        <div class="title" data-aos="zoom-in">NEXT GAME</div>
+        <div class="title">NEXT GAME</div>
         @if($nextGame)
-        <div class="match-info" data-aos="zoom-in">
+        <div class="match-info">
             <!-- Affichage du lieu du match -->
             @if(Str::startsWith($nextGame->homeTeam->name, $clubPrefix))
             <li class="d-flex align-items-center justify-content-center">
@@ -601,7 +601,7 @@ setTimeout(() => {
                 <h2 class="text-3xl font-bold mb-2 article-title" style="font-size: 2.5rem; margin-bottom: 20px;">
                     <strong>{{ $article->title }}</strong>
                 </h2>
-                <p class="text-sm text-gray-500" style="font-size: 1rem; margin-bottom: 15px;">
+                <p class="text-sm text-white" style="font-size: 1rem; margin-bottom: 15px;">
                     Published on: {{ $article->created_at->format('d M Y, H:i') }} by {{ $article->user->name }}
                 </p>
                 <!-- Buttons Container -->

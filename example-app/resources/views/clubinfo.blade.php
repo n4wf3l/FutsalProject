@@ -231,7 +231,11 @@
                 </a>
                 <hr>
                 @endforeach
+             <!-- Pagination Links -->
+            <div class="mt-4">
+            {{ $articles->links('vendor.pagination.simple') }}
             </div>
+        </div>
         </div>
 
         <!-- Recent Articles Below the Main Article -->

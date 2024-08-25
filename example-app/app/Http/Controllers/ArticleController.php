@@ -15,14 +15,14 @@ class ArticleController extends Controller
     {
         $search = $request->input('search');
         $backgroundImage = BackgroundImage::where('assigned_page', 'clubinfo')->latest()->first();
-
+    
         if ($search) {
             $articles = Article::where('title', 'LIKE', "%{$search}%")
                 ->orWhere('description', 'LIKE', "%{$search}%")
                 ->latest()
-                ->get();
+                ->paginate(10); // Pagination avec 10 articles par page
         } else {
-            $articles = Article::latest()->get();
+            $articles = Article::latest()->paginate(10); // Pagination avec 10 articles par page
         }
     
         return view('clubinfo', compact('articles', 'backgroundImage'));
