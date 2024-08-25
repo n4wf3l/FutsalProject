@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
@@ -183,7 +184,7 @@
     </header>
 
     <main class="py-12 flex flex-col items-center">
-        <div class="container mx-auto px-4 text-center">
+        <div class="container mx-auto px-4 text-center" data-aos="fade-right">
             @auth
             <div class="mb-6">
                 <x-button 
@@ -235,9 +236,9 @@
     </main>
     <div class="partner-section">
         <div class="partner-content">
-            <h2 class="partner-title custom-font">PARTNERS & SPONSORS</h2>
-            <h3 class="partner-subtitle custom-font">Do you want to be a partner?</h3>
-            <p class="partner-text">We are always looking for new partners & sponsors to help us, and we put you in the spotlight! If you and your company are interested, contact us today.</p>
+            <h2 class="partner-title custom-font" data-aos="fade-right">PARTNERS & SPONSORS</h2>
+            <h3 class="partner-subtitle custom-font" data-aos="fade-right">Do you want to be a partner?</h3>
+            <p class="partner-text" data-aos="fade-right">We are always looking for new partners & sponsors to help us, and we put you in the spotlight! If you and your company are interested, contact us today.</p>
             <x-button 
                 route="{{ route('contact.show') }}"
                 buttonText="Contact Us" 

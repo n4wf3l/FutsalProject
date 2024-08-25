@@ -272,26 +272,37 @@
                 </div>
             </div>
 
-            <!-- Form for Background Images -->
-            <section class="mb-16">
-                <div class="card">
-                    <h2 class="text-xl font-semibold text-center mb-6" style="color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">
-                        Ajouter une Image de Fond
-                    </h2>
-                    <form action="{{ route('dashboard.storeBackgroundImage') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                        @csrf
-                        <div class="mb-6">
-                            <label for="background_image" class="block text-sm font-medium text-gray-700 mb-2">Sélectionner une image :</label>
-                            <input type="file" name="background_image" id="background_image" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-{{ $userSettings->theme_color_primary ?? 'blue' }}-500 focus:border-{{ $userSettings->theme_color_primary ?? 'blue' }}-500">
-                        </div>
-                        <div class="flex justify-center">
-                            <button type="submit" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};" class="text-white font-bold py-2 px-6 rounded-full hover:opacity-90 transition duration-200 shadow-lg text-center">
-                                Ajouter
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </section>
+           <!-- Form for Background Images -->
+<section class="mb-16">
+    <div class="card">
+        <h2 class="text-xl font-semibold text-center mb-6" style="color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">
+            Ajouter une Image de Fond
+        </h2>
+        <form action="{{ route('dashboard.storeBackgroundImage') }}" method="POST" enctype="multipart/form-data" class="space-y-6" onsubmit="return validateForm()">
+            @csrf
+            <div class="mb-6">
+                <label for="background_image" class="block text-sm font-medium text-gray-700 mb-2">Sélectionner une image :</label>
+                <input type="file" name="background_image" id="background_image" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-{{ $userSettings->theme_color_primary ?? 'blue' }}-500 focus:border-{{ $userSettings->theme_color_primary ?? 'blue' }}-500">
+            </div>
+            <div class="flex justify-center">
+                <button type="submit" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};" class="text-white font-bold py-2 px-6 rounded-full hover:opacity-90 transition duration-200 shadow-lg text-center">
+                    Ajouter
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    function validateForm() {
+        const fileInput = document.getElementById('background_image');
+        if (fileInput.files.length === 0) {
+            alert('Veuillez sélectionner une image avant de soumettre.');
+            return false; // Empêche la soumission du formulaire
+        }
+        return true; // Permet la soumission du formulaire si une image est sélectionnée
+    }
+</script>
 
             <!-- List of Background Images -->
             <section class="mb-16">

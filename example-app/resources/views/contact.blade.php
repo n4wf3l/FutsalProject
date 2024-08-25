@@ -15,6 +15,7 @@
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
     <style>
         .contact-container {
             text-align: left;
@@ -132,7 +133,7 @@
 </x-page-title>
 
     <div class="contact-container">
-        <div class="contact-info">
+        <div class="contact-info" data-aos="fade-right">
             <h2>Contact Us</h2>
             <h1>Get in Touch</h1>
             <p>Fill out the form and we will get in touch with you as soon as possible regarding your inquiry or feedback.</p>
@@ -162,7 +163,7 @@
             </div>
         </div>
 
-        <div class="contact-form">
+        <div class="contact-form" data-aos="fade-left">
         <form action="{{ route('contact.send') }}" method="POST">
     @csrf
     <div class="form-group">

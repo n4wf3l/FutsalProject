@@ -12,7 +12,6 @@
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
-
     <!-- CSS Bootstrap pour les Modals -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- CSS App -->
@@ -161,120 +160,127 @@
             color: white;
         }
         
+
         .carousel-container {
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 70vh;
-            padding-top: 20px;
-        }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px; /* Hauteur fixe pour le carousel */
+    overflow: hidden;
+}
 
-        .carousel-slide {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
+.carousel-slide {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
 
-        .carousel-item {
+.carousel-item {
+    flex: 0 0 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Hauteur égale à celle du conteneur */
+    position: relative;
+}
 
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            opacity: 0.5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-            position: relative;
-        }
+.carousel-item img {
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    height: 100%; /* Hauteur égale à celle du conteneur */
+    border-radius: 8px;
+    max-height: 500px; /* S'assure que les images ne dépassent pas la hauteur du conteneur */
+}
 
-        .carousel-item.active {
-            opacity: 1;
-        }
+.carousel-slide {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
 
-        .carousel-item img {
-            object-fit: cover;
-            height: auto;
-            max-height: 70vh;
-            border-radius: 8px;
-        }
+.carousel-item.active {
+    opacity: 1;
+}
 
-        .main-article-content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            text-align: left;
-            position: absolute;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom:15%;
-        }
+.main-article-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    position: absolute;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15%;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
 
-        .main-article-content p,
-        .main-article-content h2 {
-            margin: 0;
-        }
+.main-article-content p,
+.main-article-content h2 {
+    margin: 0;
+}
 
-        .article-title {
-            font-size: 2.5rem;
-            color: white;
-            font-family: 'Bebas Neue', sans-serif;
-            margin-bottom: 20px;
-        }
+.article-title {
+    font-size: 2.5rem;
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    margin-bottom: 20px;
+}
 
-        .buttons-container {
-            margin-top: 30px;
-            display: flex;
-            justify-content: flex-start;
-            gap: 20px;
-        }
+.buttons-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+}
 
-        .buttons-container a {
-            padding: 10px 20px;
-            background-color: #DC2626;
-            color: white;
-            font-family: 'Bebas Neue', sans-serif;
-            text-transform: uppercase;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.5rem;
-            transition: transform 0.3s ease;
-        }
+.buttons-container a {
+    padding: 10px 20px;
+    background-color: #DC2626;
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
 
-        .buttons-container a:hover {
-            transform: scale(1.1);
-            background-color: #B91C1C;
-        }
+.buttons-container a:hover {
+    transform: scale(1.1);
+    background-color: #B91C1C;
+}
 
-        .carousel-controls {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-        }
+.carousel-controls {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+}
 
-        .carousel-controls button {
-            background-color: rgba(0, 0, 0, 0.5);
-            border: none;
-            color: white;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 50%;
-        }
+.carousel-controls button {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+}
 
-        .carousel-indicators {
-            position: absolute;
-            bottom: 20px;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-        .carousel-indicators .dot {
+.carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.carousel-indicators .dot {
     height: 15px;
     width: 15px;
     margin: 0 5px;

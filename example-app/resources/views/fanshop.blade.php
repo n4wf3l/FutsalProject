@@ -9,6 +9,7 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
     <style>
 .fanshop-container {
     display: flex;
@@ -197,7 +198,7 @@
         <div class="fanshop-container">
             <!-- Image du plan des tribunes -->
             @if($tribunes->isNotEmpty() && $tribunes->first()->photo)
-                <div class="stadium-plan">
+                <div class="stadium-plan" data-aos="zoom-in">
                 <li class="location-info">
                         <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 "> 
                         <span>Matches are played at {{ $clubLocation }}</span>
@@ -207,7 +208,7 @@
             @endif
 
             <!-- Liste des tribunes -->
-            <div class="tribune-list">
+            <div class="tribune-list" data-aos="fade-right">
     @foreach($tribunes as $tribune)
         <div class="tribune-item">
             <!-- X pour supprimer, placé en haut à droite -->

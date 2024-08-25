@@ -138,32 +138,61 @@
         @endif
 
         <form id="article-form" action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
+    @csrf
 
-            <div class="form-grid">
-                <div>
-                    <div class="mb-4">
-                        <label for="title" class="form-label">Title:</label>
-                        <input type="text" name="title" id="title" class="form-input" value="{{ old('title') }}" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="description" class="form-label">Description:</label>
-                        <textarea name="description" id="description" class="form-textarea">{{ old('description') }}</textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="image" class="form-label">Image:</label>
-                        <input type="file" name="image" id="image" class="form-input">
-                    </div>
-                </div>
+    <div class="form-grid">
+        <div>
+            <div class="mb-4">
+                <label for="title" class="form-label">Title:</label>
+                <input type="text" name="title" id="title" class="form-input" value="{{ old('title') }}" required>
             </div>
 
-            <div class="button-group">
-                <a href="{{ route('clubinfo') }}" class="cancel-button">Cancel</a>
-                <button type="submit" class="save-button">Save Article</button>
+            <div class="mb-4">
+                <label for="description" class="form-label">Description:</label>
+                <textarea name="description" id="description" class="form-textarea">{{ old('description') }}</textarea>
             </div>
-        </form>
+
+            <div class="mb-4">
+                <label for="image" class="form-label">Image:</label>
+                <input type="file" name="image" id="image" class="form-input" accept="image/*" required>
+                <small id="image-error" style="color: red; display: none;"></small>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <a href="{{ route('clubinfo') }}" class="cancel-button">Cancel</a>
+        <button type="submit" class="save-button">Save Article</button>
+    </div>
+</form>
+
+<script>
+document.getElementById('image').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.onload = function() {
+            if (img.height < 850) {
+                document.getElementById('image-error').textContent = `The image height is ${img.height}px. It must be at least 850px.`;
+                document.getElementById('image-error').style.display = 'block';
+                document.getElementById('article-form').querySelector('.save-button').disabled = true;
+            } else {
+                document.getElementById('image-error').style.display = 'none';
+                document.getElementById('article-form').querySelector('.save-button').disabled = false;
+            }
+        };
+    }
+});
+
+document.getElementById('article-form').addEventListener('submit', function(event) {
+    const saveButton = this.querySelector('.save-button');
+    if (saveButton.disabled) {
+        event.preventDefault(); // Empêche l'envoi du formulaire
+        alert('The image height must be at least 850px. Please choose another image.');
+    }
+});
+</script>
     </div>
 
     <x-footer />
