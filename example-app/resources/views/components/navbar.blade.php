@@ -108,12 +108,18 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-    #mobile-menu-modal {
+#mobile-menu-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: translateX(-100%); /* Position initiale en dehors de l'écran à gauche */
     transition: transform 0.3s ease-in-out;
-    transform: translateX(-100%);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size:25px;
     z-index: 1400;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 25px;
 }
 
 #mobile-menu-modal .w-64 {
@@ -363,15 +369,18 @@
     const closeButton = document.getElementById('close-button');
 
     hamburgerButton.addEventListener('click', function () {
-        mobileMenuModal.classList.remove('hidden');
-        mobileMenuModal.classList.add('open');
+        mobileMenuModal.classList.add('open');  // Ajoute la classe pour afficher le modal avec l'animation
     });
 
     closeButton.addEventListener('click', function () {
-        mobileMenuModal.classList.remove('open');
-        setTimeout(() => {
-            mobileMenuModal.classList.add('hidden');
-        }, 300); // Match this with your transition duration
+        mobileMenuModal.classList.remove('open');  // Retire la classe pour lancer l'animation de fermeture
+    });
+
+    // Ferme le menu modal si on clique en dehors du menu
+    mobileMenuModal.addEventListener('click', function(e) {
+        if (e.target.id === 'mobile-menu-modal') {
+            mobileMenuModal.classList.remove('open');  // Ferme le menu si on clique en dehors du menu
+        }
     });
 });
 

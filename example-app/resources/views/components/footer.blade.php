@@ -29,102 +29,137 @@
     }
 
     .sponsor-carousel-container {
-            width: 40%; /* Réduire la largeur à 60% de la page */
-            margin: 0 auto;
+        width: 40%;
+        margin: 0 auto;
+        text-align: center;
+        margin-bottom: 80px;
+    }
+
+    .sponsor-carousel-container h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .carousel-wrapper {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .carousel {
+        display: flex;
+        transition: transform 0.3s ease-in-out;
+        width: 100%; 
+    }
+
+    .carousel-item {
+        min-width: 33.33%; 
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .carousel-item img {
+        max-height: 100px;
+        width: auto;
+    }
+
+    .carousel-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .carousel-button.prev {
+        left: 0;
+    }
+
+    .carousel-button.next {
+        right: 0;
+    }
+
+    @media (max-width: 767px) {
+        .footer-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            margin-bottom: 80px;
-    
         }
 
-        .sponsor-carousel-container h2 {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .carousel-wrapper {
-            position: relative;
-            overflow: hidden;
+        .footer-logo,
+        .footer-social,
+        .footer-links-container {
+            justify-content: center;
+            display: flex;
             width: 100%;
         }
 
-        .carousel {
-            display: flex;
-            transition: transform 0.3s ease-in-out;
-            width: 100%; 
+        .footer-links,
+        .footer-contact {
+            text-align: center;
         }
 
-        .carousel-item {
-            min-width: 33.33%; 
-            padding: 10px;
+        .footer-copyright {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            box-sizing: border-box;
+            text-align: center;
         }
 
-        .carousel-item img {
-            max-height: 100px;
-            width: auto;
+        .footer-copyright .footer-links-container {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 10px;
         }
-
-        .carousel-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .carousel-button.prev {
-            left: 0;
-        }
-
-        .carousel-button.next {
-            right: 0;
-        }
+    }
 </style>
 
 <div class="sponsor-carousel-container">
     <x-page-title>
         Sponsors and partners
     </x-page-title>
-            <div class="carousel-wrapper">
-                <div class="carousel">
-                    @foreach($sponsors as $sponsor)
-                        <div class="carousel-item">
-                            <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
-                        </div>
-                    @endforeach
-                    <!-- Duplicate the items for the infinite loop effect -->
-                    @foreach($sponsors as $sponsor)
-                        <div class="carousel-item">
-                            <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
-                        </div>
-                    @endforeach
+    <div class="carousel-wrapper">
+        <div class="carousel">
+            @foreach($sponsors as $sponsor)
+                <div class="carousel-item">
+                    <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
                 </div>
-                <button class="carousel-button prev">&#10094;</button>
-                <button class="carousel-button next">&#10095;</button>
-            </div>
+            @endforeach
+            <!-- Duplicate the items for the infinite loop effect -->
+            @foreach($sponsors as $sponsor)
+                <div class="carousel-item">
+                    <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
+                </div>
+            @endforeach
         </div>
-
-<footer class="text-white py-12 mt-auto" style="background-color: {{ $primaryColor }};">
-    <div class="container mx-auto px-6">
-        <div class="flex flex-wrap justify-between">
-            <!-- Logo and Social Media -->
-            <div class="w-full md:w-1/4 mb-6 md:mb-0">
-    <!-- Utilisation de flex pour aligner les logos côte à côte -->
-    <div class="flex items-center space-x-4 mb-6">
-        <img src="{{ $logoPath }}" alt="Club Logo" style="height: 60px; width: auto;">
-        <img src="{{ $federationLogo }}" alt="Fed Logo" style="height: 60px; width: auto;">
+        <button class="carousel-button prev">&#10094;</button>
+        <button class="carousel-button next">&#10095;</button>
     </div>
 </div>
 
+<footer class="text-white py-12 mt-auto" style="background-color: {{ $primaryColor }};">
+    <div class="footer-center container mx-auto px-6">
+        <div class="flex flex-wrap justify-between">
+            <!-- Logo and Social Media -->
+            <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-logo">
+                <div class="flex items-center space-x-4 mb-6">
+                    <img src="{{ $logoPath }}" alt="Club Logo" style="height: 60px; width: auto;">
+                    <img src="{{ $federationLogo }}" alt="Fed Logo" style="height: 60px; width: auto;">
+                </div>
+            </div>
+
             <!-- Links -->
-            <div class="w-full md:w-1/4 mb-6 md:mb-0">
+            <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
                 <h3 class="font-bold mb-4">ABOUT US</h3>
                 <ul class="space-y-2">
                     <li><a href="{{ route('clubinfo') }}" class="hover:text-gray-300">News</a></li>
@@ -133,25 +168,26 @@
                     <li><a href="#" class="hover:text-gray-300">Board</a></li>
                     <li><a href="#" class="hover:text-gray-300">Regulations</a></li>
                     <li>
-    @if (Route::has('login'))
-        @auth
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="hover:text-gray-300 transition duration-200">
-                    Log Out
-                </button>
-            </form>
-        @else
-            <a href="{{ route('login') }}" class="hover:text-gray-300 transition duration-200">
-                Authentication
-            </a>
-        @endauth
-    @endif
-</li>
+                        @if (Route::has('login'))
+                            @auth
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="hover:text-gray-300 transition duration-200">
+                                        Log Out
+                                    </button>
+                                </form>
+                            @else
+                                <a href="{{ route('login') }}" class="hover:text-gray-300 transition duration-200">
+                                    Authentication
+                                </a>
+                            @endauth
+                        @endif
+                    </li>
                 </ul>
             </div>
 
-            <div class="w-full md:w-1/4 mb-6 md:mb-0">
+            <!-- Team Links -->
+            <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
                 <h3 class="font-bold mb-4">TEAM</h3>
                 <ul class="space-y-2">
                     <li><a href="{{ route('teams') }}" class="hover:text-gray-300">Elite</a></li>
@@ -162,7 +198,8 @@
                 </ul>
             </div>
 
-            <div class="w-full md:w-1/4 mb-6 md:mb-0">
+            <!-- Matches -->
+            <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
                 <h3 class="font-bold mb-4">MATCHES</h3>
                 <ul class="space-y-2">
                     <li><a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'upcoming']) }}#calendar-section" class="hover:text-gray-300">Next Matches</a></li>
@@ -172,50 +209,48 @@
             </div>
 
             <!-- Contact Information -->
-            <div class="w-full md:w-1/4">
+            <div class="w-full md:w-1/4 footer-contact">
                 <h3 class="font-bold mb-4">CONTACT {{ $clubName }}</h3>
                 <ul class="space-y-2">
-    <li class="flex items-center">
-        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
-        <span>{{ $clubLocation }}</span>
-    </li>
-    <li class="flex items-center">
-        <img src="{{ asset('tel.png') }}" alt="Tel" class="h-6 w-6 mr-2">
-        <span>GC: {{ $phone }}</span>
-    </li>
-    <li class="flex items-center">
-        <img src="{{ asset('email.png') }}" alt="Email" class="h-6 w-6 mr-2"> 
-        <span>{{ $email }}</span>
-    </li>
-</ul>
+                    <li class="footer-logo flex items-center">
+                        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
+                        <span>{{ $clubLocation }}</span>
+                    </li>
+                    <li class="footer-logo flex items-center">
+                        <img src="{{ asset('tel.png') }}" alt="Tel" class="h-6 w-6 mr-2">
+                        <span>GC: {{ $phone }}</span>
+                    </li>
+                    <li class="footer-logo flex items-center">
+                        <img src="{{ asset('email.png') }}" alt="Email" class="h-6 w-6 mr-2"> 
+                        <span>{{ $email }}</span>
+                    </li>
+                </ul>
 
-<div class="flex space-x-4 mt-4">
-    <a href="{{ $facebook }}" class="text-white hover:text-gray-300 flex items-center">
-        <img src="{{ asset('facebook.png') }}" alt="Facebook" class="h-6 w-6 mr-2"> 
-        <span>Facebook</span>
-    </a>
-    <a href="{{ $instagram }}" class="text-white hover:text-gray-300 flex items-center">
-        <img src="{{ asset('instagram.png') }}" alt="Instagram" class="h-6 w-6 mr-2"> 
-        <span>Instagram</span>
-    </a>
-</div>
-
+                <div class="footer-social flex space-x-4 mt-4">
+                    <a href="{{ $facebook }}" class="text-white hover:text-gray-300 flex items-center">
+                        <img src="{{ asset('facebook.png') }}" alt="Facebook" class="h-6 w-6 mr-2"> 
+                    </a>
+                    <a href="{{ $instagram }}" class="text-white hover:text-gray-300 flex items-center">
+                        <img src="{{ asset('instagram.png') }}" alt="Instagram" class="h-6 w-6 mr-2"> 
+                    </a>
+                </div>
             </div>
         </div>
 
-        <div class="mt-8 border-t border-gray-500 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-300">
-    <p>&copy; 2024 {{ $clubName }} - Website by <a href="https://nainnovations.be/" class="hover:text-white" target="_blank">NA Innovations</a></p>
-    <div class="mt-4 md:mt-0 space-x-4">
-        <a href="#" class="hover:text-white">Privacy</a>
-        <a href="#" class="hover:text-white">Terms & Conditions</a>
-        <a href="#" class="hover:text-white">Cookies</a>
-    </div>
-</div>
+        <!-- Footer Links and Copyright -->
+        <div class="mt-8 border-t border-gray-500 pt-6 footer-copyright">
+            <p>&copy; 2024 {{ $clubName }} - Website by <a href="https://nainnovations.be/" class="hover:text-white" target="_blank">NA Innovations</a></p>
+            <div class="mt-4 md:mt-0 flex space-x-4 footer-links-container">
+                <a href="#" class="hover:text-white">Privacy</a>
+                <a href="#" class="hover:text-white">Terms & Conditions</a>
+                <a href="#" class="hover:text-white">Cookies</a>
+            </div>
+        </div>
     </div>
 </footer>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-    <script type="text/javascript">
+<script type="text/javascript">
  document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.querySelector('.carousel');
     const carouselItems = document.querySelectorAll('.carousel-item');
@@ -291,4 +326,4 @@
 
     startAutoPlay();
 });
-    </script>
+</script>
