@@ -11,35 +11,35 @@
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <style>
-.fanshop-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centre le contenu horizontalement */
-    gap: 40px; /* Espace entre l'image et les tribunes */
-}
+        .fanshop-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
 
-.stadium-plan {
-    width: 80%; /* L'image occupe 80% de la largeur du conteneur */
-    max-width: 600px; /* Limite la largeur maximale de l'image */
-    margin: 0 auto; /* Centre l'image */
-}
+        .stadium-plan {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-.tribune-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Deux colonnes */
-    gap: 20px; /* Espace entre les tribunes */
-    width: 80%; /* Les tribunes occupent 80% de la largeur du conteneur */
-    max-width: 1000px; /* Limite la largeur maximale de la liste des tribunes */
-    margin: 0 auto; /* Centre la liste des tribunes */
-}
+        .tribune-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
 
-.tribune-item {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative; 
-}
+        .tribune-item {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
 
         .tribune-item h2 {
             font-size: 1.5rem;
@@ -87,7 +87,6 @@
             font-size: 18px;
             font-weight: bold;
         }
-
 
         .total-section {
             margin-top: 40px;
@@ -150,29 +149,36 @@
         }
 
         .edit-icon {
-    cursor: pointer;
-    font-size: 1rem;
-    color: {{ $primaryColor }};
-    transition: color 0.3s;
-}
+            cursor: pointer;
+            font-size: 1rem;
+            color: {{ $primaryColor }};
+            transition: color 0.3s;
+        }
 
-.edit-icon:hover {
-    color: {{ $secondaryColor }};
-}
+        .edit-icon:hover {
+            color: {{ $secondaryColor }};
+        }
 
-.delete-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1rem;
-    color: red;
-    cursor: pointer;
-    transition: color 0.3s;
-}
+        .delete-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1rem;
+            color: red;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
 
-.delete-icon:hover {
-    color: darkred;
-}
+        .delete-icon:hover {
+            color: darkred;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .tribune-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
@@ -199,7 +205,7 @@
             <!-- Image du plan des tribunes -->
             @if($tribunes->isNotEmpty() && $tribunes->first()->photo)
                 <div class="stadium-plan" data-aos="zoom-in">
-                <li class="location-info">
+                    <li class="location-info">
                         <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 "> 
                         <span>Matches are played at {{ $clubLocation }}</span>
                     </li>
@@ -209,74 +215,74 @@
 
             <!-- Liste des tribunes -->
             <div class="tribune-list" data-aos="fade-right">
-    @foreach($tribunes as $tribune)
-        <div class="tribune-item">
-            <!-- X pour supprimer, placé en haut à droite -->
-            @auth
-            <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" class="delete-icon" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" style="background: none; border: none; padding: 0;">
-                    ❌
-                </button>
-            </form>
-            @endauth
+                @foreach($tribunes as $tribune)
+                    <div class="tribune-item">
+                        <!-- X pour supprimer, placé en haut à droite -->
+                        @auth
+                        <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" class="delete-icon" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" style="background: none; border: none; padding: 0;">
+                                ❌
+                            </button>
+                        </form>
+                        @endauth
 
-            <!-- Titre de la tribune avec l'icône d'édition -->
-            <h2>
-                {{ $tribune->name }}
-                @auth
-                <a href="{{ route('tribunes.edit', $tribune->id) }}" class="edit-icon">🛠️</a>
-                @endauth
-            </h2>
-            <p>{{ $tribune->description }}</p>
+                        <!-- Titre de la tribune avec l'icône d'édition -->
+                        <h2>
+                            {{ $tribune->name }}
+                            @auth
+                            <a href="{{ route('tribunes.edit', $tribune->id) }}" class="edit-icon">🛠️</a>
+                            @endauth
+                        </h2>
+                        <p>{{ $tribune->description }}</p>
 
-            <!-- Affichage des détails du match à venir -->
-            @if($nextGame)
-                <div class="next-game-info">
-                    <p><strong>Next Match:</strong> 
-                    {{ $nextGame->homeTeam->name }} vs {{ $nextGame->awayTeam->name }} 
-                    on {{ \Carbon\Carbon::parse($nextGame->match_date)->format('d-m-Y') }}</p>
-                </div>
-            @else
-                <p>No upcoming matches scheduled.</p>
-            @endif
+                        <!-- Affichage des détails du match à venir -->
+                        @if($nextGame)
+                            <div class="next-game-info">
+                                <p><strong>Next Match:</strong> 
+                                {{ $nextGame->homeTeam->name }} vs {{ $nextGame->awayTeam->name }} 
+                                on {{ \Carbon\Carbon::parse($nextGame->match_date)->format('d-m-Y') }}</p>
+                            </div>
+                        @else
+                            <p>No upcoming matches scheduled.</p>
+                        @endif
 
-            <!-- Affichage du prix -->
-            <div class="price">
-                @if($tribune->price == 0)
-                    Free Ticket
-                @else
-                    {{ number_format($tribune->price, 2) }} {{ $tribune->currency }}
-                @endif
+                        <!-- Affichage du prix -->
+                        <div class="price">
+                            @if($tribune->price == 0)
+                                Free Ticket
+                            @else
+                                {{ number_format($tribune->price, 2) }} {{ $tribune->currency }}
+                            @endif
+                        </div>
+                        <hr>
+
+                        <!-- Gestion de la quantité -->
+                        @if($tribune->available_seats > 0)
+                            @auth
+                                <p>{{ $tribune->available_seats }} seats left</p>
+                            @endauth
+                            <div class="quantity-controls">
+                                <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">-</button>
+                                <span id="quantity-{{ $tribune->id }}">0</span>
+                                <span class="total-individual" id="total-{{ $tribune->id }}">0.00 {{ $tribune->currency }}</span>
+                                <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">+</button>
+                                <form action="{{ route('checkout') }}" method="POST" class="inline-block ml-4">
+                                    @csrf
+                                    <input type="hidden" name="tribune_id" value="{{ $tribune->id }}">
+                                    <input type="hidden" name="tribune_name" value="{{ $tribune->name }}">
+                                    <input type="hidden" name="total_amount" id="totalAmountInput-{{ $tribune->id }}" value="0">
+                                    <input type="hidden" name="quantity" id="quantityInput-{{ $tribune->id }}" value="0">
+                                    <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>Payer</button>
+                                </form>
+                            </div>
+                        @else
+                            <p class="text-red-500 font-bold">Sold Out</p>
+                        @endif
+                    </div>
+                @endforeach
             </div>
-            <hr>
-
-            <!-- Gestion de la quantité -->
-            @if($tribune->available_seats > 0)
-                @auth
-                    <p>{{ $tribune->available_seats }} seats left</p>
-                @endauth
-                <div class="quantity-controls">
-                    <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">-</button>
-                    <span id="quantity-{{ $tribune->id }}">0</span>
-                    <span class="total-individual" id="total-{{ $tribune->id }}">0.00 {{ $tribune->currency }}</span>
-                    <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">+</button>
-                    <form action="{{ route('checkout') }}" method="POST" class="inline-block ml-4">
-                        @csrf
-                        <input type="hidden" name="tribune_id" value="{{ $tribune->id }}">
-                        <input type="hidden" name="tribune_name" value="{{ $tribune->name }}">
-                        <input type="hidden" name="total_amount" id="totalAmountInput-{{ $tribune->id }}" value="0">
-                        <input type="hidden" name="quantity" id="quantityInput-{{ $tribune->id }}" value="0">
-                        <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>Payer</button>
-                    </form>
-                </div>
-            @else
-                <p class="text-red-500 font-bold">Sold Out</p>
-            @endif
-        </div>
-    @endforeach
-</div>
         </div>
     </div>
 

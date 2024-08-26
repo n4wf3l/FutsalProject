@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +9,9 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
@@ -20,7 +19,7 @@
         .contact-container {
             text-align: left;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             max-width: 1200px;
             margin: 50px auto;
             padding: 2rem;
@@ -31,9 +30,9 @@
             z-index: 2;
         }
 
-        .contact-info {
+        .contact-info, .contact-form {
             flex: 1;
-            margin-right: 2rem;
+            margin-bottom: 2rem;
         }
 
         .contact-info h2 {
@@ -57,23 +56,16 @@
             margin-bottom: 2rem;
         }
 
-        .contact-info .info-item {
+        .info-item {
             display: flex;
             align-items: center;
             margin-bottom: 1.5rem;
         }
 
-        .contact-info .info-item i {
+        .info-item i {
             margin-right: 1rem;
             font-size: 1.5rem;
             color: {{ $primaryColor }};
-        }
-
-        .contact-form {
-            flex: 1;
-            background-color: #f2f2f2;
-            padding: 2rem;
-            border-radius: 0.5rem;
         }
 
         .form-group {
@@ -107,7 +99,7 @@
             text-align: center;
             font-weight: bold;
             cursor: pointer;
-            background-color:{{ $primaryColor }};
+            background-color: {{ $primaryColor }};
             color: white;
             transition: background-color 0.3s ease;
             text-transform: uppercase;
@@ -121,16 +113,42 @@
             position: relative;
             z-index: 1;
         }
+
+        /* Responsive styles */
+        @media (min-width: 768px) {
+            .contact-container {
+                flex-direction: row;
+            }
+
+            .contact-info, .contact-form {
+                margin-right: 2rem;
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .contact-info h1 {
+                font-size: 2rem;
+            }
+
+            .contact-info p {
+                font-size: 1rem;
+            }
+
+            .info-item i {
+                font-size: 1.25rem;
+            }
+        }
     </style>
 </head>
-
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
     <x-navbar />
-   
+
     <header class="text-center my-12">
-    <x-page-title subtitle="📞 Get in touch with us! We're here to answer your questions and provide the information you need. Reach out to connect with our team today.">
-    Contact
-</x-page-title>
+        <x-page-title subtitle="📞 Get in touch with us! We're here to answer your questions and provide the information you need. Reach out to connect with our team today.">
+            Contact
+        </x-page-title>
+    </header>
 
     <div class="contact-container">
         <div class="contact-info" data-aos="fade-right">
@@ -164,34 +182,33 @@
         </div>
 
         <div class="contact-form" data-aos="fade-left">
-        <form action="{{ route('contact.send') }}" method="POST">
-    @csrf
-    <div class="form-group">
-        <label for="firstname">First Name *</label>
-        <input type="text" name="firstname" id="firstname" required>
-    </div>
-    <div class="form-group">
-        <label for="lastname">Last Name *</label>
-        <input type="text" name="lastname" id="lastname" required>
-    </div>
-    <div class="form-group">
-        <label for="email">Email Address *</label>
-        <input type="email" name="email" id="email" required>
-    </div>
-    <div class="form-group">
-        <label for="phone">Phone Number *</label>
-        <input type="tel" name="phone" id="phone" required>
-    </div>
-    <div class="form-group">
-        <label for="message">Message or Questions *</label>
-        <textarea name="message" id="message" required></textarea>
-    </div>
-    <button type="submit" class="submit-button">Send</button>
-</form>
+            <form action="{{ route('contact.send') }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label for="firstname">First Name *</label>
+                    <input type="text" name="firstname" id="firstname" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last Name *</label>
+                    <input type="text" name="lastname" id="lastname" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" name="phone" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message or Questions *</label>
+                    <textarea name="message" id="message" required></textarea>
+                </div>
+                <button type="submit" class="submit-button">Send</button>
+            </form>
         </div>
     </div>
 
     <x-footer />
 </body>
-
 </html>

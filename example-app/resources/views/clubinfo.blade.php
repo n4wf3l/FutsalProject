@@ -10,12 +10,15 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     <style>
+        /* Container for the main article and the recent articles list */
         .main-article-container {
             display: flex;
             gap: 20px;
             margin-bottom: 40px;
+            flex-direction: column; /* Default to column for smaller screens */
         }
 
+        /* Main article styles */
         .main-article {
             flex: 2;
             background-color: #ffffff;
@@ -47,6 +50,7 @@
             padding: 20px;
         }
 
+        /* Recent articles list styles */
         .recent-articles {
             flex: 1;
             background-color: #ffffff;
@@ -81,20 +85,40 @@
 
         .recent-articles hr {
             border: none;
-            border-top: 1px solid #e2e8f0; /* Tailwind CSS gray-200 */
+            border-top: 1px solid #e2e8f0;
             margin: 10px 0;
         }
 
         .recent-article-date {
             font-size: 0.875rem;
-            color: #4a5568; /* Tailwind CSS gray-700 */
+            color: #4a5568;
             white-space: nowrap;
         }
 
         .recent-articles-container {
             margin-top: 40px;
+            display: grid; /* Use CSS Grid to arrange articles responsively */
+            grid-template-columns: 1fr;
+            gap: 20px;
         }
 
+        @media (min-width: 768px) {
+            .recent-articles-container {
+                grid-template-columns: 1fr 1fr; /* Two columns for medium screens */
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .main-article-container {
+                flex-direction: row; /* Row layout for larger screens */
+            }
+
+            .recent-articles-container {
+                grid-template-columns: repeat(3, 1fr); /* Three columns for large screens */
+            }
+        }
+
+        /* Article item styles */
         .article-item {
             display: flex;
             align-items: center;
@@ -141,7 +165,7 @@
         }
 
         .article-item-meta {
-            color: #4a5568; /* Tailwind CSS gray-700 */
+            color: #4a5568;
             font-size: 0.875rem;
             margin-bottom: 10px;
         }
@@ -157,17 +181,17 @@
 
     <x-navbar />
 
-    <header class="text-center my-12" style="margin-top: 20px; margin-bottom: 20px;">
-    <x-page-title subtitle="🔔 Stay informed with all the breaking stories and headlines you need to know!">
-    Recent News
-</x-page-title>
+    <header class="text-center my-12">
+        <x-page-title subtitle="🔔 Stay informed with all the breaking stories and headlines you need to know!">
+            Recent News
+        </x-page-title>
         @auth
         <x-button 
-    route="{{ route('articles.create') }}"
-    buttonText="Add Article" 
-    primaryColor="#B91C1C" 
-    secondaryColor="#DC2626" 
-/>
+            route="{{ route('articles.create') }}"
+            buttonText="Add Article" 
+            primaryColor="#B91C1C" 
+            secondaryColor="#DC2626" 
+        />
         @endauth
     </header>
 

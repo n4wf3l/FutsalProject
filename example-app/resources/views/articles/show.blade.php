@@ -15,7 +15,9 @@
             max-width: 1200px;
             margin: 50px auto;
             display: flex;
-            gap: 20px; /* Spacing between the main article and recent articles */
+            flex-direction: column;
+            gap: 20px;
+            padding: 0 20px;
         }
 
         .main-article-section {
@@ -43,6 +45,12 @@
             margin-bottom: 1.5rem;
         }
 
+        @media (max-width: 767px) {
+            .article-title {
+                font-size: 1.75rem; /* Réduire la taille du titre sur les petits écrans */
+            }
+        }
+
         .article-description {
             font-size: 1.2rem;
             line-height: 1.6;
@@ -58,7 +66,7 @@
         }
 
         .article-image {
-            max-width: 50%; /* Réduction de la taille de l'image à 50% */
+            width: 100%; /* Assurez-vous que l'image prend toute la largeur */
             height: auto;
             border-radius: 0.5rem;
             display: block;
@@ -123,16 +131,34 @@
 
         .recent-articles-section hr {
             border: none;
-            border-top: 1px solid #e2e8f0; /* Tailwind CSS gray-200 */
+            border-top: 1px solid #e2e8f0;
             margin: 10px 0;
         }
 
         .recent-article-date {
             font-size: 0.875rem;
-            color: #4a5568; /* Tailwind CSS gray-700 */
+            color: #4a5568;
             white-space: nowrap;
         }
 
+        @media (min-width: 768px) {
+            .article-container {
+                flex-direction: row;
+            }
+
+            .main-article-section {
+                flex: 2;
+            }
+
+            .recent-articles-section {
+                flex: 1;
+            }
+
+            .article-image {
+                max-width: 50%; /* Limite la taille de l'image sur les grands écrans */
+                margin: 0 auto 1.5rem auto;
+            }
+        }
     </style>
 </head>
 
@@ -182,23 +208,23 @@
 
     <x-footer />
     <script>
-     document.addEventListener("DOMContentLoaded", function() {
-        var oembeds = document.querySelectorAll('oembed[url]');
-        oembeds.forEach(function(oembed) {
-            var iframe = document.createElement('iframe');
+        document.addEventListener("DOMContentLoaded", function() {
+            var oembeds = document.querySelectorAll('oembed[url]');
+            oembeds.forEach(function(oembed) {
+                var iframe = document.createElement('iframe');
 
-            // Set the iframe attributes to match the oEmbed's URL
-            iframe.setAttribute('width', '100%');
-            iframe.setAttribute('height', '315');
-            iframe.setAttribute('src', oembed.getAttribute('url').replace('watch?v=', 'embed/'));
-            iframe.setAttribute('frameborder', '0');
-            iframe.setAttribute('allowfullscreen', 'true');
+                // Set the iframe attributes to match the oEmbed's URL
+                iframe.setAttribute('width', '100%');
+                iframe.setAttribute('height', '315');
+                iframe.setAttribute('src', oembed.getAttribute('url').replace('watch?v=', 'embed/'));
+                iframe.setAttribute('frameborder', '0');
+                iframe.setAttribute('allowfullscreen', 'true');
 
-            // Replace the <oembed> element with the new iframe
-            oembed.parentNode.replaceChild(iframe, oembed);
+                // Replace the <oembed> element with the new iframe
+                oembed.parentNode.replaceChild(iframe, oembed);
+            });
         });
-    });
-</script>
+    </script>
 </body>
 
 </html>

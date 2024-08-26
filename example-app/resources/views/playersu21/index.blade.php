@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Styles généraux pour le conteneur des joueurs */
         .player-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -65,16 +64,16 @@ use Illuminate\Support\Facades\Auth;
             position: absolute;
             top: 10px;
             right: 10px;
-            background-color: rgba(0, 0, 0, 0.5); /* Réduit l'opacité à 50% */
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
-            width: 60px; /* Réduit la largeur */
-            height: 60px; /* Réduit la hauteur */
-            font-size: 40px; /* Ajuste la taille de la police */
+            width: 60px;
+            height: 60px;
+            font-size: 40px;
             font-weight: bold;
-            border-radius: 50%; /* Assure un cercle parfait */
-            display: flex; /* Centre le contenu */
-            align-items: center; /* Centre verticalement le contenu */
-            justify-content: center; /* Centre horizontalement le contenu */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .player-overlay {
@@ -105,6 +104,45 @@ use Illuminate\Support\Facades\Auth;
             height: auto;
             z-index: 20;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .player-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .player-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .player-info {
+                font-size: 25px;
+            }
+
+            .player-number {
+                width: 50px;
+                height: 50px;
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .player-container {
+                grid-template-columns: 1fr;
+            }
+
+            .player-info {
+                font-size: 20px;
+            }
+
+            .player-number {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
@@ -116,7 +154,7 @@ use Illuminate\Support\Facades\Auth;
         </x-page-title>
 
         @auth
-            <a href="{{ route('playersu21.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary"  style="font-size:20px; background-color: {{ $primaryColor }};"
+            <a href="{{ route('playersu21.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary" style="font-size:20px; background-color: {{ $primaryColor }};"
                onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
                 Add U21 Player
@@ -175,8 +213,8 @@ use Illuminate\Support\Facades\Auth;
 
                                 <!-- Edit Button -->
                                 <a href="{{ route('playersu21.edit', $player->id) }}" style="background-color: #1D4ED8; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
-    Edit
-</a>
+                                    Edit
+                                </a>
                             </div>
                         @endauth
                     </div>

@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
             font-family: 'Poppins', sans-serif;
         }
 
-
         .bg-coach {
             background-color: white;
             padding: 40px;
@@ -52,7 +51,6 @@ use Illuminate\Support\Facades\Auth;
             font-weight: 600;
         }
 
-        /* Styles généraux pour le conteneur des joueurs */
         .player-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -95,20 +93,20 @@ use Illuminate\Support\Facades\Auth;
         }
 
         .player-number {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(0, 0, 0, 0.5); /* Réduit l'opacité à 50% */
-    color: white;
-    width: 60px; /* Réduit la largeur */
-    height: 60px; /* Réduit la hauteur */
-    font-size: 40px; /* Ajuste la taille de la police */
-    font-weight: bold;
-    border-radius: 50%; /* Assure un cercle parfait */
-    display: flex; /* Centre le contenu */
-    align-items: center; /* Centre verticalement le contenu */
-    justify-content: center; /* Centre horizontalement le contenu */
-}
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 60px;
+            height: 60px;
+            font-size: 40px;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         .player-overlay {
             position: absolute;
@@ -142,7 +140,7 @@ use Illuminate\Support\Facades\Auth;
         .staff-section {
             color: black;
             padding: 40px 0;
-    
+            text-align: center; /* Centering the section title */
         }
 
         .staff-title {
@@ -157,7 +155,6 @@ use Illuminate\Support\Facades\Auth;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            
         }
 
         .staff-item {
@@ -202,6 +199,58 @@ use Illuminate\Support\Facades\Auth;
         .staff-item button:hover {
             opacity: 0.8;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .bg-coach {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .coach-photo {
+                margin-left: 0;
+                margin-bottom: 20px;
+            }
+
+            .player-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .staff-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bg-coach {
+                padding: 20px;
+            }
+
+            .coach-photo {
+                max-width: 150px;
+                margin-bottom: 20px;
+            }
+
+            .player-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .staff-container {
+                grid-template-columns: repeat(1, 1fr);
+            }
+
+            .staff-title {
+                font-size: 1.875rem;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .player-container {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
@@ -219,7 +268,7 @@ use Illuminate\Support\Facades\Auth;
     primaryColor="#DC2626" 
     secondaryColor="#B91C1C" 
 />
-            @endauth
+@endauth
     </header>
 
     @php

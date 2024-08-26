@@ -15,7 +15,7 @@
         /* Gallery grid layout */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Ensure items fill available space */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ensure items fill available space */
             gap: 10px;
             grid-auto-flow: dense; /* Fill gaps effectively */
         }
@@ -104,13 +104,13 @@
 
         /* Modal content style */
         .modal-content {
-    max-width: 90%;
-    max-height: 90%;
-    margin: auto;
-    display: block;
-    opacity: 0; /* Initialement transparent */
-    transition: opacity 0.5s ease; /* Transition sur l'opacité */
-}
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            display: block;
+            opacity: 0; /* Initially transparent */
+            transition: opacity 0.5s ease; /* Transition for opacity */
+        }
 
         /* Navigation buttons for image modal */
         .prev,
@@ -167,6 +167,58 @@
             font-size: 12px;
             font-weight: bold;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .modal-content {
+                max-width: 100%;
+                max-height: 100%;
+            }
+
+            .close {
+                font-size: 30px;
+                top: 10px;
+                right: 20px;
+            }
+
+            .prev,
+            .next {
+                font-size: 18px;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .modal-content {
+                max-width: 100%;
+                max-height: 100%;
+            }
+
+            .close {
+                font-size: 25px;
+                top: 5px;
+                right: 15px;
+            }
+
+            .prev,
+            .next {
+                font-size: 16px;
+                padding: 8px;
+            }
+
+            .image-caption {
+                font-size: 10px;
+                padding: 3px 5px;
+            }
+        }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -183,13 +235,11 @@
     <!-- Button for adding photos (visible only to authenticated users) -->
     @auth
         <div class="mt-8 text-center">
-            
             <button onclick="openAddPhotosModal()" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center" style="margin-bottom:50px; background-color: {{ $primaryColor }};"
                     onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                     onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Add Photos</button>
         </div>
     @endauth
-
 
     <!-- Main content section with gallery grid -->
     <main class="container mx-auto px-4 mb-20">
@@ -202,7 +252,7 @@
                     @endif
                     @auth
                     <button class="delete-photo" onclick="deletePhoto('{{ route('galleries.photos.destroy', [$gallery->id, $photo->id]) }}')">×</button>
-                @endauth
+                    @endauth
                 </div>
             @endforeach
         </div>
@@ -266,21 +316,21 @@
         }
 
         function showSlide(index) {
-    const modalImg = document.getElementById('modalImage');
-    const captionText = document.getElementById('caption');
+            const modalImg = document.getElementById('modalImage');
+            const captionText = document.getElementById('caption');
 
-    // Masque l'image actuelle en définissant l'opacité à 0
-    modalImg.style.opacity = 0;
+            // Masque l'image actuelle en définissant l'opacité à 0
+            modalImg.style.opacity = 0;
 
-    // Après un court délai pour permettre à l'image actuelle de disparaître, charge la nouvelle image
-    setTimeout(() => {
-        modalImg.src = '{{ asset('storage/') }}/' + photos[index].image;
-        captionText.textContent = photos[index].caption ? `© ${photos[index].caption}` : '';
+            // Après un court délai pour permettre à l'image actuelle de disparaître, charge la nouvelle image
+            setTimeout(() => {
+                modalImg.src = '{{ asset('storage/') }}/' + photos[index].image;
+                captionText.textContent = photos[index].caption ? `© ${photos[index].caption}` : '';
 
-        // Affiche la nouvelle image en définissant l'opacité à 1
-        modalImg.style.opacity = 1;
-    }, 200); // Correspond au temps de transition défini dans CSS
-}
+                // Affiche la nouvelle image en définissant l'opacité à 1
+                modalImg.style.opacity = 1;
+            }, 200); // Correspond au temps de transition défini dans CSS
+        }
 
         function changeSlide(direction) {
             currentSlide += direction;
@@ -361,6 +411,27 @@
                 reader.readAsDataURL(file);
             });
         }
+
+        let touchStartX = 0;
+    let touchEndX = 0;
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX) {
+            changeSlide(1); // Swipe left, go to next slide
+        }
+        if (touchEndX > touchStartX) {
+            changeSlide(-1); // Swipe right, go to previous slide
+        }
+    }
+
+    document.getElementById('imageModal').addEventListener('touchstart', function(event) {
+        touchStartX = event.changedTouches[0].screenX;
+    }, false);
+
+    document.getElementById('imageModal').addEventListener('touchend', function(event) {
+        touchEndX = event.changedTouches[0].screenX;
+        handleSwipe();
+    }, false);
     </script>
 </body>
 </html>

@@ -71,6 +71,56 @@
             cursor: pointer;
         }
 
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .grid-cols-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery-image img {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-cols-3 {
+                grid-template-columns: repeat(1, 1fr);
+            }
+
+            .gallery-image img {
+                height: 150px;
+            }
+
+            .gallery-title {
+                font-size: 1rem;
+            }
+
+            .gallery-description {
+                font-size: 0.75rem;
+            }
+
+            .gallery-content {
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-image img {
+                height: 120px;
+            }
+
+            .gallery-title {
+                font-size: 0.875rem;
+            }
+
+            .gallery-description {
+                font-size: 0.75rem;
+            }
+
+            .gallery-content {
+                padding: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -85,7 +135,7 @@
     <main class="container mx-auto px-4">
         @auth
             <!-- Button to open the modal to create a new gallery -->
-            <div class="text-center">
+            <div class="text-center mb-6">
                 <button onclick="openModal('createGalleryModal')" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center" style="background-color: {{ $primaryColor }};">Create Gallery</button>
             </div>
         @endauth
@@ -121,7 +171,7 @@
             @endforeach
         </div>
 
-        <div class="pagination">
+        <div class="pagination mt-8">
             {{ $galleries->links() }}
         </div>
     </main>
@@ -130,7 +180,7 @@
 
     <!-- Create Gallery Modal -->
     <div id="createGalleryModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
+        <div class="bg-white rounded-lg shadow-lg w-11/12 sm:w-3/4 lg:w-1/2 p-6">
             <h2 class="text-2xl font-semibold mb-4">Create Gallery</h2>
             <form action="{{ route('galleries.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -156,7 +206,7 @@
 
     <!-- Edit Gallery Modal -->
     <div id="editGalleryModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
+        <div class="bg-white rounded-lg shadow-lg w-11/12 sm:w-3/4 lg:w-1/2 p-6">
             <h2 class="text-2xl font-semibold mb-4">Edit Gallery</h2>
             <form action="" method="POST" id="editGalleryForm" enctype="multipart/form-data">
                 @csrf

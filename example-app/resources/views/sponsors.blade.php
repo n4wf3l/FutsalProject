@@ -172,6 +172,56 @@
             background-color: #e5e5e5;
             color: #333;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .sponsor-card {
+                width: 45%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sponsor-card {
+                width: 100%;
+            }
+
+            .sponsor-logo img {
+                max-height: 80px;
+                max-width: 80px;
+            }
+
+            .partner-subtitle {
+                font-size: 2rem;
+            }
+
+            .partner-text {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sponsor-card {
+                width: 100%;
+            }
+
+            .sponsor-name,
+            .sponsor-partner {
+                font-size: 1rem;
+            }
+
+            .partner-subtitle {
+                font-size: 1.5rem;
+            }
+
+            .partner-text {
+                font-size: 0.875rem;
+            }
+
+            .partner-button {
+                padding: 10px 20px;
+                font-size: 0.875rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
@@ -179,8 +229,8 @@
 
     <header class="text-center my-12">
         <x-page-title subtitle="🤝 Discover the valued partners who support and power our journey. A big thank you to our sponsors for their unwavering commitment to our success!">
-        Sponsors
-    </x-page-title>
+            Sponsors
+        </x-page-title>
     </header>
 
     <main class="py-12 flex flex-col items-center">

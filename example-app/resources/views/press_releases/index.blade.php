@@ -10,6 +10,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     <style>
+        /* Styles pour les cartes de communiqués de presse */
         .press-release-card {
             background-color: #ffffff;
             border-radius: 0.5rem;
@@ -17,7 +18,6 @@
             overflow: hidden;
             transition: transform 0.2s ease-in-out;
             margin-bottom: 24px;
-            width: 100%;
             position: relative;
         }
 
@@ -82,13 +82,22 @@
             text-decoration: underline;
         }
 
+        /* Grille pour les communiqués de presse */
         .press-release-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr; /* Une colonne par défaut */
             gap: 32px;
             padding: 32px;
         }
 
+        /* Adaptation pour les écrans moyens */
+        @media (min-width: 768px) {
+            .press-release-container {
+                grid-template-columns: repeat(2, 1fr); /* Deux colonnes pour les écrans moyens */
+            }
+        }
+
+        /* Style de la pagination */
         .pagination {
             display: flex;
             justify-content: center;
@@ -148,56 +157,29 @@
         .create-button:hover {
             background-color: {{ $secondaryColor }};
         }
-
-
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-
-    .pagination a {
-        color: {{ $primaryColor }};
-        padding: 8px 16px;
-        text-decoration: none;
-        margin: 0 4px;
-        border: 1px solid {{ $primaryColor }};
-        border-radius: 4px;
-    }
-
-    .pagination a:hover {
-        background-color: {{ $primaryColor }};
-        color: #ffffff;
-    }
-
-    .pagination .active {
-        background-color: beige; /* Couleur beige pour la page active */
-        color: #ffffff;
-        border: 1px solid {{ $primaryColor }};
-    }
     </style>
 </head>
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
     <x-navbar />
 
     <header class="text-center my-12">
-    <x-page-title subtitle="📢 Stay informed with all the breaking stories and headlines you need to know!">
-    Press Releases
-</x-page-title>
+        <x-page-title subtitle="📢 Stay informed with all the breaking stories and headlines you need to know!">
+            Press Releases
+        </x-page-title>
     </header>
 
     <main class="container mx-auto px-4">
-    @auth
-        <div class="flex justify-center mb-6">
-            <button onclick="openModal('createPressReleaseModal')" class="create-button text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg">
-                Create Press Release
-            </button>
-        </div>
-    @endauth
+        @auth
+            <div class="flex justify-center mb-6">
+                <button onclick="openModal('createPressReleaseModal')" class="create-button text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg">
+                    Create Press Release
+                </button>
+            </div>
+        @endauth
 
         <div class="press-release-container">
             @if($pressReleases->isEmpty())
-                <div class="no-press-releases-message">
+                <div class="no-press-releases-message text-center">
                     No press releases available at the moment.
                 </div>
             @else
@@ -213,8 +195,8 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="delete-button-x">X</button>
-                                    @endauth
                                 </form>
+                                @endauth
                             </div>
                         @endif
                         <div class="press-release-content">
@@ -223,7 +205,6 @@
                                 {{ $pressRelease->title }}
                                 @auth
                                 <button onclick="openEditModal('{{ $pressRelease->id }}', '{{ addslashes($pressRelease->title) }}', `{{ addslashes($pressRelease->content) }}`)" class="edit-button-emoji">🛠️</button>
-
                                 @endauth
                             </h2>
                             <div class="press-release-date">{{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</div>
@@ -234,7 +215,7 @@
             @endif
         </div>
 
-        <!-- Ajoutez la pagination ici -->
+        <!-- Pagination -->
         <div class="pagination mb-20">
             {{ $pressReleases->links('vendor.pagination.simple') }}
         </div>
@@ -244,7 +225,7 @@
 
     <!-- Create Press Release Modal -->
     <div id="createPressReleaseModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 mx-4">
             <h2 class="text-2xl font-semibold mb-4">Create Press Release</h2>
             <form action="{{ route('press_releases.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -270,7 +251,7 @@
 
     <!-- Edit Press Release Modal -->
     <div id="editPressReleaseModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 mx-4">
             <h2 class="text-2xl font-semibold mb-4">Edit Press Release</h2>
             <form action="" method="POST" id="editPressReleaseForm" enctype="multipart/form-data">
                 @csrf

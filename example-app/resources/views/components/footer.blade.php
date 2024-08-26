@@ -123,26 +123,27 @@
         }
     }
 
-    .carousel-item img {
-    max-width: 100%; /* S'assure que les images ne débordent pas de leur conteneur */
-    height: auto;
-}
-
-.carousel-item {
-    margin: 0;
+    .carousel-item {
+    flex: 0 0 25%; /* Prend 25% de la largeur en bureau */
     padding: 10px;
 }
 
-    @media (max-width: 767px) {
+.carousel-item img {
+    max-width: 100%; /* S'assure que les images ne débordent pas */
+    height: auto;
+    margin: 0 auto;
+}
+
+@media (max-width: 767px) {
     .carousel-item {
         min-width: 100%; /* Chaque item prend la largeur de l'écran en mobile */
-        padding: 10px;
+        padding: 10%;
     }
     .carousel-item img {
         max-width: 100%;
         height: auto;
-        padding: 10px;
     }
+}
 </style>
 
 <div class="sponsor-carousel-container">

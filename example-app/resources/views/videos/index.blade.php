@@ -13,7 +13,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Styles de la page */
+        /* Page Styles */
         .main-video-container {
             display: flex;
             gap: 20px;
@@ -90,12 +90,12 @@
             margin-bottom: 10px;
             text-decoration: none;
             padding-bottom: 5px;
-            color: inherit; /* Use inherit to make sure link colors are not overridden */
+            color: inherit;
         }
 
         .recent-videos a:hover {
             text-decoration: underline;
-            color: inherit; /* Ensure the color remains unchanged on hover */
+            color: inherit;
         }
 
         .recent-videos hr {
@@ -148,10 +148,44 @@
         }
 
         a {
-            color: inherit; /* Ensures links inherit the color of their parent elements */
+            color: inherit;
             text-decoration: none;
         }
 
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .main-video-container {
+                flex-direction: column;
+            }
+
+            .main-video {
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .recent-videos {
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .video-item img {
+                width: 120px;
+                height: 80px;
+            }
+
+            .video-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .video-item-content {
+                margin-top: 10px;
+            }
+
+            .video-item-title {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>

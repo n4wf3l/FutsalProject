@@ -11,13 +11,17 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     <style>
+        /* Conteneur principal de l'article */
         .article-container {
             max-width: 1200px;
             margin: 50px auto;
             display: flex;
             gap: 20px;
+            padding: 0 20px;
+            flex-direction: column;
         }
 
+        /* Section principale de l'article */
         .main-article-section {
             flex: 2;
             padding: 2rem;
@@ -26,6 +30,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        /* Section des articles récents */
         .recent-articles-section {
             flex: 1;
             padding: 2rem;
@@ -35,6 +40,7 @@
             max-height: fit-content;
         }
 
+        /* Titre de l'article */
         .article-title {
             font-size: 2.5rem;
             font-weight: bold;
@@ -43,6 +49,13 @@
             margin-bottom: 1.5rem;
         }
 
+        @media (max-width: 767px) {
+            .article-title {
+                font-size: 1.75rem; /* Réduit la taille du titre pour les écrans plus petits */
+            }
+        }
+
+        /* Description de l'article */
         .article-description {
             font-size: 1.2rem;
             line-height: 1.6;
@@ -50,6 +63,7 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Métadonnées de l'article */
         .article-meta {
             font-size: 0.9rem;
             color: #888;
@@ -57,14 +71,16 @@
             margin-bottom: 2rem;
         }
 
+        /* Image de l'article */
         .article-image {
-            max-width: 50%;
+            width: 100%;
             height: auto;
             border-radius: 0.5rem;
             display: block;
             margin: 0 auto 1.5rem auto;
         }
 
+        /* Titre des articles récents */
         .recent-articles-section h3 {
             font-size: 1.5rem;
             font-weight: bold;
@@ -73,6 +89,7 @@
             padding-bottom: 5px;
         }
 
+        /* Liens des articles récents */
         .recent-articles-section a {
             display: flex;
             justify-content: space-between;
@@ -83,20 +100,43 @@
             padding-bottom: 5px;
         }
 
+        /* Surlignage des liens d'articles récents */
         .recent-articles-section a:hover {
             text-decoration: underline;
         }
 
+        /* Ligne de séparation des articles récents */
         .recent-articles-section hr {
             border: none;
             border-top: 1px solid #e2e8f0;
             margin: 10px 0;
         }
 
+        /* Date des articles récents */
         .recent-article-date {
             font-size: 0.875rem;
             color: #4a5568;
             white-space: nowrap;
+        }
+
+        /* Style responsive */
+        @media (min-width: 768px) {
+            .article-container {
+                flex-direction: row;
+            }
+
+            .main-article-section {
+                flex: 2;
+            }
+
+            .recent-articles-section {
+                flex: 1;
+            }
+
+            .article-image {
+                max-width: 50%; /* Limite la taille de l'image sur les grands écrans */
+                margin: 0 auto 1.5rem auto;
+            }
         }
     </style>
 </head>
@@ -105,7 +145,7 @@
     <x-navbar />
 
     <div class="article-container">
-        <!-- Main Article Section -->
+        <!-- Section principale de l'article -->
         <div class="main-article-section">
             <div class="arrow-line-container">
                 <div class="arrow-circle">
@@ -121,7 +161,7 @@
             <p class="article-description">{!! nl2br(e($pressRelease->content)) !!}</p>
         </div>
 
-        <!-- Recent Articles Section -->
+        <!-- Section des articles récents -->
         <div class="recent-articles-section">
             <h3>📰 Recent Articles</h3>
             @foreach($recentArticles as $recentArticle)
