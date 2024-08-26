@@ -122,6 +122,27 @@
             gap: 10px;
         }
     }
+
+    .carousel-item img {
+    max-width: 100%; /* S'assure que les images ne débordent pas de leur conteneur */
+    height: auto;
+}
+
+.carousel-item {
+    margin: 0;
+    padding: 10px;
+}
+
+    @media (max-width: 767px) {
+    .carousel-item {
+        min-width: 100%; /* Chaque item prend la largeur de l'écran en mobile */
+        padding: 10px;
+    }
+    .carousel-item img {
+        max-width: 100%;
+        height: auto;
+        padding: 10px;
+    }
 </style>
 
 <div class="sponsor-carousel-container">
