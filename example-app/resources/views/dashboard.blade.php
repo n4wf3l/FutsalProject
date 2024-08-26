@@ -24,11 +24,14 @@
             display: flex;
             align-items: flex-start;
             gap: 20px;
+            max-width: 1200px; /* Limite la largeur maximale du contenu */
+            margin: 0 auto; /* Centre le contenu */
+            padding: 0 15px; /* Ajoute un peu de padding sur les côtés */
         }
 
         /* Sidebar styles */
         .sidebar {
-            width: 200px;
+            width: 250px; /* Augmente légèrement la largeur de la sidebar */
             background-color: #f8f9fa;
             padding: 15px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -52,7 +55,7 @@
 
         /* Main content styles */
         .content {
-            flex: 1; /* This makes the content area take up the remaining space */
+            flex: 1;
             padding: 20px;
         }
 
@@ -65,13 +68,15 @@
         }
 
         .form-container {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 20px; /* Espace entre les deux formulaires */
         }
 
-        .form-container .card {
-            flex: 1;
+        @media (min-width: 768px) {
+            .form-container {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         /* New styles for the white section under the navbar */
@@ -79,9 +84,18 @@
             background-color: white;
             padding: 20px;
             display: flex;
+            flex-direction: column;
+            gap: 10px;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 768px) {
+            .header-section {
+                flex-direction: row;
+                padding: 20px 15px; /* Moins de padding en largeur sur les grands écrans */
+            }
         }
 
         .header-section h1 {
@@ -89,12 +103,14 @@
             color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};
             font-size: 2rem;
             font-weight: bold;
+            text-align: center;
         }
 
         .header-section p {
             margin: 0;
             color: grey;
             font-size: 1rem;
+            text-align: center;
         }
 
         .header-section img {
@@ -106,6 +122,7 @@
 
         .header-section .account-section {
             display: flex;
+            justify-content: center;
             align-items: center;
             gap: 15px;
         }
@@ -120,37 +137,37 @@
                 DASHBOARD
             </x-page-title>
         </div>
-        <div class="account-section" style="display: inline-block; border-radius: 50%; transition: background-color 0.3s ease;">
+        <div class="account-section">
             <a href="{{ route('profile.edit') }}">
-                <img src="{{ asset('account.png') }}" alt="Account" style="border-radius: 50%;">
+                <img src="{{ asset('account.png') }}" alt="Account">
             </a>
         </div>
     </div>
 
     <div class="layout-container">
         <div class="sidebar">
-            <a href="{{ route('players.create') }}" lass="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('players.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Add Player
             </a>
-            <a href="{{ route('coaches.create') }}" lass="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('coaches.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Add Coach
             </a>
-            <a href="{{ route('staff.create') }}" lass="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('staff.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Add Staff
             </a>
-            <a href="{{ route('teams') }}" lass="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('teams') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Edit Staff
             </a>
-            <a href="{{ route('sponsors.create') }}" lass="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('sponsors.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Add Sponsor
             </a>
-            <a href="{{ route('about.index') }}" lass="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
-                Add AboutSection
+            <a href="{{ route('about.index') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+                Add About Section
             </a>
-            <a href="{{ route('articles.create') }}" lass="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('articles.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Add News
             </a>
-            <a href="{{ route('press_releases.index') }}" lass="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
+            <a href="{{ route('press_releases.index') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary">
                 Add Press Release
             </a>
         </div>
@@ -272,7 +289,7 @@
                 </div>
             </div>
 
-           <!-- Form for Background Images -->
+            <!-- Form for Background Images -->
 <section class="mb-16">
     <div class="card">
         <h2 class="text-xl font-semibold text-center mb-6" style="color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">
