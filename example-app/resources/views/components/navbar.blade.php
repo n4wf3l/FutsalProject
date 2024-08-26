@@ -167,6 +167,12 @@
     }
 }
 
+@media (max-width: 768px) {
+    
+    .clubName {
+        display: none; /* Masque l'image de bienvenue */
+    }
+}
 </style>
 
 
@@ -179,7 +185,7 @@
             @else
                 <p>Logo non disponible</p>
             @endif
-            <div class="ml-3 text-white px-2 py-1 border-4" style="border-color: {{ $secondaryColor }};">
+            <div class="clubName ml-3 text-white px-2 py-1 border-4" style="border-color: {{ $secondaryColor }};">
                 {{ $clubName }}
             </div>
         </div>
@@ -197,9 +203,9 @@
         </a>
         <div class="nav-link-hr"></div>
         <div class="dropdown-content">
+        <a href="{{ route('about.index') }}">About</a>
             <a href="{{ route('clubinfo') }}">News</a>
             <a href="{{ route('press_releases.index') }}">Press Releases</a>
-            <a href="{{ route('about.index') }}">About</a>
             <a href="{{ route('galleries.index') }}">Gallery</a>
             <a href="{{ route('videos.index') }}">Videos</a>
         </div>
@@ -277,10 +283,11 @@
     Club <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
 </a>
 <div id="clubDropdown" class="hidden pl-4">
+<a href="{{ route('about.index') }}" class="block text-white py-2">About</a>
     <a href="{{ route('clubinfo') }}" class="block text-white py-2">News</a>
-    <a href="{{ route('about.index') }}" class="block text-white py-2">About</a>
     <a href="{{ route('press_releases.index') }}" class="block text-white py-2">Press Releases</a>
     <a href="{{ route('galleries.index') }}" class="block text-white py-2">Gallery</a>
+    <a href="{{ route('videos.index') }}" class="block text-white py-2">Videos</a>
 </div>
 
 <!-- Calendar -->

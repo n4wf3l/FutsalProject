@@ -392,90 +392,90 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const text = "DINA KÉNITRA FC\nVivez le futsal comme jamais!\n";
-    const typingElement = document.getElementById("typing-text");
-    let index = 0;
-    const speed = 50;  // Vitesse d'écriture (ms)
+  document.addEventListener("DOMContentLoaded", function() {
+        const text = "DINA KÉNITRA FC\nVivez le futsal comme jamais!\n";
+        const typingElement = document.getElementById("typing-text");
+        let index = 0;
+        const speed = window.innerWidth <= 768 ? 25 : 50;  // Vitesse d'écriture plus rapide sur mobile
 
-    function typeWriter() {
-        if (index < text.length) {
-            const char = text.charAt(index);
-            if (char === '\n') {
-                typingElement.innerHTML += '<br>';
+        function typeWriter() {
+            if (index < text.length) {
+                const char = text.charAt(index);
+                if (char === '\n') {
+                    typingElement.innerHTML += '<br>';
+                } else {
+                    typingElement.innerHTML += char;
+                }
+                index++;
+                setTimeout(typeWriter, speed);
             } else {
-                typingElement.innerHTML += char;
-            }
-            index++;
-            setTimeout(typeWriter, speed);
-        } else {
-            typingElement.style.borderRight = "none";
+                typingElement.style.borderRight = "none";
 
-            const logo = document.createElement("img");
-            logo.src = "{{ $logoPath ? asset($logoPath) : '' }}"; // Récupérer et utiliser $logoPath ici
-            logo.alt = "Club Logo";
-            logo.style.width = "150px"; // Taille du logo
-            logo.style.position = "absolute";
-            logo.style.left = "50%";
-            logo.style.transform = "translateX(-50%)";
-            logo.style.marginTop = "30vh";
-            logo.style.opacity = "0";  // Commence transparent
-            logo.style.transition = "opacity 1s ease-in-out";
+                const logo = document.createElement("img");
+                logo.src = "{{ $logoPath ? asset($logoPath) : '' }}"; // Récupérer et utiliser $logoPath ici
+                logo.alt = "Club Logo";
+                logo.style.width = "150px"; // Taille du logo
+                logo.style.position = "absolute";
+                logo.style.left = "50%";
+                logo.style.transform = "translateX(-50%)";
+                logo.style.marginTop = window.innerWidth <= 768 ? "10vh" : "30vh";  // Positionnement plus haut sur mobile
+                logo.style.opacity = "0";  // Commence transparent
+                logo.style.transition = "opacity 1s ease-in-out";
 
-            // Vérifiez que le logoPath est valide avant de l'ajouter
-            if (logo.src && logo.src !== '') {
-                typingElement.parentNode.appendChild(logo);
+                // Vérifiez que le logoPath est valide avant de l'ajouter
+                if (logo.src && logo.src !== '') {
+                    typingElement.parentNode.appendChild(logo);
 
-                // Déclencher l'animation de fondu
-                setTimeout(() => {
-                    logo.style.opacity = "1";
-                }, 100);
-                
-                // Ajouter le bouton après un délai pour afficher le logo d'abord
-                setTimeout(function() {
-                    const button = document.createElement("a");
-                    button.id = "reserve-button";
-                    button.href = "{{ route('fanshop.index') }}";
-                    button.innerHTML = "Reserve your ticket";
-                    button.style.display = "inline-block";
-                    button.style.padding = "15px 30px";
-                    button.style.backgroundColor = "{{ $secondaryColor }}";
-                    button.style.color = "white";
-                    button.style.fontFamily = "'Bebas Neue', sans-serif";
-                    button.style.fontSize = "1.5rem";
-                    button.style.border = "none";
-                    button.style.borderRadius = "5px";
-                    button.style.cursor = "pointer";
-                    button.style.textDecoration = "none";
-                    button.style.position = "absolute";
-                    button.style.left = "50%";
-                    button.style.transform = "translateX(-50%)";
-                    button.style.marginTop = "50vh";
-                    button.style.opacity = "0"; 
-                    button.style.transition = "opacity 1s ease-in-out"; 
-
-                    button.addEventListener("mouseover", function() {
-                        button.style.backgroundColor = "{{ $primaryColor }}";
-                    });
-
-                    button.addEventListener("mouseout", function() {
+                    // Déclencher l'animation de fondu
+                    setTimeout(() => {
+                        logo.style.opacity = "1";
+                    }, window.innerWidth <= 768 ? 50 : 100); // Animation plus rapide sur mobile
+                    
+                    // Ajouter le bouton après un délai pour afficher le logo d'abord
+                    setTimeout(function() {
+                        const button = document.createElement("a");
+                        button.id = "reserve-button";
+                        button.href = "{{ route('fanshop.index') }}";
+                        button.innerHTML = "Reserve your ticket";
+                        button.style.display = "inline-block";
+                        button.style.padding = "15px 30px";
                         button.style.backgroundColor = "{{ $secondaryColor }}";
-                    });
+                        button.style.color = "white";
+                        button.style.fontFamily = "'Bebas Neue', sans-serif";
+                        button.style.fontSize = "1.5rem";
+                        button.style.border = "none";
+                        button.style.borderRadius = "5px";
+                        button.style.cursor = "pointer";
+                        button.style.textDecoration = "none";
+                        button.style.position = "absolute";
+                        button.style.left = "50%";
+                        button.style.transform = "translateX(-50%)";
+                        button.style.marginTop = window.innerWidth <= 768 ? "35vh" : "50vh"; // Positionnement plus haut sur mobile
+                        button.style.opacity = "0"; 
+                        button.style.transition = "opacity 1s ease-in-out"; 
 
-                    typingElement.parentNode.appendChild(button);
+                        button.addEventListener("mouseover", function() {
+                            button.style.backgroundColor = "{{ $primaryColor }}";
+                        });
 
-// Déclencher l'animation de fondu pour le bouton
-setTimeout(() => {
-    button.style.opacity = "1";
-}, 100); // Légère pause pour que le bouton s'ajoute avant la transition
+                        button.addEventListener("mouseout", function() {
+                            button.style.backgroundColor = "{{ $secondaryColor }}";
+                        });
 
-}, 500); // Le bouton apparaît 1 seconde après le logo
+                        typingElement.parentNode.appendChild(button);
+
+                        // Déclencher l'animation de fondu pour le bouton
+                        setTimeout(() => {
+                            button.style.opacity = "1";
+                        }, window.innerWidth <= 768 ? 50 : 500); // Animation plus rapide sur mobile
+
+                    }, window.innerWidth <= 768 ? 200 : 700); // Le bouton apparaît plus vite sur mobile
+                }
             }
         }
-    }
 
-    typeWriter();
-});
+        typeWriter();
+    });
 </script>
 
 <style>
@@ -529,6 +529,131 @@ setTimeout(() => {
     animation: rotate-image 4s infinite;
 }
 
+@media (max-width: 768px) {
+    #typing-text {
+        display: none; /* Masque le texte de saisie */
+    }
+    
+    .welcome-image {
+        display: none; /* Masque l'image de bienvenue */
+    }
+
+    .info-container {
+        width: 90%; /* Rend le conteneur plus large sur mobile */
+        top: 80%; /* Ajuste la position pour mobile */
+    }
+
+    .match-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .match-details {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .match-info span {
+        display: none; /* Cache les noms des clubs */
+    }
+
+    .team-logo img {
+        width: 90px; /* Ajuste la taille des logos pour mobile */
+        height: 90px;
+    }
+
+    .vs-text {
+        font-size: 1.5rem; /* Réduit la taille du texte "VS" */
+        margin: 0 10px; /* Ajuste l'espacement */
+    }
+
+    .match-location, .match-date {
+        font-size: 1rem; /* Ajuste la taille du texte */
+    }
+}
+
+
+    @media (max-width: 768px) {
+        .carousel-container {
+    width: 100% !important;
+    min-height: 50vh !important;
+    overflow: hidden !important;
+}
+
+.main-article-container {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+}
+
+.main-article-image img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+}
+
+.main-article-content {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    padding: 10px !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    color: white !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    box-sizing: border-box !important;
+}
+
+.main-article-content .news-badge {
+    display: block !important;
+    background-color: {{ $primaryColor }} !important;
+    color: #ffffff !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+}
+
+.main-article-content h2 {
+    font-size: 0.9rem !important;
+    margin: 0 !important;
+    color: white !important;
+    white-space: nowrap !important; /* Empêche le texte de se répartir sur plusieurs lignes */
+    overflow: hidden !important; /* Cache le texte qui dépasse la largeur du conteneur */
+    text-overflow: ellipsis !important; /* Ajoute les points de suspension si le texte est trop long */
+    background-color: transparent !important;
+    color: white !important;
+    width: 100%; /* Occupe toute la largeur disponible */
+}
+
+/* Hide the "Read More" button and other elements */
+.buttons-container,
+.main-article-content p:not(.news-badge),
+.carousel-controls,
+.carousel-indicators {
+    display: none !important;
+}
+}
+
+@media (max-width: 768px) {
+    .latest-photos .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Minimum 150px par colonne */
+    }
+}
+
+@media (max-width: 480px) {
+    .latest-photos .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Minimum 100px par colonne */
+    }
+}
 </style>
 
 
