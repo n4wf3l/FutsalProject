@@ -23,6 +23,78 @@
     footer {
         margin-top: auto;
     }
+
+    @media (max-width: 767px) {
+        .flex {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .w-full {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Aligner les logos du club et de la fédération côte à côte */
+    .flex.items-center.space-x-4.mb-6 {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* Alignement horizontal des icônes de contact et du texte */
+    .flex.items-center {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* Réseaux sociaux côte à côte */
+    .flex.space-x-4.mt-4 {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    /* Ajustement du footer */
+    .footer-bottom {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .footer-bottom div {
+        order: 1;
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .footer-bottom p {
+        order: 2;
+        margin-top: 1rem;
+    }
+    .footer-links {
+        margin-bottom: 1rem;
+    }
+
+    .footer-copyright {
+        margin-top: 10px;
+    }
+
+    .footer-links .flex {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+}
 </style>
 
 
@@ -31,12 +103,11 @@
         <div class="flex flex-wrap justify-between">
             <!-- Logo and Social Media -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0">
-    <!-- Utilisation de flex pour aligner les logos côte à côte -->
-    <div class="flex items-center space-x-4 mb-6">
-        <img src="{{ $logoPath }}" alt="Club Logo" style="height: 60px; width: auto;">
-        <img src="{{ $federationLogo }}" alt="Fed Logo" style="height: 60px; width: auto;">
-    </div>
-</div>
+                <div class="flex items-center space-x-4 mb-6">
+                    <img src="{{ $logoPath }}" alt="Club Logo" style="height: 60px; width: auto;">
+                    <img src="{{ $federationLogo }}" alt="Fed Logo" style="height: 60px; width: auto;">
+                </div>
+            </div>
 
             <!-- Links -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0">
@@ -48,21 +119,21 @@
                     <li><a href="#" class="hover:text-gray-300">Board</a></li>
                     <li><a href="#" class="hover:text-gray-300">Regulations</a></li>
                     <li>
-    @if (Route::has('login'))
-        @auth
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="hover:text-gray-300 transition duration-200">
-                    Log Out
-                </button>
-            </form>
-        @else
-            <a href="{{ route('login') }}" class="hover:text-gray-300 transition duration-200">
-                Authentication
-            </a>
-        @endauth
-    @endif
-</li>
+                        @if (Route::has('login'))
+                            @auth
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="hover:text-gray-300 transition duration-200">
+                                        Log Out
+                                    </button>
+                                </form>
+                            @else
+                                <a href="{{ route('login') }}" class="hover:text-gray-300 transition duration-200">
+                                    Authentication
+                                </a>
+                            @endauth
+                        @endif
+                    </li>
                 </ul>
             </div>
 
@@ -88,43 +159,44 @@
 
             <!-- Contact Information -->
             <div class="w-full md:w-1/4">
-                <h3 class="font-bold mb-4">CONTACT {{ $clubName }}</h3>
+                <h3 class="font-bold mb-4">CONTACT</h3>
                 <ul class="space-y-2">
-    <li class="flex items-center">
-        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
-        <span>{{ $clubLocation }}</span>
-    </li>
-    <li class="flex items-center">
-        <img src="{{ asset('tel.png') }}" alt="Tel" class="h-6 w-6 mr-2">
-        <span>GC: {{ $phone }}</span>
-    </li>
-    <li class="flex items-center">
-        <img src="{{ asset('email.png') }}" alt="Email" class="h-6 w-6 mr-2"> 
-        <span>{{ $email }}</span>
-    </li>
-</ul>
+                    <li class="flex items-center">
+                        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2">
+                        <span>{{ $clubLocation }}</span>
+                    </li>
+                    <li class="flex items-center">
+                        <img src="{{ asset('tel.png') }}" alt="Tel" class="h-6 w-6 mr-2">
+                        <span>GC: {{ $phone }}</span>
+                    </li>
+                    <li class="flex items-center">
+                        <img src="{{ asset('email.png') }}" alt="Email" class="h-6 w-6 mr-2">
+                        <span>{{ $email }}</span>
+                    </li>
+                </ul>
 
-<div class="flex space-x-4 mt-4">
-    <a href="{{ $facebook }}" class="text-white hover:text-gray-300 flex items-center">
-        <img src="{{ asset('facebook.png') }}" alt="Facebook" class="h-6 w-6 mr-2"> 
-        <span>Facebook</span>
-    </a>
-    <a href="{{ $instagram }}" class="text-white hover:text-gray-300 flex items-center">
-        <img src="{{ asset('instagram.png') }}" alt="Instagram" class="h-6 w-6 mr-2"> 
-        <span>Instagram</span>
-    </a>
-</div>
-
+                <div class="flex space-x-4 mt-4">
+                    <a href="{{ $facebook }}" class="text-white hover:text-gray-300 flex items-center">
+                        <img src="{{ asset('facebook.png') }}" alt="Facebook" class="h-6 w-6 mr-2">
+                    </a>
+                    <a href="{{ $instagram }}" class="text-white hover:text-gray-300 flex items-center">
+                        <img src="{{ asset('instagram.png') }}" alt="Instagram" class="h-6 w-6 mr-2">
+                    </a>
+                </div>
             </div>
         </div>
 
-        <div class="mt-8 border-t border-gray-500 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-300">
-    <p>&copy; 2024 {{ $clubName }} - Website by <a href="https://nainnovations.be/" class="hover:text-white" target="_blank">NA Innovations</a></p>
-    <div class="mt-4 md:mt-0 space-x-4">
-        <a href="#" class="hover:text-white">Privacy</a>
-        <a href="#" class="hover:text-white">Terms & Conditions</a>
-        <a href="#" class="hover:text-white">Cookies</a>
-    </div>
-</div>
+        <!-- Footer links and copyright -->
+        <div class="footer-links text-center mt-8 border-t border-gray-500 pt-6">
+            <div class="flex justify-center space-x-4">
+                <a href="#" class="hover:text-white">Privacy</a>
+                <a href="#" class="hover:text-white">Terms & Conditions</a>
+                <a href="#" class="hover:text-white">Cookies</a>
+            </div>
+        </div>
+        <div class="footer-copyright text-center mt-4">
+            <p>&copy; 2024 {{ $clubName }} - Website by <a href="https://nainnovations.be/" class="hover:text-white" target="_blank">NA Innovations</a></p>
+        </div>
     </div>
 </footer>
+

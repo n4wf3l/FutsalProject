@@ -302,6 +302,7 @@
 .carousel .main-article-container.active img {
     filter: grayscale(0%);
 }
+
     </style>
 </head>
 <body class="bg-gray-100">
@@ -383,7 +384,7 @@
     </div>
 </div>
 
-<div class="background-container" style="position: relative; width: 100%; height: 60vh; background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover; z-index: 500;">
+<div class="background-container" style="position: relative; width: 100%; height: 60vh; background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover; z-index: 500;" data-aos="zoom-out-up">
     @if($welcomeImage)
         <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; top:18vh; right: 100px; width: 550px; height: 500px;">
     @endif
@@ -530,6 +531,7 @@
 }
 
 @media (max-width: 768px) {
+    
     #typing-text {
         display: none; /* Masque le texte de saisie */
     }
@@ -571,6 +573,40 @@
 
     .match-location, .match-date {
         font-size: 1rem; /* Ajuste la taille du texte */
+    }
+
+    .latest-photos .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        width: 100%; /* Ensure it doesn't exceed the container width */
+        max-width: 100%; /* Prevent overflow */
+        overflow-x: hidden; /* Hide any possible overflow */
+    }
+
+    .gallery-item img {
+        max-width: 100%;
+        width: 100%; /* Ensure the image doesn't exceed the container */
+        height: auto;
+    }
+
+    .main-article-content {
+        width: 100%;
+        max-width: 100%; /* Ensure content doesn't exceed container width */
+        overflow-x: hidden;
+    }
+
+    /* Any other container that might exceed the width */
+    .carousel-container,
+    .info-container,
+    .main-article-container,
+    .gallery-item {
+        max-width: 100%;
+        width: 100%; /* Ensure width is capped at 100% */
+        overflow-x: hidden; /* Hide overflow */
+    }
+
+    .containerization {
+        max-width: 100%; /* Ensure it doesn't exceed the screen width */
+        width: 100%;
     }
 }
 
