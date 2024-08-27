@@ -9,5 +9,5 @@ class FlashMessage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['message'];
+    protected $fillable = ['message', 'homemessage'];
 }

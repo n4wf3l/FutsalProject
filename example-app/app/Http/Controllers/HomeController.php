@@ -84,12 +84,14 @@ class HomeController extends Controller
     {
         $request->validate([
             'flash_message' => 'required|string|max:255',
+            'homemessage' => 'nullable|string|max:255', // Valider homemessage
         ]);
-
+    
         $flashMessage = FlashMessage::latest()->first() ?? new FlashMessage();
         $flashMessage->message = $request->input('flash_message');
+        $flashMessage->homemessage = $request->input('homemessage'); // Enregistrer homemessage
         $flashMessage->save();
-
+    
         return redirect()->back()->with('success', 'Flash message updated successfully!');
     }
 

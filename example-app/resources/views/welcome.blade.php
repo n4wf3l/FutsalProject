@@ -344,6 +344,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <!-- Section pour afficher l'image actuelle -->
+                    @if($welcomeImage && $welcomeImage->image_path)
+                    <div class="mb-3 text-center">
+                        <label class="form-label">Current Image</label>
+                        <div>
+                            <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Current Image" class="img-fluid" style="max-height: 200px;">
+                        </div>
+                    </div>
+                    @endif
+                    <!-- Section pour sélectionner une nouvelle image -->
                     <div class="mb-3">
                         <label for="image" class="form-label">Select PNG Image</label>
                         <input type="file" class="form-control" id="image" name="image" accept="image/png" required>
@@ -374,6 +384,10 @@
                         <label for="flash_message" class="form-label">Message</label>
                         <input type="text" class="form-control" id="flash_message" name="flash_message" value="{{ $flashMessage->message ?? '' }}" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="homemessage" class="form-label">Home Message</label>
+                        <input type="text" class="form-control" id="homemessage" name="homemessage" value="{{ $flashMessage->homemessage ?? '' }}" required>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -389,103 +403,85 @@
         <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; top:18vh; right: 100px; width: 550px; height: 500px;" data-aos="fade-up-left">
     @endif
     <div id="typing-text" style="position: absolute;  left: 50%; transform: translateX(-50%); color: {{ $secondaryColor }}; font-family: 'Bebas Neue', sans-serif; font-size: 6rem; font-weight: bold; text-align: center; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); z-index: 1300;">
-    </div>
+    {{ $flashMessage->homemessage }}
+</div>
+
+<img id="club-logo" src="{{ $logoPath ? asset($logoPath) : '' }}" alt="Club Logo" style="display:none; width: 150px; position: absolute; left: 50%; transform: translateX(-50%); margin-top: 30vh; opacity: 0; transition: opacity 1s ease-in-out;">
+
+<a id="reserve-button" href="{{ route('fanshop.index') }}" style="display:none; padding: 15px 30px; background-color: {{ $secondaryColor }}; color: white; font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; position: absolute; left: 50%; transform: translateX(-50%); margin-top: 50vh; opacity: 0; transition: opacity 1s ease-in-out;">
+    Reserve your ticket
+</a>
+</div>
+
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-        const text = "DINA KÉNITRA FC\nChase the dream, own the game.";
         const typingElement = document.getElementById("typing-text");
+        const text = {!! json_encode($flashMessage->homemessage ?? "") !!};  // Utilisez json_encode pour traiter le texte
         let index = 0;
         const speed = window.innerWidth <= 768 ? 25 : 50;  // Vitesse d'écriture plus rapide sur mobile
 
-        function typeWriter() {
-            if (index < text.length) {
-                const char = text.charAt(index);
+        // Fonction pour afficher le logo et le bouton
+        function showLogoAndButton() {
+            const logo = document.getElementById("club-logo");
+            const button = document.getElementById("reserve-button");
+
+            logo.style.display = "block";
+            button.style.display = "inline-block";
+
+            setTimeout(() => {
+                logo.style.opacity = "1";
+            }, 100);
+
+            setTimeout(() => {
+                button.style.opacity = "1";
+            }, 500);
+        }
+
+        // Fonction pour formater le texte en insérant un saut de ligne après les 15 premiers caractères
+        function formatTextWithFirstLineBreak(text) {
+            if (text.length > 16) {
+                // Insère un saut de ligne après les 15 premiers caractères
+                return text.slice(0, 16) + '\n' + text.slice(15);
+            }
+            return text;  // Si le texte est plus court que 15 caractères, ne rien changer
+        }
+
+        // Fonction pour le typing effect
+        function typeWriter(formattedText) {
+            if (index < formattedText.length) {
+                const char = formattedText.charAt(index);
                 if (char === '\n') {
                     typingElement.innerHTML += '<br>';
                 } else {
                     typingElement.innerHTML += char;
                 }
                 index++;
-                setTimeout(typeWriter, speed);
+                setTimeout(() => typeWriter(formattedText), speed);
             } else {
-                typingElement.style.borderRight = "none";
-
-                const logo = document.createElement("img");
-                logo.src = "{{ $logoPath ? asset($logoPath) : '' }}"; // Récupérer et utiliser $logoPath ici
-                logo.alt = "Club Logo";
-                logo.style.width = "150px"; // Taille du logo
-                logo.style.position = "absolute";
-                logo.style.left = "50%";
-                logo.style.transform = "translateX(-50%)";
-                logo.style.marginTop = window.innerWidth <= 768 ? "10vh" : "30vh";  // Positionnement plus haut sur mobile
-                logo.style.opacity = "0";  // Commence transparent
-                logo.style.transition = "opacity 1s ease-in-out";
-
-                // Vérifiez que le logoPath est valide avant de l'ajouter
-                if (logo.src && logo.src !== '') {
-                    typingElement.parentNode.appendChild(logo);
-
-                    // Déclencher l'animation de fondu
-                    setTimeout(() => {
-                        logo.style.opacity = "1";
-                    }, window.innerWidth <= 768 ? 50 : 100); // Animation plus rapide sur mobile
-                    
-                    // Ajouter le bouton après un délai pour afficher le logo d'abord
-                    setTimeout(function() {
-                        const button = document.createElement("a");
-                        button.id = "reserve-button";
-                        button.href = "{{ route('fanshop.index') }}";
-                        button.innerHTML = "Reserve your ticket";
-                        button.style.display = "inline-block";
-                        button.style.padding = "15px 30px";
-                        button.style.backgroundColor = "{{ $secondaryColor }}";
-                        button.style.color = "white";
-                        button.style.fontFamily = "'Bebas Neue', sans-serif";
-                        button.style.fontSize = "1.5rem";
-                        button.style.border = "none";
-                        button.style.borderRadius = "5px";
-                        button.style.cursor = "pointer";
-                        button.style.textDecoration = "none";
-                        button.style.position = "absolute";
-                        button.style.left = "50%";
-                        button.style.transform = "translateX(-50%)";
-                        button.style.marginTop = window.innerWidth <= 768 ? "35vh" : "50vh"; // Positionnement plus haut sur mobile
-                        button.style.opacity = "0"; 
-                        button.style.transition = "opacity 1s ease-in-out"; 
-
-                        button.addEventListener("mouseover", function() {
-                            button.style.backgroundColor = "{{ $primaryColor }}";
-                        });
-
-                        button.addEventListener("mouseout", function() {
-                            button.style.backgroundColor = "{{ $secondaryColor }}";
-                        });
-
-                        typingElement.parentNode.appendChild(button);
-
-                        // Déclencher l'animation de fondu pour le bouton
-                        setTimeout(() => {
-                            button.style.opacity = "1";
-                        }, window.innerWidth <= 768 ? 50 : 500); // Animation plus rapide sur mobile
-
-                    }, window.innerWidth <= 768 ? 200 : 700); // Le bouton apparaît plus vite sur mobile
-                }
+                showLogoAndButton();
             }
         }
 
-        typeWriter();
+        // Efface le contenu de l'élément avant de commencer le typing effect
+        typingElement.innerHTML = "";
+
+        // Formater le texte pour inclure un saut de ligne après les 15 premiers caractères
+        const formattedText = formatTextWithFirstLineBreak(text);
+
+        // Lancer le typing effect si du texte est présent, sinon afficher immédiatement le logo et le bouton
+        if (formattedText && formattedText.length > 0) {
+            typeWriter(formattedText);
+        } else {
+            showLogoAndButton();
+        }
     });
 </script>
-
 <style>
 /* Effet d'écriture avec curseur clignotant */
 #typing-text {
     white-space: nowrap;
-    overflow: hidden;
-    border-right: 4px solid rgba(255, 255, 255, 0.75);
-    animation: cursor-blink 0.7s infinite;
 }
 
 @keyframes cursor-blink {
