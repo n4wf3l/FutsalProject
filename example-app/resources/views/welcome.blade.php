@@ -430,6 +430,15 @@
             logo.style.display = "block";
             button.style.display = "inline-block";
 
+            // Ajuster les positions pour mobile ou non
+            if (window.innerWidth <= 768) {
+                logo.style.marginTop = "10vh"; // Positionnement plus haut sur mobile
+                button.style.marginTop = "40vh"; // Positionnement plus haut sur mobile
+            } else {
+                logo.style.marginTop = "30vh"; // Positionnement par défaut sur desktop
+                button.style.marginTop = "50vh"; // Positionnement par défaut sur desktop
+            }
+
             setTimeout(() => {
                 logo.style.opacity = "1";
             }, 100);
@@ -533,6 +542,10 @@
     }
     
     .welcome-image {
+        display: none; /* Masque l'image de bienvenue */
+    }
+
+    .flash-message-container {
         display: none; /* Masque l'image de bienvenue */
     }
 
