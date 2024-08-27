@@ -10,28 +10,6 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
-
-<style>
-    h1, h2, h3, h4, h5, h6 {
-    font-family: 'Arial', sans-serif;
-    font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-h1 {
-    font-size: 2.5em;
-}
-
-h2 {
-    font-size: 2em;
-}
-
-h3 {
-    font-size: 1.75em;
-}
-</style>
 </head>
 
 <body class="bg-gray-100">
@@ -40,7 +18,9 @@ h3 {
     <x-navbar />
 
     <div class="container mx-auto py-12">
-        <h1 class="text-4xl font-bold mb-6 text-center" style="color: {{ $primaryColor }};">Edit Section</h1>
+        <x-page-title subtitle="">
+    Edit Section
+</x-page-title>
 
         <form action="{{ route('about.update', $aboutSection->id) }}" method="POST">
             @csrf

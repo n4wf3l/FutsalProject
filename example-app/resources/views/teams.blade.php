@@ -350,9 +350,9 @@ use Illuminate\Support\Facades\Auth;
                 <p class="text-lg  mb-6">{!! $coach->description !!}</p>
 
                 <div class="text-lg coach-info">
-                    <p class="mb-2"><strong>Geboortedatum:</strong> {{ \Carbon\Carbon::parse($coach->birth_date)->format('d F Y') }}</p>
-                    <p class="mb-2"><strong>Geboorteplaats:</strong> {{ $coach->birth_city }}</p>
-                    <p class="mb-2"><strong>Nationaliteit:</strong> {{ $coach->nationality }}</p>
+                    <p class="mb-2"><strong>Date of Birth:</strong> {{ \Carbon\Carbon::parse($coach->birth_date)->format('d F Y') }}</p>
+                    <p class="mb-2"><strong>Place of Birth:</strong> {{ $coach->birth_city }}</p>
+                    <p class="mb-2"><strong>Nationality:</strong> {{ $coach->nationality }}</p>
                     <p class="mb-2"><strong>Coaching since:</strong> {{ \Carbon\Carbon::parse($coach->coaching_since)->format('d F Y') }}</p>
                 </div>
             </div>
@@ -394,8 +394,8 @@ use Illuminate\Support\Facades\Auth;
 
     <!-- Staff Section -->
     <section class="staff-section">
-    <x-page-title subtitle="Ils veillent à ce que chaque joueur soit à son meilleur, sur le terrain et en dehors">
-    Staff technique et médical
+    <x-page-title subtitle="They ensure that every player is at their best, both on and off the field">
+    Technical and Medical Staff
 </x-page-title>
 
         <div class="staff-container">

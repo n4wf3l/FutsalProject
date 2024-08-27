@@ -157,7 +157,7 @@
             @if($pressRelease->image)
             <img src="{{ asset('storage/' . $pressRelease->image) }}" alt="{{ $pressRelease->title }}" class="article-image">
             @endif
-            <p class="article-meta">COMMUNIQUÉS / {{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</p>
+            <p class="article-meta">PRESS RELEASE / {{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</p>
             <p class="article-description">{!! nl2br(e($pressRelease->content)) !!}</p>
         </div>
 

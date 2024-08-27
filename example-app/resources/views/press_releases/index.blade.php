@@ -200,7 +200,7 @@
                             </div>
                         @endif
                         <div class="press-release-content">
-                            <div class="press-release-category">COMMUNIQUÉS</div>
+                            <div class="press-release-category">PRESS RELEASE</div>
                             <h2 class="press-release-title">
                                 {{ $pressRelease->title }}
                                 @auth

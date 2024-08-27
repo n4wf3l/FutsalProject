@@ -125,7 +125,9 @@
     <x-navbar />
 
     <div class="add-article-container">
-        <h1 class="add-article-title" style="color: {{ $primaryColor }};">Add New Article</h1>
+    <x-page-title subtitle="">
+    Add New Article
+</x-page-title>
 
         @if ($errors->any())
         <div class="form-error">

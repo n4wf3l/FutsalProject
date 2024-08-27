@@ -18,7 +18,9 @@
     <x-navbar />
 
     <div class="container mx-auto py-12">
-        <h1 class="text-4xl font-bold mb-6 text-center" style="color: {{ $primaryColor }};">Add New Section</h1>
+    <x-page-title subtitle="">
+    Add New Section
+</x-page-title>
 
         <form action="{{ route('about.store') }}" method="POST">
             @csrf

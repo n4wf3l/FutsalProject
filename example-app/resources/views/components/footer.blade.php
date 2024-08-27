@@ -232,7 +232,7 @@
 
             <!-- Contact Information -->
             <div class="w-full md:w-1/4 footer-contact">
-                <h3 class="font-bold mb-4">CONTACT {{ $clubName }}</h3>
+                <h3 class="font-bold mb-4">CONTACT</h3>
                 <ul class="space-y-2">
                     <li class="footer-logo flex items-center">
                         <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 

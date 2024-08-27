@@ -127,7 +127,9 @@
     <x-navbar />
 
     <div class="edit-article-container">
-        <h1 class="edit-article-title" style="color: {{ $primaryColor }};">Edit Article</h1>
+    <x-page-title subtitle="">
+    Edit Article
+</x-page-title>
 
         @if ($errors->any())
         <div class="form-error">
