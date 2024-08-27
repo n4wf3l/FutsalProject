@@ -71,6 +71,7 @@
             background-color: rgba(0, 0, 0, 0.8);
             justify-content: center;
             align-items: center;
+            transition: opacity 0.3s ease; /* Smooth transition for modal visibility */
         }
 
         /* Modal content style */
@@ -108,8 +109,7 @@
             max-height: 90%;
             margin: auto;
             display: block;
-            opacity: 0; /* Initially transparent */
-            transition: opacity 0.5s ease; /* Transition for opacity */
+            transition: transform 0.5s ease; /* Smooth transition for sliding images */
         }
 
         /* Navigation buttons for image modal */
@@ -167,58 +167,6 @@
             font-size: 12px;
             font-weight: bold;
         }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-
-            .modal-content {
-                max-width: 100%;
-                max-height: 100%;
-            }
-
-            .close {
-                font-size: 30px;
-                top: 10px;
-                right: 20px;
-            }
-
-            .prev,
-            .next {
-                font-size: 18px;
-                padding: 10px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-
-            .modal-content {
-                max-width: 100%;
-                max-height: 100%;
-            }
-
-            .close {
-                font-size: 25px;
-                top: 5px;
-                right: 15px;
-            }
-
-            .prev,
-            .next {
-                font-size: 16px;
-                padding: 8px;
-            }
-
-            .image-caption {
-                font-size: 10px;
-                padding: 3px 5px;
-            }
-        }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -227,9 +175,9 @@
     <x-navbar />
 
     <header class="text-center my-12">
-    <x-page-title subtitle="{{ $gallery->description }}">
-    {{ $gallery->name }}
-</x-page-title>
+        <x-page-title subtitle="{{ $gallery->description }}">
+            {{ $gallery->name }}
+        </x-page-title>
     </header>
 
     <!-- Button for adding photos (visible only to authenticated users) -->
@@ -251,7 +199,7 @@
                         <p class="text-center mt-2">{{ $photo->caption }}</p>
                     @endif
                     @auth
-                    <button class="delete-photo" onclick="deletePhoto('{{ route('galleries.photos.destroy', [$gallery->id, $photo->id]) }}')">×</button>
+                        <button class="delete-photo" onclick="deletePhoto('{{ route('galleries.photos.destroy', [$gallery->id, $photo->id]) }}')">×</button>
                     @endauth
                 </div>
             @endforeach
@@ -319,17 +267,13 @@
             const modalImg = document.getElementById('modalImage');
             const captionText = document.getElementById('caption');
 
-            // Masque l'image actuelle en définissant l'opacité à 0
-            modalImg.style.opacity = 0;
-
-            // Après un court délai pour permettre à l'image actuelle de disparaître, charge la nouvelle image
+            // Update image and caption text
+            modalImg.style.opacity = 0; // Start transition
             setTimeout(() => {
                 modalImg.src = '{{ asset('storage/') }}/' + photos[index].image;
                 captionText.textContent = photos[index].caption ? `© ${photos[index].caption}` : '';
-
-                // Affiche la nouvelle image en définissant l'opacité à 1
-                modalImg.style.opacity = 1;
-            }, 200); // Correspond au temps de transition défini dans CSS
+                modalImg.style.opacity = 1; // End transition
+            }, 300); // Duration should match CSS transition timing
         }
 
         function changeSlide(direction) {
@@ -411,27 +355,6 @@
                 reader.readAsDataURL(file);
             });
         }
-
-        let touchStartX = 0;
-    let touchEndX = 0;
-
-    function handleSwipe() {
-        if (touchEndX < touchStartX) {
-            changeSlide(1); // Swipe left, go to next slide
-        }
-        if (touchEndX > touchStartX) {
-            changeSlide(-1); // Swipe right, go to previous slide
-        }
-    }
-
-    document.getElementById('imageModal').addEventListener('touchstart', function(event) {
-        touchStartX = event.changedTouches[0].screenX;
-    }, false);
-
-    document.getElementById('imageModal').addEventListener('touchend', function(event) {
-        touchEndX = event.changedTouches[0].screenX;
-        handleSwipe();
-    }, false);
     </script>
 </body>
 </html>
