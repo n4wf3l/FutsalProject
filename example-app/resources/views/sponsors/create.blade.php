@@ -10,115 +10,63 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
-    <style>
-        .add-sponsor-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 2rem;
-            background-color: #f9f9f9;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .add-sponsor-title {
-            font-size: 2.5rem; /* Grandeur du titre conservée */
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: {{ $primaryColor }};
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #333;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) inset;
-            font-size: 1.1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-input:focus {
-            border-color: #1D4ED8;
-            outline: none;
-        }
-
-        .form-error {
-            background-color: #f44336;
-            color: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: center; /* Centrage des boutons */
-            gap: 16px;
-            margin-top: 2rem;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-    </style>
 </head>
 
 <body class="bg-gray-100">
     <x-navbar />
 
-    <div class="add-sponsor-container">
-        <h1 class="add-sponsor-title">Add New Sponsor</h1>
+    <header class="text-center my-12">
+        <x-page-title subtitle="">
+            Add New Sponsor
+        </x-page-title>
+    </header>
+
+    <div class="container mx-auto mt-8 p-8 rounded-lg shadow-md border border-gray-300 max-w-3xl" style="margin-bottom: 50px; background-color: #f9f9f9;">
 
         @if ($errors->any())
-        <div class="form-error">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+            <div class="form-error mb-4 p-4 text-white bg-red-500 rounded-lg shadow-md">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
 
         <form action="{{ route('sponsors.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <div class="form-grid">
-                <div class="mb-4">
-                    <label for="name" class="form-label">Name:</label>
-                    <input type="text" name="name" id="name" class="form-input" value="{{ old('name') }}" required>
+            <div class="grid grid-cols-1 gap-6 mb-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+                    <input type="text" name="name" id="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('name') }}" required>
                 </div>
 
-                <div class="mb-4">
-                    <label for="logo" class="form-label">Logo:</label>
-                    <input type="file" name="logo" id="logo" class="form-input">
+                <div>
+                    <label for="logo" class="block text-sm font-medium text-gray-700">Logo:</label>
+                    <input type="file" name="logo" id="logo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
-                <div class="mb-4">
-    <label for="website" class="form-label">Website:</label>
-    <input type="text" name="website" id="website" class="form-input flex-grow" placeholder="www.example.com" value="{{ old('website') }}">
-</div>
+                <div>
+                    <label for="website" class="block text-sm font-medium text-gray-700">Website:</label>
+                    <input type="text" name="website" id="website" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="www.example.com" value="{{ old('website') }}">
+                </div>
             </div>
 
-            <div class="button-group">
-                <button type="submit" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center"
-                    style="background-color: {{ $primaryColor }};"
+            <div class="flex justify-center gap-4">
+                <button type="submit" class="text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-200"
+                    style="background-color: {{ $primaryColor }}; font-size: 15px;"
                     onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Save Sponsor</button>
+                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+                    Save Sponsor
+                </button>
                 <a href="{{ route('sponsors.index') }}"
-                    class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center"
-                    style="background-color: {{ $primaryColor }};"
+                    class="text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-200"
+                    style="background-color: {{ $primaryColor }}; font-size: 15px;"
                     onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Cancel</a>
+                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+                    Cancel
+                </a>
             </div>
         </form>
     </div>

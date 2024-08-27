@@ -9,6 +9,7 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
 
     <!-- CSS for the gallery grid, modals, and preview images -->
     <style>
@@ -190,7 +191,10 @@
     @endauth
 
     <!-- Main content section with gallery grid -->
-    <main class="container mx-auto px-4 mb-20">
+    <main class="container mx-auto px-4 mb-20" data-aos="zoom-in-down">
+    @if($photos->isEmpty())
+        <p class="text-center text-gray-600">There are currently no photos in this album.</p>
+    @else
         <div class="gallery-grid">
             @foreach($photos as $photo)
                 <div class="gallery-item">
@@ -204,7 +208,8 @@
                 </div>
             @endforeach
         </div>
-    </main>
+    @endif
+</main>
 
     <!-- Modal for image preview -->
     <div id="imageModal" class="modal">

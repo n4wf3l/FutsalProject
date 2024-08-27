@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -169,7 +170,7 @@ use Illuminate\Support\Facades\Auth;
     @if($players->isEmpty())
         <p class="text-gray-600 text-center">There are no U21 players in the database.</p>
     @else
-        <div class="player-container">
+        <div class="player-container" data-aos="fade-up">
             @foreach($players as $player)
                 <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
                     <!-- Club Logo -->

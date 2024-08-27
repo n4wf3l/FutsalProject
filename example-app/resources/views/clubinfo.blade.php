@@ -9,6 +9,7 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
     <style>
         /* Container for the main article and the recent articles list */
         .main-article-container {
@@ -195,7 +196,7 @@
         @endauth
     </header>
 
-    <div class="flex justify-center mb-6">
+    <div class="flex justify-center mb-6" data-aos="fade-down">
         <form action="{{ route('clubinfo') }}" method="GET" class="w-full max-w-md">
             <div class="flex items-center border-b border-b-2 border-gray-500 py-2">
                 <input
@@ -218,7 +219,7 @@
         </form>
     </div>
 
-    <div class="container mx-auto py-12">
+    <div class="container mx-auto py-12" data-aos="fade-left">
         @if(session('success'))
         <div class="bg-green-500 text-green p-4 rounded mb-6">
             {{ session('success') }}
@@ -263,7 +264,7 @@
         </div>
 
         <!-- Recent Articles Below the Main Article -->
-        <div class="recent-articles-container">
+        <div class="recent-articles-container" data-aos="fade-up-right">
             @foreach($articles->skip(1) as $article)
             <a href="{{ route('articles.show', $article->slug) }}" class="article-item">
                 @if($article->image)

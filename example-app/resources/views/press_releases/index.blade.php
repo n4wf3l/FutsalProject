@@ -9,6 +9,7 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
     <style>
         /* Styles pour les cartes de communiqués de presse */
         .press-release-card {
@@ -177,7 +178,7 @@
             </div>
         @endauth
 
-        <div class="press-release-container">
+        <div class="press-release-container" data-aos="fade-up-right">
             @if($pressReleases->isEmpty())
                 <div class="no-press-releases-message text-center">
                     No press releases available at the moment.

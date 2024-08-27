@@ -14,8 +14,10 @@
     <!-- Navbar component -->
     <x-navbar />
 
-    <div class="container mx-auto mt-12 p-6 bg-white rounded-lg shadow-lg" style="margin-bottom:50px;">
-        <h1 class="text-4xl font-bold text-center text-gray-900 mb-8" style="color: {{ $primaryColor }};">Add a New Player</h1>
+    <div class="container mx-auto mt-12 p-6 bg-white rounded-lg shadow-lg max-w-2xl" style="margin-bottom:50px;">
+        <x-page-title subtitle="">
+            Add New Player
+        </x-page-title>
 
         <form action="{{ route('players.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -60,9 +62,10 @@
             </div>
 
             <div class="text-center">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200"  style="font-size:20px; background-color: {{ $primaryColor }};"
-                   onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                   onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-200"
+                        style="font-size:20px; background-color: {{ $primaryColor }};"
+                        onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+                        onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
                     Add Player
                 </button>
             </div>

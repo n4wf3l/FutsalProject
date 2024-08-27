@@ -394,7 +394,7 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-        const text = "DINA KÉNITRA FC\nVivez le futsal comme jamais!\n";
+        const text = "DINA KÉNITRA FC\nChase the dream, own the game.";
         const typingElement = document.getElementById("typing-text");
         let index = 0;
         const speed = window.innerWidth <= 768 ? 25 : 50;  // Vitesse d'écriture plus rapide sur mobile

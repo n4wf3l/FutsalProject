@@ -9,6 +9,7 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
     <style>
         .gallery-card {
             background-color: #ffffff;
@@ -140,36 +141,41 @@
             </div>
         @endauth
 
-        <div class="grid grid-cols-3 gap-6 mt-8">
-            @foreach($galleries as $gallery)
-                <div class="gallery-card">
-                    @if($gallery->cover_image)
-                        <div class="gallery-image">
-                            <a href="{{ route('galleries.show', $gallery->id) }}">
-                                <img src="{{ asset('storage/' . $gallery->cover_image) }}" alt="{{ $gallery->name }}">
-                            </a>
-                            @auth
-                            <form action="{{ route('galleries.destroy', $gallery->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this gallery?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="delete-button-x">X</button>
-                            </form>
-                            @endauth
-                        </div>
-                    @endif
-                    <div class="gallery-content">
-                        <h2 class="gallery-title">
-                            {{ $gallery->name }}
-                            @auth
-                                <button onclick="openEditModal('{{ $gallery->id }}', '{{ $gallery->name }}', '{{ $gallery->description }}')" class="edit-button-emoji">🛠️</button>
-                            @endauth
-                        </h2>
-                        <p class="gallery-description">{{ $gallery->description }}</p>
-                        <a href="{{ route('galleries.show', $gallery->id) }}" class="text-blue-500 font-bold">View Album</a>
+        <div class="grid grid-cols-3 gap-6 mt-8" data-aos="flip-down">
+    @if($galleries->isEmpty())
+        <p class="text-center text-gray-600 col-span-3">There are currently no albums.</p>
+    @else
+        @foreach($galleries as $gallery)
+            <div class="gallery-card">
+                @if($gallery->cover_image)
+                    <div class="gallery-image">
+                        <a href="{{ route('galleries.show', $gallery->id) }}">
+                            <img src="{{ asset('storage/' . $gallery->cover_image) }}" alt="{{ $gallery->name }}">
+                        </a>
+                        @auth
+                        <form action="{{ route('galleries.destroy', $gallery->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this gallery?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="delete-button-x">X</button>
+                        </form>
+                        @endauth
                     </div>
+                @endif
+                <div class="gallery-content">
+                    <h2 class="gallery-title">
+                        {{ $gallery->name }}
+                        @auth
+                            <button onclick="openEditModal('{{ $gallery->id }}', '{{ $gallery->name }}', '{{ $gallery->description }}')" class="edit-button-emoji">🛠️</button>
+                        @endauth
+                    </h2>
+                    <p class="gallery-description">{{ $gallery->description }}</p>
+                    <a href="{{ route('galleries.show', $gallery->id) }}" class="text-blue-500 font-bold">View Album</a>
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
+    @endif
+</div>
+
 
         <div class="pagination mt-8">
             {{ $galleries->links() }}

@@ -15,7 +15,9 @@
 
     <div class="container mx-auto py-12">
         <div class="max-w-md mx-auto bg-white p-8 shadow-lg rounded-lg">
-        <x-page-subtitle text="Create New Team" />
+        <x-page-title subtitle="">
+    Create New Team
+</x-page-title>
 
             <!-- Affichage des erreurs de validation -->
             @if ($errors->any())

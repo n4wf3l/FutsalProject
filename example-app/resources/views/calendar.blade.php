@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     @vite('resources/css/app.css')
-
+    @vite('resources/js/app.js')
     <style>
         body {
             background-color: #f3f4f6;
@@ -76,7 +76,6 @@
 
         .admin-buttons {
             text-align: center;
-            margin-bottom: 20px;
         }
 
         .admin-buttons a {
@@ -297,7 +296,7 @@
 
         <div class="container table-container">
             <table class="rounded-table">
-                <thead>
+                <thead data-aos="flip-left">
                     <tr>
                         <th>#</th>
                         <th>Club</th>
@@ -314,7 +313,7 @@
                 </thead>
                 <tbody>
                     @foreach($teams as $team)
-                    <tr @if($loop->first)
+                    <tr data-aos="flip-left" @if($loop->first)
                         style="background-color: #d4edda;"
                         @elseif($loop->iteration >= count($teams) - 3 && $loop->iteration <= count($teams) - 2)
                         style="background-color: #fff3cd;"
@@ -322,21 +321,21 @@
                         style="background-color: #f8d7da;"
                         @endif
                         >
-                        <td>{{ $loop->iteration }}</td>
-                        <td class="club-name">
+                        <td data-aos="flip-up">{{ $loop->iteration }}</td>
+                        <td data-aos="flip-up" class="club-name">
                             @if($team->logo_path)
                             <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} Logo" class="club-logo">
                             @endif
                             <span>{{ $team->name }}</span>
                         </td>
-                        <td>{{ $team->points }}</td>
-                        <td>{{ $team->games_played }}</td>
-                        <td>{{ $team->wins }}</td>
-                        <td>{{ $team->draws }}</td>
-                        <td>{{ $team->losses }}</td>
-                        <td>{{ $team->goal_difference }}</td>
+                        <td data-aos="flip-up">{{ $team->points }}</td>
+                        <td data-aos="flip-up">{{ $team->games_played }}</td>
+                        <td data-aos="flip-up">{{ $team->wins }}</td>
+                        <td data-aos="flip-up">{{ $team->draws }}</td>
+                        <td data-aos="flip-up">{{ $team->losses }}</td>
+                        <td data-aos="flip-up">{{ $team->goal_difference }}</td>
                         @auth
-                        <td>
+                        <td data-aos="flip-up">
                             <button type="button" data-bs-toggle="modal" data-bs-target="#editTeamModal-{{ $team->id }}">🛠️</button>
                             <div class="modal fade" id="editTeamModal-{{ $team->id }}" tabindex="-1" aria-labelledby="editTeamModalLabel-{{ $team->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -363,13 +362,13 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
                             <form action="{{ route('manage_teams.destroy', $team->id) }}" method="POST" style="display:inline;">
                                 @csrf
@@ -475,7 +474,7 @@
 
         <div class="container table-container">
             <table class="rounded-table">
-                <thead>
+                <thead data-aos="flip-up">
                     <tr>
                         <th>Date</th>
                         <th>Home</th>
@@ -489,8 +488,8 @@
                 <tbody>
                     @foreach($games->sortBy('match_date') as $game)
                     <tr>
-                        <td>{{ \Carbon\Carbon::parse($game->match_date)->format('d-m-Y') }}</td>
-                        <td>
+                        <td data-aos="flip-up">{{ \Carbon\Carbon::parse($game->match_date)->format('d-m-Y') }}</td>
+                        <td data-aos="flip-up">
                             <div style="display: flex; align-items: center;">
                                 @if($game->homeTeam->logo_path)
                                 <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} Logo" class="club-logo">
@@ -498,7 +497,7 @@
                                 {{ $game->homeTeam->name }}
                             </div>
                         </td>
-                        <td>
+                        <td data-aos="flip-up">
                             <div style="display: flex; align-items: center;">
                                 @if($game->awayTeam->logo_path)
                                 <img src="{{ asset('storage/' . $game->awayTeam->logo_path) }}" alt="{{ $game->awayTeam->name }} Logo" class="club-logo">
@@ -506,7 +505,7 @@
                                 {{ $game->awayTeam->name }}
                             </div>
                         </td>
-                        <td>
+                        <td data-aos="flip-up">
                             @auth
                             <form action="{{ route('games.updateScores', $game->id) }}" method="POST">
                                 @csrf

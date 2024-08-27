@@ -13,6 +13,7 @@
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
     <style>
         /* Styles existants */
       
@@ -87,7 +88,7 @@
     
     <div class="container mx-auto py-12">
         <div class="section-content">
-            <div class="club-info">
+            <div class="club-info" data-aos="fade-down-right">
                 <h2>{{ $clubName }}</h2>
                 <p>
                     {{ $clubName }} is a futsal club with a clear and healthy vision, 
@@ -98,7 +99,7 @@
 
 
             @foreach($sections as $section)
-    <div class="">
+    <div class="" data-aos="fade-down-left">
         <x-page-subtitle text="{{ htmlspecialchars_decode($section->title, ENT_QUOTES) }}" />
         <div class="mt-4 text-gray-700 leading-relaxed">
             {!! $section->content !!}
@@ -146,7 +147,7 @@
     
         <!-- Section d'Upload de PDF (pour les utilisateurs authentifiés) -->
         @auth
-<div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;">
+<div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;" data-aos="fade-right">
     <h3 class="text-lg font-bold mb-4 text-center">Upload a New PDF</h3>
     <form action="{{ route('regulations.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
         @csrf
@@ -183,7 +184,7 @@
     @endforeach
 </div>
 
-        <div id="map"></div>
+        <div id="map" data-aos="flip-down"></div>
     </div>
     </div>
 

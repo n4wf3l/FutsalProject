@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -278,7 +279,7 @@ use Illuminate\Support\Facades\Auth;
     @if($players->isEmpty())
         <p class="text-gray-600 text-center">There are no players in the database.</p>
     @else
-        <div class="player-container">
+        <div class="player-container" data-aos="fade-up">
         @foreach($players as $player)
     <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
         <!-- Club Logo -->
@@ -338,7 +339,7 @@ use Illuminate\Support\Facades\Auth;
     @endif
 
     <!-- Coach Section -->
-    <section class="bg-bg mt-12">
+    <section class="bg-bg mt-12" data-aos="flip-right">
     @if($coach)
         <div class="bg-coach flex items-center justify-between text-gray-700">
             <!-- Coach Information -->
@@ -393,7 +394,7 @@ use Illuminate\Support\Facades\Auth;
 
 
     <!-- Staff Section -->
-    <section class="staff-section">
+    <section class="staff-section" data-aos="flip-left">
     <x-page-title subtitle="They ensure that every player is at their best, both on and off the field">
     Technical and Medical Staff
 </x-page-title>

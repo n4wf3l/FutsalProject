@@ -9,7 +9,7 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
-
+    @vite('resources/js/app.js')
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -222,7 +222,7 @@
     <div class="main-video-container">
         @if($videos->isNotEmpty())
             <!-- Main Video -->
-            <div class="main-video">
+            <div class="main-video" data-aos="fade-right">
                 <a href="{{ $videos->first()->url }}" target="_blank">
                     @if($videos->first()->image)
                         <img src="{{ asset('storage/' . $videos->first()->image) }}" alt="{{ $videos->first()->title }}">
@@ -246,7 +246,7 @@
             </div>
 
             <!-- Recent Videos List -->
-            <div class="recent-videos">
+            <div class="recent-videos" data-aos="fade-left">
                 <h3>🎬 Recent Videos</h3>
                 @foreach($videos->skip(1) as $video)
                     <a href="{{ $video->url }}" target="_blank">
@@ -267,7 +267,7 @@
     </div>
 
     <!-- Recent Videos Below the Main Video -->
-    <div class="recent-videos-container">
+    <div class="recent-videos-container" data-aos="fade-up-right">
         @foreach($videos->skip(1) as $video)
             <div class="video-item">
                 <a href="{{ $video->url }}" target="_blank">
