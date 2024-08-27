@@ -394,7 +394,7 @@ use Illuminate\Support\Facades\Auth;
 
 
     <!-- Staff Section -->
-    <section class="staff-section" data-aos="flip-left">
+    <section class="staff-section" data-aos="flip-left" id="staff-section">
     <x-page-title subtitle="They ensure that every player is at their best, both on and off the field">
     Technical and Medical Staff
 </x-page-title>

@@ -128,6 +128,7 @@
         </div>
         @endauth
     </div>
+
     <hr style="margin-top:50px; margin-bottom:50px;">
 @endforeach
 @auth
@@ -147,7 +148,7 @@
     
         <!-- Section d'Upload de PDF (pour les utilisateurs authentifiés) -->
         @auth
-<div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;" data-aos="fade-right">
+<div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;">
     <h3 class="text-lg font-bold mb-4 text-center">Upload a New PDF</h3>
     <form action="{{ route('regulations.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
         @csrf
@@ -166,6 +167,12 @@
 </div>
 @endauth
 
+
+<div id="documents-section"></div>
+
+<x-page-title subtitle="ℹ️ Access all club resources at your fingertips.">
+    Documents
+</x-page-title>
 <!-- PDF List Section -->
 <div class="regulations-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8 justify-center mt-20">
     @foreach($regulations as $regulation)

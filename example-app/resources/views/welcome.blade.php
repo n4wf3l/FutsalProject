@@ -117,7 +117,7 @@
     background-color: {{ $secondaryColor }};
     color: white;
     padding: 20px 0;
-    z-index: 300;
+    z-index: 100;
     display: flex;
     align-items: center;
 }

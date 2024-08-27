@@ -78,9 +78,9 @@
                 <ul class="space-y-2">
                     <li><a href="{{ route('clubinfo') }}" class="hover:text-gray-300">News</a></li>
                     <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">About</a></li>
-                    <li><a href="#" class="hover:text-gray-300">Sports Hall</a></li>
-                    <li><a href="#" class="hover:text-gray-300">Board</a></li>
-                    <li><a href="#" class="hover:text-gray-300">Regulations</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">Sports Hall</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">Board</a></li>
+                    <li><a href="{{ route('about.index') }}#documents-section" class="hover:text-gray-300">Regulations</a></li>
                     <li>
                         @if (Route::has('login'))
                             @auth
@@ -104,11 +104,11 @@
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
                 <h3 class="font-bold mb-4">TEAM</h3>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('teams') }}" class="hover:text-gray-300">Elite</a></li>
+                <li><a href="{{ route('teams') }}" class="hover:text-gray-300">Elite</a></li>
                     <li><a href="{{ route('playersu21.index') }}" class="hover:text-gray-300">U21</a></li>
-                    <li><a href="#" class="hover:text-gray-300">Technical & Medical Staff</a></li>
-                    <li><a href="#" class="hover:text-gray-300">Employees</a></li>
-                    <li><a href="#" class="hover:text-gray-300">Youth Development</a></li>
+                    <li><a href="{{ route('teams') }}#staff-section" class="hover:text-gray-300">Technical & Medical Staff</a></li>
+                    <li><a href="{{ route('about.index') }}"class="hover:text-gray-300">Employees</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">Youth Development</a></li>
                 </ul>
             </div>
 
@@ -151,13 +151,13 @@
             </div>
         </div>
 
-        <!-- Footer Links and Copyright -->
-        <div class="mt-8 border-t border-gray-500 pt-6 footer-copyright">
-            <p>&copy; 2024 {{ $clubName }} - Website by <a href="https://nainnovations.be/" class="hover:text-white" target="_blank">NA Innovations</a></p>
+       <!-- Footer Links and Copyright -->
+       <div class="mt-8 border-t border-gray-500 pt-6 footer-copyright">
+            <p>&copy; 2024 {{ $clubName }} - Website by <a href="https://nainnovations.be/" class="hover:text-gray-300" target="_blank">NA Innovations</a></p>
             <div class="mt-4 md:mt-0 flex space-x-4 footer-links-container">
-                <a href="#" class="hover:text-white">Privacy</a>
-                <a href="#" class="hover:text-white">Terms & Conditions</a>
-                <a href="#" class="hover:text-white">Cookies</a>
+                <a href="#" class="hover:text-gray-300">Privacy</a>
+                <a href="#" class="hover:text-gray-300">Terms & Conditions</a>
+                <a href="#" class="hover:text-gray-300">Cookies</a>
             </div>
         </div>
     </div>
