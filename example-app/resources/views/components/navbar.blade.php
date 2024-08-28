@@ -6,8 +6,15 @@
     $clubLocation = $clubInfo->sportcomplex_location ?? 'Default Location'; // Ajout de la location par défaut
 @endphp
 
+
 @php
     use Illuminate\Support\Facades\Route;
+@endphp
+
+@php
+    if (isset($_COOKIE['locale'])) {
+        app()->setLocale($_COOKIE['locale']);
+    }
 @endphp
 
 <style>
@@ -187,9 +194,9 @@
         <!-- Logo -->
         <div class="flex items-center">
             @if($logoPath)
-                <img src="{{ $logoPath }}" alt="Site Logo" style="height: 80px; width: auto;">
+                <img src="{{ $logoPath }}" alt="@lang('messages.logo_not_available')" style="height: 80px; width: auto;">
             @else
-                <p>Logo non disponible</p>
+                <p>@lang('messages.logo_not_available')</p>
             @endif
             <div class="clubName ml-3 text-white px-2 py-1 border-4" style="border-color: {{ $secondaryColor }};">
                 {{ $clubName }}
@@ -198,63 +205,116 @@
 
         <!-- Navigation links (hidden on mobile, shown on desktop) -->
         <div class="desktop-nav space-x-8">
-    <div class="nav-link-container">
-        <a href="/" class="text-white nav-link transition duration-200">Home</a>
-        <div class="nav-link-hr"></div>
-    </div>
+            <div class="nav-link-container">
+                <a href="/" class="text-white nav-link transition duration-200">@lang('messages.home')</a>
+                <div class="nav-link-hr"></div>
+            </div>
 
-    <div class="nav-link-container dropdown">
-        <a href="#" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
-            Club <img src="{{ asset('bas.png') }}" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
-        </a>
-        <div class="nav-link-hr"></div>
-        <div class="dropdown-content">
-        <a href="{{ route('about.index') }}">About</a>
-            <a href="{{ route('clubinfo') }}">News</a>
-            <a href="{{ route('press_releases.index') }}">Press Releases</a>
-            <a href="{{ route('galleries.index') }}">Gallery</a>
-            <a href="{{ route('videos.index') }}">Videos</a>
-        </div>
-    </div>
+            <div class="nav-link-container dropdown">
+                <a href="#" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
+                    @lang('messages.club') <img src="{{ asset('bas.png') }}" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+                </a>
+                <div class="nav-link-hr"></div>
+                <div class="dropdown-content">
+                    <a href="{{ route('about.index') }}">@lang('messages.about')</a>
+                    <a href="{{ route('clubinfo') }}">@lang('messages.news')</a>
+                    <a href="{{ route('press_releases.index') }}">@lang('messages.press_releases')</a>
+                    <a href="{{ route('galleries.index') }}">@lang('messages.gallery')</a>
+                    <a href="{{ route('videos.index') }}">@lang('messages.videos')</a>
+                </div>
+            </div>
 
-    <div class="nav-link-container">
-        <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">Competition</a>
-        <div class="nav-link-hr"></div>
-    </div>
+            <div class="nav-link-container">
+                <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">@lang('messages.competition')</a>
+                <div class="nav-link-hr"></div>
+            </div>
 
-    <div class="dropdown nav-link-container">
-        <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
-            Teams <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
-        </a>
-        <div class="nav-link-hr"></div>
-        <div class="dropdown-content">
-            <a href="{{ route('teams') }}">Senior</a>
-            <a href="{{ route('playersu21.index') }}">U21</a>
-        </div>
-    </div>
+            <div class="dropdown nav-link-container">
+                <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
+                    @lang('messages.teams') <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+                </a>
+                <div class="nav-link-hr"></div>
+                <div class="dropdown-content">
+                    <a href="{{ route('teams') }}">@lang('messages.senior')</a>
+                    <a href="{{ route('playersu21.index') }}">@lang('messages.u21')</a>
+                </div>
+            </div>
 
-    <div class="nav-link-container">
-        <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">Sponsors</a>
-        <div class="nav-link-hr"></div>
-    </div>
+            <div class="nav-link-container">
+                <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">@lang('messages.sponsors')</a>
+                <div class="nav-link-hr"></div>
+            </div>
 
-    <div class="nav-link-container">
-        <a href="{{ route('contact.show') }}" class="text-white nav-link transition duration-200">Contact</a>
-        <div class="nav-link-hr"></div>
-    </div>
+            <div class="nav-link-container">
+                <a href="{{ route('contact.show') }}" class="text-white nav-link transition duration-200">@lang('messages.contact')</a>
+                <div class="nav-link-hr"></div>
+            </div>
 
-    <div class="nav-link-container">
-        <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">Fanshop</a>
-        <div class="nav-link-hr"></div>
-    </div>
+            <div class="nav-link-container">
+                <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">@lang('messages.fanshop')</a>
+                <div class="nav-link-hr"></div>
+            </div>
 
-    @auth
-    <div class="nav-link-container">
-        <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
-            Dashboard
-        </a>
-    </div>
-    @endauth
+            @auth
+            <div class="nav-link-container">
+                <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
+                    @lang('messages.dashboard')
+                </a>
+            </div>
+            @endauth
+
+            <ul class="language-switcher">
+    <li class="language-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+        <a href="#" onclick="setLanguage('en')">EN</a>
+    </li>
+    <li class="language-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
+        <a href="#" onclick="setLanguage('ar')">AR</a>
+    </li>
+</ul>
+
+        <style>
+      .language-switcher {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    color:white;
+}
+
+.language-item {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s, border-bottom 0.3s;
+    border-bottom: 2px solid transparent;
+}
+
+.language-item.active {
+    color: {{ $secondaryColor }}; /* Couleur pour la langue active */
+    border-bottom: 2px solid {{ $secondaryColor }}; /* Indicateur pour la langue active */
+}
+
+.language-item a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.language-item a:hover {
+    color: {{ $secondaryColor }};
+}
+
+.language-item.active img {
+    filter: brightness(0.8); /* Sombre légèrement l'icône de la langue active */
+}
+</style>
+        <script>
+            function setLanguage(locale) {
+                document.cookie = "locale=" + locale;
+                location.reload();
+            }
+        </script>
         </div>
 
         <!-- Hamburger menu (shown on mobile, hidden on desktop) -->
@@ -282,38 +342,38 @@
         <button id="close-button" class="text-white">&times;</button>
         
         <!-- Menu -->
-        <a href="/" class="block text-white py-2">Home</a>
+        <a href="/" class="block text-white py-2">@lang('messages.home')</a>
 
         <!-- Club Dropdown -->
         <a href="#" class="block text-white py-2" onclick="toggleDropdown('clubDropdown')" style="display: flex; align-items: center;">
-    Club <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
-</a>
-<div id="clubDropdown" class="hidden pl-4">
-<a href="{{ route('about.index') }}" class="block text-white py-2">About</a>
-    <a href="{{ route('clubinfo') }}" class="block text-white py-2">News</a>
-    <a href="{{ route('press_releases.index') }}" class="block text-white py-2">Press Releases</a>
-    <a href="{{ route('galleries.index') }}" class="block text-white py-2">Gallery</a>
-    <a href="{{ route('videos.index') }}" class="block text-white py-2">Videos</a>
-</div>
+            @lang('messages.club') <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+        </a>
+        <div id="clubDropdown" class="hidden pl-4">
+            <a href="{{ route('about.index') }}" class="block text-white py-2">@lang('messages.about')</a>
+            <a href="{{ route('clubinfo') }}" class="block text-white py-2">@lang('messages.news')</a>
+            <a href="{{ route('press_releases.index') }}" class="block text-white py-2">@lang('messages.press_releases')</a>
+            <a href="{{ route('galleries.index') }}" class="block text-white py-2">@lang('messages.gallery')</a>
+            <a href="{{ route('videos.index') }}" class="block text-white py-2">@lang('messages.videos')</a>
+        </div>
 
-<!-- Calendar -->
-<a href="{{ route('calendar.show') }}" class="block text-white py-2">Competition</a>
+        <!-- Calendar -->
+        <a href="{{ route('calendar.show') }}" class="block text-white py-2">@lang('messages.competition')</a>
 
-<!-- Teams Dropdown -->
-<a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')" style="display: flex; align-items: center;">
-    Teams <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
-</a>
-<div id="teamsDropdown" class="hidden pl-4">
-    <a href="{{ route('teams') }}" class="block text-white py-2">Senior</a>
-    <a href="{{ route('playersu21.index') }}" class="block text-white py-2">U21</a>
-</div>
+        <!-- Teams Dropdown -->
+        <a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')" style="display: flex; align-items: center;">
+            @lang('messages.teams') <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+        </a>
+        <div id="teamsDropdown" class="hidden pl-4">
+            <a href="{{ route('teams') }}" class="block text-white py-2">@lang('messages.senior')</a>
+            <a href="{{ route('playersu21.index') }}" class="block text-white py-2">@lang('messages.u21')</a>
+        </div>
 
-<a href="{{ route('sponsors.index') }}" class="block text-white py-2">Sponsors</a>
-<a href="{{ route('contact.show') }}" class="block text-white py-2">Contact</a>
-<a href="{{ route('fanshop.index') }}" class="block text-white py-2">Fanshop</a>
-@auth
-<a href="{{ url('/dashboard') }}" class="block text-white py-2">Dashboard</a>
-@endauth
+        <a href="{{ route('sponsors.index') }}" class="block text-white py-2">@lang('messages.sponsors')</a>
+        <a href="{{ route('contact.show') }}" class="block text-white py-2">@lang('messages.contact')</a>
+        <a href="{{ route('fanshop.index') }}" class="block text-white py-2">@lang('messages.fanshop')</a>
+        @auth
+        <a href="{{ url('/dashboard') }}" class="block text-white py-2">@lang('messages.dashboard')</a>
+        @endauth
     </div>
 </div>
 
@@ -323,25 +383,25 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const scrollToTopButton = document.getElementById('scroll-to-top');
+        const scrollToTopButton = document.getElementById('scroll-to-top');
 
-    // Afficher le bouton lorsque l'utilisateur défile vers le bas
-    window.addEventListener('scroll', function () {
-        if (window.scrollY > 200) {
-            scrollToTopButton.style.display = 'block';
-        } else {
-            scrollToTopButton.style.display = 'none';
-        }
-    });
+        // Afficher le bouton lorsque l'utilisateur défile vers le bas
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 200) {
+                scrollToTopButton.style.display = 'block';
+            } else {
+                scrollToTopButton.style.display = 'none';
+            }
+        });
 
-    // Remonter en haut de la page lorsque l'utilisateur clique sur le bouton
-    scrollToTopButton.addEventListener('click', function () {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+        // Remonter en haut de la page lorsque l'utilisateur clique sur le bouton
+        scrollToTopButton.addEventListener('click', function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
     });
-});
 
     // Attendre que le document soit prêt
     document.addEventListener('DOMContentLoaded', function () {
@@ -364,27 +424,27 @@
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-    const hamburgerButton = document.getElementById('hamburger-button');
-    const mobileMenuModal = document.getElementById('mobile-menu-modal');
-    const closeButton = document.getElementById('close-button');
+        const hamburgerButton = document.getElementById('hamburger-button');
+        const mobileMenuModal = document.getElementById('mobile-menu-modal');
+        const closeButton = document.getElementById('close-button');
 
-    hamburgerButton.addEventListener('click', function () {
-        mobileMenuModal.classList.add('open');  // Ajoute la classe pour afficher le modal avec l'animation
+        hamburgerButton.addEventListener('click', function () {
+            mobileMenuModal.classList.add('open');  // Ajoute la classe pour afficher le modal avec l'animation
+        });
+
+        closeButton.addEventListener('click', function () {
+            mobileMenuModal.classList.remove('open');  // Retire la classe pour lancer l'animation de fermeture
+        });
+
+        // Ferme le menu modal si on clique en dehors du menu
+        mobileMenuModal.addEventListener('click', function(e) {
+            if (e.target.id === 'mobile-menu-modal') {
+                mobileMenuModal.classList.remove('open');  // Ferme le menu si on clique en dehors du menu
+            }
+        });
     });
 
-    closeButton.addEventListener('click', function () {
-        mobileMenuModal.classList.remove('open');  // Retire la classe pour lancer l'animation de fermeture
-    });
-
-    // Ferme le menu modal si on clique en dehors du menu
-    mobileMenuModal.addEventListener('click', function(e) {
-        if (e.target.id === 'mobile-menu-modal') {
-            mobileMenuModal.classList.remove('open');  // Ferme le menu si on clique en dehors du menu
-        }
-    });
-});
-
-function toggleDropdown(dropdownId) {
+    function toggleDropdown(dropdownId) {
         console.log('Toggling: ', dropdownId); // Pour débogage
         var dropdown = document.getElementById(dropdownId);
         dropdown.classList.toggle('hidden');

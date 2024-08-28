@@ -2,6 +2,12 @@
     use Illuminate\Support\Facades\Route;
 @endphp
 
+@php
+    if (isset($_COOKIE['locale'])) {
+        app()->setLocale($_COOKIE['locale']);
+    }
+@endphp
+
 <style>
     html, body {
         height: 100%;
@@ -74,25 +80,25 @@
 
             <!-- Links -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
-                <h3 class="font-bold mb-4">ABOUT US</h3>
+                <h3 class="font-bold mb-4">@lang('messages.about_us')</h3>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('clubinfo') }}" class="hover:text-gray-300">News</a></li>
-                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">About</a></li>
-                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">Sports Hall</a></li>
-                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">Board</a></li>
-                    <li><a href="{{ route('about.index') }}#documents-section" class="hover:text-gray-300">Regulations</a></li>
+                    <li><a href="{{ route('clubinfo') }}" class="hover:text-gray-300">@lang('messages.news')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.about')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.sports_hall')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.board')</a></li>
+                    <li><a href="{{ route('about.index') }}#documents-section" class="hover:text-gray-300">@lang('messages.regulations')</a></li>
                     <li>
                         @if (Route::has('login'))
                             @auth
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="hover:text-gray-300 transition duration-200">
-                                        Log Out
+                                        @lang('messages.logout')
                                     </button>
                                 </form>
                             @else
                                 <a href="{{ route('login') }}" class="hover:text-gray-300 transition duration-200">
-                                    Authentication
+                                    @lang('messages.authentication')
                                 </a>
                             @endauth
                         @endif
@@ -102,29 +108,29 @@
 
             <!-- Team Links -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
-                <h3 class="font-bold mb-4">TEAM</h3>
+                <h3 class="font-bold mb-4">@lang('messages.team')</h3>
                 <ul class="space-y-2">
-                <li><a href="{{ route('teams') }}" class="hover:text-gray-300">Elite</a></li>
-                    <li><a href="{{ route('playersu21.index') }}" class="hover:text-gray-300">U21</a></li>
-                    <li><a href="{{ route('teams') }}#staff-section" class="hover:text-gray-300">Technical & Medical Staff</a></li>
-                    <li><a href="{{ route('about.index') }}"class="hover:text-gray-300">Employees</a></li>
-                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">Youth Development</a></li>
+                    <li><a href="{{ route('teams') }}" class="hover:text-gray-300">@lang('messages.elite')</a></li>
+                    <li><a href="{{ route('playersu21.index') }}" class="hover:text-gray-300">@lang('messages.u21')</a></li>
+                    <li><a href="{{ route('teams') }}#staff-section" class="hover:text-gray-300">@lang('messages.technical_medical_staff')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.employees')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.youth_development')</a></li>
                 </ul>
             </div>
 
             <!-- Matches -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
-                <h3 class="font-bold mb-4">MATCHES</h3>
+                <h3 class="font-bold mb-4">@lang('messages.matches')</h3>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'upcoming']) }}#calendar-section" class="hover:text-gray-300">Next Matches</a></li>
-                    <li><a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'results']) }}#calendar-section" class="hover:text-gray-300">Results</a></li>
-                    <li><a href="{{ route('calendar.show') }}#ranking-section" class="hover:text-gray-300">General Calendar</a></li>
+                    <li><a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'upcoming']) }}#calendar-section" class="hover:text-gray-300">@lang('messages.next_matches')</a></li>
+                    <li><a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'results']) }}#calendar-section" class="hover:text-gray-300">@lang('messages.results')</a></li>
+                    <li><a href="{{ route('calendar.show') }}#ranking-section" class="hover:text-gray-300">@lang('messages.general_calendar')</a></li>
                 </ul>
             </div>
 
             <!-- Contact Information -->
             <div class="w-full md:w-1/4 footer-contact">
-                <h3 class="font-bold mb-4">CONTACT</h3>
+                <h3 class="font-bold mb-4">@lang('messages.contact')</h3>
                 <ul class="space-y-2">
                     <li class="footer-logo flex items-center">
                         <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
@@ -153,12 +159,13 @@
 
        <!-- Footer Links and Copyright -->
        <div class="mt-8 border-t border-gray-500 pt-6 footer-copyright">
-            <p>&copy; 2024 {{ $clubName }} - Website by <a href="https://nainnovations.be/" class="hover:text-gray-300" target="_blank">NA Innovations</a></p>
+            <p>&copy; 2024 {{ $clubName }} - @lang('messages.website_by') <a href="https://nainnovations.be/" class="hover:text-gray-300" target="_blank">NA Innovations</a></p>
             <div class="mt-4 md:mt-0 flex space-x-4 footer-links-container">
-                <a href="#" class="hover:text-gray-300">Privacy</a>
-                <a href="#" class="hover:text-gray-300">Terms & Conditions</a>
-                <a href="#" class="hover:text-gray-300">Cookies</a>
+                <a href="#" class="hover:text-gray-300">@lang('messages.privacy')</a>
+                <a href="#" class="hover:text-gray-300">@lang('messages.terms_conditions')</a>
+                <a href="#" class="hover:text-gray-300">@lang('messages.cookies')</a>
             </div>
         </div>
     </div>
 </footer>
+

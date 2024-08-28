@@ -3,8 +3,8 @@
 @endphp
 
 <head>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 </head>
 <style>
     html, body {
@@ -15,7 +15,6 @@
     }
 
     body {
-        /* This will allow the content to take up the remaining space */
         display: flex;
         flex-direction: column;
     }
@@ -124,31 +123,31 @@
     }
 
     .carousel-item {
-    flex: 0 0 25%; /* Prend 25% de la largeur en bureau */
-    padding: 10px;
-}
-
-.carousel-item img {
-    max-width: 100%; /* S'assure que les images ne débordent pas */
-    height: auto;
-    margin: 0 auto;
-}
-
-@media (max-width: 767px) {
-    .carousel-item {
-        min-width: 100%; /* Chaque item prend la largeur de l'écran en mobile */
-        padding: 10%;
+        flex: 0 0 25%; /* Prend 25% de la largeur en bureau */
+        padding: 10px;
     }
+
     .carousel-item img {
-        max-width: 100%;
+        max-width: 100%; /* S'assure que les images ne débordent pas */
         height: auto;
+        margin: 0 auto;
     }
-}
+
+    @media (max-width: 767px) {
+        .carousel-item {
+            min-width: 100%; /* Chaque item prend la largeur de l'écran en mobile */
+            padding: 10%;
+        }
+        .carousel-item img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
 </style>
 
 <div class="sponsor-carousel-container">
     <x-page-title>
-        Sponsors and partners
+        @lang('messages.sponsors_partners')
     </x-page-title>
     <div class="carousel-wrapper">
         <div class="carousel">
@@ -175,32 +174,32 @@
             <!-- Logo and Social Media -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-logo">
                 <div class="flex items-center space-x-4 mb-6">
-                    <img src="{{ $logoPath }}" alt="Club Logo" style="height: 60px; width: auto;">
-                    <img src="{{ $federationLogo }}" alt="Fed Logo" style="height: 60px; width: auto;">
+                    <img src="{{ $logoPath }}" alt="@lang('messages.logo_not_available')" style="height: 60px; width: auto;">
+                    <img src="{{ $federationLogo }}" alt="@lang('messages.logo_not_available')" style="height: 60px; width: auto;">
                 </div>
             </div>
 
             <!-- Links -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
-                <h3 class="font-bold mb-4">ABOUT US</h3>
+                <h3 class="font-bold mb-4">@lang('messages.about_us')</h3>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('clubinfo') }}" class="hover:text-gray-300">News</a></li>
-                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">About</a></li>
-                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">Sports Hall</a></li>
-                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">Board</a></li>
-                    <li><a href="{{ route('about.index') }}#documents-section" class="hover:text-gray-300">Regulations</a></li>
+                    <li><a href="{{ route('clubinfo') }}" class="hover:text-gray-300">@lang('messages.news')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.about')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.sports_hall')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.board')</a></li>
+                    <li><a href="{{ route('about.index') }}#documents-section" class="hover:text-gray-300">@lang('messages.regulations')</a></li>
                     <li>
                         @if (Route::has('login'))
                             @auth
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="hover:text-gray-300 transition duration-200">
-                                        Log Out
+                                        @lang('messages.logout')
                                     </button>
                                 </form>
                             @else
                                 <a href="{{ route('login') }}" class="hover:text-gray-300 transition duration-200">
-                                    Authentication
+                                    @lang('messages.authentication')
                                 </a>
                             @endauth
                         @endif
@@ -210,37 +209,37 @@
 
             <!-- Team Links -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
-                <h3 class="font-bold mb-4">TEAM</h3>
+                <h3 class="font-bold mb-4">@lang('messages.team')</h3>
                 <ul class="space-y-2">
-                <li><a href="{{ route('teams') }}" class="hover:text-gray-300">Elite</a></li>
-                    <li><a href="{{ route('playersu21.index') }}" class="hover:text-gray-300">U21</a></li>
-                    <li><a href="{{ route('teams') }}#staff-section" class="hover:text-gray-300">Technical & Medical Staff</a></li>
-                    <li><a href="{{ route('about.index') }}"class="hover:text-gray-300">Employees</a></li>
-                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">Youth Development</a></li>
+                    <li><a href="{{ route('teams') }}" class="hover:text-gray-300">@lang('messages.elite')</a></li>
+                    <li><a href="{{ route('playersu21.index') }}" class="hover:text-gray-300">@lang('messages.u21')</a></li>
+                    <li><a href="{{ route('teams') }}#staff-section" class="hover:text-gray-300">@lang('messages.technical_medical_staff')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.employees')</a></li>
+                    <li><a href="{{ route('about.index') }}" class="hover:text-gray-300">@lang('messages.youth_development')</a></li>
                 </ul>
             </div>
 
             <!-- Matches -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
-                <h3 class="font-bold mb-4">MATCHES</h3>
+                <h3 class="font-bold mb-4">@lang('messages.matches')</h3>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'upcoming']) }}#calendar-section" class="hover:text-gray-300">Next Matches</a></li>
-                    <li><a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'results']) }}#calendar-section" class="hover:text-gray-300">Results</a></li>
-                    <li><a href="{{ route('calendar.show') }}#ranking-section" class="hover:text-gray-300">General Calendar</a></li>
+                    <li><a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'upcoming']) }}#calendar-section" class="hover:text-gray-300">@lang('messages.next_matches')</a></li>
+                    <li><a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'results']) }}#calendar-section" class="hover:text-gray-300">@lang('messages.results')</a></li>
+                    <li><a href="{{ route('calendar.show') }}#ranking-section" class="hover:text-gray-300">@lang('messages.general_calendar')</a></li>
                 </ul>
             </div>
 
             <!-- Contact Information -->
             <div class="w-full md:w-1/4 footer-contact">
-                <h3 class="font-bold mb-4">CONTACT</h3>
+                <h3 class="font-bold mb-4">@lang('messages.contact')</h3>
                 <ul class="space-y-2">
                     <li class="footer-logo flex items-center">
-                        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
+                        <img src="{{ asset('position.png') }}" alt="@lang('messages.location')" class="h-6 w-6 mr-2"> 
                         <span>{{ $clubLocation }}</span>
                     </li>
                     <li class="footer-logo flex items-center">
                         <img src="{{ asset('tel.png') }}" alt="Tel" class="h-6 w-6 mr-2">
-                        <span>GC: {{ $phone }}</span>
+                        <span>@lang('messages.gc'): {{ $phone }}</span>
                     </li>
                     <li class="footer-logo flex items-center">
                         <img src="{{ asset('email.png') }}" alt="Email" class="h-6 w-6 mr-2"> 
@@ -261,16 +260,15 @@
 
        <!-- Footer Links and Copyright -->
        <div class="mt-8 border-t border-gray-500 pt-6 footer-copyright">
-            <p>&copy; 2024 {{ $clubName }} - Website by <a href="https://nainnovations.be/" class="hover:text-gray-300" target="_blank">NA Innovations</a></p>
+            <p>&copy; 2024 {{ $clubName }} - @lang('messages.website_by') <a href="https://nainnovations.be/" class="hover:text-gray-300" target="_blank">NA Innovations</a></p>
             <div class="mt-4 md:mt-0 flex space-x-4 footer-links-container">
-                <a href="#" class="hover:text-gray-300">Privacy</a>
-                <a href="#" class="hover:text-gray-300">Terms & Conditions</a>
-                <a href="#" class="hover:text-gray-300">Cookies</a>
+                <a href="#" class="hover:text-gray-300">@lang('messages.privacy')</a>
+                <a href="#" class="hover:text-gray-300">@lang('messages.terms_conditions')</a>
+                <a href="#" class="hover:text-gray-300">@lang('messages.cookies')</a>
             </div>
         </div>
     </div>
 </footer>
-
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script type="text/javascript">
