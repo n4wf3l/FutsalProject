@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile | {{ $clubName }}</title>
+    <title>{{ __('messages.edit_profile') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
@@ -14,8 +14,8 @@
     <x-navbar />
 
     <header class="text-center my-12">
-        <x-page-title subtitle="Manage your profile and account settings">
-            {{ __('Profile') }}
+        <x-page-title subtitle="{{ __('messages.manage_profile_subtitle') }}">
+            {{ __('messages.profile') }}
         </x-page-title>
     </header>
 
@@ -25,7 +25,7 @@
             <div class="p-8 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
                 <div class="max-w-2xl mx-auto">
                     <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
-                        {{ __('Update Profile Information') }}
+                        {{ __('messages.update_profile_information') }}
                     </h3>
                     @include('profile.partials.update-profile-information-form')
                 </div>
@@ -35,7 +35,7 @@
             <div class="p-8 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
                 <div class="max-w-2xl mx-auto">
                     <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
-                        {{ __('Update Password') }}
+                        {{ __('messages.update_password') }}
                     </h3>
                     @include('profile.partials.update-password-form')
                 </div>
@@ -45,7 +45,7 @@
             <div class="p-8 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
                 <div class="max-w-2xl mx-auto">
                     <h3 class="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">
-                        {{ __('Delete Account') }}
+                        {{ __('messages.delete_account') }}
                     </h3>
                     @include('profile.partials.delete-user-form')
                 </div>

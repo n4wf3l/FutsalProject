@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sponsors | {{ $clubName }}</title>
+    <title>{{ __('messages.sponsors') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
@@ -228,8 +228,8 @@
     <x-navbar />
 
     <header class="text-center my-12">
-        <x-page-title subtitle="🤝 Discover the valued partners who support and power our journey. A big thank you to our sponsors for their unwavering commitment to our success!">
-            Sponsors
+        <x-page-title subtitle="{{ __('messages.sponsors_subtitle') }}">
+            {{ __('messages.sponsors') }}
         </x-page-title>
     </header>
 
@@ -239,7 +239,7 @@
             <div class="mb-6">
                 <x-button 
                     route="{{ route('sponsors.create') }}"
-                    buttonText="Add Sponsor" 
+                    buttonText="{{ __('messages.add_sponsor') }}" 
                     primaryColor="#DC2626" 
                     secondaryColor="#B91C1C"
                     class="custom-font"
@@ -250,13 +250,13 @@
             <div class="sponsors-container">
                 @if($sponsors->isEmpty())
                     <div class="no-sponsors-message">
-                        There are no sponsors at the moment.
+                        {{ __('messages.no_sponsors') }}
                     </div>
                 @else
                     @foreach($sponsors as $sponsor)
                     <div class="sponsor-card">
                         @auth
-                        <form action="{{ route('sponsors.destroy', $sponsor->id) }}" method="POST" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this sponsor?');">
+                        <form action="{{ route('sponsors.destroy', $sponsor->id) }}" method="POST" class="delete-form" onsubmit="return confirm('{{ __('messages.delete_confirmation_sponsor') }}');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="delete-button">X</button>
@@ -270,12 +270,12 @@
                         @endif
                         <div class="sponsor-content">
                             <div class="sponsor-details">
-                                <span class="sponsor-partner custom-font">Partner:</span>
+                                <span class="sponsor-partner custom-font">{{ __('messages.partner') }}:</span>
                                 <span class="sponsor-name custom-font">{{ $sponsor->name }}</span>
                             </div>
                             <div class="sponsor-hr"></div>
                             @if($sponsor->website)
-                            <a href="{{ $sponsor->website }}" class="sponsor-website custom-font" style="font-size:20px; color: {{ $primaryColor }};" target="_blank">Visit the website →</a>
+                            <a href="{{ $sponsor->website }}" class="sponsor-website custom-font" style="font-size:20px; color: {{ $primaryColor }};" target="_blank">{{ __('messages.visit_website') }}</a>
                             @endif
                         </div>
                     </div>
@@ -286,12 +286,12 @@
     </main>
     <div class="partner-section">
         <div class="partner-content">
-            <h2 class="partner-title custom-font" data-aos="fade-right">PARTNERS & SPONSORS</h2>
-            <h3 class="partner-subtitle custom-font" data-aos="fade-right">Do you want to be a partner?</h3>
-            <p class="partner-text" data-aos="fade-right">We are always looking for new partners & sponsors to help us, and we put you in the spotlight! If you and your company are interested, contact us today.</p>
+            <h2 class="partner-title custom-font" data-aos="fade-right">{{ __('messages.partners_and_sponsors') }}</h2>
+            <h3 class="partner-subtitle custom-font" data-aos="fade-right">{{ __('messages.become_partner') }}</h3>
+            <p class="partner-text" data-aos="fade-right">{{ __('messages.become_partner_text') }}</p>
             <x-button 
                 route="{{ route('contact.show') }}"
-                buttonText="Contact Us" 
+                buttonText="{{ __('messages.contact_us') }}" 
                 primaryColor="#B91C1C" 
                 secondaryColor="#DC2626"
                 class="custom-font"

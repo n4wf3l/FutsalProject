@@ -16,6 +16,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- CSS App -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+<!-- Meta Tags for SEO -->
+<meta name="description" content="@lang('messages.welcome_to_club') - {{ $clubName }} in {{ $city }}. Discover our latest news, matches, and more.">
+<meta name="keywords" content="futsal, {{ $clubName }}, {{ $city }}, matches, sports">
+<meta property="og:title" content="@lang('messages.welcome') - {{ $clubName }} in {{ $city }}">
+<meta property="og:description" content="@lang('messages.welcome_to_club') - Discover our latest news, matches, and more.">
+<meta property="og:image" content="{{ asset('storage/' . $backgroundImage->image_path) }}">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ url()->current() }}">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <style>
@@ -313,7 +323,7 @@
         <div class="weather-info">
             <li class="d-flex align-items-center justify-content-center">
                 <img src="{{ asset('weather.png') }}" alt="Position" class="h-6 w-6 mr-2 ml-2"> 
-                <div class="mr-2">{{ $city }} – <span style="font-weight: bold;">{{ $weatherData['main']['temp'] ?? 'N/A' }}°C</span></div>
+                <div class="mr-2">{{ $city }} | <span style="font-weight: bold;">{{ $weatherData['main']['temp'] ?? 'N/A' }}°C</span></div>
                 @auth
                     <button type="button" class="btn btn-sm btn-light mr-2" data-bs-toggle="modal" data-bs-target="#editFlashMessageModal">
                         EDIT
@@ -404,7 +414,8 @@
 
         <img id="club-logo" src="{{ $logoPath ? asset($logoPath) : '' }}" alt="Club Logo" style="display:none; width: 150px; position: absolute; left: 50%; transform: translateX(-50%); margin-top: 30vh; opacity: 0; transition: opacity 1s ease-in-out;">
 
-        <a id="reserve-button" href="{{ route('fanshop.index') }}" style="display:none; padding: 15px 30px; background-color: {{ $secondaryColor }}; color: white; font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; position: absolute; left: 50%; transform: translateX(-50%); margin-top: 50vh; opacity: 0; transition: opacity 1s ease-in-out;">
+        <a id="reserve-button" href="{{ route('fanshop.index') }}" style="display:none; padding: 15px 30px; color: white; font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; position: absolute; left: 50%; transform: translateX(-50%); margin-top: 50vh; opacity: 0; transition: opacity 1s ease-in-out;" onmouseover="this.style.backgroundColor='{{ $primaryColor }}';"
+        onmouseout="this.style.backgroundColor='{{ $secondaryColor }}';">
             @lang('messages.reserve_your_ticket')
         </a>
     </div>
@@ -426,8 +437,8 @@
 
                 // Ajuster les positions pour mobile ou non
                 if (window.innerWidth <= 768) {
-                    logo.style.marginTop = "10vh"; // Positionnement plus haut sur mobile
-                    button.style.marginTop = "40vh"; // Positionnement plus haut sur mobile
+                    logo.style.marginTop = "5vh"; // Positionnement plus haut sur mobile
+                    button.style.marginTop = "30vh"; // Positionnement plus haut sur mobile
                 } else {
                     logo.style.marginTop = "30vh"; // Positionnement par défaut sur desktop
                     button.style.marginTop = "50vh"; // Positionnement par défaut sur desktop
@@ -690,10 +701,14 @@
             .latest-photos .gallery-grid {
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Minimum 100px par colonne */
             }
+
+            .info-container{
+
+            }
         }
     </style>
 
-    <div class="info-container" style="top:100vh; z-index: 1300;">
+    <div class="info-container" style="top:105vh; z-index: 1300;">
         <div class="title">@lang('messages.next_game')</div>
         @if($nextGame)
             <div class="match-info">
@@ -734,9 +749,11 @@
 
     <hr style="margin-bottom:50px;">
 
+    <div style="text-align:center;">
     <x-page-title subtitle="🔔 {{ __('messages.stay_informed') }}">
         @lang('messages.latest_news')
     </x-page-title>
+    </div>
     <div class="carousel-container" data-aos="fade-right" style="position: relative; width: 100%; min-height: 70vh; display: flex; justify-content: center; align-items: center;  z-index: 1000;">
         <div class="carousel" style="display: flex; transition: transform 0.5s ease-in-out; width: 80%;">
             @foreach($articles as $index => $article)
@@ -796,9 +813,11 @@
     <hr style="margin-bottom:50px;">
 
     <!-- Section pour les 5 prochains matchs -->
-    <x-page-title subtitle="{{ __('messages.get_ready') }}">
+     <div style="text-align:center">
+    <x-page-title style="text-align:center" subtitle="{{ __('messages.get_ready') }}">
         @lang('messages.upcoming_matches')
     </x-page-title>
+    </div>
     <div class="containerization" data-aos="fade-right">
         @if($nextGames->isNotEmpty())
             @foreach($nextGames as $index => $game)
@@ -827,7 +846,12 @@
                 </div>
             @endforeach
             <div class="see-all-container">
-                <a href="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'upcoming']) }}#calendar-section" class="see-all-btn">@lang('messages.see_all_matches')</a>
+            <x-button 
+    route="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'upcoming']) }}#calendar-section"
+    buttonText="{{ __('messages.see_all_matches') }}" 
+    primaryColor="#B91C1C" 
+    secondaryColor="#DC2626" 
+/>
             </div>
         @else
             <p>@lang('messages.no_upcoming_games')</p>
@@ -1199,7 +1223,7 @@
     <hr style="margin-bottom:50px;">
 
     <section class="latest-photos">
-        <div class="container">
+        <div class="container" style="text-align:center">
             <x-page-title subtitle="📸 {{ __('messages.explore_gallery') }}">
                 @lang('messages.explore_latest_photos')
             </x-page-title>
@@ -1290,7 +1314,7 @@
         <!-- Section des deux dernières vidéos -->
         <section class="latest-videos mt-12 mb-20" data-aos="fade-right">
             <div class="container mx-auto">
-                <x-page-title subtitle="🎥 {{ __('messages.check_latest_videos') }}">
+                <x-page-title subtitle="{{ __('messages.check_latest_videos') }}">
                     @lang('messages.latest_videos')
                 </x-page-title>
                 @if($videos->isEmpty())

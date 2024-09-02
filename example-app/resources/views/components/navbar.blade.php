@@ -17,6 +17,7 @@
     }
 @endphp
 
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
@@ -185,6 +186,12 @@
     .clubName {
         display: none; /* Masque l'image de bienvenue */
     }
+
+     #reserve-button {
+        padding: 10px 20px; /* Réduction du padding pour un bouton plus petit */
+        font-size: 1rem; /* Réduction de la taille de la police */
+        white-space: nowrap; /* Empêche le texte de se diviser en plusieurs lignes */
+    }
 }
 </style>
 
@@ -337,10 +344,22 @@
                 {{ $clubName }}
             </div>
         </div>
-        
+
+        <!-- Sélection de la langue -->
+        <div class="py-2 flex justify-center">
+            <ul class="language-switcher flex" style="list-style-type: none; padding: 0; margin: 0;">
+                <li class="language-item {{ app()->getLocale() == 'en' ? 'active' : '' }}" style="margin-right: 15px;">
+                    <a href="#" onclick="setLanguage('en')" style="text-decoration: none; color: inherit; font-weight: bold;">EN</a>
+                </li>
+                <li class="language-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
+                    <a href="#" onclick="setLanguage('ar')" style="text-decoration: none; color: inherit; font-weight: bold;">AR</a>
+                </li>
+            </ul>
+        </div>
+
         <!-- Bouton de fermeture -->
         <button id="close-button" class="text-white">&times;</button>
-        
+
         <!-- Menu -->
         <a href="/" class="block text-white py-2">@lang('messages.home')</a>
 
@@ -348,6 +367,7 @@
         <a href="#" class="block text-white py-2" onclick="toggleDropdown('clubDropdown')" style="display: flex; align-items: center;">
             @lang('messages.club') <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
         </a>
+
         <div id="clubDropdown" class="hidden pl-4">
             <a href="{{ route('about.index') }}" class="block text-white py-2">@lang('messages.about')</a>
             <a href="{{ route('clubinfo') }}" class="block text-white py-2">@lang('messages.news')</a>

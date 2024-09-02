@@ -70,7 +70,13 @@ Route::resource('tribunes', TribuneController::class)->except(['index'])->middle
 
 // Autres routes
 Route::get('/teams', [PlayerController::class, 'index'])->name('teams');
-Route::get('/clubinfo', [ArticleController::class, 'index'])->name('clubinfo');
+Route::get('/clubinfo', function () {
+    return redirect()->route('news');
+})->name('clubinfo');
+
+
+Route::get('/news', [ArticleController::class, 'index'])->name('news');
+Route::redirect('/clubinfo', '/news');
 Route::get('/calendar', function () {
     return view('calendar');
 })->name('calendar');
@@ -130,6 +136,10 @@ Route::middleware(['guest', CheckRegistrationStatus::class])->group(function () 
 });
 
 Route::resource('videos', VideoController::class);
+
+Route::get('/legal', function () {
+    return view('legal');
+})->name('legal');
 
 // Routes API
 //Route::prefix('api')->group(function () {

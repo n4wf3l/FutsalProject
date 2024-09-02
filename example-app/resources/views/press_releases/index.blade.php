@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Press Releases | {{ $clubName }}</title>
+    <title>{{ __('messages.press_releases') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
@@ -164,8 +164,8 @@
     <x-navbar />
 
     <header class="text-center my-12">
-        <x-page-title subtitle="📢 Stay informed with all the breaking stories and headlines you need to know!">
-            Press Releases
+        <x-page-title :subtitle="__('messages.stay_informed')">
+            {{ __('messages.press_releases') }}
         </x-page-title>
     </header>
 
@@ -173,7 +173,7 @@
         @auth
             <div class="flex justify-center mb-6">
                 <button onclick="openModal('createPressReleaseModal')" class="create-button text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg">
-                    Create Press Release
+                    {{ __('messages.create_press_release') }}
                 </button>
             </div>
         @endauth
@@ -181,7 +181,7 @@
         <div class="press-release-container" data-aos="fade-up-right">
             @if($pressReleases->isEmpty())
                 <div class="no-press-releases-message text-center">
-                    No press releases available at the moment.
+                    {{ __('messages.no_press_releases') }}
                 </div>
             @else
                 @foreach($pressReleases as $pressRelease)
@@ -192,7 +192,7 @@
                                     <img src="{{ asset('storage/' . $pressRelease->image) }}" alt="{{ $pressRelease->title }}">
                                 </a>
                                 @auth
-                                <form action="{{ route('press_releases.destroy', $pressRelease->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this press release?');">
+                                <form action="{{ route('press_releases.destroy', $pressRelease->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="delete-button-x">X</button>
@@ -201,7 +201,7 @@
                             </div>
                         @endif
                         <div class="press-release-content">
-                            <div class="press-release-category">PRESS RELEASE</div>
+                            <div class="press-release-category">{{ __('messages.press_release') }}</div>
                             <h2 class="press-release-title">
                                 {{ $pressRelease->title }}
                                 @auth
@@ -209,7 +209,7 @@
                                 @endauth
                             </h2>
                             <div class="press-release-date">{{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</div>
-                            <a href="{{ route('press_releases.show', $pressRelease->slug) }}" class="press-release-view">Read more →</a>
+                            <a href="{{ route('press_releases.show', $pressRelease->slug) }}" class="press-release-view">{{ __('messages.read_more') }} →</a>
                         </div>
                     </div>
                 @endforeach
@@ -227,24 +227,24 @@
     <!-- Create Press Release Modal -->
     <div id="createPressReleaseModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 mx-4">
-            <h2 class="text-2xl font-semibold mb-4">Create Press Release</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{ __('messages.create_press_release') }}</h2>
             <form action="{{ route('press_releases.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
-                    <label for="createTitle" class="block text-sm font-medium text-gray-700">Title</label>
+                    <label for="createTitle" class="block text-sm font-medium text-gray-700">{{ __('messages.title') }}</label>
                     <input type="text" name="title" id="createTitle" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label for="createContent" class="block text-sm font-medium text-gray-700">Content</label>
+                    <label for="createContent" class="block text-sm font-medium text-gray-700">{{ __('messages.content') }}</label>
                     <textarea name="content" id="createContent" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required></textarea>
                 </div>
                 <div class="mb-4">
-                    <label for="createImage" class="block text-sm font-medium text-gray-700">Image</label>
+                    <label for="createImage" class="block text-sm font-medium text-gray-700">{{ __('messages.image') }}</label>
                     <input type="file" name="image" id="createImage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('createPressReleaseModal')">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Create</button>
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('createPressReleaseModal')">{{ __('messages.cancel') }}</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">{{ __('messages.create') }}</button>
                 </div>
             </form>
         </div>
@@ -253,25 +253,25 @@
     <!-- Edit Press Release Modal -->
     <div id="editPressReleaseModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 mx-4">
-            <h2 class="text-2xl font-semibold mb-4">Edit Press Release</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{ __('messages.edit_press_release') }}</h2>
             <form action="" method="POST" id="editPressReleaseForm" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-4">
-                    <label for="editTitle" class="block text-sm font-medium text-gray-700">Title</label>
+                    <label for="editTitle" class="block text-sm font-medium text-gray-700">{{ __('messages.title') }}</label>
                     <input type="text" name="title" id="editTitle" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label for="editContent" class="block text-sm font-medium text-gray-700">Content</label>
+                    <label for="editContent" class="block text-sm font-medium text-gray-700">{{ __('messages.content') }}</label>
                     <textarea name="content" id="editContent" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required></textarea>
                 </div>
                 <div class="mb-4">
-                    <label for="editImage" class="block text-sm font-medium text-gray-700">Image</label>
+                    <label for="editImage" class="block text-sm font-medium text-gray-700">{{ __('messages.image') }}</label>
                     <input type="file" name="image" id="editImage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('editPressReleaseModal')">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Update</button>
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('editPressReleaseModal')">{{ __('messages.cancel') }}</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">{{ __('messages.update') }}</button>
                 </div>
             </form>
         </div>

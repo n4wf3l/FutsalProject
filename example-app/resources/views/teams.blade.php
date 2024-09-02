@@ -2,15 +2,24 @@
 use Illuminate\Support\Facades\Auth;
 @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Senior Team | {{ $clubName }}</title>
+    <title>{{ __('messages.senior_team') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- Meta Tags for SEO -->
+<meta name="description" content="Discover the senior team of {{ $clubName }} for the {{ $championship->season }} season. Get to know the players, the coach, and the technical staff.">
+<meta name="keywords" content="senior team, {{ $clubName }}, {{ $championship->season }}, futsal, players, coach, technical staff">
+<meta property="og:title" content="{{ __('messages.senior_team') }} | {{ $clubName }}">
+<meta property="og:description" content="Meet the senior squad of {{ $clubName }} for the {{ $championship->season }} season. Explore player profiles, coaching details, and staff information.">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ url()->current() }}">
+
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -258,18 +267,18 @@ use Illuminate\Support\Facades\Auth;
     <x-navbar />
 
     <header class="text-center my-12">
-    <x-page-title subtitle="👥 Meet the talented players of our Team A, each bringing their unique skills and passion to the game. ">
-    Senior Squad {{ $championship->season }}
-</x-page-title>
+        <x-page-title subtitle="{{ __('messages.meet_players') }}">
+            {{ __('messages.senior_squad') }} {{ $championship->season }}
+        </x-page-title>
 
-@auth
-<x-button 
-    route="{{ route('players.create') }}"
-    buttonText="Add Player" 
-    primaryColor="#DC2626" 
-    secondaryColor="#B91C1C" 
-/>
-@endauth
+        @auth
+            <x-button 
+                route="{{ route('players.create') }}"
+                buttonText="{{ __('messages.add_player') }}" 
+                primaryColor="#DC2626" 
+                secondaryColor="#B91C1C" 
+            />
+        @endauth
     </header>
 
     @php
@@ -277,151 +286,150 @@ use Illuminate\Support\Facades\Auth;
     @endphp
 
     @if($players->isEmpty())
-        <p class="text-gray-600 text-center">There are no players in the database.</p>
+        <p class="text-gray-600 text-center">{{ __('messages.no_players') }}</p>
     @else
         <div class="player-container" data-aos="fade-up">
-        @foreach($players as $player)
-    <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
-        <!-- Club Logo -->
-        @if($userSettings && $userSettings->logo)
-            <img src="{{ asset('storage/' . $userSettings->logo) }}" alt="Club Logo" class="club-logo" style="height: 60px; width: auto;">
-        @endif
+            @foreach($players as $player)
+                <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
+                    <!-- Club Logo -->
+                    @if($userSettings && $userSettings->logo)
+                        <img src="{{ asset('storage/' . $userSettings->logo) }}" alt="{{ __('messages.club_logo') }}" class="club-logo" style="height: 60px; width: auto;">
+                    @endif
 
-        <!-- Player Image -->
-        @if($player->photo)
-            <img src="{{ asset('storage/' . $player->photo) }}" alt="{{ $player->first_name }} {{ $player->last_name }}" class="w-full h-48 object-cover">
-        @else
-            <img src="{{ asset('avatar.png') }}" alt="Default Player" class="w-full h-48 object-cover">
-        @endif
+                    <!-- Player Image -->
+                    @if($player->photo)
+                        <img src="{{ asset('storage/' . $player->photo) }}" alt="{{ $player->first_name }} {{ $player->last_name }}" class="w-full h-48 object-cover">
+                    @else
+                        <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.default_player') }}" class="w-full h-48 object-cover">
+                    @endif
 
-        <!-- Player Number -->
-        <div class="player-number absolute top-2 right-2 bg-black text-white text-lg font-bold rounded-full px-3 py-1 z-10">{{ $player->number }}</div>
+                    <!-- Player Number -->
+                    <div class="player-number absolute top-2 right-2 bg-black text-white text-lg font-bold rounded-full px-3 py-1 z-10">{{ $player->number }}</div>
 
-        <!-- Player Name on Image -->
-        <div class="player-info absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white p-2 z-10">
-            <span>{{ $player->first_name }} {{ $player->last_name }}</span>
-        </div>
+                    <!-- Player Name on Image -->
+                    <div class="player-info absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white p-2 z-10">
+                        <span>{{ $player->first_name }} {{ $player->last_name }}</span>
+                    </div>
 
-        <!-- Player Info Overlay -->
-        <div class="player-overlay p-4">
-            <p><strong>Birthdate:</strong> {{ $player->birthdate }}</p>
-            <p><strong>Position:</strong> {{ $player->position }}</p>
-            <p><strong>Nationality:</strong> {{ $player->nationality }}</p>
-            <p><strong>Height:</strong> {{ $player->height }} cm</p>
-            <p><strong>Contract Until:</strong> {{ \Carbon\Carbon::parse($player->contract_until)->format('d-m-Y') }}</p>
+                    <!-- Player Info Overlay -->
+                    <div class="player-overlay p-4">
+                        <p><strong>{{ __('messages.birthdate') }}:</strong> {{ $player->birthdate }}</p>
+                        <p><strong>{{ __('messages.position') }}:</strong> {{ $player->position }}</p>
+                        <p><strong>{{ __('messages.nationality') }}:</strong> {{ $player->nationality }}</p>
+                        <p><strong>{{ __('messages.height') }}:</strong> {{ $player->height }} cm</p>
+                        <p><strong>{{ __('messages.contract_until') }}:</strong> {{ \Carbon\Carbon::parse($player->contract_until)->format('d-m-Y') }}</p>
 
-            <!-- Delete and Edit buttons, visible only to authenticated users -->
-            @auth
-                <div class="flex mt-4">
-                    <!-- Delete Button -->
-                    <form action="{{ route('players.destroy', $player->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this player?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; margin-right: 10px; text-align: center;">
-                            Delete
-                        </button>
-                    </form>
+                        <!-- Delete and Edit buttons, visible only to authenticated users -->
+                        @auth
+                            <div class="flex mt-4">
+                                <!-- Delete Button -->
+                                <form action="{{ route('players.destroy', $player->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; margin-right: 10px; text-align: center;">
+                                        {{ __('messages.delete') }}
+                                    </button>
+                                </form>
 
-                    <!-- Edit Button -->
-                    <a href="{{ route('players.edit', $player->id) }}" 
-                       style="background-color: #2563EB; color: white; padding: 8px 16px; border-radius: 8px; display: inline-block; text-align: center; text-decoration: none;"
-                       onmouseover="this.style.backgroundColor='#1D4ED8';" 
-                       onmouseout="this.style.backgroundColor='#2563EB';">
-                        Edit
-                    </a>
+                                <!-- Edit Button -->
+                                <a href="{{ route('players.edit', $player->id) }}" 
+                                   style="background-color: #2563EB; color: white; padding: 8px 16px; border-radius: 8px; display: inline-block; text-align: center; text-decoration: none;"
+                                   onmouseover="this.style.backgroundColor='#1D4ED8';" 
+                                   onmouseout="this.style.backgroundColor='#2563EB';">
+                                    {{ __('messages.edit') }}
+                                </a>
+                            </div>
+                        @endauth
+                    </div>
                 </div>
-            @endauth
-        </div>
-    </div>
-@endforeach
-
+            @endforeach
         </div>
     @endif
 
     <!-- Coach Section -->
     <section class="bg-bg mt-12" data-aos="flip-right">
-    @if($coach)
-        <div class="bg-coach flex items-center justify-between text-gray-700">
-            <!-- Coach Information -->
-            <div class="coach-details text-gray-700">
-            <x-page-title subtitle="L'entraîneur est le cœur battant qui insuffle motivation et discipline">
-    Headcoach
-</x-page-title>
-                <h3 class="text-3xl font-bold mb-6">{{ $coach->first_name }} {{ $coach->last_name }}</h3>
-                <p class="text-lg  mb-6">{!! $coach->description !!}</p>
+        @if($coach)
+            <div class="bg-coach flex items-center justify-between text-gray-700">
+                <!-- Coach Information -->
+                <div class="coach-details text-gray-700">
+                    <x-page-title subtitle="{{ __('messages.coach_subtitle') }}">
+                        {{ __('messages.head_coach') }}
+                    </x-page-title>
+                    <h3 class="text-3xl font-bold mb-6">{{ $coach->first_name }} {{ $coach->last_name }}</h3>
+                    <p class="text-lg  mb-6">{!! $coach->description !!}</p>
 
-                <div class="text-lg coach-info">
-                    <p class="mb-2"><strong>Date of Birth:</strong> {{ \Carbon\Carbon::parse($coach->birth_date)->format('d F Y') }}</p>
-                    <p class="mb-2"><strong>Place of Birth:</strong> {{ $coach->birth_city }}</p>
-                    <p class="mb-2"><strong>Nationality:</strong> {{ $coach->nationality }}</p>
-                    <p class="mb-2"><strong>Coaching since:</strong> {{ \Carbon\Carbon::parse($coach->coaching_since)->format('d F Y') }}</p>
+                    <div class="text-lg coach-info">
+                        <p class="mb-2"><strong>{{ __('messages.date_of_birth') }}:</strong> {{ \Carbon\Carbon::parse($coach->birth_date)->format('d F Y') }}</p>
+                        <p class="mb-2"><strong>{{ __('messages.place_of_birth') }}:</strong> {{ $coach->birth_city }}</p>
+                        <p class="mb-2"><strong>{{ __('messages.nationality') }}:</strong> {{ $coach->nationality }}</p>
+                        <p class="mb-2"><strong>{{ __('messages.coaching_since') }}:</strong> {{ \Carbon\Carbon::parse($coach->coaching_since)->format('d F Y') }}</p>
+                    </div>
+                </div>
+
+                <!-- Coach Photo and Buttons -->
+                <div class="text-center flex flex-col items-center justify-center">
+                    @if($coach->photo)
+                        <img src="{{ asset('storage/' . $coach->photo) }}" alt="{{ $coach->first_name }} {{ $coach->last_name }}" class="coach-photo">
+                    @else
+                        <img src="https://via.placeholder.com/256" alt="{{ __('messages.no_photo') }}" class="coach-photo">
+                    @endif
+
+                    <!-- Buttons for Edit and Delete -->
+                    @auth
+                        <div class="flex mt-6">
+                            <!-- Edit Button -->
+                            <a href="{{ route('coaches.edit', $coach->id) }}" 
+                               style="background-color: #2563EB; color: white; padding: 8px 16px; border-radius: 8px; text-align: center; margin-right: 8px;">
+                                {{ __('messages.edit') }}
+                            </a>
+
+                            <!-- Delete Button -->
+                            <form action="{{ route('coaches.destroy', $coach->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
+                                    {{ __('messages.delete') }}
+                                </button>
+                            </form>
+                        </div>
+                    @endauth
                 </div>
             </div>
-
-            <!-- Coach Photo and Buttons -->
-            <div class="text-center flex flex-col items-center justify-center">
-                @if($coach->photo)
-                    <img src="{{ asset('storage/' . $coach->photo) }}" alt="{{ $coach->first_name }} {{ $coach->last_name }}" class="coach-photo">
-                @else
-                    <img src="https://via.placeholder.com/256" alt="No photo available" class="coach-photo">
-                @endif
-
-                <!-- Buttons for Edit and Delete -->
-                @auth
-                    <div class="flex mt-6">
-                        <!-- Edit Button -->
-                        <a href="{{ route('coaches.edit', $coach->id) }}" 
-                           style="background-color: #2563EB; color: white; padding: 8px 16px; border-radius: 8px; text-align: center; margin-right: 8px;">
-                            Edit
-                        </a>
-
-                        <!-- Delete Button -->
-                        <form action="{{ route('coaches.destroy', $coach->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this coach?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
-                                Delete
-                            </button>
-                        </form>
-                    </div>
-                @endauth
-            </div>
-        </div>
-    @else
-        <p class="text-gray-600 text-center">No coach available.</p>
-    @endif
-</section>
-
+        @else
+            <p class="text-gray-600 text-center">{{ __('messages.no_coach') }}</p>
+        @endif
+    </section>
 
     <!-- Staff Section -->
     <section class="staff-section" data-aos="flip-left" id="staff-section">
-    <x-page-title subtitle="They ensure that every player is at their best, both on and off the field">
-    Technical and Medical Staff
-</x-page-title>
+        <x-page-title subtitle="{{ __('messages.staff_subtitle') }}">
+            {{ __('messages.technical_staff') }}
+        </x-page-title>
 
         <div class="staff-container">
             @foreach($staff as $member)
-            <div class="staff-item">
-                <h3>{{ $member->first_name }} {{ $member->last_name }}</h3>
-                <p>{{ $member->position }}</p>
+                <div class="staff-item">
+                    <h3>{{ $member->first_name }} {{ $member->last_name }}</h3>
+                    <p>{{ $member->position }}</p>
 
-                @auth
-                <div class="mt-4 flex justify-center space-x-4">
-    <!-- Delete Button -->
-    <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this staff member?');">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="bg-red-500 text-white font-bold py-2 px-4 rounded">Delete</button>
-    </form>
+                    @auth
+                        <div class="mt-4 flex justify-center space-x-4">
+                            <!-- Delete Button -->
+                            <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.delete') }}</button>
+                            </form>
 
-    <!-- Edit Button -->
-    <a href="{{ route('staff.edit', $member->id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">Edit</a>
-</div>
-                @endauth
-            </div>
+                            <!-- Edit Button -->
+                            <a href="{{ route('staff.edit', $member->id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.edit') }}</a>
+                        </div>
+                    @endauth
+                </div>
             @endforeach
         </div>
     </section>
+
     <x-footer />
 </body>
 </html>

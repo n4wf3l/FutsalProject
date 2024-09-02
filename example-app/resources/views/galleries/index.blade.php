@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery | {{ $clubName }}</title>
+    <title>{{ __('messages.gallery') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
@@ -128,54 +128,55 @@
     <x-navbar />
 
     <header class="text-center my-12">
-    <x-page-title subtitle="📸 Dive into our collection of photo albums capturing the excitement and energy of past futsal events.">
-    Gallery
-</x-page-title>
+        <x-page-title subtitle="{{ __('messages.gallery_subtitle') }}">
+            {{ __('messages.gallery') }}
+        </x-page-title>
     </header>
 
     <main class="container mx-auto px-4">
         @auth
             <!-- Button to open the modal to create a new gallery -->
             <div class="text-center mb-6">
-                <button onclick="openModal('createGalleryModal')" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center" style="background-color: {{ $primaryColor }};">Create Gallery</button>
+                <button onclick="openModal('createGalleryModal')" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center" style="background-color: {{ $primaryColor }};">
+                    {{ __('messages.create_gallery') }}
+                </button>
             </div>
         @endauth
 
         <div class="grid grid-cols-3 gap-6 mt-8" data-aos="flip-down">
-    @if($galleries->isEmpty())
-        <p class="text-center text-gray-600 col-span-3">There are currently no albums.</p>
-    @else
-        @foreach($galleries as $gallery)
-            <div class="gallery-card">
-                @if($gallery->cover_image)
-                    <div class="gallery-image">
-                        <a href="{{ route('galleries.show', $gallery->id) }}">
-                            <img src="{{ asset('storage/' . $gallery->cover_image) }}" alt="{{ $gallery->name }}">
-                        </a>
-                        @auth
-                        <form action="{{ route('galleries.destroy', $gallery->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this gallery?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="delete-button-x">X</button>
-                        </form>
-                        @endauth
+            @if($galleries->isEmpty())
+                <p class="text-center text-gray-600 col-span-3">{{ __('messages.no_albums') }}</p>
+            @else
+                @foreach($galleries as $gallery)
+                    <div class="gallery-card">
+                        @if($gallery->cover_image)
+                            <div class="gallery-image">
+                                <a href="{{ route('galleries.show', $gallery->id) }}">
+                                    <img src="{{ asset('storage/' . $gallery->cover_image) }}" alt="{{ $gallery->name }}">
+                                </a>
+                                @auth
+                                    <form action="{{ route('galleries.destroy', $gallery->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="delete-button-x">X</button>
+                                    </form>
+                                @endauth
+                            </div>
+                        @endif
+                        <div class="gallery-content">
+                            <h2 class="gallery-title">
+                                {{ $gallery->name }}
+                                @auth
+                                    <button onclick="openEditModal('{{ $gallery->id }}', '{{ $gallery->name }}', '{{ $gallery->description }}')" class="edit-button-emoji">🛠️</button>
+                                @endauth
+                            </h2>
+                            <p class="gallery-description">{{ $gallery->description }}</p>
+                            <a href="{{ route('galleries.show', $gallery->id) }}" class="text-blue-500 font-bold">{{ __('messages.view_album') }}</a>
+                        </div>
                     </div>
-                @endif
-                <div class="gallery-content">
-                    <h2 class="gallery-title">
-                        {{ $gallery->name }}
-                        @auth
-                            <button onclick="openEditModal('{{ $gallery->id }}', '{{ $gallery->name }}', '{{ $gallery->description }}')" class="edit-button-emoji">🛠️</button>
-                        @endauth
-                    </h2>
-                    <p class="gallery-description">{{ $gallery->description }}</p>
-                    <a href="{{ route('galleries.show', $gallery->id) }}" class="text-blue-500 font-bold">View Album</a>
-                </div>
-            </div>
-        @endforeach
-    @endif
-</div>
-
+                @endforeach
+            @endif
+        </div>
 
         <div class="pagination mt-8">
             {{ $galleries->links() }}
@@ -187,24 +188,24 @@
     <!-- Create Gallery Modal -->
     <div id="createGalleryModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg shadow-lg w-11/12 sm:w-3/4 lg:w-1/2 p-6">
-            <h2 class="text-2xl font-semibold mb-4">Create Gallery</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{ __('messages.create_gallery') }}</h2>
             <form action="{{ route('galleries.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700">{{ __('messages.name') }}</label>
                     <input type="text" name="name" id="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <label for="description" class="block text-sm font-medium text-gray-700">{{ __('messages.description') }}</label>
                     <textarea name="description" id="description" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                 </div>
                 <div class="mb-4">
-                    <label for="cover_image" class="block text-sm font-medium text-gray-700">Cover Image</label>
+                    <label for="cover_image" class="block text-sm font-medium text-gray-700">{{ __('messages.cover_image') }}</label>
                     <input type="file" name="cover_image" id="cover_image" accept="image/*" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('createGalleryModal')">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Create</button>
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('createGalleryModal')">{{ __('messages.cancel') }}</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">{{ __('messages.create') }}</button>
                 </div>
             </form>
         </div>
@@ -213,25 +214,25 @@
     <!-- Edit Gallery Modal -->
     <div id="editGalleryModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg shadow-lg w-11/12 sm:w-3/4 lg:w-1/2 p-6">
-            <h2 class="text-2xl font-semibold mb-4">Edit Gallery</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{ __('messages.edit_gallery') }}</h2>
             <form action="" method="POST" id="editGalleryForm" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-4">
-                    <label for="editName" class="block text-sm font-medium text-gray-700">Name</label>
+                    <label for="editName" class="block text-sm font-medium text-gray-700">{{ __('messages.name') }}</label>
                     <input type="text" name="name" id="editName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
                 </div>
                 <div class="mb-4">
-                    <label for="editDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                    <label for="editDescription" class="block text-sm font-medium text-gray-700">{{ __('messages.description') }}</label>
                     <textarea name="description" id="editDescription" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                 </div>
                 <div class="mb-4">
-                    <label for="editCoverImage" class="block text-sm font-medium text-gray-700">Cover Image</label>
+                    <label for="editCoverImage" class="block text-sm font-medium text-gray-700">{{ __('messages.cover_image') }}</label>
                     <input type="file" name="cover_image" id="editCoverImage" accept="image/*" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('editGalleryModal')">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Update</button>
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeModal('editGalleryModal')">{{ __('messages.cancel') }}</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">{{ __('messages.update') }}</button>
                 </div>
             </form>
         </div>

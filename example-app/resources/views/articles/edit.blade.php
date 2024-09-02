@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Article | {{ $clubName }}</title>
+    <title>@lang('messages.edit_article') | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
     @endif
@@ -127,9 +127,9 @@
     <x-navbar />
 
     <div class="edit-article-container">
-    <x-page-title subtitle="">
-    Edit Article
-</x-page-title>
+        <x-page-title :subtitle="__('messages.edit_article')">
+            @lang('messages.edit_article')
+        </x-page-title>
 
         @if ($errors->any())
         <div class="form-error">
@@ -148,12 +148,12 @@
             <div class="form-grid">
                 <div>
                     <div class="mb-4">
-                        <label for="title" class="form-label">Title:</label>
+                        <label for="title" class="form-label">@lang('messages.title'):</label>
                         <input type="text" name="title" id="title" class="form-input" value="{{ old('title', $article->title) }}" required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="description" class="form-label">Description:</label>
+                        <label for="description" class="form-label">@lang('messages.description'):</label>
                         <textarea name="description" id="description" class="form-textarea" required>{{ old('description', $article->description) }}</textarea>
                     </div>
                 </div>
@@ -163,15 +163,15 @@
                     <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="form-image-preview">
                     @endif
                     <div class="mb-4">
-                        <label for="image" class="form-label">Choose a new image:</label>
+                        <label for="image" class="form-label">@lang('messages.choose_new_image'):</label>
                         <input type="file" name="image" id="image" class="form-input">
                     </div>
                 </div>
             </div>
 
             <div class="button-group">
-                <a href="{{ route('clubinfo') }}" class="cancel-button">Cancel</a>
-                <button type="submit" class="update-button">Update</button>
+                <a href="{{ route('clubinfo') }}" class="cancel-button">@lang('messages.cancel')</a>
+                <button type="submit" class="update-button">@lang('messages.update')</button>
             </div>
         </form>
     </div>

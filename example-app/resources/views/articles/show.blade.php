@@ -178,16 +178,16 @@
             @if($article->image)
             <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="article-image">
             @endif
-            <p class="article-meta">Published on: {{ $article->created_at->format('d M Y, H:i') }} by {{ $article->user->name }}</p>
+            <p class="article-meta">{{ __('messages.published_on') }}: {{ $article->created_at->format('d M Y, H:i') }} {{ __('messages.by') }} {{ $article->user->name }}</p>
             <p class="article-description">{!! $article->description !!}</p>
 
             @auth
             <div class="button-container">
-                <a href="{{ route('articles.edit', $article->id) }}" class="edit-btn">Edit</a>
-                <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this article?');">
+                <a href="{{ route('articles.edit', $article->id) }}" class="edit-btn">{{ __('messages.edit') }}</a>
+                <form action="{{ route('articles.destroy', $article->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="delete-btn">Delete</button>
+                    <button type="submit" class="delete-btn">{{ __('messages.delete') }}</button>
                 </form>
             </div>
             @endauth
@@ -195,7 +195,7 @@
 
         <!-- Recent Articles Section -->
         <div class="recent-articles-section">
-            <h3>📰 Recent Articles</h3>
+            <h3>📰 {{ __('messages.recent_articles') }}</h3> 
             @foreach($recentArticles as $recentArticle)
             <a href="{{ route('articles.show', $recentArticle->slug) }}">
                 <span>{{ $recentArticle->title }}</span>

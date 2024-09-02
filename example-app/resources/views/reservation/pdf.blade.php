@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation Details | {{ $clubName }}</title>
+    <title>{{ __('messages.reservation_details') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
@@ -75,55 +75,55 @@
 <body>
     <div class="header">
         <h1>{{ $clubName }}</h1>
-        <h2>Reservation Details</h2>
+        <h2>{{ __('messages.reservation_details') }}</h2>
     </div>
 
     <table class="details-table">
         <tr>
-            <th>Name</th>
-            <td>{{ $reservationDetails['name'] }}</td>
-        </tr>
-        <tr>
-            <th>Email</th>
+            <th>{{ __('messages.email') }}</th>
             <td>{{ $reservationDetails['email'] }}</td>
         </tr>
         <tr>
-            <th>Amount Paid</th>
+            <th>{{ __('messages.amount_paid') }}</th>
             <td>{{ number_format($reservationDetails['amount'], 2) }} {{ $reservationDetails['currency'] }}</td>
         </tr>
         <tr>
-            <th>Date of purchase</th>
+            <th>{{ __('messages.date_of_purchase') }}</th>
             <td>{{ $reservationDetails['date'] }}</td>
         </tr>
         <tr>
-            <th>Reservation ID</th>
+            <th>{{ __('messages.reservation_id') }}</th>
             <td>{{ $reservationDetails['reservation_id'] }}</td>
         </tr>
         @if($reservationDetails['game'])
         <tr>
-            <th>Match</th>
+        <th>{{ __('messages.next_match') }}</th>
             <td>{{ $reservationDetails['game']->homeTeam->name }} vs {{ $reservationDetails['game']->awayTeam->name }}</td>
         </tr>
         <tr>
-            <th>Date of Match</th>
+            <th>{{ __('messages.date_of_match') }}</th>
             <td>{{ \Carbon\Carbon::parse($reservationDetails['game']->match_date)->format('d-m-Y') }}</td>
         </tr>
         @endif
         <tr>
-            <th>Seats Reserved</th>
+            <th>{{ __('messages.seats_reserved') }}</th>
             <td>{{ $reservationDetails['seats_reserved'] }}</td>
+        </tr>
+        <tr>
+            <th>{{ __('messages.ticket_type') }}</th>
+            <td>{{ $reservationDetails['tribune_name'] }}</td>
         </tr>
     </table>
 
     <div class="qr-code-container">
-        <h3>Scan the QR code for your reservation details:</h3>
+        <h3>{{ __('messages.scan_qr') }}</h3>
         <div class="qr-code">
             <img src="data:image/svg+xml;base64,{{ $qrCode }}" alt="QR Code">
         </div>
     </div>
 
     <div class="note">
-        <p>Please make sure to have this QR code saved as a photo for easy access on the day of the event.</p>
+        <p>{{ __('messages.qr_note') }}</p>
     </div>
 </body>
 </html>

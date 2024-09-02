@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fanshop | {{ $clubName }}</title>
+    <title>{{ __('messages.fanshop') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <!-- Meta Tags for SEO -->
+<meta name="description" content="{{ __('messages.fanshop') }} - Explore the fanshop of {{ $clubName }}. Get your tickets for the next match and support your team at {{ $clubLocation }}.">
+<meta name="keywords" content="fanshop, {{ $clubName }}, {{ $clubLocation }}, tickets, futsal, sports"> 
+<meta property="og:title" content="{{ __('messages.fanshop') }} - {{ $clubName }} in {{ $clubLocation }}">
+<meta property="og:description" content="{{ __('messages.fanshop') }} - Purchase your match tickets and show your support for {{ $clubName }}.">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ url()->current() }}">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <style>
@@ -186,14 +195,14 @@
 
     <header class="text-center my-12">
         <x-page-title 
-            :subtitle="$nextGame ? '🎟️ Grab your tickets and gear up for the next big match against ' . $nextGame->awayTeam->name . '.' : 'No upcoming home matches available.'">
-            Fanshop
+            :subtitle="__('messages.fanshop_subtitle')">
+            {{ __('messages.fanshop') }}
         </x-page-title>
 
         @auth
             <x-button 
                 route="{{ route('tribunes.create') }}" 
-                buttonText="Add Tribune" 
+                buttonText="{{ __('messages.add_tribune') }}" 
                 primaryColor="#DC2626" 
                 secondaryColor="#B91C1C" 
             />
@@ -206,10 +215,10 @@
             @if($tribunes->isNotEmpty() && $tribunes->first()->photo)
                 <div class="stadium-plan" data-aos="zoom-in">
                     <li class="location-info">
-                        <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 "> 
-                        <span>Matches are played at {{ $clubLocation }}</span>
+                        <img src="{{ asset('position.png') }}" alt="{{ __('messages.matches_played_at') }}" class="h-6 w-6 "> 
+                        <span>{{ __('messages.matches_played_at') }} {{ $clubLocation }}</span>
                     </li>
-                    <img src="{{ asset('storage/' . $tribunes->first()->photo) }}" alt="Stadium Plan" class="w-full h-auto rounded-lg shadow-lg">
+                    <img src="{{ asset('storage/' . $tribunes->first()->photo) }}" alt="{{ __('messages.stadium_plan') }}" class="w-full h-auto rounded-lg shadow-lg">
                 </div>
             @endif
 
@@ -219,7 +228,7 @@
                     <div class="tribune-item">
                         <!-- X pour supprimer, placé en haut à droite -->
                         @auth
-                        <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" class="delete-icon" onsubmit="return confirm('Are you sure you want to delete this tribune?');">
+                        <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" class="delete-icon" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" style="background: none; border: none; padding: 0;">
@@ -240,18 +249,18 @@
                         <!-- Affichage des détails du match à venir -->
                         @if($nextGame)
                             <div class="next-game-info">
-                                <p><strong>Next Match:</strong> 
+                                <p><strong>{{ __('messages.next_match') }}</strong> 
                                 {{ $nextGame->homeTeam->name }} vs {{ $nextGame->awayTeam->name }} 
                                 on {{ \Carbon\Carbon::parse($nextGame->match_date)->format('d-m-Y') }}</p>
                             </div>
                         @else
-                            <p>No upcoming matches scheduled.</p>
+                            <p>{{ __('messages.no_upcoming_matches') }}</p>
                         @endif
 
                         <!-- Affichage du prix -->
                         <div class="price">
                             @if($tribune->price == 0)
-                                Free Ticket
+                                {{ __('messages.free_ticket') }}
                             @else
                                 {{ number_format($tribune->price, 2) }} {{ $tribune->currency }}
                             @endif
@@ -261,7 +270,7 @@
                         <!-- Gestion de la quantité -->
                         @if($tribune->available_seats > 0)
                             @auth
-                                <p>{{ $tribune->available_seats }} seats left</p>
+                                <p>{{ $tribune->available_seats }} {{ __('messages.seats_left') }}</p>
                             @endauth
                             <div class="quantity-controls">
                                 <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">-</button>
@@ -274,11 +283,11 @@
                                     <input type="hidden" name="tribune_name" value="{{ $tribune->name }}">
                                     <input type="hidden" name="total_amount" id="totalAmountInput-{{ $tribune->id }}" value="0">
                                     <input type="hidden" name="quantity" id="quantityInput-{{ $tribune->id }}" value="0">
-                                    <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>Payer</button>
+                                    <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>{{ __('messages.pay') }}</button>
                                 </form>
                             </div>
                         @else
-                            <p class="text-red-500 font-bold">Sold Out</p>
+                            <p class="text-red-500 font-bold">{{ __('messages.sold_out') }}</p>
                         @endif
                     </div>
                 @endforeach

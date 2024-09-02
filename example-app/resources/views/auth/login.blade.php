@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | {{ $clubName }}</title>
+    <title>{{ __('messages.login') }} | {{ $clubName }}</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     <style>
@@ -26,7 +26,7 @@
         }
         .login-container img {
             display: block;
-            margin: 0 auto 1.5rem; /* Centrer l'image et ajouter un espace en bas */
+            margin: 0 auto 1.5rem;
             max-width: 150px;
         }
         .login-container button {
@@ -56,7 +56,7 @@
 <div class="login-container">
     <!-- Logo Centré -->
     @if($logoPath)
-        <img src="{{ asset($logoPath) }}" alt="Site Logo">
+        <img src="{{ asset($logoPath) }}" alt="{{ __('messages.site_logo') }}">
     @endif
 
     <!-- Formulaire de Connexion -->
@@ -65,7 +65,7 @@
 
         <!-- Adresse Email -->
         <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <label for="email" class="block text-sm font-medium text-gray-700">{{ __('messages.email') }}</label>
             <input id="email" type="email" name="email" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm" value="{{ old('email') }}" required autofocus>
             @error('email')
             <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -74,7 +74,7 @@
 
         <!-- Mot de Passe -->
         <div class="mb-4">
-            <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+            <label for="password" class="block text-sm font-medium text-gray-700">{{ __('messages.password') }}</label>
             <input id="password" type="password" name="password" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm" required>
             @error('password')
             <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -85,19 +85,19 @@
         <div class="mb-4">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
+                <span class="ml-2 text-sm text-gray-600">{{ __('messages.remember_me') }}</span>
             </label>
         </div>
 
         <!-- Bouton de Connexion -->
         <button type="submit">
-            Connexion
+            {{ __('messages.login') }}
         </button>
 
         <!-- Lien Mot de Passe Oublié -->
         @if (Route::has('password.request'))
             <div class="mt-4">
-                <a href="{{ route('password.request') }}">Mot de passe oublié ?</a>
+                <a href="{{ route('password.request') }}">{{ __('messages.forgot_password') }}</a>
             </div>
         @endif
     </form>

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U21 Team | {{ $clubName }}</title>
+    <title>{{ __('messages.u21_team_title') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
     @endif
@@ -150,15 +150,15 @@ use Illuminate\Support\Facades\Auth;
     <x-navbar />
 
     <header class="text-center my-12">
-        <x-page-title subtitle="🌟 Explore the rising stars of our U21 team, showcasing the next generation of talent ready to make their mark on the field. The future of football starts here! ">
-            U21 Squad {{ $championship->season }}
+        <x-page-title subtitle="{{ __('messages.u21_subtitle') }}">
+            {{ __('messages.u21_team_title') }} {{ $championship->season }}
         </x-page-title>
 
         @auth
             <a href="{{ route('playersu21.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary" style="font-size:20px; background-color: {{ $primaryColor }};"
                onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                Add U21 Player
+                {{ __('messages.add_u21_player') }}
             </a>
         @endauth
     </header>
@@ -168,21 +168,21 @@ use Illuminate\Support\Facades\Auth;
     @endphp
 
     @if($players->isEmpty())
-        <p class="text-gray-600 text-center">There are no U21 players in the database.</p>
+        <p class="text-gray-600 text-center">{{ __('messages.no_u21_players') }}</p>
     @else
         <div class="player-container" data-aos="fade-up">
             @foreach($players as $player)
                 <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
                     <!-- Club Logo -->
                     @if($userSettings && $userSettings->logo)
-                        <img src="{{ asset('storage/' . $userSettings->logo) }}" alt="Club Logo" class="club-logo" style="height: 60px; width: auto;">
+                        <img src="{{ asset('storage/' . $userSettings->logo) }}" alt="{{ __('messages.club_logo_alt') }}" class="club-logo" style="height: 60px; width: auto;">
                     @endif
 
                     <!-- Player Image -->
                     @if($player->photo)
                         <img src="{{ asset('storage/' . $player->photo) }}" alt="{{ $player->first_name }} {{ $player->last_name }}" class="w-full h-48 object-cover">
                     @else
-                        <img src="{{ asset('avatar.png') }}" alt="Default Player" class="w-full h-48 object-cover">
+                        <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.default_player_alt') }}" class="w-full h-48 object-cover">
                     @endif
 
                     <!-- Player Number -->
@@ -195,26 +195,26 @@ use Illuminate\Support\Facades\Auth;
 
                     <!-- Player Info Overlay -->
                     <div class="player-overlay p-4">
-                        <p><strong>Birthdate:</strong> {{ $player->birthdate }}</p>
-                        <p><strong>Position:</strong> {{ $player->position }}</p>
-                        <p><strong>Nationality:</strong> {{ $player->nationality }}</p>
-                        <p><strong>Height:</strong> {{ $player->height }} cm</p>
+                        <p><strong>{{ __('messages.birthdate') }}:</strong> {{ $player->birthdate }}</p>
+                        <p><strong>{{ __('messages.position') }}:</strong> {{ $player->position }}</p>
+                        <p><strong>{{ __('messages.nationality') }}:</strong> {{ $player->nationality }}</p>
+                        <p><strong>{{ __('messages.height') }}:</strong> {{ $player->height }} cm</p>
 
                         <!-- Delete and Edit buttons, visible only to authenticated users -->
                         @auth
                             <div class="flex mt-4">
                                 <!-- Delete Button -->
-                                <form action="{{ route('playersu21.destroy', $player->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this player?');">
+                                <form action="{{ route('playersu21.destroy', $player->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.confirm_delete_player') }}');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; margin-right: 10px; text-align: center;">
-                                        Delete
+                                        {{ __('messages.delete') }}
                                     </button>
                                 </form>
 
                                 <!-- Edit Button -->
                                 <a href="{{ route('playersu21.edit', $player->id) }}" style="background-color: #1D4ED8; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
-                                    Edit
+                                    {{ __('messages.edit') }}
                                 </a>
                             </div>
                         @endauth

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News | {{ $clubName }}</title>
+    <title>{{ __('messages.news_title') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
@@ -11,15 +11,13 @@
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <style>
-        /* Container for the main article and the recent articles list */
+        /* Styles existants */
         .main-article-container {
             display: flex;
             gap: 20px;
             margin-bottom: 40px;
-            flex-direction: column; /* Default to column for smaller screens */
+            flex-direction: column;
         }
-
-        /* Main article styles */
         .main-article {
             flex: 2;
             background-color: #ffffff;
@@ -28,30 +26,24 @@
             overflow: hidden;
             transition: transform 0.2s ease;
         }
-
         .main-article:hover {
             transform: translateY(-5px);
         }
-
         .main-article a {
             display: block;
             color: inherit;
             text-decoration: none;
             height: 100%;
         }
-
         .main-article img {
             width: 100%;
             object-fit: cover;
             height: auto;
             max-height: 500px;
         }
-
         .main-article-content {
             padding: 20px;
         }
-
-        /* Recent articles list styles */
         .recent-articles {
             flex: 1;
             background-color: #ffffff;
@@ -61,7 +53,6 @@
             padding: 20px;
             position: relative;
         }
-
         .recent-articles h3 {
             font-size: 1.5rem;
             font-weight: bold;
@@ -69,7 +60,6 @@
             border-bottom: 3px solid {{ $secondaryColor }};
             padding-bottom: 5px;
         }
-
         .recent-articles a {
             display: flex;
             justify-content: space-between;
@@ -79,47 +69,38 @@
             text-decoration: none;
             padding-bottom: 5px;
         }
-
         .recent-articles a:hover {
             text-decoration: underline;
         }
-
         .recent-articles hr {
             border: none;
             border-top: 1px solid #e2e8f0;
             margin: 10px 0;
         }
-
         .recent-article-date {
             font-size: 0.875rem;
             color: #4a5568;
             white-space: nowrap;
         }
-
         .recent-articles-container {
             margin-top: 40px;
-            display: grid; /* Use CSS Grid to arrange articles responsively */
+            display: grid;
             grid-template-columns: 1fr;
             gap: 20px;
         }
-
         @media (min-width: 768px) {
             .recent-articles-container {
-                grid-template-columns: 1fr 1fr; /* Two columns for medium screens */
+                grid-template-columns: 1fr 1fr;
             }
         }
-
         @media (min-width: 1024px) {
             .main-article-container {
-                flex-direction: row; /* Row layout for larger screens */
+                flex-direction: row;
             }
-
             .recent-articles-container {
-                grid-template-columns: repeat(3, 1fr); /* Three columns for large screens */
+                grid-template-columns: repeat(3, 1fr);
             }
         }
-
-        /* Article item styles */
         .article-item {
             display: flex;
             align-items: center;
@@ -133,12 +114,10 @@
             text-decoration: none;
             color: inherit;
         }
-
         .article-item:hover {
             transform: translateY(-5px);
             border-color: {{ $primaryColor }};
         }
-
         .article-item img {
             width: 150px;
             height: 100px;
@@ -146,13 +125,11 @@
             border-radius: 5px;
             margin-right: 20px;
         }
-
         .article-item-content {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
-
         .article-item-title {
             font-size: 1.25rem;
             font-weight: bold;
@@ -160,17 +137,14 @@
             color: {{ $primaryColor }};
             text-decoration: none;
         }
-
         .article-item-title:hover {
             text-decoration: underline;
         }
-
         .article-item-meta {
             color: #4a5568;
             font-size: 0.875rem;
             margin-bottom: 10px;
         }
-
         .article-item-description {
             font-size: 1rem;
             color: #333;
@@ -183,13 +157,13 @@
     <x-navbar />
 
     <header class="text-center my-12">
-        <x-page-title subtitle="🔔 Stay informed with all the breaking stories and headlines you need to know!">
-            Recent News
+        <x-page-title :subtitle="__('messages.stay_informed')">
+            {{ __('messages.recent_news') }}
         </x-page-title>
         @auth
         <x-button 
             route="{{ route('articles.create') }}"
-            buttonText="Add Article" 
+            :buttonText="__('messages.add_article')" 
             primaryColor="#B91C1C" 
             secondaryColor="#DC2626" 
         />
@@ -203,8 +177,8 @@
                     type="text"
                     name="search"
                     class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
-                    placeholder="Search articles..."
-                    aria-label="Search"
+                    placeholder="{{ __('messages.search_articles') }}..."
+                    aria-label="{{ __('messages.search') }}"
                 >
                 <button
                     type="submit"
@@ -213,7 +187,7 @@
                     onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                     onmouseout="this.style.backgroundColor='{{ $primaryColor }}'"
                 >
-                    Search
+                    {{ __('messages.search') }}
                 </button>
             </div>
         </form>
@@ -234,21 +208,20 @@
                     <img src="{{ asset('storage/' . $articles->first()->image) }}" alt="{{ $articles->first()->title }}">
                     @endif
                     <div class="main-article-content">
-                        <h2 class="text-3xl font-bold mb-2 article-title" >
+                        <h2 class="text-3xl font-bold mb-2 article-title">
                             <strong>{{ $articles->first()->title }}</strong>
                         </h2>
                         <p class="text-gray-600 mb-4">
                             {!! \Illuminate\Support\Str::limit(strip_tags($articles->first()->description, '<b><i><strong><em><ul><li><ol>'), 200) !!}
                         </p>
-                        <p class="text-sm text-gray-500">Published on: {{ $articles->first()->created_at->format('d M Y, H:i') }} by
-                            {{ $articles->first()->user->name }}</p>
+                        <p class="text-sm text-gray-500">{{ __('messages.published_on') }}: {{ $articles->first()->created_at->format('d M Y, H:i') }} {{ __('messages.by') }} {{ $articles->first()->user->name }}</p>
                     </div>
                 </a>
             </div>
 
             <!-- Recent Articles List -->
-            <div class="recent-articles" data-aos="zoom-in"'>
-                <h3>📰 Recent Articles</h3>
+            <div class="recent-articles" data-aos="zoom-in">
+                <h3>📰 {{ __('messages.recent_articles') }}</h3>
                 @foreach($articles->skip(1) as $article)
                 <a href="{{ route('articles.show', $article->slug) }}">
                     <span>{{ $article->title }}</span>
@@ -258,9 +231,9 @@
                 @endforeach
              <!-- Pagination Links -->
             <div class="mt-4">
-            {{ $articles->links('vendor.pagination.simple') }}
+                {{ $articles->links('vendor.pagination.simple') }}
             </div>
-        </div>
+            </div>
         </div>
 
         <!-- Recent Articles Below the Main Article -->

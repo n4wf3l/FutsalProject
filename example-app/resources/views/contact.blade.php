@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact | {{ $clubName }}</title>
+    <title>{{ __('messages.contact') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
     @endif
@@ -13,6 +13,15 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Meta Tags for SEO -->
+<meta name="description" content="{{ __('messages.contact') }} - Get in touch with {{ $clubName }} in {{ $clubLocation }}. Contact us for any inquiries, feedback, or support.">
+<meta name="keywords" content="futsal, {{ $clubName }}, {{ $clubLocation }}, contact, sports, inquiries"> 
+<meta property="og:title" content="{{ __('messages.contact') }} - {{ $clubName }} in {{ $clubLocation }}">
+<meta property="og:description" content="{{ __('messages.contact') }} - Reach out to {{ $clubName }} for support or information.">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ url()->current() }}">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <style>
@@ -145,21 +154,21 @@
     <x-navbar />
 
     <header class="text-center my-12">
-        <x-page-title subtitle="📞 Get in touch with us! We're here to answer your questions and provide the information you need. Reach out to connect with our team today.">
-            Contact
+        <x-page-title subtitle="{{ __('messages.contact_subtitle') }}">
+            {{ __('messages.contact') }}
         </x-page-title>
     </header>
 
     <div class="contact-container">
         <div class="contact-info" data-aos="fade-right">
-            <h2>Contact Us</h2>
-            <h1>Get in Touch</h1>
-            <p>Fill out the form and we will get in touch with you as soon as possible regarding your inquiry or feedback.</p>
+            <h2>{{ __('messages.contact_us') }}</h2>
+            <h1>{{ __('messages.get_in_touch') }}</h1>
+            <p>{{ __('messages.contact_form_instruction') }}</p>
 
             <div class="info-item">
                 <i class="fas fa-map-marker-alt"></i>
                 <div>
-                    <strong>Address</strong>
+                    <strong>{{ __('messages.address') }}</strong>
                     <p>{{ $clubLocation }}</p>
                 </div>
             </div>
@@ -167,15 +176,15 @@
             <div class="info-item">
                 <i class="fas fa-phone-alt"></i>
                 <div>
-                    <strong>Phone Number</strong>
-                    <p>GC: {{ $phone }}</p>
+                    <strong>{{ __('messages.phone_number') }}</strong>
+                    <p>{{ __('messages.gc') }}: {{ $phone }}</p>
                 </div>
             </div>
 
             <div class="info-item">
                 <i class="fas fa-envelope"></i>
                 <div>
-                    <strong>Email Address</strong>
+                    <strong>{{ __('messages.email_address') }}</strong>
                     <p>{{ $email }}</p>
                 </div>
             </div>
@@ -185,26 +194,26 @@
             <form action="{{ route('contact.send') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="firstname">First Name *</label>
+                    <label for="firstname">{{ __('messages.first_name') }} *</label>
                     <input type="text" name="firstname" id="firstname" required>
                 </div>
                 <div class="form-group">
-                    <label for="lastname">Last Name *</label>
+                    <label for="lastname">{{ __('messages.last_name') }} *</label>
                     <input type="text" name="lastname" id="lastname" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email Address *</label>
+                    <label for="email">{{ __('messages.email_address') }} *</label>
                     <input type="email" name="email" id="email" required>
                 </div>
                 <div class="form-group">
-                    <label for="phone">Phone Number *</label>
+                    <label for="phone">{{ __('messages.phone_number') }} *</label>
                     <input type="tel" name="phone" id="phone" required>
                 </div>
                 <div class="form-group">
-                    <label for="message">Message or Questions *</label>
+                    <label for="message">{{ __('messages.message_or_questions') }} *</label>
                     <textarea name="message" id="message" required></textarea>
                 </div>
-                <button type="submit" class="submit-button">Send</button>
+                <button type="submit" class="submit-button">{{ __('messages.send') }}</button>
             </form>
         </div>
     </div>

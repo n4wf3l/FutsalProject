@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar | {{ $clubName }}</title>
+    <title>{{ __('messages.calendar') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
@@ -12,6 +12,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<!-- Meta Tags for SEO -->
+<meta name="description" content="@lang('messages.calendar_subtitle') - {{ $championship->name }} {{ $championship->season }}. Discover the match calendar and follow the performances of {{ $clubName }} in {{ $clubLocation }}.">
+<meta name="keywords" content="futsal, {{ $clubName }}, {{ $championship->name }}, match calendar, {{ $clubLocation }}, sports">
+<meta property="og:title" content="@lang('messages.calendar') - {{ $clubName }} in {{ $clubLocation }}">
+<meta property="og:description" content="@lang('messages.calendar_subtitle') - Follow the matches and results of {{ $clubName }}.">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ url()->current() }}">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <style>
@@ -237,7 +245,7 @@
     <x-navbar />
 
     <header class="text-center my-12">
-        <x-page-title subtitle=" 🗓️ Stay up to date with our comprehensive calendar, featuring all the upcoming futsal matches and key events.">
+        <x-page-title subtitle="{{ __('messages.calendar_subtitle') }}">
             {{ $championship->name }}
         </x-page-title>
         <x-validation-messages />
@@ -245,7 +253,7 @@
 
     @auth
     <div class="admin-buttons">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#championshipModal">Settings</a>
+        <a href="#" data-bs-toggle="modal" data-bs-target="#championshipModal">{{ __('messages.settings') }}</a>
     </div>
     @endauth
 
@@ -254,24 +262,24 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="championshipModalLabel">Championship Settings</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="championshipModalLabel">{{ __('messages.championship_settings') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
                 </div>
                 <form action="{{ route('championship.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Championship Name</label>
+                            <label for="name" class="form-label">{{ __('messages.championship_name') }}</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $championship->name ?? '' }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="season" class="form-label">Season</label>
+                            <label for="season" class="form-label">{{ __('messages.season') }}</label>
                             <input type="text" class="form-control" id="season" name="season" value="{{ $championship->season ?? '' }}" required>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save_changes') }}</button>
                     </div>
                 </form>
             </div>
@@ -281,16 +289,16 @@
     <main class="py-12">
         <a id="ranking-section"></a>
         @if($championship)
-        <x-page-subtitle text="Ranking - {{ $championship->name }} {{ $championship->season }}" />
+        <x-page-subtitle text="{{ __('messages.ranking') }} - {{ $championship->name }} {{ $championship->season }}" />
         @else
-        <x-page-subtitle text="No championship data available" />
+        <x-page-subtitle text="{{ __('messages.no_championship_data') }}" />
         @endif
-        <p class="text-center text-gray-600 italic">Green: Season champion of {{ $championship->name }}</p>
-        <p class="text-center text-gray-600 italic">Yellow: Compete in playoffs against the top two from D2</p>
-        <p class="text-center text-gray-600 italic mb-4">Red: Relegation to D2</p>
+        <p class="text-center text-gray-600 italic">{{ __('messages.green_champion') }} {{ $championship->name }}</p>
+        <p class="text-center text-gray-600 italic">{{ __('messages.yellow_playoffs') }}</p>
+        <p class="text-center text-gray-600 italic mb-4">{{ __('messages.red_relegation') }}</p>
         @auth
         <div class="admin-buttons">
-            <a href="{{ route('manage_teams.create') }}">Add a Team</a>
+            <a href="{{ route('manage_teams.create') }}">{{ __('messages.add_team') }}</a>
         </div>
         @endauth
 
@@ -299,21 +307,21 @@
                 <thead data-aos="flip-left">
                     <tr>
                         <th>#</th>
-                        <th>Club</th>
-                        <th>Pts</th>
-                        <th>Jo</th>
-                        <th>G</th>
-                        <th>N</th>
-                        <th>P</th>
-                        <th>Diff</th>
+                        <th>{{ __('messages.club') }}</th>
+                        <th>{{ __('messages.pts') }}</th>
+                        <th>{{ __('messages.jo') }}</th>
+                        <th>{{ __('messages.g') }}</th>
+                        <th>{{ __('messages.n') }}</th>
+                        <th>{{ __('messages.p') }}</th>
+                        <th>{{ __('messages.diff') }}</th>
                         @auth
-                        <th>Actions</th>
+                        <th>{{ __('messages.actions') }}</th>
                         @endauth
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($teams as $team)
-                    <tr data-aos="flip-left" @if($loop->first)
+                    <tr  @if($loop->first)
                         style="background-color: #d4edda;"
                         @elseif($loop->iteration >= count($teams) - 3 && $loop->iteration <= count($teams) - 2)
                         style="background-color: #fff3cd;"
@@ -324,7 +332,7 @@
                         <td data-aos="flip-up">{{ $loop->iteration }}</td>
                         <td data-aos="flip-up" class="club-name">
                             @if($team->logo_path)
-                            <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} Logo" class="club-logo">
+                            <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} {{ __('messages.logo') }}" class="club-logo">
                             @endif
                             <span>{{ $team->name }}</span>
                         </td>
@@ -335,35 +343,35 @@
                         <td data-aos="flip-up">{{ $team->losses }}</td>
                         <td data-aos="flip-up">{{ $team->goal_difference }}</td>
                         @auth
-                        <td data-aos="flip-up">
+                        <td>
                             <button type="button" data-bs-toggle="modal" data-bs-target="#editTeamModal-{{ $team->id }}">🛠️</button>
                             <div class="modal fade" id="editTeamModal-{{ $team->id }}" tabindex="-1" aria-labelledby="editTeamModalLabel-{{ $team->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="editTeamModalLabel-{{ $team->id }}">Edit Team</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <h5 class="modal-title" id="editTeamModalLabel-{{ $team->id }}">{{ __('messages.edit_team') }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
                                         </div>
                                         <form action="{{ route('manage_teams.update', $team->id) }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-body">
                                                 <div class="mb-4">
-                                                    <label for="team_name" class="block text-sm font-medium text-gray-700">Team Name</label>
+                                                    <label for="team_name" class="block text-sm font-medium text-gray-700">{{ __('messages.team_name') }}</label>
                                                     <input type="text" name="name" id="team_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $team->name }}" required>
                                                 </div>
 
                                                 <div class="mb-4">
-                                                    <label for="logo_path" class="block text-sm font-medium text-gray-700">Team Logo</label>
+                                                    <label for="logo_path" class="block text-sm font-medium text-gray-700">{{ __('messages.team_logo') }}</label>
                                                     <input type="file" name="logo_path" id="logo_path" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                                                     @if($team->logo_path)
-                                                    <img src="{{ Storage::url($team->logo_path) }}" alt="{{ $team->name }} Logo" style="height: 50px; margin-top: 10px;">
+                                                    <img src="{{ Storage::url($team->logo_path) }}" alt="{{ $team->name }} {{ __('messages.logo') }}" style="height: 50px; margin-top: 10px;">
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('messages.save_changes') }}</button>
                 </div>
             </form>
         </div>
@@ -373,7 +381,7 @@
                             <form action="{{ route('manage_teams.destroy', $team->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" style="background:none; border:none; color:red; cursor:pointer;" onclick="return confirm('Are you sure you want to delete this team?');">X</button>
+                                <button type="submit" style="background:none; border:none; color:red; cursor:pointer;" onclick="return confirm('{{ __('messages.confirm_delete_team') }}');">X</button>
                             </form>
                         </td>
                         @endauth
@@ -386,11 +394,11 @@
         <hr class="mt-20 mb-20">
 
         <a id="calendar-section"></a>
-        <x-page-subtitle text="Match Calendar - {{ $clubName }}" />
-        <p class="text-center text-gray-600 italic mb-4">All home matches take place at {{ $clubLocation }}.</p>
+        <x-page-subtitle text="{{ __('messages.match_calendar') }} - {{ $clubName }}" />
+        <p class="text-center text-gray-600 italic mb-4">{{ __('messages.home_matches_location') }} {{ $clubLocation }}.</p>
         @auth
         <div class="admin-buttons">
-            <a href="{{ route('games.create') }}" class="btn btn-primary">Create a Match</a>
+            <a href="{{ route('games.create') }}" class="btn btn-primary">{{ __('messages.create_match') }}</a>
         </div>
         @endauth
 
@@ -452,9 +460,9 @@
         <form method="GET" action="{{ route('calendar.show') }}" class="filter-form">
             <div class="filter-group">
                 <!-- Filter by team -->
-                <label for="team_filter">Show matches of:</label>
+                <label for="team_filter">{{ __('messages.show_matches_of') }}:</label>
                 <select name="team_filter" id="team_filter" onchange="this.form.submit()">
-                    <option value="all_teams" {{ request('team_filter') == 'all_teams' ? 'selected' : '' }}>All Teams</option>
+                    <option value="all_teams" {{ request('team_filter') == 'all_teams' ? 'selected' : '' }}>{{ __('messages.all_teams') }}</option>
                     <option value="specific_team" {{ request('team_filter') == 'specific_team' ? 'selected' : '' }}>
                         {{ $clubName }} <!-- Display full club name here -->
                     </option>
@@ -463,11 +471,11 @@
 
             <div class="filter-group">
                 <!-- Filter by date -->
-                <label for="date_filter">Show:</label>
+                <label for="date_filter">{{ __('messages.show') }}:</label>
                 <select name="date_filter" id="date_filter" onchange="this.form.submit()">
-                    <option value="results_and_upcoming" {{ request('date_filter') == 'results_and_upcoming' ? 'selected' : '' }}>Results + Upcoming Matches</option>
-                    <option value="upcoming" {{ request('date_filter') == 'upcoming' ? 'selected' : '' }}>Upcoming Matches</option>
-                    <option value="results" {{ request('date_filter') == 'results' ? 'selected' : '' }}>Results</option>
+                    <option value="results_and_upcoming" {{ request('date_filter') == 'results_and_upcoming' ? 'selected' : '' }}>{{ __('messages.results_and_upcoming') }}</option>
+                    <option value="upcoming" {{ request('date_filter') == 'upcoming' ? 'selected' : '' }}>{{ __('messages.upcoming_matches') }}</option>
+                    <option value="results" {{ request('date_filter') == 'results' ? 'selected' : '' }}>{{ __('messages.results') }}</option>
                 </select>
             </div>
         </form>
@@ -476,12 +484,12 @@
             <table class="rounded-table">
                 <thead data-aos="flip-up">
                     <tr>
-                        <th>Date</th>
-                        <th>Home</th>
-                        <th>Away</th>
-                        <th>Score</th>
+                        <th>{{ __('messages.date') }}</th>
+                        <th>{{ __('messages.home') }}</th>
+                        <th>{{ __('messages.away') }}</th>
+                        <th>{{ __('messages.score') }}</th>
                         @auth
-                        <th>Actions</th>
+                        <th>{{ __('messages.actions') }}</th>
                         @endauth
                     </tr>
                 </thead>
@@ -492,7 +500,7 @@
                         <td data-aos="flip-up">
                             <div style="display: flex; align-items: center;">
                                 @if($game->homeTeam->logo_path)
-                                <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} Logo" class="club-logo">
+                                <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} {{ __('messages.logo') }}" class="club-logo">
                                 @endif
                                 {{ $game->homeTeam->name }}
                             </div>
@@ -500,7 +508,7 @@
                         <td data-aos="flip-up">
                             <div style="display: flex; align-items: center;">
                                 @if($game->awayTeam->logo_path)
-                                <img src="{{ asset('storage/' . $game->awayTeam->logo_path) }}" alt="{{ $game->awayTeam->name }} Logo" class="club-logo">
+                                <img src="{{ asset('storage/' . $game->awayTeam->logo_path) }}" alt="{{ $game->awayTeam->name }} {{ __('messages.logo') }}" class="club-logo">
                                 @endif
                                 {{ $game->awayTeam->name }}
                             </div>
@@ -512,7 +520,7 @@
                                 <input type="number" name="home_team_score" value="{{ old('home_team_score', $game->home_score) }}" min="0" class="score-input {{ $game->home_score !== null ? 'green-text' : 'gray-text' }}">
                                 <span> - </span>
                                 <input type="number" name="away_team_score" value="{{ old('away_team_score', $game->away_score) }}" min="0" class="score-input {{ $game->away_score !== null ? 'green-text' : 'gray-text' }}">
-                                <button type="submit" class="update-scores-button">OK</button>
+                                <button type="submit" class="update-scores-button">{{ __('messages.ok') }}</button>
                             </form>
                             @else
                             {{ $game->home_score }} - {{ $game->away_score }}
@@ -526,20 +534,20 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="editGameModalLabel-{{ $game->id }}">Edit Match</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <h5 class="modal-title" id="editGameModalLabel-{{ $game->id }}">{{ __('messages.edit_match') }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
                                         </div>
                                         <form action="{{ route('games.update', $game->id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-body">
                                                 <div class="mb-4">
-                                                    <label for="match_date" class="block text-sm font-medium text-gray-700">Match Date</label>
+                                                    <label for="match_date" class="block text-sm font-medium text-gray-700">{{ __('messages.match_date') }}</label>
                                                     <input type="date" name="match_date" id="match_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $game->match_date }}" required>
                                                 </div>
 
                                                 <div class="mb-4">
-                                                    <label for="home_team_id" class="block text-sm font-medium text-gray-700">Home Team</label>
+                                                    <label for="home_team_id" class="block text-sm font-medium text-gray-700">{{ __('messages.home_team') }}</label>
                                                     <select name="home_team_id" id="home_team_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                                                         @foreach($teams as $team)
                                                         <option value="{{ $team->id }}" {{ $team->id == $game->home_team_id ? 'selected' : '' }}>{{ $team->name }}</option>
@@ -548,7 +556,7 @@
                                                 </div>
 
                                                 <div class="mb-4">
-                                                    <label for="away_team_id" class="block text-sm font-medium text-gray-700">Away Team</label>
+                                                    <label for="away_team_id" class="block text-sm font-medium text-gray-700">{{ __('messages.away_team') }}</label>
                                                     <select name="away_team_id" id="away_team_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                                                         @foreach($teams as $team)
                                                         <option value="{{ $team->id }}" {{ $team->id == $game->away_team_id ? 'selected' : '' }}>{{ $team->name }}</option>
@@ -557,8 +565,8 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
+                                                <button type="submit" class="btn btn-primary">{{ __('messages.save_changes') }}</button>
                                             </div>
                                         </form>
                                     </div>
@@ -568,7 +576,7 @@
                             <form action="{{ route('games.destroy', $game->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" style="background:none; border:none; color:red; cursor:pointer;" onclick="return confirm('Are you sure you want to delete this game?');">X</button>
+                                <button type="submit" style="background:none; border:none; color:red; cursor:pointer;" onclick="return confirm('{{ __('messages.confirm_delete_match') }}');">X</button>
                             </form>
                         </td>
                         @endauth
@@ -580,7 +588,7 @@
 
         @auth
         <div class="admin-buttons">
-            <a href="#" onclick="event.preventDefault(); document.getElementById('reset-scores-form').submit();" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700">Reset</a>
+            <a href="#" onclick="event.preventDefault(); document.getElementById('reset-scores-form').submit();" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700">{{ __('messages.reset') }}</a>
 
             <form id="reset-scores-form" action="{{ route('reset.scores') }}" method="POST" style="display: none;">
                 @csrf

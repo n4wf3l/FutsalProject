@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Videos | {{ $clubName }}</title>
+    <title>{{ __('messages.videos') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
@@ -13,14 +13,13 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Page Styles */
+        /* Styles existants */
         .main-video-container {
             display: flex;
             gap: 20px;
             margin-bottom: 40px;
-            position: relative;
+            flex-direction: column;
         }
-
         .main-video {
             flex: 2;
             background-color: #ffffff;
@@ -28,53 +27,34 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: transform 0.2s ease;
-            position: relative;
         }
-
         .main-video:hover {
             transform: translateY(-5px);
         }
-
+        .main-video a {
+            display: block;
+            color: inherit;
+            text-decoration: none;
+            height: 100%;
+        }
         .main-video img {
             width: 100%;
             object-fit: cover;
             height: auto;
             max-height: 500px;
         }
-
         .main-video-content {
             padding: 20px;
         }
-
-        .delete-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #FF0000;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s ease;
-        }
-
-        .delete-button:hover {
-            background-color: #cc0000;
-        }
-
         .recent-videos {
             flex: 1;
             background-color: #ffffff;
             border-radius: 0.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
             padding: 20px;
+            position: relative;
         }
-
         .recent-videos h3 {
             font-size: 1.5rem;
             font-weight: bold;
@@ -82,28 +62,47 @@
             border-bottom: 3px solid {{ $secondaryColor }};
             padding-bottom: 5px;
         }
-
         .recent-videos a {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: {{ $secondaryColor }};
             margin-bottom: 10px;
             text-decoration: none;
             padding-bottom: 5px;
-            color: inherit;
         }
-
         .recent-videos a:hover {
             text-decoration: underline;
-            color: inherit;
         }
-
         .recent-videos hr {
             border: none;
             border-top: 1px solid #e2e8f0;
             margin: 10px 0;
         }
-
+        .recent-video-date {
+            font-size: 0.875rem;
+            color: #4a5568;
+            white-space: nowrap;
+        }
+        .recent-videos-container {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .recent-videos-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (min-width: 1024px) {
+            .main-video-container {
+                flex-direction: row;
+            }
+            .recent-videos-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
         .video-item {
             display: flex;
             align-items: center;
@@ -112,16 +111,15 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             padding: 20px;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease, border-color 0.2s ease;
             border: 1px solid transparent;
-            position: relative;
+            text-decoration: none;
+            color: inherit;
         }
-
         .video-item:hover {
             transform: translateY(-5px);
             border-color: {{ $primaryColor }};
         }
-
         .video-item img {
             width: 150px;
             height: 100px;
@@ -129,62 +127,30 @@
             border-radius: 5px;
             margin-right: 20px;
         }
-
         .video-item-content {
             flex: 1;
+            display: flex;
+            flex-direction: column;
         }
-
         .video-item-title {
             font-size: 1.25rem;
             font-weight: bold;
             margin-bottom: 10px;
             color: {{ $primaryColor }};
+            text-decoration: none;
         }
-
+        .video-item-title:hover {
+            text-decoration: underline;
+        }
         .video-item-meta {
             color: #4a5568;
             font-size: 0.875rem;
             margin-bottom: 10px;
         }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .main-video-container {
-                flex-direction: column;
-            }
-
-            .main-video {
-                max-width: 100%;
-                margin-bottom: 20px;
-            }
-
-            .recent-videos {
-                max-width: 100%;
-                padding: 10px;
-            }
-
-            .video-item img {
-                width: 120px;
-                height: 80px;
-            }
-
-            .video-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .video-item-content {
-                margin-top: 10px;
-            }
-
-            .video-item-title {
-                font-size: 1rem;
-            }
+        .video-item-description {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -193,8 +159,8 @@
     <x-navbar />
 
     <header class="text-center my-12">
-        <x-page-title subtitle="🎥 Check out our latest videos!">
-            Recent Videos
+        <x-page-title subtitle="{{ __('messages.check_latest_videos') }}">
+            {{ __('messages.recent_videos') }}
         </x-page-title>
         @auth
             <button 
@@ -213,7 +179,7 @@
         onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';"
                 data-bs-toggle="modal"
                 data-bs-target="#addVideoModal">
-                Add Video
+                {{ __('messages.add_video') }}
             </button>
         @endauth
     </header>
@@ -238,7 +204,7 @@
                 </a>
 
                 <!-- Delete Button for Main Video -->
-                <form action="{{ route('videos.destroy', $videos->first()->id) }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
+                <form action="{{ route('videos.destroy', $videos->first()->id) }}" method="POST" style="position: absolute; top: 10px; right: 10px;" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="delete-button">&times;</button>
@@ -247,7 +213,7 @@
 
             <!-- Recent Videos List -->
             <div class="recent-videos" data-aos="fade-left">
-                <h3>🎬 Recent Videos</h3>
+                <h3>{{ __('messages.recent_videos_list') }}</h3>
                 @foreach($videos->skip(1) as $video)
                     <a href="{{ $video->url }}" target="_blank">
                         <span>{{ $video->title }}</span>
@@ -262,7 +228,7 @@
                 </div>
             </div>
         @else
-            <p class="text-center text-gray-600">No videos available.</p>
+            <p class="text-center text-gray-600">{{ __('messages.no_videos_available') }}</p>
         @endif
     </div>
 
@@ -286,7 +252,7 @@
                 </a>
 
                 <!-- Delete Button for Recent Videos -->
-                <form action="{{ route('videos.destroy', $video->id) }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
+                <form action="{{ route('videos.destroy', $video->id) }}" method="POST" style="position: absolute; top: 10px; right: 10px;" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="delete-button">&times;</button>
@@ -301,46 +267,44 @@
     </div>
 </div>
 
-    <!-- Add Video Modal -->
-    <div class="modal fade" id="addVideoModal" tabindex="-1" aria-labelledby="addVideoModalLabel" aria-hidden="true">
+    <x-footer />
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+     <!-- Add Video Modal -->
+     <div class="modal fade" id="addVideoModal" tabindex="-1" aria-labelledby="addVideoModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form action="{{ route('videos.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addVideoModalLabel">Add New Video</h5>
+                        <h5 class="modal-title" id="addVideoModalLabel">{{ __('messages.add_new_video') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="title">Title</label>
+                            <label for="title">{{ __('messages.title') }}</label>
                             <input type="text" name="title" class="form-control" required>
                         </div>
                         <div class="form-group mt-3">
-                            <label for="description">Description</label>
+                            <label for="description">{{ __('messages.description') }}</label>
                             <textarea name="description" class="form-control"></textarea>
                         </div>
                         <div class="form-group mt-3">
-                            <label for="url">Video URL</label>
+                            <label for="url">{{ __('messages.video_url') }}</label>
                             <input type="url" name="url" class="form-control" required>
                         </div>
                         <div class="form-group mt-3">
-                            <label for="image">Image</label>
+                            <label for="image">{{ __('messages.image') }}</label>
                             <input type="file" name="image" class="form-control-file" required>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save Video</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save_video') }}</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
-    <x-footerforhome />
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

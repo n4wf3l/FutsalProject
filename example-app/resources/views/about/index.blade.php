@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | {{ $clubName }}</title>
+    <title>@lang('messages.about') | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
     @endif
@@ -12,6 +12,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
+
+<!-- Meta Tags for SEO -->
+<meta name="description" content="@lang('messages.about') - {{ $clubName }}. Learn more about our history, values, and latest news.">
+<meta name="keywords" content="futsal, {{ $clubName }}, history, team, sports">
+<meta property="og:title" content="@lang('messages.about') - {{ $clubName }}">
+<meta property="og:description" content="@lang('messages.about') - Discover our history, values, and commitments.">
+<meta property="og:image" content="{{ asset('storage/' . $backgroundImage->image_path) }}">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ url()->current() }}">
+
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <style>
@@ -29,7 +40,6 @@
             font-size: 1rem;
             margin-bottom: 0.3rem; /* Réduction de l'espace entre les paragraphes */
             line-height: 1.75;
-            color: #555;
         }
 
         .club-info {
@@ -81,8 +91,8 @@
     <x-navbar />
 
     <header class="text-center my-12">
-    <x-page-title subtitle="ℹ️ Learn more about who we are and what we stand for, providing you with the story behind our mission and values.">
-    About
+    <x-page-title :subtitle="__('messages.learn_more_about_us')">
+    {{ __('messages.about') }}
 </x-page-title>
     </header>
     
@@ -91,105 +101,105 @@
             <div class="club-info" data-aos="fade-down-right">
                 <h2>{{ $clubName }}</h2>
                 <p>
-                    {{ $clubName }} is a futsal club with a clear and healthy vision, 
-                    aiming to deliver attractive top-level futsal with as many homegrown players and/or people as possible.
+                    {{ $clubName }} @lang('messages.club_description')
                 </p>
 
             <hr>
 
 
             @foreach($sections as $section)
-    <div class="" data-aos="fade-down-left">
-        <x-page-subtitle text="{{ htmlspecialchars_decode($section->title, ENT_QUOTES) }}" />
-        <div class="mt-4 text-gray-700 leading-relaxed">
-            {!! $section->content !!}
-        </div>
-        @auth
-        <div class="button-group">
-            <a href="{{ route('about.edit', $section->id) }}"
-                class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg"
-                style="background-color: {{ $primaryColor }};"
-                onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                🛠️
-            </a>
-            <form action="{{ route('about.destroy', $section->id) }}" method="POST" class="inline-block"
-                onsubmit="return confirm('Are you sure?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                    class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg"
+                <div class="" data-aos="fade-down-left">
+                    <x-page-subtitle text="{{ htmlspecialchars_decode($section->title, ENT_QUOTES) }}" />
+                    <div class="mt-4 text-gray-700 leading-relaxed">
+                        {!! $section->content !!}
+                    </div>
+                    @auth
+                    <div class="button-group">
+                        <a href="{{ route('about.edit', $section->id) }}"
+                            class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg"
+                            style="background-color: {{ $primaryColor }};"
+                            onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+                            onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+                            🛠️
+                        </a>
+                        <form action="{{ route('about.destroy', $section->id) }}" method="POST" class="inline-block"
+                            onsubmit="return confirm('@lang('messages.confirm_delete')');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="text-white font-bold py-2 px-4 rounded transition duration-200 shadow-lg"
+                                style="background-color: {{ $primaryColor }};"
+                                onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+                                onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+                                X
+                            </button>
+                        </form>
+                    </div>
+                    @endauth
+                </div>
+
+                <hr style="margin-top:50px; margin-bottom:50px;">
+            @endforeach
+
+            @auth
+            <div class="text-center mt-8">
+                <a href="{{ route('about.create') }}"
+                    class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg"
                     style="background-color: {{ $primaryColor }};"
                     onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                     onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                    X
-                </button>
-            </form>
-        </div>
-        @endauth
-    </div>
-
-    <hr style="margin-top:50px; margin-bottom:50px;">
-@endforeach
-@auth
-        <div class="text-center mt-8">
-            <a href="{{ route('about.create') }}"
-                class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg"
-                style="background-color: {{ $primaryColor }};"
-                onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                Add New Section
-            </a>
-        </div>
-        @endauth
+                    @lang('messages.add_new_section')
+                </a>
+            </div>
+            @endauth
         </div>
 
-        <!-- Button to add a new section -->
-    
         <!-- Section d'Upload de PDF (pour les utilisateurs authentifiés) -->
         @auth
-<div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;">
-    <h3 class="text-lg font-bold mb-4 text-center">Upload a New PDF</h3>
-    <form action="{{ route('regulations.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
-        @csrf
-        <div class="form-group mb-4 w-full">
-            <label for="title" class="block text-sm font-medium text-gray-700">PDF Title</label>
-            <input type="text" name="title" id="title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-        </div>
-
-        <div class="form-group mb-4 w-full">
-            <label for="pdf" class="block text-sm font-medium text-gray-700">Select a PDF</label>
-            <input type="file" name="pdf" id="pdf" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-semibold" style="color: {{ $primaryColor }};" required>
-        </div>
-
-        <button type="submit" class="w-full py-2 px-4 rounded text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Publish</button>
-    </form>
-</div>
-@endauth
-
-
-<div id="documents-section"></div>
-
-<x-page-title subtitle="ℹ️ Access all club resources at your fingertips.">
-    Documents
-</x-page-title>
-<!-- PDF List Section -->
-<div class="regulations-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8 justify-center mt-20">
-    @foreach($regulations as $regulation)
-        <div class="regulation-item p-4 bg-white border border-gray-200 rounded-lg shadow-sm relative">
-            <!-- Delete Button -->
-             @auth
-            <form action="{{ route('regulations.destroy', $regulation->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this PDF?');" class="absolute top-2 right-2">
+        <div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;">
+            <h3 class="text-lg font-bold mb-4 text-center">@lang('messages.upload_new_pdf')</h3>
+            <form action="{{ route('regulations.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
                 @csrf
-                @method('DELETE')
-                <button type="submit" class="text-red-500 hover:text-red-700 text-lg">X</button>
+                <div class="form-group mb-4 w-full">
+                    <label for="title" class="block text-sm font-medium text-gray-700">@lang('messages.pdf_title')</label>
+                    <input type="text" name="title" id="title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                </div>
+
+                <div class="form-group mb-4 w-full">
+                    <label for="pdf" class="block text-sm font-medium text-gray-700">@lang('messages.select_pdf')</label>
+                    <input type="file" name="pdf" id="pdf" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-semibold" style="color: {{ $primaryColor }};" required>
+                </div>
+
+                <button type="submit" class="w-full py-2 px-4 rounded text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">@lang('messages.publish')</button>
             </form>
-@endauth
-            <h4 class="text-lg font-semibold text-gray-800 mb-2 text-center">📄 {{ $regulation->title }}</h4>
-            <a href="{{ asset('storage/' . $regulation->pdf_path) }}" target="_blank" class="inline-block w-full py-2 px-4 rounded text-center text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">View PDF</a>
         </div>
-    @endforeach
-</div>
+        @endauth
+
+
+        <div id="documents-section"></div>
+
+        <x-page-title :subtitle="__('messages.access_club_resources')">
+    {{ __('messages.documents') }}
+</x-page-title>
+
+        
+        <!-- PDF List Section -->
+        <div class="regulations-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8 justify-center mt-20">
+            @foreach($regulations as $regulation)
+                <div class="regulation-item p-4 bg-white border border-gray-200 rounded-lg shadow-sm relative">
+                    <!-- Delete Button -->
+                    @auth
+                    <form action="{{ route('regulations.destroy', $regulation->id) }}" method="POST" onsubmit="return confirm('@lang('messages.confirm_delete_pdf')');" class="absolute top-2 right-2">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-500 hover:text-red-700 text-lg">X</button>
+                    </form>
+                    @endauth
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2 text-center">📄 {{ $regulation->title }}</h4>
+                    <a href="{{ asset('storage/' . $regulation->pdf_path) }}" target="_blank" class="inline-block w-full py-2 px-4 rounded text-center text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">@lang('messages.view_pdf')</a>
+                </div>
+            @endforeach
+        </div>
 
         <div id="map" data-aos="flip-down"></div>
     </div>

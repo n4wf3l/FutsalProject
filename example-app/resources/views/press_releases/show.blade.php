@@ -157,13 +157,13 @@
             @if($pressRelease->image)
             <img src="{{ asset('storage/' . $pressRelease->image) }}" alt="{{ $pressRelease->title }}" class="article-image">
             @endif
-            <p class="article-meta">PRESS RELEASE / {{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</p>
+            <p class="article-meta">{{ __('messages.press_release') }} / {{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</p>
             <p class="article-description">{!! nl2br(e($pressRelease->content)) !!}</p>
         </div>
 
         <!-- Section des articles récents -->
         <div class="recent-articles-section">
-            <h3>📰 Recent Articles</h3>
+            <h3>📰 {{ __('messages.recent_articles') }}</h3>
             @foreach($recentArticles as $recentArticle)
             <a href="{{ route('articles.show', $recentArticle->slug) }}">
                 <span>{{ $recentArticle->title }}</span>

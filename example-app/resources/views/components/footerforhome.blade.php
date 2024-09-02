@@ -159,11 +159,11 @@
 
        <!-- Footer Links and Copyright -->
        <div class="mt-8 border-t border-gray-500 pt-6 footer-copyright">
-            <p>&copy; 2024 {{ $clubName }} - @lang('messages.website_by') <a href="https://nainnovations.be/" class="hover:text-gray-300" target="_blank">NA Innovations</a></p>
+            <p>&copy; 2024 {{ $clubName }} - @lang('messages.platform_by') <a href="https://nainnovations.be/" class="hover:text-gray-300" target="_blank">NA Innovations</a></p>
             <div class="mt-4 md:mt-0 flex space-x-4 footer-links-container">
-                <a href="#" class="hover:text-gray-300">@lang('messages.privacy')</a>
-                <a href="#" class="hover:text-gray-300">@lang('messages.terms_conditions')</a>
-                <a href="#" class="hover:text-gray-300">@lang('messages.cookies')</a>
+            <a href="{{ route('legal') }}#privacy-policy" class="hover:text-gray-300">@lang('messages.privacy')</a>
+    <a href="{{ route('legal') }}#terms-conditions" class="hover:text-gray-300">@lang('messages.terms_conditions')</a>
+    <a href="{{ route('legal') }}#cookies-policy" class="hover:text-gray-300">@lang('messages.cookies')</a>
             </div>
         </div>
     </div>

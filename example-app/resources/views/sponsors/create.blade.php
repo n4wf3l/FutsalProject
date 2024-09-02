@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Sponsor | {{ $clubName }}</title>
+    <title>{{ __('messages.add_new_sponsor') }} | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
     @endif
@@ -17,7 +17,7 @@
 
     <header class="text-center my-12">
         <x-page-title subtitle="">
-            Add New Sponsor
+            {{ __('messages.add_new_sponsor') }}
         </x-page-title>
     </header>
 
@@ -38,17 +38,17 @@
 
             <div class="grid grid-cols-1 gap-6 mb-6">
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700">{{ __('messages.name') }}:</label>
                     <input type="text" name="name" id="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('name') }}" required>
                 </div>
 
                 <div>
-                    <label for="logo" class="block text-sm font-medium text-gray-700">Logo:</label>
+                    <label for="logo" class="block text-sm font-medium text-gray-700">{{ __('messages.logo') }}:</label>
                     <input type="file" name="logo" id="logo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 <div>
-                    <label for="website" class="block text-sm font-medium text-gray-700">Website:</label>
+                    <label for="website" class="block text-sm font-medium text-gray-700">{{ __('messages.website') }}:</label>
                     <input type="text" name="website" id="website" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="www.example.com" value="{{ old('website') }}">
                 </div>
             </div>
@@ -58,14 +58,14 @@
                     style="background-color: {{ $primaryColor }}; font-size: 15px;"
                     onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                     onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                    Save Sponsor
+                    {{ __('messages.save_sponsor') }}
                 </button>
                 <a href="{{ route('sponsors.index') }}"
                     class="text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-200"
                     style="background-color: {{ $primaryColor }}; font-size: 15px;"
                     onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                     onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                    Cancel
+                    {{ __('messages.cancel') }}
                 </a>
             </div>
         </form>

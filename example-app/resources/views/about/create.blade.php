@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Section | {{ $clubName }}</title>
+    <title>@lang('messages.add_new_section') | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
     @endif
@@ -18,19 +18,19 @@
     <x-navbar />
 
     <div class="container mx-auto py-12">
-    <x-page-title subtitle="">
-    Add New Section
+    <x-page-title :subtitle="__('messages.add_new_section')">
+    @lang('messages.add_new_section')
 </x-page-title>
 
         <form action="{{ route('about.store') }}" method="POST">
             @csrf
             <div class="mb-6">
-                <label for="title" class="block text-sm font-medium text-gray-700" style="color: {{ $primaryColor }};">Title</label>
+                <label for="title" class="block text-sm font-medium text-gray-700" style="color: {{ $primaryColor }};">@lang('messages.title')</label>
                 <input type="text" name="title" id="title" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-{{ $primaryColor }}" required>
             </div>
 
             <div class="mb-6">
-                <label for="content" class="block text-sm font-medium text-gray-700" style="color: {{ $primaryColor }};">Content</label>
+                <label for="content" class="block text-sm font-medium text-gray-700" style="color: {{ $primaryColor }};">@lang('messages.content')</label>
                 <textarea name="content" id="content" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-{{ $primaryColor }}"></textarea>
             </div>
 
@@ -40,7 +40,7 @@
                         style="background-color: {{ $primaryColor }};"
                         onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                         onmouseout="this.style.backgroundColor='{{ $primaryColor }}';">
-                    Save Section
+                    @lang('messages.save_section')
                 </button>
             </div>
         </form>

@@ -186,30 +186,30 @@
         <div class="mt-8 text-center">
             <button onclick="openAddPhotosModal()" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center" style="margin-bottom:50px; background-color: {{ $primaryColor }};"
                     onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">Add Photos</button>
+                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">{{ __('messages.add_photos') }}</button>
         </div>
     @endauth
 
     <!-- Main content section with gallery grid -->
     <main class="container mx-auto px-4 mb-20" data-aos="zoom-in-down">
-    @if($photos->isEmpty())
-        <p class="text-center text-gray-600">There are currently no photos in this album.</p>
-    @else
-        <div class="gallery-grid">
-            @foreach($photos as $photo)
-                <div class="gallery-item">
-                    <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->caption }}" onclick="openImageModal({{ $loop->index }})">
-                    @if($photo->caption)
-                        <p class="text-center mt-2">{{ $photo->caption }}</p>
-                    @endif
-                    @auth
-                        <button class="delete-photo" onclick="deletePhoto('{{ route('galleries.photos.destroy', [$gallery->id, $photo->id]) }}')">×</button>
-                    @endauth
-                </div>
-            @endforeach
-        </div>
-    @endif
-</main>
+        @if($photos->isEmpty())
+            <p class="text-center text-gray-600">{{ __('messages.no_photos') }}</p>
+        @else
+            <div class="gallery-grid">
+                @foreach($photos as $photo)
+                    <div class="gallery-item">
+                        <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->caption }}" onclick="openImageModal({{ $loop->index }})">
+                        @if($photo->caption)
+                            <p class="text-center mt-2">{{ $photo->caption }}</p>
+                        @endif
+                        @auth
+                            <button class="delete-photo" onclick="deletePhoto('{{ route('galleries.photos.destroy', [$gallery->id, $photo->id]) }}')">×</button>
+                        @endauth
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </main>
 
     <!-- Modal for image preview -->
     <div id="imageModal" class="modal">
@@ -226,24 +226,24 @@
     <div id="addPhotosModal" class="modal">
         <div class="modal-content bg-white rounded-lg p-6">
             <span class="close" onclick="closeAddPhotosModal()">&times;</span>
-            <h2 class="text-2xl font-semibold mb-4">Add Photos to Album</h2>
+            <h2 class="text-2xl font-semibold mb-4">{{ __('messages.add_photos_to_album') }}</h2>
             <form action="{{ route('galleries.photos.storeMultiple', $gallery->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
-                    <label for="photos" class="block text-sm font-medium text-gray-700">Select up to 10 photos</label>
+                    <label for="photos" class="block text-sm font-medium text-gray-700">{{ __('messages.select_photos') }}</label>
                     <input type="file" name="photos[]" id="photos" multiple accept="image/*" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" onchange="previewPhotos()">
                 </div>
                 
                 <!-- Single Caption Input for all photos -->
                 <div class="mb-4">
-                    <label for="captions" class="block text-sm font-medium text-gray-700">Photographer</label>
-                    <input type="text" name="captions" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter the photographer's name">
+                    <label for="captions" class="block text-sm font-medium text-gray-700">{{ __('messages.photographer') }}</label>
+                    <input type="text" name="captions" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="{{ __('messages.enter_photographer_name') }}">
                 </div>
 
                 <div id="photoPreview" class="grid grid-cols-5 gap-2 mb-4"></div>
                 <div class="flex justify-end">
-                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeAddPhotosModal()">Cancel</button>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Upload Photos</button>
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeAddPhotosModal()">{{ __('messages.cancel') }}</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">{{ __('messages.upload_photos') }}</button>
                 </div>
             </form>
         </div>
@@ -295,7 +295,7 @@
 
         // Function to delete a photo
         function deletePhoto(deleteUrl) {
-            if (confirm('Are you sure you want to delete this photo?')) {
+            if (confirm('{{ __('messages.delete_confirmation') }}')) {
                 // Create a hidden form
                 const form = document.createElement('form');
                 form.method = 'POST';

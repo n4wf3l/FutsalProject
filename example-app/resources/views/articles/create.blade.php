@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Article | {{ $clubName }}</title>
+    <title>@lang('messages.add_new_article') | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
     @endif
@@ -125,9 +125,9 @@
     <x-navbar />
 
     <div class="add-article-container">
-    <x-page-title subtitle="">
-    Add New Article
-</x-page-title>
+        <x-page-title :subtitle="__('messages.add_new_article')">
+            @lang('messages.add_new_article')
+        </x-page-title>
 
         @if ($errors->any())
         <div class="form-error">
@@ -140,61 +140,61 @@
         @endif
 
         <form id="article-form" action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data">
-    @csrf
+            @csrf
 
-    <div class="form-grid">
-        <div>
-            <div class="mb-4">
-                <label for="title" class="form-label">Title:</label>
-                <input type="text" name="title" id="title" class="form-input" value="{{ old('title') }}" required>
+            <div class="form-grid">
+                <div>
+                    <div class="mb-4">
+                        <label for="title" class="form-label">@lang('messages.title'):</label>
+                        <input type="text" name="title" id="title" class="form-input" value="{{ old('title') }}" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="description" class="form-label">@lang('messages.description'):</label>
+                        <textarea name="description" id="description" class="form-textarea">{{ old('description') }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="image" class="form-label">@lang('messages.image'):</label>
+                        <input type="file" name="image" id="image" class="form-input" accept="image/*" required>
+                        <small id="image-error" style="color: red; display: none;"></small>
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label for="description" class="form-label">Description:</label>
-                <textarea name="description" id="description" class="form-textarea">{{ old('description') }}</textarea>
+            <div class="button-group">
+                <a href="{{ route('clubinfo') }}" class="cancel-button">@lang('messages.cancel')</a>
+                <button type="submit" class="save-button">@lang('messages.save_article')</button>
             </div>
+        </form>
 
-            <div class="mb-4">
-                <label for="image" class="form-label">Image:</label>
-                <input type="file" name="image" id="image" class="form-input" accept="image/*" required>
-                <small id="image-error" style="color: red; display: none;"></small>
-            </div>
-        </div>
-    </div>
+        <script>
+            document.getElementById('image').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+                    img.onload = function() {
+                        if (img.height < 850) {
+                            document.getElementById('image-error').textContent = `@lang('messages.image_height_error', ['height' => '${img.height}px'])`;
+                            document.getElementById('image-error').style.display = 'block';
+                            document.getElementById('article-form').querySelector('.save-button').disabled = true;
+                        } else {
+                            document.getElementById('image-error').style.display = 'none';
+                            document.getElementById('article-form').querySelector('.save-button').disabled = false;
+                        }
+                    };
+                }
+            });
 
-    <div class="button-group">
-        <a href="{{ route('clubinfo') }}" class="cancel-button">Cancel</a>
-        <button type="submit" class="save-button">Save Article</button>
-    </div>
-</form>
-
-<script>
-document.getElementById('image').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const img = new Image();
-        img.src = URL.createObjectURL(file);
-        img.onload = function() {
-            if (img.height < 850) {
-                document.getElementById('image-error').textContent = `The image height is ${img.height}px. It must be at least 850px.`;
-                document.getElementById('image-error').style.display = 'block';
-                document.getElementById('article-form').querySelector('.save-button').disabled = true;
-            } else {
-                document.getElementById('image-error').style.display = 'none';
-                document.getElementById('article-form').querySelector('.save-button').disabled = false;
-            }
-        };
-    }
-});
-
-document.getElementById('article-form').addEventListener('submit', function(event) {
-    const saveButton = this.querySelector('.save-button');
-    if (saveButton.disabled) {
-        event.preventDefault(); // Empêche l'envoi du formulaire
-        alert('The image height must be at least 850px. Please choose another image.');
-    }
-});
-</script>
+            document.getElementById('article-form').addEventListener('submit', function(event) {
+                const saveButton = this.querySelector('.save-button');
+                if (saveButton.disabled) {
+                    event.preventDefault(); // Empêche l'envoi du formulaire
+                    alert('@lang('messages.image_height_alert')');
+                }
+            });
+        </script>
     </div>
 
     <x-footer />
@@ -204,23 +204,22 @@ document.getElementById('article-form').addEventListener('submit', function(even
         let editor;
 
         ClassicEditor
-        .create(document.querySelector('#description'), {
-            toolbar: {
-                items: [
-                    'bold', 'italic', '|',
-                    'bulletedList', 'numberedList', '|',
-                    'undo', 'redo', '|',
-                    // Supprimez 'imageUpload' et 'mediaEmbed' si vous ne voulez pas ces fonctionnalités
-                    'blockQuote', 'insertTable'
-                ]
-            },
-        })
-        .then(newEditor => {
-            editor = newEditor;
-        })
-        .catch(error => {
-            console.error(error);
-        });
+            .create(document.querySelector('#description'), {
+                toolbar: {
+                    items: [
+                        'bold', 'italic', '|',
+                        'bulletedList', 'numberedList', '|',
+                        'undo', 'redo', '|',
+                        'blockQuote', 'insertTable'
+                    ]
+                },
+            })
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
 
         document.getElementById('article-form').addEventListener('submit', function(event) {
             // Synchronize CKEditor data with textarea

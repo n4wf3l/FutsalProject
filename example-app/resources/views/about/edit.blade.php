@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Section | {{ $clubName }}</title>
+    <title>@lang('messages.edit_section') | {{ $clubName }}</title>
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png"> <!-- Type de l'image selon le type du logo -->
     @endif
@@ -18,22 +18,22 @@
     <x-navbar />
 
     <div class="container mx-auto py-12">
-        <x-page-title subtitle="">
-    Edit Section
-</x-page-title>
+        <x-page-title :subtitle="__('messages.edit_section')">
+            @lang('messages.edit_section')
+        </x-page-title>
 
         <form action="{{ route('about.update', $aboutSection->id) }}" method="POST">
             @csrf
             @method('PUT')
 
             <div class="mb-6">
-                <label for="title" class="block text-sm font-medium text-gray-700" style="color: {{ $primaryColor }};">Title</label>
+                <label for="title" class="block text-sm font-medium text-gray-700" style="color: {{ $primaryColor }};">@lang('messages.title')</label>
                 <input type="text" name="title" id="title" value="{{ $aboutSection->title }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-{{ $primaryColor }}" required>
             </div>
 
             <div class="mb-6">
-                <label for="content" class="block text-sm font-medium text-gray-700" style="color: {{ $primaryColor }};">Content</label>
-                <textarea name="content" id="content" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-{{ $primaryColor }}" required> {!! $aboutSection->content !!}</textarea>
+                <label for="content" class="block text-sm font-medium text-gray-700" style="color: {{ $primaryColor }};">@lang('messages.content')</label>
+                <textarea name="content" id="content" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-{{ $primaryColor }}" required>{!! $aboutSection->content !!}</textarea>
             </div>
 
             <div class="text-center">
@@ -42,7 +42,7 @@
                         style="background-color: {{ $primaryColor }};"
                         onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
                         onmouseout="this.style.backgroundColor='{{ $primaryColor }}';">
-                    Update Section
+                    @lang('messages.update_section')
                 </button>
             </div>
         </form>
@@ -68,8 +68,7 @@
         .catch(error => {
             console.error(error);
         });
-</script>
-
+    </script>
 
 </body>
 
