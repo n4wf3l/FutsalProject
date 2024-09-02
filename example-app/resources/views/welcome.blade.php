@@ -626,7 +626,7 @@
         @media (max-width: 768px) {
             .carousel-container {
                 width: 100% !important;
-                min-height: 50vh !important;
+                min-height: 20vh !important;
                 overflow: hidden !important;
             }
 
