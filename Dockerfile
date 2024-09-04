@@ -7,8 +7,10 @@ WORKDIR /var/www/html
 # Copie les fichiers du projet dans le conteneur Docker
 COPY . .
 
+# Installe Composer directement si ce n'est pas déjà installé dans l'image
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 # Installe les dépendances PHP via Composer
-RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
 # Installe les dépendances Node.js via npm ou yarn
