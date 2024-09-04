@@ -12,7 +12,7 @@
 
 @if($subtitle)
 <div class="flex justify-center items-center mt-2 mb-4">
-    <p class="text-xl text-gray-600">{{ $subtitle }}</p>
+    <p class="text-xl text-gray-300">{{ $subtitle }}</p>
 </div>
 @endif
 

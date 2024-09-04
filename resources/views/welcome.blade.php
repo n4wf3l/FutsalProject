@@ -790,7 +790,7 @@
                         <div class="buttons-container" style="margin-top: 30px; display: flex; justify-content: flex-start; gap: 20px;">
                             <x-button 
                                 route="{{ route('articles.show', $article->slug) }}"
-                                buttonText="@lang('messages.read_more')" 
+                                buttonText="{{ __('messages.read_more') }}" 
                                 primaryColor="#B91C1C" 
                                 secondaryColor="#DC2626" 
                             />
@@ -1232,7 +1232,7 @@
                     <div class="gallery-item">
                         <img src="{{ asset('storage/' . $photo->image) }}" alt="{{ $photo->caption }}" onclick="openImageModal({{ $loop->index }})">
                         @if($photo->caption)
-                            <div class="image-caption">{{ $photo->caption }}</div>
+                            <div class="image-caption">© {{ $photo->caption }}</div>
                         @endif
                     </div>
                 @endforeach

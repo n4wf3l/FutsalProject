@@ -1,91 +1,66 @@
-# Plateforme de Club de Futsal/Football
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-## Introduction
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-Bienvenue sur la plateforme de gestion de club de futsal/football. Cette application web, développée avec **Laravel 11** et **Tailwind CSS**, est conçue pour répondre aux besoins des clubs de futsal/football en permettant à la fois aux fans et aux membres du staff du club de suivre et de mettre à jour toutes les informations importantes du club. La plateforme offre une expérience personnalisée et dynamique, avec une multitude de fonctionnalités pour gérer et afficher les données du club.
+## About Laravel
 
-## Fonctionnalités
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-### Page d'Accueil Dynamique
-- **Messages personnalisés** : Affichage de messages personnalisés pour les utilisateurs.
-- **Personnalisation du frontend** : Possibilité de personnaliser l'apparence de la page d'accueil selon les besoins du club.
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-### API de Température
-- **Température actuelle** : Affichage de la température actuelle de la ville où se situe le club.
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-### News et Médias
-- **News** : Publication et gestion des actualités du club.
-- **Vidéos** : Intégration et affichage des vidéos relatives au club.
-- **Communiqués** : Gestion et affichage des communiqués officiels du club.
-- **Galerie de Photos** : Upload et gestion des photos par le photographe du club.
+## Learning Laravel
 
-### Page À Propos
-- **Sections personnalisables** : Affichage des informations à propos du club sous forme de sections personnalisables.
-- **API de Localisation** : Intégration de Leaflet OpenStreetMap pour afficher la localisation du club.
-- **Téléchargement de PDF** : Possibilité de télécharger des documents PDF (réglementation, présentation du club, etc.) ajoutés par l'administrateur.
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-### Page Compétition
-- **Automatisation API en direct** : Gestion et planification des matchs avec mise à jour automatique du classement.
-- **Ajout d'équipes** : Possibilité d'ajouter des équipes dans la compétition, avec leur logo respectif.
-- **Filtre des matchs** : Filtrer les prochains matchs et les anciens matchs du club local.
-- **Classement du championnat** : Possibilité de fetch le classement d'autres projets.
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-### Page Équipe
-- **Équipe professionnelle et équipe B** : Gestion des joueurs, entraîneurs, et staff technique & médical avec des opérations CRUD.
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-### Page Sponsors
-- **CRUD Sponsors** : Gestion des sponsors du club.
+## Laravel Sponsors
 
-### Fanshop et Billetterie
-- **Gestion des tribunes** : Ajout de tribunes avec leurs prix et photos.
-- **Vente de billets** : Achat de billets avec redirection vers Stripe pour le paiement.
-- **Confirmation de paiement** : Génération d'une page de succès avec code QR, document PDF, et envoi d'un email de confirmation.
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Personnalisation du Site
-- **Configuration manuelle** : Personnalisation des couleurs, nom du site, logo, emplacement du club, réseaux sociaux, etc.
-- **Images de fond** : Possibilité d'ajouter des images de fond dans le background des pages.
-- **Gestion des inscriptions** : Activation ou désactivation de l'inscription pour les visiteurs.
+### Premium Partners
 
-### Multilingue
-- **Langues** : La plateforme est disponible en plusieurs langues avec l'anglais comme langue principale.
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[WebReinvent](https://webreinvent.com/)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Jump24](https://jump24.co.uk)**
+- **[Redberry](https://redberry.international/laravel/)**
+- **[Active Logic](https://activelogic.com)**
+- **[byte5](https://byte5.de)**
+- **[OP.GG](https://op.gg)**
 
-## Technologies Utilisées
+## Contributing
 
-- **Framework Backend** : Laravel 11
-- **Framework Frontend** : Tailwind CSS
-- **Base de Données** : MySQL
-- **API** : Intégration avec l'API OpenStreetMap, API de météo, et autres services nécessaires.
-- **Paiement** : Intégration avec Stripe pour le paiement des billets.
-- **Multilingue** : Gestion de la traduction et de l'internationalisation.
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Installation
+## Code of Conduct
 
-1. Clonez le dépôt : `git clone [URL du dépôt]`
-2. Installez les dépendances : `composer install` et `npm install`
-3. Configurez les variables d'environnement : Créez un fichier `.env` en vous basant sur le `.env.example`.
-4. Compilez les assets front-end : `npm run dev` ou `npm run build` pour la production.
-5. Lancez le serveur de développement : `php artisan serve`
-6. Accédez à la plateforme via `http://localhost:8000` ou l'URL configurée.
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Utilisation
+## Security Vulnerabilities
 
-1. **Connexion Administrateur** : Connectez-vous avec les identifiants administrateurs pour gérer la plateforme.
-2. **Personnalisation** : Accédez à la section de configuration pour personnaliser le site selon les besoins du club.
-3. **Gestion des Pages** : Utilisez les différentes sections du back-office pour gérer les équipes, matchs, sponsors, galeries, etc.
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## Contribution
+## License
 
-Les contributions sont les bienvenues ! Si vous souhaitez contribuer à ce projet, veuillez suivre les étapes suivantes :
-1. Forkez le dépôt.
-2. Créez une branche pour votre fonctionnalité : `git checkout -b ma-nouvelle-fonctionnalité`.
-3. Commitez vos modifications : `git commit -m 'Ajouter une nouvelle fonctionnalité'`.
-4. Poussez la branche : `git push origin ma-nouvelle-fonctionnalité`.
-5. Créez une Pull Request.
-
-## Licence
-
-Ce projet est sous licence MIT. Veuillez consulter le fichier LICENSE pour plus de détails.
-
-## Remerciements
-
-Merci à toutes les personnes ayant contribué au développement de cette plateforme.
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

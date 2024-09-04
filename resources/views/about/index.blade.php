@@ -18,7 +18,6 @@
 <meta name="keywords" content="futsal, {{ $clubName }}, history, team, sports">
 <meta property="og:title" content="@lang('messages.about') - {{ $clubName }}">
 <meta property="og:description" content="@lang('messages.about') - Discover our history, values, and commitments.">
-<meta property="og:image" content="{{ asset('storage/' . $backgroundImage->image_path) }}">
 <meta property="og:url" content="{{ url()->current() }}">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="{{ url()->current() }}">
