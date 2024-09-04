@@ -19,5 +19,8 @@
     },
     "dependencies": {
         "aos": "^2.3.4"
+    },
+    "engines": {
+        "node": "16.x"
     }
 }
