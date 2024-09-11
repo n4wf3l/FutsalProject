@@ -16,8 +16,6 @@ use App\Http\Controllers\TribuneController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\GameController;
-use App\Http\Controllers\Api\GameController as ApiGameController;
-use App\Http\Controllers\Api\TeamController as ApiTeamController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PressReleaseController;
@@ -77,9 +75,7 @@ Route::get('/clubinfo', function () {
 
 Route::get('/news', [ArticleController::class, 'index'])->name('news');
 Route::redirect('/clubinfo', '/news');
-Route::get('/calendar', function () {
-    return view('calendar');
-})->name('calendar');
+
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');

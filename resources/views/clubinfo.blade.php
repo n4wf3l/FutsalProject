@@ -201,6 +201,7 @@
         @endif
 
         <div class="main-article-container">
+                @if($articles->isNotEmpty())
             <!-- Main Article -->
             <div class="main-article">
                 <a href="{{ route('articles.show', $articles->first()->slug) }}">
@@ -229,12 +230,17 @@
                 </a>
                 <hr>
                 @endforeach
+
+                                     @else
+                                         <p class="text-center text-gray-600">{{ __('messages.no_articles_found') }}</p>
+    @endif
              <!-- Pagination Links -->
             <div class="mt-4">
                 {{ $articles->links('vendor.pagination.simple') }}
             </div>
             </div>
         </div>
+        
 
         <!-- Recent Articles Below the Main Article -->
         <div class="recent-articles-container" data-aos="fade-up-right">

@@ -183,22 +183,26 @@
 
         
         <!-- PDF List Section -->
-        <div class="regulations-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8 justify-center mt-20">
-            @foreach($regulations as $regulation)
-                <div class="regulation-item p-4 bg-white border border-gray-200 rounded-lg shadow-sm relative">
-                    <!-- Delete Button -->
-                    @auth
-                    <form action="{{ route('regulations.destroy', $regulation->id) }}" method="POST" onsubmit="return confirm('@lang('messages.confirm_delete_pdf')');" class="absolute top-2 right-2">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-500 hover:text-red-700 text-lg">X</button>
-                    </form>
-                    @endauth
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2 text-center">📄 {{ $regulation->title }}</h4>
-                    <a href="{{ asset('storage/' . $regulation->pdf_path) }}" target="_blank" class="inline-block w-full py-2 px-4 rounded text-center text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">@lang('messages.view_pdf')</a>
-                </div>
-            @endforeach
-        </div>
+@if($regulations->isEmpty())
+    <p class="text-center text-gray-600">{{ __('messages.no_documents_available') }}</p>
+@else
+    <div class="regulations-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8 justify-center mt-20">
+        @foreach($regulations as $regulation)
+            <div class="regulation-item p-4 bg-white border border-gray-200 rounded-lg shadow-sm relative">
+                <!-- Delete Button -->
+                @auth
+                <form action="{{ route('regulations.destroy', $regulation->id) }}" method="POST" onsubmit="return confirm('@lang('messages.confirm_delete_pdf')');" class="absolute top-2 right-2">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-red-500 hover:text-red-700 text-lg">X</button>
+                </form>
+                @endauth
+                <h4 class="text-lg font-semibold text-gray-800 mb-2 text-center">📄 {{ $regulation->title }}</h4>
+                <a href="{{ asset('storage/' . $regulation->pdf_path) }}" target="_blank" class="inline-block w-full py-2 px-4 rounded text-center text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">@lang('messages.view_pdf')</a>
+            </div>
+        @endforeach
+    </div>
+@endif
 
         <div id="map" data-aos="flip-down"></div>
     </div>

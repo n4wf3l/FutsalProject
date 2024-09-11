@@ -124,14 +124,6 @@
             gap: 10px;
         }
 
-        .no-sponsors-message {
-            font-size: 1.5rem;
-            color: #555;
-            margin-top: 20px;
-            text-align: center;
-            width: 100%;
-        }
-
         .partner-section {
             background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $secondaryColor }} 100%);
             color: white;
@@ -249,7 +241,7 @@
 
             <div class="sponsors-container">
                 @if($sponsors->isEmpty())
-                    <div class="no-sponsors-message">
+                    <div class="text-center text-gray-600">
                         {{ __('messages.no_sponsors') }}
                     </div>
                 @else

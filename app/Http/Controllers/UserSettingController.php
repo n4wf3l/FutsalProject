@@ -15,21 +15,29 @@ class UserSettingController extends Controller
         return view('dashboard', compact('userSettings'));
     }
 
-    public function update(Request $request)
+  public function update(Request $request)
 {
     $user = Auth::user();
     $userSettings = UserSetting::firstOrNew(['user_id' => $user->id]);
 
     $validatedData = $request->validate([
-        'theme_color_primary' => 'required|string|max:7',
-        'theme_color_secondary' => 'required|string|max:7',
-        'club_name' => 'required|string|max:255',
+        'theme_color_primary' => 'nullable|string|max:7',
+        'theme_color_secondary' => 'nullable|string|max:7',
+        'club_name' => 'nullable|string|max:255',
         'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
-    $userSettings->theme_color_primary = $validatedData['theme_color_primary'];
-    $userSettings->theme_color_secondary = $validatedData['theme_color_secondary'];
-    $userSettings->club_name = $validatedData['club_name'];
+    if ($request->filled('theme_color_primary')) {
+        $userSettings->theme_color_primary = $validatedData['theme_color_primary'];
+    }
+
+    if ($request->filled('theme_color_secondary')) {
+        $userSettings->theme_color_secondary = $validatedData['theme_color_secondary'];
+    }
+
+    if ($request->filled('club_name')) {
+        $userSettings->club_name = $validatedData['club_name'];
+    }
 
     if ($request->hasFile('logo')) {
         if ($userSettings->logo) {

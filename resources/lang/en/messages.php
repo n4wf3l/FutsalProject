@@ -672,4 +672,10 @@ return [
     There is no explicit request to accept or reject cookies, as our 
     use is limited to this functional aspect. However, you can manage 
     your browser settings to control or disable cookies if you wish.',
+  'ticket_unavailable' => 'Online ticket purchase is currently unavailable.',
+  'no_articles_found' => 'No articles have been published yet.',
+  'no_staff' => 'There are no staff in the database.',
+  'no_documents_available' => 'There are currently no documents available.',
+  'no_teams' => 'There are no teams available.',
+'no_games' => 'There are no games scheduled yet.',
 ];

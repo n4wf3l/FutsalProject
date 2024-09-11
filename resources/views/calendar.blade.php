@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('messages.calendar') }} | {{ $clubName }}</title>
-    @if($logoPath)
+    <title>{{ __('messages.calendar') }} | {{ $clubName ?? 'Default Club Name' }}</title>
+    @if(isset($logoPath))
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -13,10 +13,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <!-- Meta Tags for SEO -->
-<meta name="description" content="@lang('messages.calendar_subtitle') - {{ $championship->name }} {{ $championship->season }}. Discover the match calendar and follow the performances of {{ $clubName }} in {{ $clubLocation }}.">
-<meta name="keywords" content="futsal, {{ $clubName }}, {{ $championship->name }}, match calendar, {{ $clubLocation }}, sports">
-<meta property="og:title" content="@lang('messages.calendar') - {{ $clubName }} in {{ $clubLocation }}">
-<meta property="og:description" content="@lang('messages.calendar_subtitle') - Follow the matches and results of {{ $clubName }}.">
+<meta name="description" content="@lang('messages.calendar_subtitle') - {{ $championship->name ?? 'Unknown Championship' }} {{ $championship->season ?? '' }}. Discover the match calendar and follow the performances of {{ $clubName ?? 'Default Club Name' }} in {{ $clubLocation ?? 'Unknown Location' }}.">
+<meta name="keywords" content="futsal, {{ $clubName ?? 'Default Club Name' }}, {{ $championship->name ?? 'Unknown Championship' }}, match calendar, {{ $clubLocation ?? 'Unknown Location' }}, sports">
+<meta property="og:title" content="@lang('messages.calendar') - {{ $clubName ?? 'Default Club Name' }} in {{ $clubLocation ?? 'Unknown Location' }}">
+<meta property="og:description" content="@lang('messages.calendar_subtitle') - Follow the matches and results of {{ $clubName ?? 'Default Club Name' }}.">
 <meta property="og:url" content="{{ url()->current() }}">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="{{ url()->current() }}">
@@ -241,12 +241,12 @@
         }
     </style>
 </head>
-<body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
+<body class="bg-gray-100" @if(isset($backgroundImage)) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
     <x-navbar />
 
     <header class="text-center my-12">
         <x-page-title subtitle="{{ __('messages.calendar_subtitle') }}">
-            {{ $championship->name }}
+{{ $championship->name ?? 'Not available' }}
         </x-page-title>
         <x-validation-messages />
     </header>
@@ -288,12 +288,12 @@
 
     <main class="py-12">
         <a id="ranking-section"></a>
-        @if($championship)
+       @if(isset($championship))
         <x-page-subtitle text="{{ __('messages.ranking') }} - {{ $championship->name }} {{ $championship->season }}" />
         @else
         <x-page-subtitle text="{{ __('messages.no_championship_data') }}" />
         @endif
-        <p class="text-center text-gray-600 italic">{{ __('messages.green_champion') }} {{ $championship->name }}</p>
+        <p class="text-center text-gray-600 italic">{{ __('messages.green_champion') }} {{ $championship->name ?? 'Not available' }}</p>
         <p class="text-center text-gray-600 italic">{{ __('messages.yellow_playoffs') }}</p>
         <p class="text-center text-gray-600 italic mb-4">{{ __('messages.red_relegation') }}</p>
         @auth
@@ -319,20 +319,18 @@
                         @endauth
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($teams as $team)
-                    <tr  @if($loop->first)
-                        style="background-color: #d4edda;"
-                        @elseif($loop->iteration >= count($teams) - 3 && $loop->iteration <= count($teams) - 2)
-                        style="background-color: #fff3cd;"
-                        @elseif($loop->iteration >= count($teams) - 1)
-                        style="background-color: #f8d7da;"
-                        @endif
-                        >
+               <tbody>
+            @if($teams->isEmpty())
+                <tr>
+                    <td colspan="9" class="text-center text-gray-600">{{ __('messages.no_teams') }}</td>
+                </tr>
+            @else
+                @foreach($teams as $team)
+                    <tr>
                         <td data-aos="flip-up">{{ $loop->iteration }}</td>
                         <td data-aos="flip-up" class="club-name">
                             @if($team->logo_path)
-                            <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} {{ __('messages.logo') }}" class="club-logo">
+                                <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} {{ __('messages.logo') }}" class="club-logo">
                             @endif
                             <span>{{ $team->name }}</span>
                         </td>
@@ -386,9 +384,10 @@
                         </td>
                         @endauth
                     </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                @endforeach
+            @endif
+        </tbody>
+    </table>
         </div>
 
         <hr class="mt-20 mb-20">
@@ -494,7 +493,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($games->sortBy('match_date') as $game)
+                     @if($games->isEmpty())
+                <tr>
+                    <td colspan="5" class="text-center text-gray-600">{{ __('messages.no_games') }}</td>
+                </tr>
+            @else
+                    @foreach(($games ?? collect())->sortBy('match_date') as $game)
                     <tr>
                         <td data-aos="flip-up">{{ \Carbon\Carbon::parse($game->match_date)->format('d-m-Y') }}</td>
                         <td data-aos="flip-up">
@@ -582,6 +586,7 @@
                         @endauth
                     </tr>
                     @endforeach
+                                @endif
                 </tbody>
             </table>
         </div>

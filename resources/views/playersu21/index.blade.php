@@ -151,7 +151,7 @@ use Illuminate\Support\Facades\Auth;
 
     <header class="text-center my-12">
         <x-page-title subtitle="{{ __('messages.u21_subtitle') }}">
-            {{ __('messages.u21_team_title') }} {{ $championship->season }}
+            {{ __('messages.u21_team_title') }} {{ $championship->season ?? 'N/A' }}
         </x-page-title>
 
         @auth

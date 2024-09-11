@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\Auth;
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <!-- Meta Tags for SEO -->
-<meta name="description" content="Discover the senior team of {{ $clubName }} for the {{ $championship->season }} season. Get to know the players, the coach, and the technical staff.">
-<meta name="keywords" content="senior team, {{ $clubName }}, {{ $championship->season }}, futsal, players, coach, technical staff">
+<meta name="description" content="Discover the senior team of {{ $clubName }} for the {{ $championship->season ?? 'N/A' }} season. Get to know the players, the coach, and the technical staff.">
+<meta name="keywords" content="senior team, {{ $clubName }}, {{ $championship->season ?? 'N/A' }}, futsal, players, coach, technical staff">
 <meta property="og:title" content="{{ __('messages.senior_team') }} | {{ $clubName }}">
-<meta property="og:description" content="Meet the senior squad of {{ $clubName }} for the {{ $championship->season }} season. Explore player profiles, coaching details, and staff information.">
+<meta property="og:description" content="Meet the senior squad of {{ $clubName }} for the {{ $championship->season ?? 'N/A' }} season. Explore player profiles, coaching details, and staff information.">
 <meta property="og:url" content="{{ url()->current() }}">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="{{ url()->current() }}">
@@ -268,7 +268,7 @@ use Illuminate\Support\Facades\Auth;
 
     <header class="text-center my-12">
         <x-page-title subtitle="{{ __('messages.meet_players') }}">
-            {{ __('messages.senior_squad') }} {{ $championship->season }}
+            {{ __('messages.senior_squad') }} {{ $championship->season ?? 'N/A' }}
         </x-page-title>
 
         @auth
@@ -406,6 +406,10 @@ use Illuminate\Support\Facades\Auth;
             {{ __('messages.technical_staff') }}
         </x-page-title>
 
+          @if($staff->isEmpty())
+        <p class="text-gray-600 text-center">{{ __('messages.no_staff') }}</p>
+    @else
+
         <div class="staff-container">
             @foreach($staff as $member)
                 <div class="staff-item">
@@ -428,6 +432,7 @@ use Illuminate\Support\Facades\Auth;
                 </div>
             @endforeach
         </div>
+            @endif
     </section>
 
     <x-footer />

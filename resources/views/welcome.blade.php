@@ -22,7 +22,7 @@
 <meta name="keywords" content="futsal, {{ $clubName }}, {{ $city }}, matches, sports">
 <meta property="og:title" content="@lang('messages.welcome') - {{ $clubName }} in {{ $city }}">
 <meta property="og:description" content="@lang('messages.welcome_to_club') - Discover our latest news, matches, and more.">
-<meta property="og:image" content="{{ asset('storage/' . $backgroundImage->image_path) }}">
+<meta property="og:image" content="{{ $backgroundImage && $backgroundImage->image_path ? asset('storage/' . $backgroundImage->image_path) : asset('storage/default-image.jpg') }}">
 <meta property="og:url" content="{{ url()->current() }}">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="{{ url()->current() }}">
@@ -404,12 +404,14 @@
         </div>
     </div>
 
-    <div class="background-container" style="position: relative; width: 100%; height: 60vh; background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center; background-size: cover; z-index: 500;" data-aos="zoom-out-up">
+    <div class="background-container" 
+     style="position: relative; width: 100%; height: 60vh; background: url('{{ $backgroundImage && $backgroundImage->image_path ? asset('storage/' . $backgroundImage->image_path) : asset('storage/default-background.jpg') }}') no-repeat center center; background-size: cover; z-index: 500;" 
+     data-aos="zoom-out-up">
         @if($welcomeImage)
             <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; top:18vh; right: 100px; width: 550px; height: 500px;" data-aos="fade-up-left">
         @endif
         <div id="typing-text" style="position: absolute;  left: 50%; transform: translateX(-50%); color: {{ $secondaryColor }}; font-family: 'Bebas Neue', sans-serif; font-size: 6rem; font-weight: bold; text-align: center; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); z-index: 1300;">
-            {{ $flashMessage->homemessage }}
+{{ $flashMessage->homemessage ?? '' }}
         </div>
 
         <img id="club-logo" src="{{ $logoPath ? asset($logoPath) : '' }}" alt="Club Logo" style="display:none; width: 150px; position: absolute; left: 50%; transform: translateX(-50%); margin-top: 30vh; opacity: 0; transition: opacity 1s ease-in-out;">
@@ -749,66 +751,73 @@
 
     <hr style="margin-bottom:50px;">
 
+<section>
     <div style="text-align:center;">
-    <x-page-title subtitle="🔔 {{ __('messages.stay_informed') }}">
-        @lang('messages.latest_news')
-    </x-page-title>
+        <x-page-title subtitle="🔔 {{ __('messages.stay_informed') }}">
+            @lang('messages.latest_news')
+        </x-page-title>
     </div>
-    <div class="carousel-container" data-aos="fade-right" style="position: relative; width: 100%; min-height: 70vh; display: flex; justify-content: center; align-items: center;  z-index: 1000;">
-        <div class="carousel" style="display: flex; transition: transform 0.5s ease-in-out; width: 80%;">
-            @foreach($articles as $index => $article)
-                <div class="main-article-container" style="flex: 0 0 100%; display: flex; flex-direction: row; align-items: flex-start; position: relative;">
-                    <!-- Main Article Image -->
-                    <div class="main-article-image" style="width: 100%;">
-                        <a href="{{ route('articles.show', $article->slug) }}">
-                            @if($article->image)
-                                <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}">
-                            @endif
-                        </a>
-                    </div>
 
-                    <!-- Main Article Content -->
-                    <div class="main-article-content" data-aos="fade-right" style="padding-left: 20px; display: flex; flex-direction: column; justify-content: center; position: absolute; bottom: 30px; left: 30px; color: white; max-width: 50%; background-color: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 8px;">
-                        <p style="background-color: {{ $primaryColor }};
-                    color: #ffffff;
-                    font-size: 0.875rem;
-                    margin-bottom: 1rem;
-                    text-transform: uppercase;
-                    font-weight: bold;
-                    padding: 4px 8px;
-                    display: inline-block;
-                    border-radius: 4px;">
-                            @lang('messages.news')
-                        </p>
-                        <h2 class="text-3xl font-bold mb-2 article-title" style="font-size: 2.5rem; margin-bottom: 20px;">
-                            <strong>{{ $article->title }}</strong>
-                        </h2>
-                        <p class="text-sm text-white" style="font-size: 1rem; margin-bottom: 15px;">
-                            @lang('messages.published_on'): {{ $article->created_at->format('d M Y, H:i') }} @lang('messages.by') {{ $article->user->name }}
-                        </p>
-                        <!-- Buttons Container -->
-                        <div class="buttons-container" style="margin-top: 30px; display: flex; justify-content: flex-start; gap: 20px;">
-                            <x-button 
-                                route="{{ route('articles.show', $article->slug) }}"
-                                buttonText="{{ __('messages.read_more') }}" 
-                                primaryColor="#B91C1C" 
-                                secondaryColor="#DC2626" 
-                            />
+    @if($articles->isEmpty())
+        <p class="text-center text-gray-600">No news has been added yet.</p>
+    @else
+        <div class="carousel-container" data-aos="fade-right" style="position: relative; width: 100%; min-height: 70vh; display: flex; justify-content: center; align-items: center;  z-index: 1000;">
+            <div class="carousel" style="display: flex; transition: transform 0.5s ease-in-out; width: 80%;">
+                @foreach($articles as $index => $article)
+                    <div class="main-article-container" style="flex: 0 0 100%; display: flex; flex-direction: row; align-items: flex-start; position: relative;">
+                        <!-- Main Article Image -->
+                        <div class="main-article-image" style="width: 100%;">
+                            <a href="{{ route('articles.show', $article->slug) }}">
+                                @if($article->image)
+                                    <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}">
+                                @endif
+                            </a>
+                        </div>
+
+                        <!-- Main Article Content -->
+                        <div class="main-article-content" data-aos="fade-right" style="padding-left: 20px; display: flex; flex-direction: column; justify-content: center; position: absolute; bottom: 30px; left: 30px; color: white; max-width: 50%; background-color: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 8px;">
+                            <p style="background-color: {{ $primaryColor }};
+                        color: #ffffff;
+                        font-size: 0.875rem;
+                        margin-bottom: 1rem;
+                        text-transform: uppercase;
+                        font-weight: bold;
+                        padding: 4px 8px;
+                        display: inline-block;
+                        border-radius: 4px;">
+                                @lang('messages.news')
+                            </p>
+                            <h2 class="text-3xl font-bold mb-2 article-title" style="font-size: 2.5rem; margin-bottom: 20px;">
+                                <strong>{{ $article->title }}</strong>
+                            </h2>
+                            <p class="text-sm text-white" style="font-size: 1rem; margin-bottom: 15px;">
+                                @lang('messages.published_on'): {{ $article->created_at->format('d M Y, H:i') }} @lang('messages.by') {{ $article->user->name }}
+                            </p>
+                            <!-- Buttons Container -->
+                            <div class="buttons-container" style="margin-top: 30px; display: flex; justify-content: flex-start; gap: 20px;">
+                                <x-button 
+                                    route="{{ route('articles.show', $article->slug) }}"
+                                    buttonText="{{ __('messages.read_more') }}" 
+                                    primaryColor="#B91C1C" 
+                                    secondaryColor="#DC2626" 
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
-        </div>
+                @endforeach
+            </div>
 
-        <!-- Navigation Dots -->
-        <div class="navigation-dots" style="position: absolute; bottom: 20px; display: flex; justify-content: center; width: 100%;">
-            @foreach($articles as $index => $article)
-                <div id="dot-{{ $index }}" class="dot" onclick="goToSlide({{ $index }})" style="margin: 0 5px; cursor: pointer;">
-                    <span id="emoji-{{ $index }}">{{ $index === 0 ? '⚫️' : '⚪' }}</span>
-                </div>
-            @endforeach
+            <!-- Navigation Dots -->
+            <div class="navigation-dots" style="position: absolute; bottom: 20px; display: flex; justify-content: center; width: 100%;">
+                @foreach($articles as $index => $article)
+                    <div id="dot-{{ $index }}" class="dot" onclick="goToSlide({{ $index }})" style="margin: 0 5px; cursor: pointer;">
+                        <span id="emoji-{{ $index }}">{{ $index === 0 ? '⚫️' : '⚪' }}</span>
+                    </div>
+                @endforeach
+            </div>
         </div>
-    </div>
+    @endif
+</section>
 
     <hr style="margin-bottom:50px;">
 
@@ -1222,11 +1231,15 @@
 
     <hr style="margin-bottom:50px;">
 
-    <section class="latest-photos">
-        <div class="container" style="text-align:center">
-            <x-page-title subtitle="📸 {{ __('messages.explore_gallery') }}">
-                @lang('messages.explore_latest_photos')
-            </x-page-title>
+  <section class="latest-photos">
+    <div class="container" style="text-align:center">
+        <x-page-title subtitle="📸 {{ __('messages.explore_gallery') }}">
+            @lang('messages.explore_latest_photos')
+        </x-page-title>
+        
+        @if($latestPhotos->isEmpty())
+            <p class="text-center text-gray-600">No photos have been added yet.</p>
+        @else
             <div class="gallery-grid mt-10" data-aos="fade-up">
                 @foreach($latestPhotos as $photo)
                     <div class="gallery-item">
@@ -1237,17 +1250,20 @@
                     </div>
                 @endforeach
             </div>
+        @endif
 
-            <!-- Nos Albums link -->
-            <div class="albums-link-container">
-                <x-button 
-                    route="{{ route('galleries.index') }}"
-                    buttonText="{{ __('messages.our_albums') }}"
-                    primaryColor="#B91C1C" 
-                    secondaryColor="#DC2626" 
-                />
-            </div>
+        <!-- Nos Albums link -->
+        <div class="albums-link-container">
+            <x-button 
+                route="{{ route('galleries.index') }}"
+                buttonText="{{ __('messages.our_albums') }}"
+                primaryColor="#B91C1C" 
+                secondaryColor="#DC2626" 
+            />
         </div>
+    </div>
+</section>
+
 
         <style>
             .video-item {

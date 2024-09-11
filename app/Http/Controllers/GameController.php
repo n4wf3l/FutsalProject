@@ -7,37 +7,29 @@ use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Models\Championship;
 use App\Models\BackgroundImage;
-use App\Models\ClubInfo;
-use App\Models\SiteSetting; 
+use App\Models\SiteSetting;
 
 class GameController extends Controller
 {
-    
     public function showCalendar(Request $request)
     {
+        // Récupérer le premier championnat existant
         $championship = Championship::first();
-    
-        if (!$championship) {
-            return redirect()->back()->with('error', 'No championship data available.');
-        }
-    
+
+        // Récupérer les paramètres du site, en particulier le nom du club
         $siteSetting = SiteSetting::first();
-    
-        if (!$siteSetting || !$siteSetting->club_name) {
-            return redirect()->back()->with('error', 'Aucun nom de club trouvé dans les paramètres.');
-        }
-    
-        $clubName = $siteSetting->club_name;
-        $clubNamePrefix = trim(substr($clubName, 0, 4)); 
-    
+        $clubName = $siteSetting->club_name ?? 'Default Club Name'; // Nom par défaut si absent
+        $clubNamePrefix = substr($clubName, 0, 4); // Prefixe du nom du club pour filtrer les équipes
+
+        // Filtre par équipe et date
         $teamFilter = $request->input('team_filter', 'all_teams');
         $dateFilter = $request->input('date_filter', 'results_and_upcoming');
         $today = now()->startOfDay();
-    
+
         // Requête de base pour les matchs
         $gamesQuery = Game::with(['homeTeam', 'awayTeam']);
-    
-        // Filtrage par équipe
+
+        // Filtrer par équipe si nécessaire
         if ($teamFilter === 'specific_team') {
             $gamesQuery->where(function ($query) use ($clubNamePrefix) {
                 $query->whereHas('homeTeam', function ($q) use ($clubNamePrefix) {
@@ -47,37 +39,34 @@ class GameController extends Controller
                 });
             });
         }
-    
-        // Filtrage par date et score
+
+        // Filtrer par date (matchs à venir ou résultats)
         if ($dateFilter === 'upcoming') {
-            // Prochains matchs (matchs à venir sans score)
             $gamesQuery->where('match_date', '>=', $today)
                        ->whereNull('home_score')
                        ->whereNull('away_score');
         } elseif ($dateFilter === 'results') {
-            // Résultats (matchs où les scores ont été introduits)
             $gamesQuery->whereNotNull('home_score')
                        ->whereNotNull('away_score');
         }
-    
-        // Résultats + Prochains matchs : pas de filtre supplémentaire
-        // On affiche tout dans ce cas
-    
+
+        // Obtenir les matchs
         $games = $gamesQuery->orderBy('match_date')->get();
-    
+
+        // Récupérer les équipes classées par points, différence de buts et buts marqués
         $teams = Team::orderBy('points', 'desc')
             ->orderBy('goal_difference', 'desc')
             ->orderBy('goals_for', 'desc')
             ->get();
-    
+
+        // Récupérer l'image de fond pour la page du calendrier
         $backgroundImage = BackgroundImage::where('assigned_page', 'calendar')->latest()->first();
-    
+
+        // Retourner la vue avec les données
         return view('calendar', compact('championship', 'games', 'teams', 'backgroundImage', 'clubName', 'clubNamePrefix'));
     }
-    
-    
 
-    // Afficher le calendrier et le classement (API)
+    // Méthode pour l'API - afficher le calendrier et les équipes
     public function apiShowCalendar()
     {
         $games = Game::with(['homeTeam', 'awayTeam'])->get();
@@ -93,38 +82,38 @@ class GameController extends Controller
         ], 200);
     }
 
-    // Mettre à jour les scores d'un match (Vue)
+    // Méthode pour mettre à jour les scores d'un match
     public function updateScores(Request $request, Game $game)
     {
         $request->validate([
             'home_team_score' => 'required|integer|min:0',
             'away_team_score' => 'required|integer|min:0',
         ]);
-    
-        // Réinitialiser les statistiques liées à l'ancien score
+
+        // Réinitialiser les statistiques de l'ancien score
         $this->resetTeamStats($game);
-    
-        // Mettre à jour le score du match
+
+        // Mettre à jour les scores
         $game->home_score = $request->input('home_team_score');
         $game->away_score = $request->input('away_team_score');
         $game->save();
-    
-        // Appliquer les nouvelles statistiques après la mise à jour des scores
+
+        // Mettre à jour les statistiques des équipes
         $this->updateTeamStats($game);
-    
+
         return redirect()->route('calendar.show')->with('success', 'Scores updated successfully.');
     }
 
-    // Mettre à jour les scores d'un match (API)
+    // API pour mettre à jour les scores d'un match
     public function apiUpdateScores(Request $request, Game $game)
     {
         $request->validate([
-            'home_team_score' => 'required|integer|min=0',
-            'away_team_score' => 'required|integer|min=0',
+            'home_team_score' => 'required|integer|min:0',
+            'away_team_score' => 'required|integer|min:0',
         ]);
 
-        $game->home_team_score = $request->input('home_team_score');
-        $game->away_team_score = $request->input('away_team_score');
+        $game->home_score = $request->input('home_team_score');
+        $game->away_score = $request->input('away_team_score');
         $game->save();
 
         $this->updateTeamStats($game);
@@ -132,22 +121,23 @@ class GameController extends Controller
         return response()->json(['message' => 'Scores updated successfully'], 200);
     }
 
+    // Mise à jour des statistiques des équipes après un match
     private function updateTeamStats(Game $game)
     {
         $homeTeam = $game->homeTeam;
         $awayTeam = $game->awayTeam;
-    
-        // Appliquer les nouveaux scores
+
+        // Mettre à jour les buts marqués et encaissés
         $homeTeam->goals_for += $game->home_score;
         $homeTeam->goals_against += $game->away_score;
         $awayTeam->goals_for += $game->away_score;
         $awayTeam->goals_against += $game->home_score;
-    
-        // Calcul de la différence de buts
+
+        // Calculer la différence de buts
         $homeTeam->goal_difference = $homeTeam->goals_for - $homeTeam->goals_against;
         $awayTeam->goal_difference = $awayTeam->goals_for - $awayTeam->goals_against;
-    
-        // Attribution des points en fonction du score
+
+        // Mettre à jour les points en fonction du résultat
         if ($game->home_score > $game->away_score) {
             $homeTeam->points += 3;
             $homeTeam->wins += 1;
@@ -162,307 +152,181 @@ class GameController extends Controller
             $homeTeam->draws += 1;
             $awayTeam->draws += 1;
         }
-    
-        // Mettre à jour les matchs joués
+
+        // Mettre à jour le nombre de matchs joués
         $homeTeam->games_played += 1;
         $awayTeam->games_played += 1;
-    
+
         $homeTeam->save();
         $awayTeam->save();
     }
-    
+
+    // Réinitialiser les statistiques des équipes pour un match donné
     private function resetTeamStats(Game $game)
-{
-    $homeTeam = $game->homeTeam;
-    $awayTeam = $game->awayTeam;
-
-    // Si le score était déjà défini, annuler les effets des statistiques précédentes
-    if (!is_null($game->home_score) && !is_null($game->away_score)) {
-        // Annuler les effets des buts
-        $homeTeam->goals_for -= $game->home_score;
-        $homeTeam->goals_against -= $game->away_score;
-        $awayTeam->goals_for -= $game->away_score;
-        $awayTeam->goals_against -= $game->home_score;
-
-        // Annuler les effets de la différence de buts
-        $homeTeam->goal_difference = $homeTeam->goals_for - $homeTeam->goals_against;
-        $awayTeam->goal_difference = $awayTeam->goals_for - $awayTeam->goals_against;
-
-        // Annuler les points gagnés/perdus
-        if ($game->home_score > $game->away_score) {
-            $homeTeam->points -= 3;
-            $homeTeam->wins -= 1;
-            $awayTeam->losses -= 1;
-        } elseif ($game->home_score < $game->away_score) {
-            $awayTeam->points -= 3;
-            $awayTeam->wins -= 1;
-            $homeTeam->losses -= 1;
-        } else {
-            $homeTeam->points -= 1;
-            $awayTeam->points -= 1;
-            $homeTeam->draws -= 1;
-            $awayTeam->draws -= 1;
-        }
-
-        // Annuler les matchs joués
-        $homeTeam->games_played -= 1;
-        $awayTeam->games_played -= 1;
-
-        $homeTeam->save();
-        $awayTeam->save();
-    }
-}
-    
-    private function applyMatchResult(Team $team, $goals_for, $goals_against)
     {
-        $team->goals_for += $goals_for;
-        $team->goals_against += $goals_against;
-        $team->goal_difference = $team->goals_for - $team->goals_against;
-    
-        if ($goals_for > $goals_against) {
-            $team->wins += 1;
-            $team->points += 3;
-        } elseif ($goals_for == $goals_against) {
-            $team->draws += 1;
-            $team->points += 1;
-        } else {
-            $team->losses += 1;
+        $homeTeam = $game->homeTeam;
+        $awayTeam = $game->awayTeam;
+
+        if (!is_null($game->home_score) && !is_null($game->away_score)) {
+            // Réinitialiser les scores précédents
+            $homeTeam->goals_for -= $game->home_score;
+            $homeTeam->goals_against -= $game->away_score;
+            $awayTeam->goals_for -= $game->away_score;
+            $awayTeam->goals_against -= $game->home_score;
+
+            // Réinitialiser les points et résultats précédents
+            if ($game->home_score > $game->away_score) {
+                $homeTeam->points -= 3;
+                $homeTeam->wins -= 1;
+                $awayTeam->losses -= 1;
+            } elseif ($game->home_score < $game->away_score) {
+                $awayTeam->points -= 3;
+                $awayTeam->wins -= 1;
+                $homeTeam->losses -= 1;
+            } else {
+                $homeTeam->points -= 1;
+                $awayTeam->points -= 1;
+                $homeTeam->draws -= 1;
+                $awayTeam->draws -= 1;
+            }
+
+            // Réinitialiser les matchs joués
+            $homeTeam->games_played -= 1;
+            $awayTeam->games_played -= 1;
+
+            $homeTeam->save();
+            $awayTeam->save();
         }
-    
-        $team->games_played += 1;
     }
 
-    // Afficher la liste des matches (Vue)
+    // Méthode pour afficher la liste des matchs (Vue)
     public function index()
     {
         $games = Game::with(['homeTeam', 'awayTeam'])->get();
         return view('games.index', compact('games'));
     }
 
-    // Afficher la liste des matches (API)
-    public function apiIndex()
-    {
-        $games = Game::with(['homeTeam', 'awayTeam'])->get();
-        return response()->json($games, 200);
-    }
-
-    // Afficher le formulaire pour créer un nouveau match (Vue)
+    // Afficher le formulaire de création d'un match
     public function create()
     {
         $teams = Team::all();
         return view('games.create', compact('teams'));
     }
 
-    // Enregistrer un nouveau match (Vue)
+    // Enregistrer un nouveau match
     public function store(Request $request)
-{
-    $request->validate([
-        'home_team_id' => 'required|exists:teams,id',
-        'away_team_id' => 'required|exists:teams,id|different:home_team_id',
-        'match_date' => 'required|date', 
-    ]);
-
-    Game::create($request->all());
-
-    return redirect()->route('calendar.show')->with('success', 'Game created successfully.');
-}
-
-    // Enregistrer un nouveau match (API)
-    public function apiStore(Request $request)
     {
         $request->validate([
             'home_team_id' => 'required|exists:teams,id',
             'away_team_id' => 'required|exists:teams,id|different:home_team_id',
-            'match_date' => 'required|date', // Assurez-vous que la date est fournie
+            'match_date' => 'required|date',
         ]);
 
-        $game = Game::create($request->all());
+        Game::create($request->all());
 
-        return response()->json($game, 201);
+        return redirect()->route('calendar.show')->with('success', 'Game created successfully.');
     }
 
-    // Afficher les détails d'un match spécifique (Vue)
-    public function show(Game $game)
-    {
-        return view('games.show', compact('game'));
-    }
-
-    // Afficher les détails d'un match spécifique (API)
-    public function apiShow(Game $game)
-    {
-        return response()->json($game, 200);
-    }
-
-    // Afficher le formulaire pour éditer un match existant (Vue)
+    // Afficher le formulaire d'édition d'un match
     public function edit(Game $game)
     {
         $teams = Team::all();
         return view('games.edit', compact('game', 'teams'));
     }
 
-    // Mettre à jour un match existant (Vue)
+    // Mettre à jour un match existant
     public function update(Request $request, Game $game)
-{
-    $request->validate([
-        'home_team_id' => 'required|exists:teams,id|different:away_team_id',
-        'away_team_id' => 'required|exists:teams,id|different:home_team_id',
-        'match_date' => 'required|date',
-    ]);
-
-    $game->update($request->all());
-
-    return redirect()->route('calendar.show')->with('success', 'Game updated successfully.');
-}
-
-    // Mettre à jour un match existant (API)
-    public function apiUpdate(Request $request, Game $game)
     {
         $request->validate([
-            'home_team_id' => 'required|exists:teams,id',
+            'home_team_id' => 'required|exists:teams,id|different:away_team_id',
             'away_team_id' => 'required|exists:teams,id|different:home_team_id',
-            'match_date' => 'required|date', // Assurez-vous que la date est fournie
+            'match_date' => 'required|date',
         ]);
 
         $game->update($request->all());
 
-        $this->updateTeamStats($game);
-
-        return response()->json($game, 200);
+        return redirect()->route('calendar.show')->with('success', 'Game updated successfully.');
     }
 
-    // Supprimer un match (Vue)
+    // Supprimer un match
     public function destroy(Game $game)
-{
-    // Récupérer les équipes impliquées
-    $homeTeam = $game->homeTeam;
-    $awayTeam = $game->awayTeam;
-
-    // Réduire les scores et ajuster les statistiques des équipes
-    if ($game->home_score !== null && $game->away_score !== null) {
-        // Réduire les buts marqués et encaissés
-        $homeTeam->goals_for -= $game->home_score;
-        $homeTeam->goals_against -= $game->away_score;
-        $awayTeam->goals_for -= $game->away_score;
-        $awayTeam->goals_against -= $game->home_score;
-
-        // Ajuster le goal difference
-        $homeTeam->goal_difference = $homeTeam->goals_for - $homeTeam->goals_against;
-        $awayTeam->goal_difference = $awayTeam->goals_for - $awayTeam->goals_against;
-
-        // Ajuster les points, victoires, défaites, et nuls
-        if ($game->home_score > $game->away_score) {
-            // Domicile a gagné, extérieur a perdu
-            $homeTeam->points -= 3;
-            $homeTeam->wins -= 1;
-            $awayTeam->losses -= 1;
-        } elseif ($game->home_score < $game->away_score) {
-            // Extérieur a gagné, domicile a perdu
-            $awayTeam->points -= 3;
-            $awayTeam->wins -= 1;
-            $homeTeam->losses -= 1;
-        } else {
-            // Match nul
-            $homeTeam->points -= 1;
-            $awayTeam->points -= 1;
-            $homeTeam->draws -= 1;
-            $awayTeam->draws -= 1;
-        }
-
-        // Réduire le nombre de matchs joués
-        $homeTeam->games_played -= 1;
-        $awayTeam->games_played -= 1;
-
-        // Enregistrer les changements
-        $homeTeam->save();
-        $awayTeam->save();
-    }
-
-    // Supprimer le match
-    $game->delete();
-
-    // Redirection avec message de succès
-    return redirect()->route('calendar.show')->with('success', 'Game and its scores deleted successfully.');
-}
-
-    // Supprimer un match (API)
-    public function apiDestroy(Game $game)
     {
+        // Réinitialiser les statistiques avant de supprimer le match
+        $this->resetTeamStats($game);
         $game->delete();
-        return response()->json(null, 204);
+
+        return redirect()->route('calendar.show')->with('success', 'Game and its scores deleted successfully.');
     }
 
+    // Réinitialiser les scores de tous les matchs
     public function resetScores()
-{
-    // Réinitialiser les scores des matchs
-    Game::query()->update(['home_score' => null, 'away_score' => null]);
+    {
+        Game::query()->update(['home_score' => null, 'away_score' => null]);
 
-    // Réinitialiser les statistiques des équipes
-    Team::query()->update([
-        'points' => 0,
-        'wins' => 0,
-        'draws' => 0,
-        'losses' => 0,
-        'goals_for' => 0,
-        'goals_against' => 0,
-        'goal_difference' => 0,
-        'games_played' => 0,
-    ]);
-
-    return redirect()->route('calendar.show')->with('success', 'All scores and statistics have been reset.');
-}
-
-public function storeMultiple(Request $request)
-{
-    $matches = $request->input('matches', []);
-
-    foreach ($matches as $match) {
-        if (!$match['home_team_id'] || !$match['away_team_id']) {
-            return redirect()->back()->withErrors(['Please select both a home team and an away team.']);
-        }
-
-        if ($match['home_team_id'] === $match['away_team_id']) {
-            return redirect()->back()->withErrors(['A team cannot play against itself.']);
-        }
-
-        if (!$match['match_date']) {
-            return redirect()->back()->withErrors(['Please select a date for the match.']);
-        }
-
-        Game::create([
-            'home_team_id' => $match['home_team_id'],
-            'away_team_id' => $match['away_team_id'],
-            'match_date' => $match['match_date'],
+        Team::query()->update([
+            'points' => 0,
+            'wins' => 0,
+            'draws' => 0,
+            'losses' => 0,
+            'goals_for' => 0,
+            'goals_against' => 0,
+            'goal_difference' => 0,
+            'games_played' => 0,
         ]);
+
+        return redirect()->route('calendar.show')->with('success', 'All scores and statistics have been reset.');
     }
 
-    return redirect()->route('calendar.show')->with('success', 'Matches created successfully.');
-}
+    // Enregistrer plusieurs matchs à la fois
+    public function storeMultiple(Request $request)
+    {
+        $matches = $request->input('matches', []);
 
+        foreach ($matches as $match) {
+            if (!$match['home_team_id'] || !$match['away_team_id']) {
+                return redirect()->back()->withErrors(['Please select both a home team and an away team.']);
+            }
 
-public function storeChampionship(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'season' => 'required|string|max:255',
-    ]);
+            if ($match['home_team_id'] === $match['away_team_id']) {
+                return redirect()->back()->withErrors(['A team cannot play against itself.']);
+            }
 
-    // Vérifier si un championnat existe déjà
-    $championship = Championship::first();
+            if (!$match['match_date']) {
+                return redirect()->back()->withErrors(['Please select a date for the match.']);
+            }
 
-    if ($championship) {
-        // Si un championnat existe, mettez-le à jour
-        $championship->update([
-            'name' => $request->input('name'),
-            'season' => $request->input('season'),
-        ]);
-        return redirect()->route('calendar.show')->with('success', 'Championship updated successfully.');
-    } else {
-        // Si aucun championnat n'existe, créez-en un nouveau
-        Championship::create([
-            'name' => $request->input('name'),
-            'season' => $request->input('season'),
-        ]);
-        return redirect()->route('calendar.show')->with('success', 'Championship created successfully.');
+            Game::create([
+                'home_team_id' => $match['home_team_id'],
+                'away_team_id' => $match['away_team_id'],
+                'match_date' => $match['match_date'],
+            ]);
+        }
+
+        return redirect()->route('calendar.show')->with('success', 'Matches created successfully.');
     }
-}
+
+    // Créer ou mettre à jour le championnat
+    public function storeChampionship(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'season' => 'required|string|max:255',
+        ]);
+
+        $championship = Championship::first();
+
+        if ($championship) {
+            $championship->update([
+                'name' => $request->input('name'),
+                'season' => $request->input('season'),
+            ]);
+            return redirect()->route('calendar.show')->with('success', 'Championship updated successfully.');
+        } else {
+            Championship::create([
+                'name' => $request->input('name'),
+                'season' => $request->input('season'),
+            ]);
+            return redirect()->route('calendar.show')->with('success', 'Championship created successfully.');
+        }
+    }
 }

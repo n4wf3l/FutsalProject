@@ -22,13 +22,13 @@ class AppServiceProvider extends ServiceProvider
             $logoPath = $siteSettings && $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : null;
             $clubName = $siteSettings->club_name ?? 'Default Club Name';
 
-            // Assurez-vous que les informations du club sont bien récupérées
-            $clubLocation = $clubInfo->sportcomplex_location ?? 'Default Location';
-            $phone = $clubInfo->phone ?? 'No phone available';
-            $email = $clubInfo->email ?? 'No email available';
-            $federationLogo = $clubInfo->federation_logo ? asset('storage/' . $clubInfo->federation_logo) : null;
-            $facebook = $clubInfo->facebook ?? '#';
-            $instagram = $clubInfo->instagram ?? '#';
+            // Vérifier si $clubInfo existe avant d'accéder à ses propriétés
+            $clubLocation = $clubInfo ? $clubInfo->sportcomplex_location ?? 'Default Location' : 'Default Location';
+            $phone = $clubInfo ? $clubInfo->phone ?? 'No phone available' : 'No phone available';
+            $email = $clubInfo ? $clubInfo->email ?? 'No email available' : 'No email available';
+            $federationLogo = $clubInfo && $clubInfo->federation_logo ? asset('storage/' . $clubInfo->federation_logo) : null;
+            $facebook = $clubInfo ? $clubInfo->facebook ?? '#' : '#';
+            $instagram = $clubInfo ? $clubInfo->instagram ?? '#' : '#';
 
             // Récupérer les sponsors
             $sponsors = Sponsor::all();

@@ -151,7 +151,8 @@
     }
 </style>
 
-<div class="sponsor-carousel-container">
+@if($sponsors->isNotEmpty())
+    <div class="sponsor-carousel-container">
     <x-page-title>
     {{ __('messages.sponsors_partners') }}
     </x-page-title>
@@ -173,6 +174,8 @@
         <button class="carousel-button next">&#10095;</button>
     </div>
 </div>
+@endif
+
 
 <footer class="text-white py-12 mt-auto" style="background-color: {{ $primaryColor }};">
     <div class="footer-center container mx-auto px-6">
