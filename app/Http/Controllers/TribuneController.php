@@ -65,18 +65,18 @@ class TribuneController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            // Supprime l'ancienne photo si elle existe
-            $oldPhoto = Tribune::first()->photo;
-            if ($oldPhoto) {
-                Storage::disk('public')->delete($oldPhoto);
-            }
+    // Vérifie s'il y a déjà une tribune existante avant d'essayer de récupérer l'ancienne photo
+    $firstTribune = Tribune::first();
+    if ($firstTribune && $firstTribune->photo) {
+        Storage::disk('public')->delete($firstTribune->photo);
+    }
 
-            // Stocke la nouvelle photo
-            $photoPath = $request->file('photo')->store('tribune_photos', 'public');
+    // Stocke la nouvelle photo
+    $photoPath = $request->file('photo')->store('tribune_photos', 'public');
 
-            // Met à jour toutes les tribunes avec la nouvelle photo
-            Tribune::query()->update(['photo' => $photoPath]);
-        }
+    // Met à jour toutes les tribunes avec la nouvelle photo (si nécessaire)
+    Tribune::query()->update(['photo' => $photoPath]);
+}
 
         // Crée une nouvelle entrée pour la tribune
         Tribune::create([

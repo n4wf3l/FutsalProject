@@ -305,41 +305,47 @@
     <x-footer />
     <script src="https://js.stripe.com/v3/"></script>
     <script>
-        function changeQuantity(button, price, availableSeats, tribuneId, currency) {
-            const quantityElement = document.getElementById('quantity-' + tribuneId);
-            const totalElement = document.getElementById('total-' + tribuneId);
-            const quantityInput = document.getElementById('quantityInput-' + tribuneId);
-            const totalAmountInput = document.getElementById('totalAmountInput-' + tribuneId);
+function changeQuantity(button, price, availableSeats, tribuneId, currency) {
+    const quantityElement = document.getElementById('quantity-' + tribuneId);
+    const totalElement = document.getElementById('total-' + tribuneId);
+    const quantityInput = document.getElementById('quantityInput-' + tribuneId);
+    const totalAmountInput = document.getElementById('totalAmountInput-' + tribuneId);
 
-            let quantity = parseInt(quantityElement.innerText);
-            let total = parseFloat(totalElement.innerText);
+    let quantity = parseInt(quantityElement.innerText);
+    let total = parseFloat(totalElement.innerText);
 
-            if (button.innerText === '+') {
-                if (quantity < availableSeats) {
-                    quantity++;
-                    total += price;
-                }
-            } else if (button.innerText === '-') {
-                if (quantity > 0) {
-                    quantity--;
-                    total -= price;
-                }
-            }
+    // Vérifier si l'élément total contient déjà une devise, et si oui, la conserver
+    const currentTotalText = totalElement.innerText.trim();
+    const existingCurrency = currentTotalText.split(' ').pop(); // Récupérer la devise existante
+    currency = existingCurrency || currency; // Utiliser la devise existante ou la devise fournie
 
-            quantityElement.innerText = quantity;
-            totalElement.innerText = total.toFixed(2) + ' ' + currency;
-
-            // Update the hidden input fields
-            quantityInput.value = quantity;
-            totalAmountInput.value = total.toFixed(2);
-
-            const checkoutButton = document.getElementById('checkout-button-' + tribuneId);
-            if (quantity > 0) {
-                checkoutButton.removeAttribute('disabled');
-            } else {
-                checkoutButton.setAttribute('disabled', 'disabled');
-            }
+    if (button.innerText === '+') {
+        if (quantity < availableSeats) {
+            quantity++;
+            total += price;
         }
+    } else if (button.innerText === '-') {
+        if (quantity > 0) {
+            quantity--;
+            total -= price;
+        }
+    }
+
+    quantityElement.innerText = quantity;
+    totalElement.innerText = total.toFixed(2) + ' ' + currency;
+
+    // Mettre à jour les champs cachés
+    quantityInput.value = quantity;
+    totalAmountInput.value = total.toFixed(2);
+
+    const checkoutButton = document.getElementById('checkout-button-' + tribuneId);
+    if (quantity > 0) {
+        checkoutButton.removeAttribute('disabled');
+    } else {
+        checkoutButton.setAttribute('disabled', 'disabled');
+    }
+}
+
     </script>
 </body>
 </html>

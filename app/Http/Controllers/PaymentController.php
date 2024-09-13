@@ -29,7 +29,16 @@ class PaymentController extends Controller
         $tribune = Tribune::find($tribuneId);
     
         // Remplacer "dh" par "mad" si c'est du Dirham marocain
-        $currency = strtolower($tribune->currency) == 'dh' ? 'mad' : strtolower($tribune->currency);
+$currency = strtolower($tribune->currency);
+
+// Vérifie et ajuste la devise pour qu'elle soit compatible avec Stripe
+if ($currency == '€' || $currency == 'eur') {
+    $currency = 'eur';
+} elseif ($currency == 'dh' || $currency == 'mad') {
+    $currency = 'mad';
+} elseif ($currency == '$' || $currency == 'usd') {
+    $currency = 'usd';
+}
     
         // Log the ID, amount, and currency to verify
         Log::info("Creating Stripe session for Tribune ID: {$tribuneId}, Amount: {$totalAmount}, Currency: {$currency}");
