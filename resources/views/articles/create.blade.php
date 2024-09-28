@@ -176,7 +176,7 @@
                     img.src = URL.createObjectURL(file);
                     img.onload = function() {
                         if (img.height < 850) {
-                            document.getElementById('image-error').textContent = `@lang('messages.image_height_error', ['height' => '${img.height}px'])`;
+                            document.getElementById('image-error').textContent = @lang('messages.image_height_error', ['height' => '${img.height}px']);
                             document.getElementById('image-error').style.display = 'block';
                             document.getElementById('article-form').querySelector('.save-button').disabled = true;
                         } else {
