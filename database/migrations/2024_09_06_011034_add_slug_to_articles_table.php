@@ -23,10 +23,7 @@ return new class extends Migration
             DB::table('articles')->where('id', $article->id)->update(['slug' => $slug]);
         });
 
-        // Ajouter la contrainte d'unicité sur le champ slug
-        Schema::table('articles', function (Blueprint $table) {
-            $table->string('slug')->unique()->change();
-        });
+        // Ajouter la contrainte d'unicité sur le champ slug (modification dans une nouvelle migration)
     }
 
     /**

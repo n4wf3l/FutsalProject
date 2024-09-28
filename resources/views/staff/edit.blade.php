@@ -60,6 +60,12 @@
                 <input type="text" name="position" id="position" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('position', $staff->position) }}" required>
             </div>
 
+                <!-- Champ pour l'image -->
+    <div class="mb-4">
+        <label for="photo" class="block text-sm font-medium text-gray-700">{{ __('messages.photo') }}:</label>
+        <input type="file" name="photo" id="photo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+    </div>
+
             <!-- Submit Button -->
             <div class="text-center">
                 <button type="submit" 

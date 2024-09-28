@@ -45,7 +45,7 @@
         @endif
 
         <!-- Add Form -->
-        <form action="{{ route('staff.store') }}" method="POST">
+        <form action="{{ route('staff.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <!-- First Name -->
@@ -65,6 +65,12 @@
                 <label for="position" class="block text-sm font-medium text-gray-700">{{ __('messages.position') }}:</label>
                 <input type="text" name="position" id="position" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-{{ $primaryColor }} focus:border-{{ $primaryColor }}" required>
             </div>
+
+                <!-- Champ pour l'image -->
+    <div class="mb-4">
+        <label for="photo" class="block text-sm font-medium text-gray-700">{{ __('messages.photo') }}:</label>
+        <input type="file" name="photo" id="photo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+    </div>
 
             <!-- Submit Button -->
             <div class="text-center">

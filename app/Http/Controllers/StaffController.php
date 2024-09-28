@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Staff; 
+use Illuminate\Support\Facades\Storage;
 
 class StaffController extends Controller
 {
@@ -24,7 +25,14 @@ class StaffController extends Controller
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'position' => 'required|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Valider l'image
         ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('photos', 'public'); // Stocker l'image
+        }
 
         Staff::create($request->all());
 
@@ -37,10 +45,22 @@ class StaffController extends Controller
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'position' => 'required|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Valider l'image
         ]);
     
-        $staff->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('photo')) {
+            // Supprimer l'ancienne image si elle existe
+            if ($staff->photo) {
+                Storage::disk('public')->delete($staff->photo);
+            }
+
+            $data['photo'] = $request->file('photo')->store('photos', 'public'); // Stocker la nouvelle image
+        }
     
+        $staff->update($data);
+
         // Rediriger vers la page 'teams' après la mise à jour d'un membre du personnel
         return redirect()->route('teams')->with('success', 'Staff member updated successfully.');
     }

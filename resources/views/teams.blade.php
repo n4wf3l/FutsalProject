@@ -412,24 +412,29 @@ use Illuminate\Support\Facades\Auth;
 
         <div class="staff-container">
             @foreach($staff as $member)
-                <div class="staff-item">
-                    <h3>{{ $member->first_name }} {{ $member->last_name }}</h3>
-                    <p>{{ $member->position }}</p>
+            <div class="staff-item">
+    @if($member->photo)
+        <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->first_name }} {{ $member->last_name }}" class="w-full h-48 object-cover">
+    @else
+        <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.default_player') }}" class="w-full h-48 object-cover">
+    @endif
+    <h3>{{ $member->first_name }} {{ $member->last_name }}</h3>
+    <p>{{ $member->position }}</p>
 
-                    @auth
-                        <div class="mt-4 flex justify-center space-x-4">
-                            <!-- Delete Button -->
-                            <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.delete') }}</button>
-                            </form>
+    @auth
+        <div class="mt-4 flex justify-center space-x-4">
+            <!-- Delete Button -->
+            <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="bg-red-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.delete') }}</button>
+            </form>
 
-                            <!-- Edit Button -->
-                            <a href="{{ route('staff.edit', $member->id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.edit') }}</a>
-                        </div>
-                    @endauth
-                </div>
+            <!-- Edit Button -->
+            <a href="{{ route('staff.edit', $member->id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.edit') }}</a>
+        </div>
+    @endauth
+</div>
             @endforeach
         </div>
             @endif
