@@ -198,17 +198,13 @@
 
 <nav class="p-10" style="background-color: {{ $primaryColor }};">
     <div class="container mx-auto flex justify-between items-center custom-font" style="font-size: 25px; letter-spacing: 2px;">
-        <!-- Logo -->
-        <div class="flex items-center">
-            @if($logoPath)
-                <img src="{{ $logoPath }}" alt="@lang('messages.logo_not_available')" style="height: 80px; width: auto;">
-            @else
-                <p>@lang('messages.logo_not_available')</p>
-            @endif
-            <div class="clubName ml-3 text-white px-2 py-1 border-4" style="border-color: {{ $secondaryColor }};">
-                {{ $clubName }}
-            </div>
-        </div>
+<!-- Logo -->
+<div class="flex items-center">
+    <img src="{{ $logoPath ?? asset('unknown.png') }}" alt="@lang('messages.logo_not_available')" style="height: 80px; width: auto;">
+    <div class="clubName ml-3 text-white px-2 py-1 border-4" style="border-color: {{ $secondaryColor }};">
+        {{ $clubName }}
+    </div>
+</div>
 
         <!-- Navigation links (hidden on mobile, shown on desktop) -->
         <div class="desktop-nav space-x-8">

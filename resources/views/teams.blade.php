@@ -160,55 +160,68 @@ use Illuminate\Support\Facades\Auth;
         }
 
         .staff-container {
-            max-width: 1600px;
-            margin: 50px auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
+    max-width: 1600px;
+    margin: 50px auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
 
-        .staff-item {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
+.staff-item {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    height: 700px; /* Hauteur fixe pour le conteneur */
+    overflow: hidden; /* Cache le dépassement si nécessaire */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
-        .staff-item h3 {
-            color: black;
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
+.staff-item h3 {
+    color: black;
+    font-size: 30px;
+    margin: 10px 0;
+}
 
-        .staff-item p {
-            color: black;
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
+.staff-item p {
+    color: black;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
 
-        .staff-item button,
-        .staff-item a {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-right: 10px;
-        }
+.staff-item button,
+.staff-item a {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-right: 10px;
+}
 
-        .staff-item button {
-            background-color: #DC2626;
-            color: white;
-        }
+.staff-item button {
+    background-color: #DC2626;
+    color: white;
+}
 
-        .staff-item a {
-            color: white;
-            text-decoration: none;
-        }
+.staff-item a {
+    color: white;
+    text-decoration: none;
+}
 
-        .staff-item a:hover,
-        .staff-item button:hover {
-            opacity: 0.8;
-        }
+.staff-item a:hover,
+.staff-item button:hover {
+    opacity: 0.8;
+}
+
+.uniform-photo {
+    width: 100%;
+    height: 500px; /* Hauteur fixe pour l'image */
+    object-fit: cover; /* Remplit le conteneur sans déformation */
+    object-position: top; /* Priorise le haut de l'image */
+    border-radius: 8px; /* Pour s'harmoniser avec le conteneur */
+}
 
         /* Responsive Styles */
         @media (max-width: 1200px) {
@@ -406,38 +419,48 @@ use Illuminate\Support\Facades\Auth;
             {{ __('messages.technical_staff') }}
         </x-page-title>
 
-          @if($staff->isEmpty())
-        <p class="text-gray-600 text-center">{{ __('messages.no_staff') }}</p>
-    @else
-
-        <div class="staff-container">
-            @foreach($staff as $member)
-            <div class="staff-item">
-    @if($member->photo)
-        <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->first_name }} {{ $member->last_name }}" class="w-full h-48 object-cover">
-    @else
-        <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.default_player') }}" class="w-full h-48 object-cover">
-    @endif
-    <h3>{{ $member->first_name }} {{ $member->last_name }}</h3>
-    <p>{{ $member->position }}</p>
-
-    @auth
-        <div class="mt-4 flex justify-center space-x-4">
-            <!-- Delete Button -->
-            <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="bg-red-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.delete') }}</button>
-            </form>
-
-            <!-- Edit Button -->
-            <a href="{{ route('staff.edit', $member->id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.edit') }}</a>
-        </div>
-    @endauth
-</div>
-            @endforeach
-        </div>
+        @if($staff->isEmpty()) 
+    <p class="text-gray-600 text-center">{{ __('messages.no_staff') }}</p>
+@else
+    <div class="staff-container">
+    @foreach($staff as $member)
+    <div class="staff-item relative bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="relative">
+            <!-- Logo du club en haut à gauche de l'image -->
+            @if($userSettings && $userSettings->logo)
+                <img src="{{ asset('storage/' . $userSettings->logo) }}" alt="{{ __('messages.club_logo') }}" class="club-logo" style="height: 60px; width: auto; position: absolute; top: 10px; left: 10px; z-index: 10;">
             @endif
+
+            <!-- Photo du membre du staff -->
+            @if($member->photo)
+                <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->first_name }} {{ $member->last_name }}" class="uniform-photo">
+            @else
+                <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.default_player') }}" class="uniform-photo">
+            @endif
+        </div>
+
+        <!-- Informations du membre -->
+        <h3>{{ $member->first_name }} {{ $member->last_name }}</h3>
+        <p>{{ $member->position }}</p>
+
+        <!-- Boutons Modifier et Supprimer -->
+        @auth
+            <div class="mt-4 flex justify-center space-x-4">
+                <!-- Bouton Supprimer -->
+                <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.delete') }}</button>
+                </form>
+
+                <!-- Bouton Modifier -->
+                <a href="{{ route('staff.edit', $member->id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.edit') }}</a>
+            </div>
+        @endauth
+    </div>
+@endforeach
+    </div>
+@endif
     </section>
 
     <x-footer />

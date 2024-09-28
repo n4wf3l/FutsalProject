@@ -240,68 +240,78 @@
                 </div>
 
                 <div class="card">
-                    <form action="{{ route('club-info.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
-                        @csrf
+                <form action="{{ route('club-info.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+    @csrf
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="sportcomplex_location" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.sportcomplex_location') }}</label>
-                            <input type="text" name="sportcomplex_location" id="sportcomplex_location" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('sportcomplex_location', $clubInfo->sportcomplex_location ?? '') }}">
-                        </div>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="sportcomplex_location" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.sportcomplex_location') }}</label>
+        <input type="text" name="sportcomplex_location" id="sportcomplex_location" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('sportcomplex_location', $clubInfo->sportcomplex_location ?? '') }}">
+    </div>
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="city" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.city') }}</label>
-                            <input type="text" name="city" id="city" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('city', $clubInfo->city ?? '') }}">
-                        </div>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="city" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.city') }}</label>
+        <input type="text" name="city" id="city" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('city', $clubInfo->city ?? '') }}">
+    </div>
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.phone_number') }}</label>
-                            <input type="text" name="phone" id="phone" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('phone', $clubInfo->phone ?? '') }}">
-                        </div>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.phone_number') }}</label>
+        <input type="text" name="phone" id="phone" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('phone', $clubInfo->phone ?? '') }}">
+    </div>
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.email') }}</label>
-                            <input type="email" name="email" id="email" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('email', $clubInfo->email ?? '') }}">
-                        </div>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.email') }}</label>
+        <input type="email" name="email" id="email" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('email', $clubInfo->email ?? '') }}">
+    </div>
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="federation_logo" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.federation_logo') }}</label>
-                            <input type="file" name="federation_logo" id="federation_logo" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            @if($clubInfo && $clubInfo->federation_logo)
-                                <img src="{{ asset('storage/' . $clubInfo->federation_logo) }}" alt="{{ __('messages.logo') }}" class="mt-4" style="max-height: 80px; width: auto;">
-                            @endif
-                        </div>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="federation_logo" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.federation_logo') }}</label>
+        <input type="file" name="federation_logo" id="federation_logo" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        @if($clubInfo && $clubInfo->federation_logo)
+            <img src="{{ asset('storage/' . $clubInfo->federation_logo) }}" alt="{{ __('messages.logo') }}" class="mt-4" style="max-height: 80px; width: auto;">
+        @endif
+    </div>
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="facebook" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.facebook') }}</label>
-                            <input type="text" name="facebook" id="facebook" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('facebook', $clubInfo->facebook ?? '') }}">
-                        </div>
+    <!-- Organization Logo -->
+    <div class="mb-6 flex flex-col items-center">
+        <label for="organization_logo" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.organization_logo') }}</label>
+        <input type="file" name="organization_logo" id="organization_logo" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        @if($clubInfo && $clubInfo->organization_logo)
+            <img src="{{ asset('storage/' . $clubInfo->organization_logo) }}" alt="{{ __('messages.logo') }}" class="mt-4" style="max-height: 80px; width: auto;">
+        @endif
+    </div>
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="instagram" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.instagram') }}</label>
-                            <input type="text" name="instagram" id="instagram" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('instagram', $clubInfo->instagram ?? '') }}">
-                        </div>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="facebook" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.facebook') }}</label>
+        <input type="text" name="facebook" id="facebook" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('facebook', $clubInfo->facebook ?? '') }}">
+    </div>
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="president" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.president') }}</label>
-                            <input type="text" name="president" id="president" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('president', $clubInfo->president ?? '') }}">
-                        </div>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="instagram" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.instagram') }}</label>
+        <input type="text" name="instagram" id="instagram" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('instagram', $clubInfo->instagram ?? '') }}">
+    </div>
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="latitude" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.latitude') }}</label>
-                            <input type="text" name="latitude" id="latitude" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('latitude', $clubInfo->latitude ?? '') }}">
-                        </div>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="president" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.president') }}</label>
+        <input type="text" name="president" id="president" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('president', $clubInfo->president ?? '') }}">
+    </div>
 
-                        <div class="mb-6 flex flex-col items-center">
-                            <label for="longitude" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.longitude') }}</label>
-                            <input type="text" name="longitude" id="longitude" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('longitude', $clubInfo->longitude ?? '') }}">
-                        </div>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="latitude" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.latitude') }}</label>
+        <input type="text" name="latitude" id="latitude" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('latitude', $clubInfo->latitude ?? '') }}">
+    </div>
 
-                        <div class="flex justify-center">
-                            <button type="submit" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }}; margin-bottom:20px;" class="text-white font-bold py-2 px-6 rounded-full hover:opacity-80 transition duration-200 shadow-lg text-center">
-                                {{ __('messages.save_club_info') }}
-                            </button>
-                        </div>
-                    </form>
+    <div class="mb-6 flex flex-col items-center">
+        <label for="longitude" class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.longitude') }}</label>
+        <input type="text" name="longitude" id="longitude" class="block max-w-md border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('longitude', $clubInfo->longitude ?? '') }}">
+    </div>
+
+    <div class="flex justify-center">
+        <button type="submit" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }}; margin-bottom:20px;" class="text-white font-bold py-2 px-6 rounded-full hover:opacity-80 transition duration-200 shadow-lg text-center">
+            {{ __('messages.save_club_info') }}
+        </button>
+    </div>
+</form>
+
                 </div>
             </div>
 

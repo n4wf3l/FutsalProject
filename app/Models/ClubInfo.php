@@ -16,6 +16,7 @@ class ClubInfo extends Model
         'phone',
         'email',
         'federation_logo',
+        'organization_logo',
         'facebook',
         'instagram',
         'president',

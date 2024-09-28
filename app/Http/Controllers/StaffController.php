@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Staff; 
+use App\Models\Staff;
 use Illuminate\Support\Facades\Storage;
 
 class StaffController extends Controller
@@ -28,17 +28,20 @@ class StaffController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Valider l'image
         ]);
 
-        $data = $request->all();
+        // Préparer les données
+        $data = $request->except('photo');
 
+        // Gérer l'image si elle est présente
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('photos', 'public'); // Stocker l'image
         }
 
-        Staff::create($request->all());
+        // Créer un nouveau membre du staff
+        Staff::create($data);
 
         return redirect()->route('teams')->with('success', 'Staff member created successfully.');
     }
-    
+
     public function update(Request $request, Staff $staff)
     {
         $request->validate([
@@ -47,9 +50,11 @@ class StaffController extends Controller
             'position' => 'required|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Valider l'image
         ]);
-    
-        $data = $request->all();
 
+        // Préparer les données
+        $data = $request->except('photo');
+
+        // Gérer l'image si elle est présente
         if ($request->hasFile('photo')) {
             // Supprimer l'ancienne image si elle existe
             if ($staff->photo) {
@@ -58,10 +63,10 @@ class StaffController extends Controller
 
             $data['photo'] = $request->file('photo')->store('photos', 'public'); // Stocker la nouvelle image
         }
-    
+
+        // Mettre à jour les informations du staff
         $staff->update($data);
 
-        // Rediriger vers la page 'teams' après la mise à jour d'un membre du personnel
         return redirect()->route('teams')->with('success', 'Staff member updated successfully.');
     }
 
@@ -72,10 +77,16 @@ class StaffController extends Controller
     }
 
     public function destroy(Staff $staff)
-{
-    $staff->delete();
+    {
+        // Supprimer l'image associée si elle existe
+        if ($staff->photo) {
+            Storage::disk('public')->delete($staff->photo);
+        }
 
-    // Redirigez vers la page souhaitée, par exemple vers la page 'teams'
-    return redirect()->route('teams')->with('success', 'Staff member deleted successfully.');
-}
+        // Supprimer le membre du staff
+        $staff->delete();
+
+        // Rediriger vers la page souhaitée, par exemple vers la page 'teams'
+        return redirect()->route('teams')->with('success', 'Staff member deleted successfully.');
+    }
 }

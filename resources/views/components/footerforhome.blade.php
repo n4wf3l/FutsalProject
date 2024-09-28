@@ -8,6 +8,14 @@
     }
 @endphp
 
+@php
+    use App\Models\ClubInfo;
+
+    $clubInfo = ClubInfo::first();
+    $federationLogo = $clubInfo->federation_logo ? asset('storage/' . $clubInfo->federation_logo) : asset('unknown.png');
+    $organizationLogo = $clubInfo->organization_logo ? asset('storage/' . $clubInfo->organization_logo) : asset('unknown.png');
+@endphp
+
 <style>
     html, body {
         height: 100%;
@@ -70,13 +78,26 @@
 <footer class="text-white py-12 mt-auto" style="background-color: {{ $primaryColor }};">
     <div class="footer-center container mx-auto px-6">
         <div class="flex flex-wrap justify-between">
-            <!-- Logo and Social Media -->
-            <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-logo">
-                <div class="flex items-center space-x-4 mb-6">
-                    <img src="{{ $logoPath }}" alt="Club Logo" style="height: 60px; width: auto;">
-                    <img src="{{ $federationLogo }}" alt="Fed Logo" style="height: 60px; width: auto;">
-                </div>
-            </div>
+        <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-logo">
+    <div class="flex items-center space-x-4 mb-6">
+        <!-- Affiche le logo du club ou unknown.png si indisponible -->
+        <img src="{{ $logoPath ? asset($logoPath) : asset('unknown.png') }}" 
+             alt="@lang('messages.logo_not_available')" 
+             style="height: 60px; width: auto;">
+
+        <!-- Affiche le logo de la fédération ou unknown.png si indisponible -->
+        <img src="{{ $federationLogo ? asset($federationLogo) : asset('unknown.png') }}" 
+             alt="@lang('messages.logo_not_available')" 
+             style="height: 60px; width: auto;">
+
+        <!-- Affiche le logo de l'organisation uniquement s'il est disponible -->
+        @if ($organizationLogo)
+            <img src="{{ asset($organizationLogo) }}" 
+                 alt="@lang('messages.logo_not_available')" 
+                 style="height: 60px; width: auto;">
+        @endif
+    </div>
+</div>
 
             <!-- Links -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
