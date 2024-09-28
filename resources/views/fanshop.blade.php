@@ -240,7 +240,7 @@
 
                             <!-- Titre de la tribune avec l'icône d'édition -->
                             <h2>
-                                {{ $tribune->name }}
+                                {{ $tribune->name }} — {{ $championship->season ?? 'N/A' }} 
                                 @auth
                                 <a href="{{ route('tribunes.edit', $tribune->id) }}" class="edit-icon">🛠️</a>
                                 @endauth

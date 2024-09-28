@@ -315,7 +315,7 @@ return [
     'message_or_questions' => 'Message or Questions',
     'send' => 'Send',
     'fanshop' => 'Fanshop',
-    'fanshop_subtitle' => '🎟️ Grab your tickets and gear up for the next big match against ',
+    'fanshop_subtitle' => '🎟️ Grab your tickets and gear up for the next match',
     'add_tribune' => 'Add Tribune',
     'matches_played_at' => 'Matches are played at',
     'next_match' => 'Next Match:',

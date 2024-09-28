@@ -11,6 +11,7 @@ use App\Models\Game;
 use App\Models\ClubInfo;
 use App\Models\BackgroundImage;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Championship;
 
 class TribuneController extends Controller
 {
@@ -20,6 +21,7 @@ class TribuneController extends Controller
     public function index()
     {
         $tribunes = Tribune::all();
+                $championship = Championship::first(); 
         $backgroundImage = BackgroundImage::where('assigned_page', 'fanshop')->latest()->first();
         // Récupérer les informations du club pour déterminer le prochain match pertinent
         $clubInfo = ClubInfo::first();
@@ -34,7 +36,7 @@ class TribuneController extends Controller
             ->orderBy('match_date', 'asc')
             ->first();
     
-        return view('fanshop', compact('tribunes', 'nextGame', 'backgroundImage'));
+        return view('fanshop', compact('tribunes', 'nextGame', 'backgroundImage', 'championship'));
     }
     
     /**
