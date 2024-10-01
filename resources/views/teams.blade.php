@@ -326,7 +326,7 @@ use Illuminate\Support\Facades\Auth;
 
                     <!-- Player Info Overlay -->
                     <div class="player-overlay p-4">
-                        <p><strong>{{ __('messages.birthdate') }}:</strong> {{ $player->birthdate }}</p>
+                        <p><strong>{{ __('messages.birthdate') }}:</strong> {{ \Carbon\Carbon::parse($player->birthdate)->format('d-m-Y') }}</p>
                         <p><strong>{{ __('messages.position') }}:</strong> {{ $player->position }}</p>
                         <p><strong>{{ __('messages.nationality') }}:</strong> {{ $player->nationality }}</p>
                         <p><strong>{{ __('messages.height') }}:</strong> {{ $player->height }} cm</p>
@@ -408,9 +408,20 @@ use Illuminate\Support\Facades\Auth;
                     @endauth
                 </div>
             </div>
-        @else
-            <p class="text-gray-600 text-center">{{ __('messages.no_coach') }}</p>
-        @endif
+            @else
+    <p class="text-gray-600 text-center">{{ __('messages.no_coach') }}</p>
+    @auth
+        <div class="flex justify-center mt-4">
+            <x-button 
+                route="{{ route('coaches.create') }}"
+                buttonText="{{ __('messages.add_coach') }}" 
+                primaryColor="#DC2626" 
+                secondaryColor="#B91C1C"
+            />
+        </div>
+    @endauth
+@endif
+
     </section>
 
     <!-- Staff Section -->
@@ -418,6 +429,14 @@ use Illuminate\Support\Facades\Auth;
         <x-page-title subtitle="{{ __('messages.staff_subtitle') }}">
             {{ __('messages.technical_staff') }}
         </x-page-title>
+        @auth
+        <x-button 
+            route="{{ route('staff.create') }}"
+            buttonText="{{ __('messages.add_staff') }}" 
+            primaryColor="#DC2626" 
+            secondaryColor="#B91C1C" 
+        />
+    @endauth
 
         @if($staff->isEmpty()) 
     <p class="text-gray-600 text-center">{{ __('messages.no_staff') }}</p>
@@ -461,6 +480,7 @@ use Illuminate\Support\Facades\Auth;
 @endforeach
     </div>
 @endif
+
     </section>
 
     <x-footer />

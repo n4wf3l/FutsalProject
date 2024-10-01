@@ -153,28 +153,6 @@
             @endauth
         </div>
 
-        <!-- Section d'Upload de PDF (pour les utilisateurs authentifiés) -->
-        @auth
-        <div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;">
-            <h3 class="text-lg font-bold mb-4 text-center">@lang('messages.upload_new_pdf')</h3>
-            <form action="{{ route('regulations.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
-                @csrf
-                <div class="form-group mb-4 w-full">
-                    <label for="title" class="block text-sm font-medium text-gray-700">@lang('messages.pdf_title')</label>
-                    <input type="text" name="title" id="title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                </div>
-
-                <div class="form-group mb-4 w-full">
-                    <label for="pdf" class="block text-sm font-medium text-gray-700">@lang('messages.select_pdf')</label>
-                    <input type="file" name="pdf" id="pdf" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-semibold" style="color: {{ $primaryColor }};" required>
-                </div>
-
-                <button type="submit" class="w-full py-2 px-4 rounded text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">@lang('messages.publish')</button>
-            </form>
-        </div>
-        @endauth
-
-
         <div id="documents-section"></div>
 
         <x-page-title :subtitle="__('messages.access_club_resources')">
@@ -204,6 +182,27 @@
     </div>
 @endif
 
+        <!-- Section d'Upload de PDF (pour les utilisateurs authentifiés) -->
+        @auth
+        <div class="upload-pdf-container mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm" style="max-width: 600px; margin: 0 auto;">
+            <h3 class="text-lg font-bold mb-4 text-center">@lang('messages.upload_new_pdf')</h3>
+            <form action="{{ route('regulations.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
+                @csrf
+                <div class="form-group mb-4 w-full">
+                    <label for="title" class="block text-sm font-medium text-gray-700">@lang('messages.pdf_title')</label>
+                    <input type="text" name="title" id="title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                </div>
+
+                <div class="form-group mb-4 w-full">
+                    <label for="pdf" class="block text-sm font-medium text-gray-700">@lang('messages.select_pdf')</label>
+                    <input type="file" name="pdf" id="pdf" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-semibold" style="color: {{ $primaryColor }};" required>
+                </div>
+
+                <button type="submit" class="w-full py-2 px-4 rounded text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">@lang('messages.publish')</button>
+            </form>
+        </div>
+        @endauth
+        
         <div id="map" data-aos="flip-down"></div>
     </div>
     </div>

@@ -239,6 +239,20 @@
                 padding: 8px;
             }
         }
+        .page-title {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.page-title::before {
+    content: "";
+    display: block;
+    width: 60px; /* Vous pouvez ajuster selon le design souhaité */
+    height: 5px; /* Épaisseur de la barre */
+    background-color: red;
+    margin-right: 15px; /* Espace entre la barre et le texte */
+}
     </style>
 </head>
 <body class="bg-gray-100" @if(isset($backgroundImage)) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>

@@ -11,8 +11,9 @@
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+
         /* Styles existants */
         .main-video-container {
             display: flex;
@@ -157,7 +158,7 @@
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
 
     <x-navbar />
-
+    <div class="bootstrap-only">
     <header class="text-center my-12">
         <x-page-title subtitle="{{ __('messages.check_latest_videos') }}">
             {{ __('messages.recent_videos') }}
@@ -178,7 +179,8 @@
         onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
         onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';"
                 data-bs-toggle="modal"
-                data-bs-target="#addVideoModal">
+                data-bs-target="#addVideoModal"
+                onclick="loadBootstrap()">
                 {{ __('messages.add_video') }}
             </button>
         @endauth
@@ -266,7 +268,7 @@
         </div>
     </div>
 </div>
-
+</div>
     <x-footer />
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -306,5 +308,24 @@
             </form>
         </div>
     </div>
+
+    <script>
+           function loadBootstrap() {
+        if (!document.getElementById('bootstrap-css')) {
+            var link = document.createElement('link');
+            link.id = 'bootstrap-css';
+            link.rel = 'stylesheet';
+            link.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
+            document.head.appendChild(link);
+        }
+
+        if (!document.getElementById('bootstrap-js')) {
+            var script = document.createElement('script');
+            script.id = 'bootstrap-js';
+            script.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
+            document.body.appendChild(script);
+        }
+    }
+    </script>
 </body>
 </html>

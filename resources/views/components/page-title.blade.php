@@ -26,6 +26,8 @@
     letter-spacing:2px;
 }
 
+
+
 .vertical-line {
     width: 8px;
     height: 60px; /* Ajustez la hauteur selon votre préférence */

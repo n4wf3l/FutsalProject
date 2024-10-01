@@ -13,6 +13,11 @@ use Illuminate\Support\Str;
 use App\Models\AccessCode;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Player;
+use App\Models\Staff;
+use App\Models\Coach;
 
 class DashboardController extends Controller
 {
@@ -22,11 +27,14 @@ class DashboardController extends Controller
         $clubInfo = ClubInfo::first();
         $userSettings = UserSetting::where('user_id', $user->id)->first();
         $backgroundImages = BackgroundImage::all(); // Récupérer les images de fond
-    
+        $users = User::all();
         $registrationOpen = config('app.registration_open', false) ? 'true' : 'false';
-        
+        $players = Player::all();
+        $staff = Staff::all();
+        $coach = Coach::first();
+
         // Passer toutes les variables à la vue, y compris $registrationOpen
-        return view('dashboard', compact('clubInfo', 'userSettings', 'backgroundImages', 'registrationOpen'));
+        return view('dashboard', compact('clubInfo', 'userSettings', 'backgroundImages', 'registrationOpen', 'users', 'players', 'staff', 'coach'));
     }
 
     public function update(Request $request)
@@ -169,5 +177,30 @@ class DashboardController extends Controller
 
     // Recharger les variables d'environnement
     Artisan::call('config:cache');
+}
+
+public function storeUser(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8',
+    ]);
+
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    return redirect()->route('dashboard')->with('success', 'User created successfully.');
+}
+
+public function destroyUser($id)
+{
+    $user = User::findOrFail($id);
+    $user->delete();
+
+    return redirect()->route('dashboard')->with('success', 'User deleted successfully.');
 }
 }

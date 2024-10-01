@@ -101,4 +101,13 @@ class PlayerController extends Controller
     
         return redirect()->route('players.index')->with('success', 'Player deleted successfully.');
     }
+
+    public function dashboard()
+{
+    $players = Player::all();
+    $staff = Staff::all(); 
+    $coach = Coach::first();
+    
+    return view('dashboard', compact('players', 'staff', 'coach'));
+}
 }

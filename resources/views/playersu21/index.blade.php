@@ -168,7 +168,7 @@ use Illuminate\Support\Facades\Auth;
     @endphp
 
     @if($players->isEmpty())
-        <p class="text-gray-600 text-center">{{ __('messages.no_u21_players') }}</p>
+        <p class="text-gray-600 text-center mb-20">{{ __('messages.no_u21_players') }}</p>
     @else
         <div class="player-container" data-aos="fade-up">
             @foreach($players as $player)

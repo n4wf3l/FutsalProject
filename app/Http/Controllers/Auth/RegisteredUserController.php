@@ -22,6 +22,18 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
+    public function dashboard(): View
+    {
+        $users = User::all(); // Récupérer tous les utilisateurs
+        return view('dashboard', compact('users')); // Passer la variable $users à la vue dashboard.blade.php
+    }
+    
+    public function index(): View
+    {
+        $users = User::all(); // Récupérer tous les utilisateurs
+        return view('admin.users.index', compact('users')); // Passer la variable $users à la vue
+    }
+
     /**
      * Handle an incoming registration request.
      *
