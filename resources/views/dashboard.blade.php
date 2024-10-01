@@ -20,12 +20,13 @@
 
         .sidebar {
             width: 250px;
-            height: 100vh;
-            background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};
-            color: white;
-            padding: 20px;
-            position: fixed;
-            transition: all 0.3s;
+        height: 100vh; /* Full height to cover the entire viewport */
+        overflow-y: auto; /* Enable vertical scrolling */
+        background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};
+        color: white;
+        padding: 20px;
+        position: fixed;
+        transition: all 0.3s;
         }
 
         .sidebar a {
