@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Player;
 use App\Models\Staff;
 use App\Models\Coach;
+use App\Models\PlayerU21;
 
 class DashboardController extends Controller
 {
@@ -32,9 +33,9 @@ class DashboardController extends Controller
         $players = Player::all();
         $staff = Staff::all();
         $coach = Coach::first();
-
+        $playersU21 = PlayerU21::orderBy('number', 'asc')->get();
         // Passer toutes les variables à la vue, y compris $registrationOpen
-        return view('dashboard', compact('clubInfo', 'userSettings', 'backgroundImages', 'registrationOpen', 'users', 'players', 'staff', 'coach'));
+        return view('dashboard', compact('clubInfo', 'userSettings', 'backgroundImages', 'registrationOpen', 'users', 'players', 'staff', 'coach', 'playersU21'));
     }
 
     public function update(Request $request)

@@ -73,7 +73,7 @@
 
             <!-- Height -->
             <div class="mb-4">
-                <label for="height" class="block text-sm font-medium text-gray-700">{{ __('messages.height') }} (cm):</label>
+                <label for="height" class="block text-sm font-medium text-gray-700">{{ __('messages.height') }}:</label>
                 <input type="number" name="height" id="height" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ old('height', $player->height) }}" required>
             </div>
 

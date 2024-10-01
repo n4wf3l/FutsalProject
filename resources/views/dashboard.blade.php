@@ -179,44 +179,73 @@
 </head>
 
 <body>
-    <div class="sidebar">
-        <!-- Dropdown for Dashboard -->
-        <div class="dropdown">
-            <button class="dropdown-button" onclick="toggleDropdown(this)">
-                {{ __('messages.dashboard') }}
-            </button>
-            <div class="dropdown-content">
-                <a href="/">@lang('messages.home')</a>
-                <a href="{{ route('calendar.show') }}">@lang('messages.calendar')</a>
-                <a href="{{ route('about.index') }}">@lang('messages.about')</a>
-                <a href="{{ route('clubinfo') }}">@lang('messages.club_info')</a>
-                <a href="{{ route('press_releases.index') }}">@lang('messages.press_releases')</a>
-                <a href="{{ route('teams') }}">@lang('messages.senior_team')</a>
-                <a href="{{ route('playersu21.index') }}">@lang('messages.u21_team')</a>
-                <a href="{{ route('sponsors.index') }}">@lang('messages.sponsor')</a>
-                <a href="{{ route('contact.show') }}">@lang('messages.contact')</a>
-            </div>
+<div class="sidebar">
+    <!-- Dropdown for Dashboard -->
+    <div class="dropdown">
+        <button class="dropdown-button" onclick="toggleDropdown(this)">
+            {{ __('messages.dashboard') }}
+        </button>
+        <div class="dropdown-content">
+            <a href="/">@lang('messages.home')</a>
+            <a href="{{ route('calendar.show') }}">@lang('messages.calendar')</a>
+            <a href="{{ route('about.index') }}">@lang('messages.about')</a>
+            <a href="{{ route('clubinfo') }}">@lang('messages.club_info')</a>
+            <a href="{{ route('press_releases.index') }}">@lang('messages.press_releases')</a>
+            <a href="{{ route('teams') }}">@lang('messages.senior_team')</a>
+            <a href="{{ route('playersu21.index') }}">@lang('messages.u21_team')</a>
+            <a href="{{ route('sponsors.index') }}">@lang('messages.sponsor')</a>
+            <a href="{{ route('contact.show') }}">@lang('messages.contact')</a>
         </div>
-
-        <a href="{{ route('profile.edit') }}"><i class="fas fa-user-circle"></i> My Account</a>
-        <hr>
-        <a href="{{ route('coaches.create') }}"><i class="fas fa-user-plus"></i>{{ __('messages.add_coach') }}</a>
-        <a href="{{ route('staff.create') }}"><i class="fas fa-user-cog"></i>{{ __('messages.add_staff') }}</a>
-        <a href="{{ route('sponsors.create') }}"><i class="fas fa-handshake"></i>{{ __('messages.add_sponsor') }}</a>
-        <a href="{{ route('articles.create') }}"><i class="fas fa-newspaper"></i>{{ __('messages.add_news') }}</a>
-        <a href="{{ route('press_releases.index') }}"><i class="fas fa-bullhorn"></i>{{ __('messages.add_press_release') }}</a>
-        <hr>
-        <a href="javascript:void(0);" onclick="showCard('members-card')"><i class="fas fa-users"></i>Members</a>
-        <a href="javascript:void(0);" onclick="showCard('background-card')"><i class="fas fa-images"></i>Backgrounds</a>
-        <a href="javascript:void(0);" onclick="showCard('players-card')"><i class="fas fa-users"></i>Players</a>
     </div>
 
-    <script>
+    <a href="{{ route('profile.edit') }}"><i class="fas fa-user-circle"></i> My Account</a>
+    <hr>
+    <a href="{{ route('coaches.create') }}"><i class="fas fa-user-plus"></i>{{ __('messages.add_coach') }}</a>
+    <a href="{{ route('staff.create') }}"><i class="fas fa-user-cog"></i>{{ __('messages.add_staff') }}</a>
+    <a href="{{ route('sponsors.create') }}"><i class="fas fa-handshake"></i>{{ __('messages.add_sponsor') }}</a>
+    <a href="{{ route('articles.create') }}"><i class="fas fa-newspaper"></i>{{ __('messages.add_news') }}</a>
+    <a href="{{ route('press_releases.index') }}"><i class="fas fa-bullhorn"></i>{{ __('messages.add_press_release') }}</a>
+    <hr>
+    <a href="javascript:void(0);" onclick="showCard('members-card')"><i class="fas fa-users"></i> Members</a>
+    <a href="javascript:void(0);" onclick="showCard('background-card')"><i class="fas fa-images"></i> Backgrounds</a>
+
+   <!-- Dropdown for Players -->
+   <div class="dropdown">
+    <a href="javascript:void(0);" onclick="toggleDropdown(this)" class="dropdown-link flex items-center">
+        <i class="fas fa-users"></i>
+        <span>Players</span>
+        <i class="fas fa-chevron-down dropdown-icon ml-2"></i>
+    </a>
+    <div class="dropdown-content players-dropdown">
+        <a href="javascript:void(0);" onclick="showCard('players-card')">{{ __('messages.senior_team') }}</a>
+        <a href="javascript:void(0);" onclick="showCard('playersu21-card')">{{ __('messages.u21_team') }}</a>
+    </div>
+</div>
+</div>
+
+<script>
         function toggleDropdown(button) {
-            const dropdown = button.parentElement;
+        // Cibler l'élément suivant, qui devrait être le dropdown content
+        const dropdown = button.nextElementSibling;
+
+        // Si l'élément dropdown est trouvé, basculer la classe 'open'
+        if (dropdown) {
             dropdown.classList.toggle('open');
         }
-    </script>
+
+        // Basculer la direction de l'icône fléchée
+        const icon = button.querySelector('.dropdown-icon');
+        if (icon) {
+            if (icon.classList.contains('fa-chevron-down')) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+    }
+</script>
 
     <div class="main-content">
         <header class="flex justify-between items-center mb-6">
@@ -500,6 +529,63 @@
 </div>
         
 
+<div id="playersu21-card" class="card mt-8" style="display: none;">
+    <h2 class="text-xl font-bold">{{ __('messages.u21_team') }}</h2>
+    <div class="overflow-x-auto mt-4">
+        <table class="min-w-full bg-white rounded-lg">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">{{ __('messages.photo') }}</th>
+                    <th class="py-3 px-6 text-left">{{ __('messages.name') }}</th>
+                    <th class="py-3 px-6 text-left">{{ __('messages.position') }}</th>
+                    <th class="py-3 px-6 text-left">{{ __('messages.number') }}</th>
+                    <th class="py-3 px-6 text-left">{{ __('messages.nationality') }}</th>
+                    <th class="py-3 px-6 text-center">{{ __('messages.actions') }}</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                @foreach($playersU21 as $player)
+                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <td class="py-3 px-6 text-left">
+                        @if($player->photo)
+                            <img src="{{ asset('storage/' . $player->photo) }}" alt="{{ $player->first_name }} {{ $player->last_name }}" class="w-16 h-16 rounded-full">
+                        @else
+                            <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.default_player') }}" class="w-16 h-16 rounded-full">
+                        @endif
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        {{ $player->first_name }} {{ $player->last_name }}
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        {{ $player->position }}
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        {{ $player->number }}
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        {{ $player->nationality }}
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <a href="{{ route('playersu21.edit', $player->id) }}" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('playersu21.destroy', $player->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <!-- Section pour visualiser tous les membres inscrits -->
 <div id="members-card" class="card mt-8" style="display: none;">
     <h2 class="text-xl font-bold">{{ __('messages.registered_members') }}</h2>
@@ -548,6 +634,7 @@
             </tbody>
         </table>
     </div>
+    
 
     <!-- Formulaire pour ajouter un membre -->
     <form action="{{ route('users.store') }}" method="POST" class="mt-4">
