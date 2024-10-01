@@ -104,10 +104,11 @@
         }
 
         .main-content {
-            margin-left: 250px;
-            padding: 20px;
-            transition: margin-left 0.3s;
-        }
+    margin-left: 250px;
+    width: calc(100% - 250px); /* Ajuste la largeur pour exclure la barre latérale */
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
 
         .card {
             background-color: white;
@@ -206,6 +207,7 @@
     <a href="{{ route('articles.create') }}"><i class="fas fa-newspaper"></i>{{ __('messages.add_news') }}</a>
     <a href="{{ route('press_releases.index') }}"><i class="fas fa-bullhorn"></i>{{ __('messages.add_press_release') }}</a>
     <hr>
+    <a href="javascript:void(0);" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
     <a href="javascript:void(0);" onclick="showCard('members-card')"><i class="fas fa-users"></i> Members</a>
     <a href="javascript:void(0);" onclick="showCard('background-card')"><i class="fas fa-images"></i> Backgrounds</a>
 
@@ -213,11 +215,11 @@
    <div class="dropdown">
     <a href="javascript:void(0);" onclick="toggleDropdown(this)" class="dropdown-link flex items-center">
         <i class="fas fa-users"></i>
-        <span>Players</span>
+        <span>Squad</span>
         <i class="fas fa-chevron-down dropdown-icon ml-2"></i>
     </a>
     <div class="dropdown-content players-dropdown">
-        <a href="javascript:void(0);" onclick="showCard('players-card')">{{ __('messages.senior_team') }}</a>
+    <a href="javascript:void(0);" onclick="showSeniorTeam()">{{ __('messages.senior_team') }}</a>
         <a href="javascript:void(0);" onclick="showCard('playersu21-card')">{{ __('messages.u21_team') }}</a>
     </div>
 </div>
@@ -247,12 +249,12 @@
     }
 </script>
 
-    <div class="main-content">
-        <header class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold" style="color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">{{ __('messages.dashboard') }}</h1>
-        </header>
+<div class="main-content">
+    <header class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold" style="color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">{{ __('messages.dashboard') }}</h1>
+    </header>
 
-        <div class="card">
+    <div id="settings-form-card" class=" card mt-4" >
     <h2>{{ __('messages.settings') }}</h2>
     <form action="{{ route('user.settings.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -322,7 +324,7 @@
 
 
 
-<div class="card">
+<div id="club-info-card" class=" card mt-8">
     <h2>{{ __('messages.club_info') }}</h2>
     <form action="{{ route('club-info.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -527,6 +529,107 @@
         </table>
     </div>
 </div>
+
+<!-- Section Entraîneur -->
+<div id="coach-card" class="card mt-8" style="display: none;">
+    <h2 class="text-xl font-bold">{{ __('messages.head_coach') }}</h2>
+    @if($coach)
+    <div class="flex items-center">
+        <div class="w-1/4">
+            @if($coach->photo)
+                <img src="{{ asset('storage/' . $coach->photo) }}" alt="{{ $coach->first_name }} {{ $coach->last_name }}" class="w-24 h-24 rounded-full mx-auto">
+            @else
+                <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.no_photo') }}" class="w-24 h-24 rounded-full mx-auto">
+            @endif
+        </div>
+        <div class="flex-1 pl-6">
+            <h3 class="text-lg font-bold">{{ $coach->first_name }} {{ $coach->last_name }}</h3>
+            <p><strong>{{ __('messages.date_of_birth') }}:</strong> {{ \Carbon\Carbon::parse($coach->birth_date)->format('d-m-Y') }}</p>
+            <p><strong>{{ __('messages.nationality') }}:</strong> {{ $coach->nationality }}</p>
+            <div class="flex mt-4">
+                @auth
+                    <a href="{{ route('coaches.edit', $coach->id) }}" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="{{ route('coaches.destroy', $coach->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');" class="ml-2">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
+                @endauth
+            </div>
+        </div>
+    </div>
+    @else
+    <p class="text-gray-600 mb-10">{{ __('messages.no_coach') }}</p>
+    @auth
+    <a href="{{ route('coaches.create') }}" class="button-primary">{{ __('messages.add_coach') }}</a>
+    @endauth
+    @endif
+</div>
+
+<!-- Section Staff -->
+<div id="staff-card" class="card mt-8" style="display: none;">
+    <h2 class="text-xl font-bold">{{ __('messages.technical_staff') }}</h2>
+    @if($staff->isEmpty())
+    <p class="text-gray-600">{{ __('messages.no_staff') }}</p>
+    @auth
+    <a href="{{ route('staff.create') }}" class="button-primary">{{ __('messages.add_staff') }}</a>
+    @endauth
+    @else
+    <div class="overflow-x-auto mt-4">
+        <table class="min-w-full bg-white rounded-lg">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">{{ __('messages.photo') }}</th>
+                    <th class="py-3 px-6 text-left">{{ __('messages.name') }}</th>
+                    <th class="py-3 px-6 text-left">{{ __('messages.position') }}</th>
+                    <th class="py-3 px-6 text-center">{{ __('messages.actions') }}</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                @foreach($staff as $member)
+                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <td class="py-3 px-6 text-left">
+                        @if($member->photo)
+                            <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->first_name }} {{ $member->last_name }}" class="w-16 h-16 rounded-full">
+                        @else
+                            <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.default_player') }}" class="w-16 h-16 rounded-full">
+                        @endif
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        {{ $member->first_name }} {{ $member->last_name }}
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        {{ $member->position }}
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        @auth
+                        <div class="flex item-center justify-center">
+                            <a href="{{ route('staff.edit', $member->id) }}" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                        @endauth
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    @endif
+</div>
+
+
         
 
 <div id="playersu21-card" class="card mt-8" style="display: none;">
@@ -711,6 +814,47 @@
             const cards = document.querySelectorAll('.card');
             cards.forEach(card => card.style.display = 'block');
         }
+
+        function showSeniorTeam() {
+    // Masquer toutes les cards
+    const cards = document.querySelectorAll('.main-content .card');
+    cards.forEach(card => {
+        card.style.display = 'none';
+    });
+
+    // Afficher les cards des joueurs, entraîneurs et staff
+    const playerCard = document.getElementById('players-card');
+    const coachCard = document.getElementById('coach-card');
+    const staffCard = document.getElementById('staff-card');
+
+    if (playerCard) playerCard.style.display = 'block';
+    if (coachCard) coachCard.style.display = 'block';
+    if (staffCard) staffCard.style.display = 'block';
+}
+
+function showSettings() {
+    // Masquer toutes les cards à l'intérieur de `main-content`
+    const cards = document.querySelectorAll('.main-content .card');
+    cards.forEach(card => {
+        card.style.display = 'none';
+    });
+
+    // Afficher les cards spécifiées (réglages et club info)
+    const settingsFormCard = document.getElementById('settings-form-card');
+    const clubInfoCard = document.getElementById('club-info-card');
+
+    if (settingsFormCard) {
+        settingsFormCard.style.display = 'block';
+    } else {
+        console.error('settings-form-card not found');
+    }
+
+    if (clubInfoCard) {
+        clubInfoCard.style.display = 'block';
+    } else {
+        console.error('club-info-card not found');
+    }
+}
     </script>
 </body>
 
