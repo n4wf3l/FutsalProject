@@ -48,30 +48,32 @@
     width: 100%;
 }
 
+/* Définir le dropdown */
 .dropdown {
     position: relative;
     display: inline-block;
-    transition: transform 0.3s ease-in-out;
     z-index: 600;
 }
 
+/* Ajuster la visibilité et l'animation du contenu du dropdown */
 .dropdown-content {
-    display: none;
+    visibility: hidden;
     position: absolute;
     background-color: {{ $primaryColor }};
-    z-index: 1100; 
+    z-index: 1100;
     width: 200px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     text-align: left;
     opacity: 0;
-    transform: translateY(0); 
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(-10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
     border-radius: 0 0 8px 8px;
-    overflow: hidden;
-    margin-top: 3px;
+    margin-top: 1px;
     border: 1px solid {{ $secondaryColor }};
+    pointer-events: none; /* Empêche le menu de bloquer la détection du hover en dehors */
 }
 
+/* Ajuster le comportement du lien dans le dropdown */
 .dropdown-content a {
     color: white;
     padding: 10px 14px;
@@ -81,23 +83,31 @@
     font-size: 0.875rem;
 }
 
+/* Changement de couleur lors du survol d'un lien */
 .dropdown-content a:hover {
     background-color: {{ $secondaryColor }};
     color: white;
 }
 
+/* Montrer le contenu avec un léger délai au survol */
 .dropdown:hover .dropdown-content {
-    display: block;
+    visibility: visible;
     opacity: 1;
     transform: translateY(0);
+    transition-delay: 0.3s; /* Délai avant d'afficher le dropdown */
+    pointer-events: auto; /* Permet l'interaction avec le menu */
 }
 
-.dropdown:hover .dropdown-content {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
+/* Masquer doucement le contenu lorsque la souris quitte */
+.dropdown:not(:hover) .dropdown-content {
+    visibility: visible;  /* Laisse visible pour la transition */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;  /* Bloque les événements lorsqu'il est caché */
 }
 
+/* Flèche au-dessus du menu déroulant */
 .dropdown-content::before {
     content: '';
     position: absolute;
@@ -106,16 +116,17 @@
     transform: translateX(-50%);
     width: 0;
     height: 0;
+    border-top: 10px solid transparent;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 10px solid {{ $primaryColor }};
     z-index: -1;
 }
 
+/* Style de séparation entre les liens du dropdown */
 .dropdown-content a:not(:last-child) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
-
 #mobile-menu-modal {
     position: fixed;
     top: 0;
@@ -206,65 +217,73 @@
     </div>
 </div>
 
-        <!-- Navigation links (hidden on mobile, shown on desktop) -->
-        <div class="desktop-nav space-x-8">
-            <div class="nav-link-container">
-                <a href="/" class="text-white nav-link transition duration-200">@lang('messages.home')</a>
-                <div class="nav-link-hr"></div>
-            </div>
+       <!-- Navigation links (hidden on mobile, shown on desktop) -->
+<div class="desktop-nav space-x-8">
+    <div class="nav-link-container">
+        <a href="/" class="text-white nav-link transition duration-200">@lang('messages.home')</a>
+        <div class="nav-link-hr"></div>
+    </div>
 
-            <div class="nav-link-container dropdown">
-                <a href="#" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
-                    @lang('messages.club') <img src="{{ asset('bas.png') }}" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
-                </a>
-                <div class="nav-link-hr"></div>
-                <div class="dropdown-content">
-                    <a href="{{ route('about.index') }}">@lang('messages.about')</a>
-                    <a href="{{ route('clubinfo') }}">@lang('messages.news')</a>
-                    <a href="{{ route('press_releases.index') }}">@lang('messages.press_releases')</a>
-                    <a href="{{ route('galleries.index') }}">@lang('messages.gallery')</a>
-                    <a href="{{ route('videos.index') }}">@lang('messages.videos')</a>
-                </div>
-            </div>
+    <div class="nav-link-container dropdown">
+        <a href="#" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
+            @lang('messages.club') <img src="{{ asset('bas.png') }}" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+        </a>
+        <div class="nav-link-hr"></div>
+        <div class="dropdown-content">
+            <a href="{{ route('about.index') }}">@lang('messages.about')</a>
+            <a href="{{ route('clubinfo') }}">@lang('messages.news')</a>
+            <a href="{{ route('press_releases.index') }}">@lang('messages.press_releases')</a>
+            <a href="{{ route('galleries.index') }}">@lang('messages.gallery')</a>
+            <a href="{{ route('videos.index') }}">@lang('messages.videos')</a>
+        </div>
+    </div>
 
-            <div class="nav-link-container">
-                <a href="{{ route('calendar.show') }}" class="text-white nav-link transition duration-200">@lang('messages.competition')</a>
-                <div class="nav-link-hr"></div>
-            </div>
+    <!-- Sous-menu ajouté sous Competition -->
+    <div class="nav-link-container dropdown">
+        <a href="#" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
+            @lang('messages.competition') <img src="{{ asset('bas.png') }}" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+        </a>
+        <div class="nav-link-hr"></div>
+        <div class="dropdown-content">
+        <a href="{{ route('calendar.show') }}#ranking-section">@lang('messages.ranking')</a>
+        <a href="{{ route('calendar.show') }}#calendar-section">@lang('messages.calendar')</a>
+        </div>
+    </div>
 
-            <div class="dropdown nav-link-container">
-                <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
-                    @lang('messages.teams') <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
-                </a>
-                <div class="nav-link-hr"></div>
-                <div class="dropdown-content">
-                    <a href="{{ route('teams') }}">@lang('messages.senior')</a>
-                    <a href="{{ route('playersu21.index') }}">@lang('messages.u21')</a>
-                </div>
-            </div>
+    <div class="dropdown nav-link-container">
+        <a href="{{ route('teams') }}" class="text-white nav-link transition duration-200" style="display: flex; align-items: center;">
+            @lang('messages.teams') <img src="{{ asset('bas.png') }}" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+        </a>
+        <div class="nav-link-hr"></div>
+        <div class="dropdown-content">
+            <a href="{{ route('teams') }}">@lang('messages.senior')</a>
+            <a href="{{ route('playersu21.index') }}">@lang('messages.u21')</a>
+        </div>
+    </div>
 
-            <div class="nav-link-container">
-                <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">@lang('messages.sponsors')</a>
-                <div class="nav-link-hr"></div>
-            </div>
+    <div class="nav-link-container">
+        <a href="{{ route('sponsors.index') }}" class="text-white nav-link transition duration-200">@lang('messages.sponsors')</a>
+        <div class="nav-link-hr"></div>
+    </div>
 
-            <div class="nav-link-container">
-                <a href="{{ route('contact.show') }}" class="text-white nav-link transition duration-200">@lang('messages.contact')</a>
-                <div class="nav-link-hr"></div>
-            </div>
+    <div class="nav-link-container">
+        <a href="{{ route('contact.show') }}" class="text-white nav-link transition duration-200">@lang('messages.contact')</a>
+        <div class="nav-link-hr"></div>
+    </div>
 
-            <div class="nav-link-container">
-                <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">@lang('messages.fanshop')</a>
-                <div class="nav-link-hr"></div>
-            </div>
+    <div class="nav-link-container">
+        <a href="{{ route('fanshop.index') }}" class="text-white nav-link transition duration-200">@lang('messages.fanshop')</a>
+        <div class="nav-link-hr"></div>
+    </div>
 
-            @auth
-            <div class="nav-link-container">
-                <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
-                    @lang('messages.dashboard')
-                </a>
-            </div>
-            @endauth
+    @auth
+    <div class="nav-link-container">
+        <a href="{{ url('/dashboard') }}" class="text-white nav-link transition duration-200 px-4 border-2 rounded-full" style="border-color: {{ $secondaryColor }};">
+            @lang('messages.dashboard')
+        </a>
+    </div>
+    @endauth
+
 
             <ul class="language-switcher">
     <li class="language-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
@@ -476,4 +495,5 @@
     function closeMobileMenu() {
         document.getElementById('mobile-menu-modal').classList.remove('open');
     }
+    
 </script>
