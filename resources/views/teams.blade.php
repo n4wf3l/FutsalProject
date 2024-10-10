@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -334,25 +335,25 @@ use Illuminate\Support\Facades\Auth;
 
                         <!-- Delete and Edit buttons, visible only to authenticated users -->
                         @auth
-                            <div class="flex mt-4">
-                                <!-- Delete Button -->
-                                <form action="{{ route('players.destroy', $player->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; margin-right: 10px; text-align: center;">
-                                        {{ __('messages.delete') }}
-                                    </button>
-                                </form>
+    <div class="flex mt-4">
+        <!-- Delete Button -->
+        <form action="{{ route('players.destroy', $player->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');" class="mr-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="transform hover:scale-110 transition duration-200" title="{{ __('messages.delete') }}">
+                <i class="fas fa-trash-alt text-white hover:text-red-500 text-xl"></i>
+            </button>
+        </form>
 
-                                <!-- Edit Button -->
-                                <a href="{{ route('players.edit', $player->id) }}" 
-                                   style="background-color: #2563EB; color: white; padding: 8px 16px; border-radius: 8px; display: inline-block; text-align: center; text-decoration: none;"
-                                   onmouseover="this.style.backgroundColor='#1D4ED8';" 
-                                   onmouseout="this.style.backgroundColor='#2563EB';">
-                                    {{ __('messages.edit') }}
-                                </a>
-                            </div>
-                        @endauth
+        <!-- Edit Button -->
+        <a href="{{ route('players.edit', $player->id) }}" 
+           class="transform hover:scale-110 transition duration-200" 
+           title="{{ __('messages.edit') }}">
+            <i class="fas fa-edit text-white hover:text-blue-500 text-xl"></i>
+        </a>
+    </div>
+@endauth
+
                     </div>
                 </div>
             @endforeach
@@ -389,23 +390,25 @@ use Illuminate\Support\Facades\Auth;
 
                     <!-- Buttons for Edit and Delete -->
                     @auth
-                        <div class="flex mt-6">
-                            <!-- Edit Button -->
-                            <a href="{{ route('coaches.edit', $coach->id) }}" 
-                               style="background-color: #2563EB; color: white; padding: 8px 16px; border-radius: 8px; text-align: center; margin-right: 8px;">
-                                {{ __('messages.edit') }}
-                            </a>
+    <div class="flex mt-6">
+        <!-- Edit Button -->
+        <a href="{{ route('coaches.edit', $coach->id) }}" 
+           class="hover:text-blue-700 transform hover:scale-110 transition duration-200" 
+           title="{{ __('messages.edit') }}">
+            <i class="fas fa-edit text-xl"></i>
+        </a>
 
-                            <!-- Delete Button -->
-                            <form action="{{ route('coaches.destroy', $coach->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
-                                    {{ __('messages.delete') }}
-                                </button>
-                            </form>
-                        </div>
-                    @endauth
+        <!-- Delete Button -->
+        <form action="{{ route('coaches.destroy', $coach->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');" class="ml-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="hover:text-red-500 transform hover:scale-110 transition duration-200" title="{{ __('messages.delete') }}">
+                <i class="fas fa-trash-alt text-xl"></i>
+            </button>
+        </form>
+    </div>
+@endauth
+
                 </div>
             </div>
             @else
@@ -464,18 +467,22 @@ use Illuminate\Support\Facades\Auth;
 
         <!-- Boutons Modifier et Supprimer -->
         @auth
-            <div class="mt-4 flex justify-center space-x-4">
-                <!-- Bouton Supprimer -->
-                <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="bg-red-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.delete') }}</button>
-                </form>
+    <div class="mt-4 flex justify-center space-x-4">
+        <!-- Bouton Supprimer -->
+        <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="transform hover:scale-110 transition duration-200" title="{{ __('messages.delete') }}" style="background:none; border:none;">
+                <i class="fas fa-trash-alt text-black hover:text-red-500 text-xl"></i>
+            </button>
+        </form>
 
-                <!-- Bouton Modifier -->
-                <a href="{{ route('staff.edit', $member->id) }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">{{ __('messages.edit') }}</a>
-            </div>
-        @endauth
+        <!-- Bouton Modifier -->
+        <a href="{{ route('staff.edit', $member->id) }}" class="transform hover:scale-110 transition duration-200" title="{{ __('messages.edit') }}">
+            <i class="fas fa-edit text-black hover:text-blue-700 text-xl"></i>
+        </a>
+    </div>
+@endauth
     </div>
 @endforeach
     </div>

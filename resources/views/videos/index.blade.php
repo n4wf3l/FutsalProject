@@ -164,25 +164,28 @@
             {{ __('messages.recent_videos') }}
         </x-page-title>
         @auth
-            <button 
-                type="button" 
-                style="background-color: {{ $primaryColor }}; 
-               color: white; 
-               font-family: 'Bebas Neue', sans-serif;
-               font-weight: bold; 
-               padding: 5px 10px; 
-               border: none; 
-               border-radius: 50px; 
-               cursor: pointer; 
-               transition: background-color 0.3s ease, transform 0.2s ease; 
-               box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);"
-        onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
-        onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';"
-                data-bs-toggle="modal"
-                data-bs-target="#addVideoModal"
-                onclick="loadBootstrap()">
-                {{ __('messages.add_video') }}
-            </button>
+        <button 
+    type="button"
+    style="
+        background-color: {{ $primaryColor }};
+        color: white;
+        font-family: 'Bebas Neue', sans-serif;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        letter-spacing: 1px;
+    "
+    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
+    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';"
+    data-bs-toggle="modal"
+    data-bs-target="#addVideoModal"
+    onclick="loadBootstrap()">
+    {{ __('messages.add_video') }}
+</button>
         @endauth
     </header>
 
@@ -230,7 +233,7 @@
                 </div>
             </div>
         @else
-            <p class="text-center text-gray-600">{{ __('messages.no_videos_available') }}</p>
+            <p class="text-gray-600 text-center" style="margin: 0 auto;">{{ __('messages.no_videos_available') }}</p>
         @endif
     </div>
 

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -155,11 +156,12 @@ use Illuminate\Support\Facades\Auth;
         </x-page-title>
 
         @auth
-            <a href="{{ route('playersu21.create') }}" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center button-hover-primary" style="font-size:20px; background-color: {{ $primaryColor }};"
-               onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-               onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                {{ __('messages.add_u21_player') }}
-            </a>
+            <x-button 
+                route="{{ route('playersu21.create') }}"
+                buttonText="{{ __('messages.add_u21_player') }}" 
+                primaryColor="#DC2626" 
+                secondaryColor="#B91C1C" 
+            />
         @endauth
     </header>
 
@@ -202,22 +204,24 @@ use Illuminate\Support\Facades\Auth;
 
                         <!-- Delete and Edit buttons, visible only to authenticated users -->
                         @auth
-                            <div class="flex mt-4">
-                                <!-- Delete Button -->
-                                <form action="{{ route('playersu21.destroy', $player->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.confirm_delete_player') }}');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" style="background-color: #DC2626; color: white; padding: 8px 16px; border-radius: 8px; margin-right: 10px; text-align: center;">
-                                        {{ __('messages.delete') }}
-                                    </button>
-                                </form>
+    <div class="flex mt-4">
+        <!-- Delete Button -->
+        <form action="{{ route('playersu21.destroy', $player->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.confirm_delete_player') }}');" class="mr-4">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="transform hover:scale-110 transition duration-200" title="{{ __('messages.delete') }}">
+                <i class="fas fa-trash-alt text-white hover:text-red-500 text-xl"></i>
+            </button>
+        </form>
 
-                                <!-- Edit Button -->
-                                <a href="{{ route('playersu21.edit', $player->id) }}" style="background-color: #1D4ED8; color: white; padding: 8px 16px; border-radius: 8px; text-align: center;">
-                                    {{ __('messages.edit') }}
-                                </a>
-                            </div>
-                        @endauth
+        <!-- Edit Button -->
+        <a href="{{ route('playersu21.edit', $player->id) }}" 
+           class="transform hover:scale-110 transition duration-200" 
+           title="{{ __('messages.edit') }}">
+            <i class="fas fa-edit text-white hover:text-blue-500 text-xl"></i>
+        </a>
+    </div>
+@endauth
                     </div>
                 </div>
             @endforeach

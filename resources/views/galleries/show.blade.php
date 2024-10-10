@@ -184,9 +184,26 @@
     <!-- Button for adding photos (visible only to authenticated users) -->
     @auth
         <div class="mt-8 text-center">
-            <button onclick="openAddPhotosModal()" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center" style="margin-bottom:50px; background-color: {{ $primaryColor }};"
-                    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">{{ __('messages.add_photos') }}</button>
+        <button onclick="openAddPhotosModal()"
+    class="transition duration-200 shadow-lg text-center text-white font-bold"
+    style="
+        display: inline-block;
+        background-color: {{ $primaryColor }};
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: 1px;
+        text-align: center;
+        margin-bottom: 50px;
+    "
+    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+    {{ __('messages.add_photos') }}
+</button>
         </div>
     @endauth
 

@@ -9,6 +9,7 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
@@ -267,7 +268,27 @@
 
     @auth
     <div class="admin-buttons">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#championshipModal">{{ __('messages.settings') }}</a>
+    <a href="#" 
+    data-bs-toggle="modal" 
+    data-bs-target="#championshipModal"
+    style="
+        display: inline-block;
+        background-color: {{ $primaryColor }};
+        color: white;
+        font-family: 'Bebas Neue', sans-serif;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        letter-spacing: 1px;
+        text-decoration: none;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    "
+    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
+    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';">
+    {{ __('messages.settings') }}
+</a>
     </div>
     @endauth
 
@@ -312,7 +333,25 @@
         <p class="text-center text-gray-600 italic mb-4">{{ __('messages.red_relegation') }}</p>
         @auth
         <div class="admin-buttons">
-            <a href="{{ route('manage_teams.create') }}">{{ __('messages.add_team') }}</a>
+        <a href="{{ route('manage_teams.create') }}" 
+   style="
+       display: inline-block;
+       background-color: {{ $primaryColor }};
+       color: white;
+       font-family: 'Bebas Neue', sans-serif;
+       font-weight: bold;
+       padding: 10px 20px;
+       border-radius: 50px;
+       cursor: pointer;
+       transition: background-color 0.3s ease, transform 0.2s ease;
+       letter-spacing: 1px;
+       text-decoration: none;
+       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+   "
+   onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
+   onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';">
+    {{ __('messages.add_team') }}
+</a>
         </div>
         @endauth
 
@@ -356,7 +395,9 @@
                         <td data-aos="flip-up">{{ $team->goal_difference }}</td>
                         @auth
                         <td>
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#editTeamModal-{{ $team->id }}">🛠️</button>
+                        <button type="button" data-bs-toggle="modal" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110" data-bs-target="#editTeamModal-{{ $team->id }}">
+    <i class="fas fa-edit"></i>
+</button>
                             <div class="modal fade" id="editTeamModal-{{ $team->id }}" tabindex="-1" aria-labelledby="editTeamModalLabel-{{ $team->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -390,11 +431,13 @@
     </div>
 </div>
 
-                            <form action="{{ route('manage_teams.destroy', $team->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="background:none; border:none; color:red; cursor:pointer;" onclick="return confirm('{{ __('messages.confirm_delete_team') }}');">X</button>
-                            </form>
+<form action="{{ route('manage_teams.destroy', $team->id) }}" method="POST" style="display:inline;">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="w-4 mr-2 transform hover:text-red-500 hover:scale-110" onclick="return confirm('{{ __('messages.confirm_delete_team') }}');">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+</form>
                         </td>
                         @endauth
                     </tr>
@@ -411,7 +454,25 @@
         <p class="text-center text-gray-600 italic mb-4">{{ __('messages.home_matches_location') }} {{ $clubLocation }}.</p>
         @auth
         <div class="admin-buttons">
-            <a href="{{ route('games.create') }}" class="btn btn-primary">{{ __('messages.create_match') }}</a>
+        <a href="{{ route('games.create') }}" 
+   style="
+       display: inline-block;
+       background-color: {{ $primaryColor }};
+       color: white;
+       font-family: 'Bebas Neue', sans-serif;
+       font-weight: bold;
+       padding: 10px 20px;
+       border-radius: 50px;
+       cursor: pointer;
+       transition: background-color 0.3s ease, transform 0.2s ease;
+       letter-spacing: 1px;
+       text-decoration: none;
+       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+   "
+   onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
+   onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';">
+    {{ __('messages.create_match') }}
+</a>
         </div>
         @endauth
 
@@ -546,7 +607,9 @@
                         </td>
                         @auth
                         <td>
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#editGameModal-{{ $game->id }}">🛠️</button>
+                        <button type="button" data-bs-toggle="modal" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110" data-bs-target="#editGameModal-{{ $game->id }}">
+    <i class="fas fa-edit"></i>
+</button>
 
                             <div class="modal fade" id="editGameModal-{{ $game->id }}" tabindex="-1" aria-labelledby="editGameModalLabel-{{ $game->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -592,10 +655,12 @@
                             </div>
 
                             <form action="{{ route('games.destroy', $game->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="background:none; border:none; color:red; cursor:pointer;" onclick="return confirm('{{ __('messages.confirm_delete_match') }}');">X</button>
-                            </form>
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="w-4 mr-2 transform hover:text-red-500 hover:scale-110" onclick="return confirm('{{ __('messages.confirm_delete_match') }}');">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+</form>
                         </td>
                         @endauth
                     </tr>
@@ -607,7 +672,26 @@
 
         @auth
         <div class="admin-buttons">
-            <a href="#" onclick="event.preventDefault(); document.getElementById('reset-scores-form').submit();" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700">{{ __('messages.reset') }}</a>
+        <a href="#" 
+   onclick="event.preventDefault(); document.getElementById('reset-scores-form').submit();" 
+   style="
+       display: inline-block;
+       background-color: {{ $primaryColor }};
+       color: white;
+       font-family: 'Bebas Neue', sans-serif;
+       font-weight: bold;
+       padding: 10px 20px;
+       border-radius: 50px;
+       cursor: pointer;
+       transition: background-color 0.3s ease, transform 0.2s ease;
+       letter-spacing: 1px;
+       text-decoration: none;
+       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+   "
+   onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
+   onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';">
+    {{ __('messages.reset') }}
+</a>
 
             <form id="reset-scores-form" action="{{ route('reset.scores') }}" method="POST" style="display: none;">
                 @csrf

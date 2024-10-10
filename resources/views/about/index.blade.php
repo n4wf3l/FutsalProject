@@ -142,14 +142,26 @@
 
             @auth
             <div class="text-center mt-8">
-                <a href="{{ route('about.create') }}"
-                    class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg"
-                    style="background-color: {{ $primaryColor }};"
-                    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                    @lang('messages.add_new_section')
-                </a>
-            </div>
+    <a href="{{ route('about.create') }}"
+        class="text-white font-bold transition duration-200 shadow-lg"
+        style="
+            display: inline-block;
+            background-color: {{ $primaryColor }};
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
+        "
+        onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+        onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+        @lang('messages.add_new_section')
+    </a>
+</div>
             @endauth
         </div>
 
@@ -198,7 +210,25 @@
                     <input type="file" name="pdf" id="pdf" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-semibold" style="color: {{ $primaryColor }};" required>
                 </div>
 
-                <button type="submit" class="w-full py-2 px-4 rounded text-white transition duration-200" style="background-color: {{ $primaryColor }};" onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'" onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">@lang('messages.publish')</button>
+                <button type="submit"
+    class="w-full transition duration-200 text-white font-bold"
+    style="
+        display: inline-block;
+        background-color: {{ $primaryColor }};
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: 1px;
+    "
+    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+    @lang('messages.publish')
+</button>
             </form>
         </div>
         @endauth

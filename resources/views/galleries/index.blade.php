@@ -137,9 +137,25 @@
         @auth
             <!-- Button to open the modal to create a new gallery -->
             <div class="text-center mb-6">
-                <button onclick="openModal('createGalleryModal')" class="text-white font-bold py-2 px-6 rounded-full transition duration-200 shadow-lg text-center" style="background-color: {{ $primaryColor }};">
-                    {{ __('messages.create_gallery') }}
-                </button>
+            <button onclick="openModal('createGalleryModal')"
+    class="transition duration-200 shadow-lg text-center text-white font-bold"
+    style="
+        display: inline-block;
+        background-color: {{ $primaryColor }};
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: 1px;
+        text-align: center;
+    "
+    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+    {{ __('messages.create_gallery') }}
+</button>
             </div>
         @endauth
 

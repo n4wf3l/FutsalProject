@@ -176,6 +176,7 @@
             border-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};
             box-shadow: 0 0 8px rgba(29, 78, 216, 0.3);
         }
+        
     </style>
 </head>
 

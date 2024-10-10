@@ -79,7 +79,7 @@
     padding: 10px 14px;
     text-decoration: none;
     display: block;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: ease-in-out 0.5s, color 0.3s ease;
     font-size: 0.875rem;
 }
 
@@ -87,6 +87,7 @@
 .dropdown-content a:hover {
     background-color: {{ $secondaryColor }};
     color: white;
+    border-radius: 0 0 8px 8px;
 }
 
 /* Montrer le contenu avec un léger délai au survol */
@@ -391,8 +392,15 @@
             <a href="{{ route('videos.index') }}" class="block text-white py-2">@lang('messages.videos')</a>
         </div>
 
-        <!-- Calendar -->
-        <a href="{{ route('calendar.show') }}" class="block text-white py-2">@lang('messages.competition')</a>
+        <!-- Competition Dropdown -->
+        <a href="#" class="block text-white py-2" onclick="toggleDropdown('competitionDropdown')" style="display: flex; align-items: center;">
+            @lang('messages.competition') <img src="{{ asset('bas.png') }}" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
+        </a>
+
+        <div id="competitionDropdown" class="hidden pl-4">
+            <a href="{{ route('calendar.show') }}#ranking-section" class="block text-white py-2">@lang('messages.ranking')</a>
+            <a href="{{ route('calendar.show') }}#calendar-section" class="block text-white py-2">@lang('messages.calendar')</a>
+        </div>
 
         <!-- Teams Dropdown -->
         <a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')" style="display: flex; align-items: center;">

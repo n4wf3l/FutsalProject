@@ -232,7 +232,9 @@
                 @endforeach
 
                                      @else
-                                         <p class="text-center text-gray-600">{{ __('messages.no_articles_found') }}</p>
+                                     <p class="text-gray-600 text-center" style="margin: 0 auto;">
+    {{ __('messages.no_articles_found') }}
+</p>
     @endif
              <!-- Pagination Links -->
             <div class="mt-4">
