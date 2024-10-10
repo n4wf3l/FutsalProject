@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/users/store', [DashboardController::class, 'storeUser'])->name('users.store');
     Route::delete('/users/{id}', [DashboardController::class, 'destroyUser'])->name('users.destroy');
+    Route::delete('/club-info/{field}/delete', [ClubInfoController::class, 'destroyField'])->name('club-info.destroyField');
 });
 
 // Routes resource pour différents contrôleurs

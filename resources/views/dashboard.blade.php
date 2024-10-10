@@ -325,65 +325,184 @@
 
 
 
-<div id="club-info-card" class=" card mt-8">
+<div id="club-info-card" class="card mt-8">
     <h2>{{ __('messages.club_info') }}</h2>
     <form action="{{ route('club-info.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-container">
-            <div>
+
+            <!-- Sportcomplex Location -->
+            <div class="field-container" id="field-sportcomplex_location">
                 <label for="sportcomplex_location">{{ __('messages.sportcomplex_location') }}</label>
-                <input type="text" name="sportcomplex_location" id="sportcomplex_location" value="{{ old('sportcomplex_location', $clubInfo->sportcomplex_location ?? '') }}">
+                <div class="input-with-icon">
+                    <input type="text" name="sportcomplex_location" id="sportcomplex_location" value="{{ old('sportcomplex_location', $clubInfo->sportcomplex_location ?? '') }}">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('sportcomplex_location')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div>
+
+            <!-- City -->
+            <div class="field-container" id="field-city">
                 <label for="city">{{ __('messages.city') }}</label>
-                <input type="text" name="city" id="city" value="{{ old('city', $clubInfo->city ?? '') }}">
+                <div class="input-with-icon">
+                    <input type="text" name="city" id="city" value="{{ old('city', $clubInfo->city ?? '') }}">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('city')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div>
+
+            <!-- Phone -->
+            <div class="field-container" id="field-phone">
                 <label for="phone">{{ __('messages.phone_number') }}</label>
-                <input type="text" name="phone" id="phone" value="{{ old('phone', $clubInfo->phone ?? '') }}">
+                <div class="input-with-icon">
+                    <input type="text" name="phone" id="phone" value="{{ old('phone', $clubInfo->phone ?? '') }}">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('phone')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div>
+
+            <!-- Email -->
+            <div class="field-container" id="field-email">
                 <label for="email">{{ __('messages.email') }}</label>
-                <input type="email" name="email" id="email" value="{{ old('email', $clubInfo->email ?? '') }}">
+                <div class="input-with-icon">
+                    <input type="email" name="email" id="email" value="{{ old('email', $clubInfo->email ?? '') }}">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('email')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div>
+
+            <!-- Organization Logo -->
+            <div class="field-container" id="field-organization_logo">
                 <label for="organization_logo">{{ __('messages.organization_logo') }}</label>
-                <input type="file" name="organization_logo" id="organization_logo" accept="image/*">
+                <div class="input-with-icon">
+                    <input type="file" name="organization_logo" id="organization_logo" accept="image/*">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('organization_logo')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
                 <span class="text-sm font-bold">Chosen logo:</span>
                 <img id="organization-logo-preview" src="{{ $clubInfo && $clubInfo->organization_logo ? asset('storage/' . $clubInfo->organization_logo) : asset('unknown.png') }}" alt="{{ __('messages.logo') }}" class="mt-4" style="max-height: 80px; width: auto; margin-left: 10px; border-radius: 5px;">
             </div>
-            <div>
+
+            <!-- Federation Logo -->
+            <div class="field-container" id="field-federation_logo">
                 <label for="federation_logo">{{ __('messages.federation_logo') }}</label>
-                <input type="file" name="federation_logo" id="federation_logo" accept="image/*">
+                <div class="input-with-icon">
+                    <input type="file" name="federation_logo" id="federation_logo" accept="image/*">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('federation_logo')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
                 <span class="text-sm font-bold">Chosen logo:</span>
                 <img id="federation-logo-preview" src="{{ $clubInfo && $clubInfo->federation_logo ? asset('storage/' . $clubInfo->federation_logo) : asset('unknown.png') }}" alt="{{ __('messages.logo') }}" class="mt-4" style="max-height: 80px; width: auto; margin-left: 10px; border-radius: 5px;">
             </div>
-            <div>
+
+            <!-- Facebook -->
+            <div class="field-container" id="field-facebook">
                 <label for="facebook">{{ __('messages.facebook') }}</label>
-                <input type="text" name="facebook" id="facebook" value="{{ old('facebook', $clubInfo->facebook ?? '') }}">
+                <div class="input-with-icon">
+                    <input type="text" name="facebook" id="facebook" value="{{ old('facebook', $clubInfo->facebook ?? '') }}">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('facebook')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div>
+
+            <!-- Instagram -->
+            <div class="field-container" id="field-instagram">
                 <label for="instagram">{{ __('messages.instagram') }}</label>
-                <input type="text" name="instagram" id="instagram" value="{{ old('instagram', $clubInfo->instagram ?? '') }}">
+                <div class="input-with-icon">
+                    <input type="text" name="instagram" id="instagram" value="{{ old('instagram', $clubInfo->instagram ?? '') }}">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('instagram')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div>
+
+            <!-- President -->
+            <div class="field-container" id="field-president">
                 <label for="president">{{ __('messages.president') }}</label>
-                <input type="text" name="president" id="president" value="{{ old('president', $clubInfo->president ?? '') }}">
+                <div class="input-with-icon">
+                    <input type="text" name="president" id="president" value="{{ old('president', $clubInfo->president ?? '') }}">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('president')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div>
+
+            <!-- Latitude -->
+            <div class="field-container" id="field-latitude">
                 <label for="latitude">{{ __('messages.latitude') }}</label>
-                <input type="text" name="latitude" id="latitude" value="{{ old('latitude', $clubInfo->latitude ?? '') }}">
+                <div class="input-with-icon">
+                    <input type="text" name="latitude" id="latitude" value="{{ old('latitude', $clubInfo->latitude ?? '') }}">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('latitude')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div>
+
+            <!-- Longitude -->
+            <div class="field-container" id="field-longitude">
                 <label for="longitude">{{ __('messages.longitude') }}</label>
-                <input type="text" name="longitude" id="longitude" value="{{ old('longitude', $clubInfo->longitude ?? '') }}">
+                <div class="input-with-icon">
+                    <input type="text" name="longitude" id="longitude" value="{{ old('longitude', $clubInfo->longitude ?? '') }}">
+                    <button type="button" class="w-4 ml-2 transform hover:text-red-500 hover:scale-110" onclick="submitDelete('longitude')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
+
         </div>
+
         <div class="flex justify-center mt-4">
             <button type="submit" class="button-primary">{{ __('messages.save_club_info') }}</button>
         </div>
     </form>
+
+    <!-- Formulaire de suppression dynamique (invisible) -->
+    <form id="delete-form" action="" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
 </div>
+
+<script>
+    function submitDelete(field) {
+        let form = document.getElementById('delete-form');
+        form.action = `/club-info/${field}/delete`; // Modifie l'action du formulaire de suppression
+        form.submit(); // Soumet le formulaire
+    }
+</script>
+
+
+
+
+<!-- Inline CSS -->
+<style>
+    .input-with-icon {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .input-with-icon input[type="text"],
+    .input-with-icon input[type="email"],
+    .input-with-icon input[type="file"] {
+        width: 100%;
+        padding-right: 2.5rem; /* Espace pour l'icône */
+    }
+
+    .delete-icon {
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        color: red;
+    }
+</style>
 
 <script>
     // Update the logo preview when a new file is chosen for organization_logo
@@ -856,6 +975,39 @@ function showSettings() {
         console.error('club-info-card not found');
     }
 }
+
+document.querySelectorAll('.delete-icon').forEach(icon => {
+    icon.addEventListener('click', function () {
+        const fieldName = this.dataset.field;
+        const clubId = this.dataset.id;
+
+        if (confirm('Are you sure you want to delete this field?')) {
+            // Effectuer la requête AJAX pour supprimer le champ
+            fetch(`/club-info/${fieldName}/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Field deleted successfully.') {
+                    // Effacer le champ du formulaire après suppression
+                    const inputField = document.getElementById(fieldName);
+                    if (inputField) {
+                        inputField.value = ''; // Vider le champ
+                    }
+                } else {
+                    console.error('Erreur lors de la suppression du champ.');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la requête de suppression:', error);
+            });
+        }
+    });
+});
     </script>
 </body>
 
