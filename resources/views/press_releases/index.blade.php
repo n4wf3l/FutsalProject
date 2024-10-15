@@ -178,9 +178,9 @@
             </div>
         @endauth
 
-        <div class="press-release-container" data-aos="fade-up-right">
+        <div class="press-release-container grid grid-cols-3 gap-6 mt-8" data-aos="fade-up-right">
             @if($pressReleases->isEmpty())
-                <div class="no-press-releases-message text-center">
+                <div class="text-center text-gray-600 col-span-3">
                     {{ __('messages.no_press_releases') }}
                 </div>
             @else
