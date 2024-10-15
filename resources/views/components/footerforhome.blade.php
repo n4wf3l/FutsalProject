@@ -94,11 +94,11 @@
                     @endif
 
                     <!-- Affiche le logo de l'organisation uniquement s'il est disponible -->
-                    @if (!empty($organizationLogo))
-                        <img src="{{ asset($organizationLogo) }}" 
-                             alt="@lang('messages.logo_not_available')" 
-                             style="height: 60px; width: auto;">
-                    @endif
+                    @if ($organizationLogo)
+    <img src="{{ $organizationLogo }}" 
+         alt="" 
+         style="height: 60px; width: auto;">
+@endif
                 </div>
             </div>
 
