@@ -174,7 +174,7 @@ use Illuminate\Support\Facades\Auth;
     @else
         <div class="player-container" data-aos="fade-up">
             @foreach($players as $player)
-                <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
+                <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group transform transition-transform duration-200 hover:scale-105">
                     <!-- Club Logo -->
                     @if($userSettings && $userSettings->logo)
                         <img src="{{ asset('storage/' . $userSettings->logo) }}" alt="{{ __('messages.club_logo_alt') }}" class="club-logo" style="height: 60px; width: auto;">

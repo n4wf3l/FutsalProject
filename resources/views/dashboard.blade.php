@@ -9,6 +9,7 @@
     <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -191,11 +192,11 @@
             <a href="/">@lang('messages.home')</a>
             <a href="{{ route('calendar.show') }}">@lang('messages.calendar')</a>
             <a href="{{ route('about.index') }}">@lang('messages.about')</a>
-            <a href="{{ route('clubinfo') }}">@lang('messages.club_info')</a>
+            <a href="{{ route('clubinfo') }}">@lang('messages.news')</a>
             <a href="{{ route('press_releases.index') }}">@lang('messages.press_releases')</a>
             <a href="{{ route('teams') }}">@lang('messages.senior_team')</a>
             <a href="{{ route('playersu21.index') }}">@lang('messages.u21_team')</a>
-            <a href="{{ route('sponsors.index') }}">@lang('messages.sponsor')</a>
+            <a href="{{ route('sponsors.index') }}">@lang('messages.sponsors')</a>
             <a href="{{ route('contact.show') }}">@lang('messages.contact')</a>
         </div>
     </div>
@@ -211,7 +212,7 @@
     <a href="javascript:void(0);" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
     <a href="javascript:void(0);" onclick="showCard('members-card')"><i class="fas fa-users"></i> Members</a>
     <a href="javascript:void(0);" onclick="showCard('background-card')"><i class="fas fa-images"></i> Backgrounds</a>
-
+    <a href="javascript:void(0);" onclick="showCard('ticket-sales-card')"><i class="fas fa-ticket-alt"></i> Ticket Sales</a>
    <!-- Dropdown for Players -->
    <div class="dropdown">
     <a href="javascript:void(0);" onclick="toggleDropdown(this)" class="dropdown-link flex items-center">
@@ -223,6 +224,8 @@
     <a href="javascript:void(0);" onclick="showSeniorTeam()">{{ __('messages.senior_team') }}</a>
         <a href="javascript:void(0);" onclick="showCard('playersu21-card')">{{ __('messages.u21_team') }}</a>
     </div>
+
+    
 </div>
 </div>
 
@@ -326,7 +329,7 @@
 
 
 <div id="club-info-card" class="card mt-8">
-    <h2>{{ __('messages.club_info') }}</h2>
+    <h2>{{ __('messages.about') }}</h2>
     <form action="{{ route('club-info.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-container">
@@ -588,8 +591,65 @@
     </div>
     </div>
 
+<!-- Section Ticket Sales -->
+<div id="ticket-sales-card" class="card mt-8 p-4 bg-white shadow-lg rounded-lg">
+    <h2 class="text-2xl font-bold mb-4">{{ __('messages.tribunes') }}</h2>
+    @if($tribunes->isNotEmpty())
+        <div class="tribune-list space-y-6">
+            @foreach($tribunes as $tribune)
+                <div class="tribune-item p-4 border rounded-lg shadow-md bg-gray-50">
+                    <h3 class="text-xl font-semibold flex justify-between items-center">
+                        {{ $tribune->name }}
+                        <div class="flex">
+                            <a href="{{ route('tribunes.edit', $tribune->id) }}" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('tribunes.destroy', $tribune->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');" class="ml-2">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </h3>
+                    <p class="text-gray-600">{{ $tribune->description }}</p>
+                    <p><strong>{{ __('messages.available_seats') }}:</strong> <span class="{{ $tribune->available_seats > 0 ? 'text-green-600' : 'text-red-600 font-bold' }}">{{ $tribune->available_seats }}</span></p>
+                    <p><strong>{{ __('messages.tickets_sold') }}:</strong> <span>{{ $tribune->sold_tickets ?? 0 }}</span></p>
+                    <p><strong>{{ __('messages.price') }}:</strong> {{ number_format($tribune->price, 2) }} {{ $tribune->currency }}</p>
+                    
+                    <!-- قسم الحالة -->
+                    <p class="font-bold mt-2">
+                        <span class="{{ $tribune->available_seats == 0 ? 'text-red-600' : 'text-green-600' }}">
+                            {{ $tribune->available_seats == 0 ? __('messages.sold_out') : __('messages.available') }}
+                        </span>
+                    </p>
 
-    <div id="players-card" class="card mt-8" style="display: none;">
+                    <!-- قسم الحجوزات -->
+                    <h4 class="mt-4 text-md font-semibold">{{ __('messages.reservations') }}:</h4>
+                    <ul class="reservation-list space-y-1">
+                        @php
+                            $reservations = json_decode(file_get_contents(storage_path('app/reservations.json')), true);
+                        @endphp
+                        @foreach($reservations as $reservation)
+                            @if($reservation['tribune_name'] == $tribune->name)
+                                <li class="text-gray-700">
+                                    {{ $reservation['name'] }} - {{ $reservation['seats_reserved'] }} مقاعد ({{ $reservation['email'] }})
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </div>
+            @endforeach
+        </div>
+    @else
+        <p class="text-red-500">{{ __('messages.no_tribunes_available') }}</p>
+    @endif
+</div>
+
+
+<!-- Section Players -->
+<div id="players-card" class="card mt-8" style="display: none;">
     <h2 class="text-xl font-bold">{{ __('messages.registered_players') }}</h2>
     <div class="overflow-x-auto mt-4">
         <table class="min-w-full bg-white rounded-lg">
@@ -650,7 +710,7 @@
     </div>
 </div>
 
-<!-- Section Entraîneur -->
+<!-- Section Coach -->
 <div id="coach-card" class="card mt-8" style="display: none;">
     <h2 class="text-xl font-bold">{{ __('messages.head_coach') }}</h2>
     @if($coach)
@@ -694,64 +754,62 @@
 <div id="staff-card" class="card mt-8" style="display: none;">
     <h2 class="text-xl font-bold">{{ __('messages.technical_staff') }}</h2>
     @if($staff->isEmpty())
-    <p class="text-gray-600">{{ __('messages.no_staff') }}</p>
-    @auth
-    <a href="{{ route('staff.create') }}" class="button-primary">{{ __('messages.add_staff') }}</a>
-    @endauth
+        <p class="text-gray-600">{{ __('messages.no_staff') }}</p>
+        @auth
+            <a href="{{ route('staff.create') }}" class="button-primary">{{ __('messages.add_staff') }}</a>
+        @endauth
     @else
-    <div class="overflow-x-auto mt-4">
-        <table class="min-w-full bg-white rounded-lg">
-            <thead>
-                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                    <th class="py-3 px-6 text-left">{{ __('messages.photo') }}</th>
-                    <th class="py-3 px-6 text-left">{{ __('messages.name') }}</th>
-                    <th class="py-3 px-6 text-left">{{ __('messages.position') }}</th>
-                    <th class="py-3 px-6 text-center">{{ __('messages.actions') }}</th>
-                </tr>
-            </thead>
-            <tbody class="text-gray-600 text-sm font-light">
-                @foreach($staff as $member)
-                <tr class="border-b border-gray-200 hover:bg-gray-100">
-                    <td class="py-3 px-6 text-left">
-                        @if($member->photo)
-                            <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->first_name }} {{ $member->last_name }}" class="w-16 h-16 rounded-full">
-                        @else
-                            <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.default_player') }}" class="w-16 h-16 rounded-full">
-                        @endif
-                    </td>
-                    <td class="py-3 px-6 text-left">
-                        {{ $member->first_name }} {{ $member->last_name }}
-                    </td>
-                    <td class="py-3 px-6 text-left">
-                        {{ $member->position }}
-                    </td>
-                    <td class="py-3 px-6 text-center">
-                        @auth
-                        <div class="flex item-center justify-center">
-                            <a href="{{ route('staff.edit', $member->id) }}" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        </div>
-                        @endauth
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+        <div class="overflow-x-auto mt-4">
+            <table class="min-w-full bg-white rounded-lg">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">{{ __('messages.photo') }}</th>
+                        <th class="py-3 px-6 text-left">{{ __('messages.name') }}</th>
+                        <th class="py-3 px-6 text-left">{{ __('messages.position') }}</th> <!-- Correction ici -->
+                        <th class="py-3 px-6 text-center">{{ __('messages.actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 text-sm font-light">
+                    @foreach($staff as $member)
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left">
+                            @if($member->photo)
+                                <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->first_name }} {{ $member->last_name }}" class="w-16 h-16 rounded-full">
+                            @else
+                                <img src="{{ asset('avatar.png') }}" alt="{{ __('messages.default_player') }}" class="w-16 h-16 rounded-full">
+                            @endif
+                        </td>
+                        <td class="py-3 px-6 text-left">
+                            {{ $member->first_name }} {{ $member->last_name }}
+                        </td>
+                        <td class="py-3 px-6 text-left">
+                            {{ $member->position }}
+                        </td>
+                        <td class="py-3 px-6 text-center">
+                            @auth
+                            <div class="flex item-center justify-center">
+                                <a href="{{ route('staff.edit', $member->id) }}" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            @endauth
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     @endif
 </div>
 
-
-        
-
+<!-- Section U21 -->
 <div id="playersu21-card" class="card mt-8" style="display: none;">
     <h2 class="text-xl font-bold">{{ __('messages.u21_team') }}</h2>
     <div class="overflow-x-auto mt-4">
@@ -882,24 +940,23 @@
     </form>
 
     <!-- Section pour activer ou désactiver l'inscription -->
-<hr class="mt-10 mb-10">
-        <h2>{{ __('messages.registration_settings') }}</h2>
-        <form action="{{ route('dashboard.updateRegistrationStatus') }}" method="POST">
-            @csrf
-            <div class="form-container">
-                <div>
-                    <label for="registration_open">{{ __('messages.open_registration') }}</label>
-                    <select name="registration_open" id="registration_open">
-                        <option value="1" {{ $registrationOpen == 'true' ? 'selected' : '' }}>{{ __('messages.yes') }}</option>
-                        <option value="0" {{ $registrationOpen == 'false' ? 'selected' : '' }}>{{ __('messages.no') }}</option>
-                    </select>
-                </div>
+    <hr class="mt-10 mb-10">
+    <h2>{{ __('messages.registration_settings') }}</h2>
+    <form action="{{ route('dashboard.updateRegistrationStatus') }}" method="POST">
+        @csrf
+        <div class="form-container">
+            <div>
+                <label for="registration_open">{{ __('messages.open_registration') }}</label>
+                <select name="registration_open" id="registration_open">
+                    <option value="1" {{ $registrationOpen == 'true' ? 'selected' : '' }}>{{ __('messages.yes') }}</option>
+                    <option value="0" {{ $registrationOpen == 'false' ? 'selected' : '' }}>{{ __('messages.no') }}</option>
+                </select>
             </div>
-            <div class="flex justify-center mt-4">
-                <button type="submit" class="button-primary">{{ __('messages.save') }}</button>
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="flex justify-center mt-4">
+            <button type="submit" class="button-primary">{{ __('messages.save') }}</button>
+        </div>
+    </form>
 </div>
 
 

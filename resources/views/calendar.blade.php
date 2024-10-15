@@ -332,7 +332,7 @@
         <p class="text-center text-gray-600 italic">{{ __('messages.yellow_playoffs') }}</p>
         <p class="text-center text-gray-600 italic mb-4">{{ __('messages.red_relegation') }}</p>
         @auth
-        <div class="admin-buttons">
+        <div class="admin-buttons mb-10">
         <a href="{{ route('manage_teams.create') }}" 
    style="
        display: inline-block;
@@ -355,7 +355,7 @@
         </div>
         @endauth
 
-        <div class="container table-container">
+        <div class="container table-container transform transition-transform duration-200 hover:scale-105">
             <table class="rounded-table">
                 <thead data-aos="flip-left">
                     <tr>
@@ -554,7 +554,7 @@
             </div>
         </form>
 
-        <div class="container table-container">
+        <div class="container table-container transform transition-transform duration-200 hover:scale-105">
             <table class="rounded-table">
                 <thead data-aos="flip-up">
                     <tr>

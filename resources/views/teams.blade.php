@@ -304,7 +304,7 @@ use Illuminate\Support\Facades\Auth;
     @else
         <div class="player-container" data-aos="fade-up">
             @foreach($players as $player)
-                <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group">
+                <div class="player-item relative bg-white shadow-lg rounded-lg overflow-hidden group transform transition-transform duration-200 hover:scale-105">
                     <!-- Club Logo -->
                     @if($userSettings && $userSettings->logo)
                         <img src="{{ asset('storage/' . $userSettings->logo) }}" alt="{{ __('messages.club_logo') }}" class="club-logo" style="height: 60px; width: auto;">
@@ -363,7 +363,7 @@ use Illuminate\Support\Facades\Auth;
     <!-- Coach Section -->
     <section class="bg-bg mt-12" data-aos="flip-right">
         @if($coach)
-            <div class="bg-coach flex items-center justify-between text-gray-700">
+            <div class="bg-coach flex items-center justify-between text-gray-700 transform transition-transform duration-200 hover:scale-105">
                 <!-- Coach Information -->
                 <div class="coach-details text-gray-700">
                     <x-page-title subtitle="{{ __('messages.coach_subtitle') }}">
@@ -446,7 +446,7 @@ use Illuminate\Support\Facades\Auth;
 @else
     <div class="staff-container">
     @foreach($staff as $member)
-    <div class="staff-item relative bg-white shadow-lg rounded-lg overflow-hidden">
+    <div class="staff-item relative bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform duration-200 hover:scale-105">
         <div class="relative">
             <!-- Logo du club en haut à gauche de l'image -->
             @if($userSettings && $userSettings->logo)

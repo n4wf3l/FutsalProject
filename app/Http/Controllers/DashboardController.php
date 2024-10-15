@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Player;
 use App\Models\Staff;
 use App\Models\Coach;
+use App\Models\Tribune;
 use App\Models\PlayerU21;
+
 
 class DashboardController extends Controller
 {
@@ -34,8 +36,10 @@ class DashboardController extends Controller
         $staff = Staff::all();
         $coach = Coach::first();
         $playersU21 = PlayerU21::orderBy('number', 'asc')->get();
+        $tribunes = Tribune::all();
+        $reservations = $this->getReservationsFromFile();
         // Passer toutes les variables à la vue, y compris $registrationOpen
-        return view('dashboard', compact('clubInfo', 'userSettings', 'backgroundImages', 'registrationOpen', 'users', 'players', 'staff', 'coach', 'playersU21'));
+        return view('dashboard', compact('clubInfo', 'userSettings', 'backgroundImages', 'registrationOpen', 'users', 'players', 'staff', 'coach', 'playersU21', 'tribunes','reservations'));
     }
 
     public function update(Request $request)
@@ -203,5 +207,17 @@ public function destroyUser($id)
     $user->delete();
 
     return redirect()->route('dashboard')->with('success', 'User deleted successfully.');
+}
+
+protected function getReservationsFromFile()
+{
+    $filePath = storage_path('app/reservations.json');
+
+    if (file_exists($filePath)) {
+        $json = file_get_contents($filePath);
+        return json_decode($json, true) ?? [];
+    }
+
+    return [];
 }
 }

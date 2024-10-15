@@ -70,48 +70,46 @@ if ($currency == '€' || $currency == 'eur') {
     }
 
     public function success(Request $request)
-    {
-        $clubInfo = ClubInfo::first();
-        $clubName = $clubInfo->club_name;
-        $clubPrefix = substr($clubName, 0, 4);
-        
-        // Déboguer pour vérifier le clubName et le clubPrefix
-        Log::info("Club Prefix: $clubPrefix");
-    
-        // Récupérer le prochain match
-        $nextGame = Game::where('match_date', '>=', now()->startOfDay())
-            ->whereHas('homeTeam', function ($query) use ($clubPrefix) {
-                $query->where('name', 'LIKE', "$clubPrefix%");
-            })
-            ->orderBy('match_date', 'asc')
-            ->first();
-    
-        if (!$nextGame) {
-            Log::info("No game found for the given prefix and date.");
-        } else {
-            Log::info("Next game found: " . $nextGame->homeTeam->name . " vs " . $nextGame->awayTeam->name . " on " . $nextGame->match_date);
-        }
-    
-        $session_id = $request->get('session_id');
-        if ($session_id) {
-            // Utilisation de la clé API via config()
-            Stripe::setApiKey(config('services.stripe.secret'));
-            
-            $session = StripeSession::retrieve($session_id);
-    
-            $tribuneId = $session->metadata->tribune_id;
-            $quantityReserved = $session->metadata->quantity;
-    
-            if ($tribuneId) {
-                $tribune = Tribune::find($tribuneId);
-    
-                if ($tribune && $tribune->available_seats >= $quantityReserved) {
-                    $tribune->available_seats -= $quantityReserved;
-                    $tribune->save();
-                } else {
-                    return redirect()->route('fanshop.index')->with('error', 'Not enough seats available.');
-                }
-    
+{
+    $clubInfo = ClubInfo::first();
+    $clubName = $clubInfo->club_name;
+    $clubPrefix = substr($clubName, 0, 4);
+
+    // Déboguer pour vérifier le clubName et le clubPrefix
+    Log::info("Club Prefix: $clubPrefix");
+
+    // Récupérer le prochain match
+    $nextGame = Game::where('match_date', '>=', now()->startOfDay())
+        ->whereHas('homeTeam', function ($query) use ($clubPrefix) {
+            $query->where('name', 'LIKE', "$clubPrefix%");
+        })
+        ->orderBy('match_date', 'asc')
+        ->first();
+
+    if (!$nextGame) {
+        Log::info("No game found for the given prefix and date.");
+    } else {
+        Log::info("Next game found: " . $nextGame->homeTeam->name . " vs " . $nextGame->awayTeam->name . " on " . $nextGame->match_date);
+    }
+
+    $session_id = $request->get('session_id');
+    if ($session_id) {
+        // Utilisation de la clé API via config()
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $session = StripeSession::retrieve($session_id);
+
+        $tribuneId = $session->metadata->tribune_id;
+        $quantityReserved = $session->metadata->quantity;
+
+        if ($tribuneId) {
+            $tribune = Tribune::find($tribuneId);
+
+            if ($tribune && $tribune->available_seats >= $quantityReserved) {
+                $tribune->available_seats -= $quantityReserved;
+                $tribune->save();
+
+                // Détails de la réservation
                 $reservationDetails = [
                     'name' => $session->customer_details->name ?? 'Unknown',
                     'email' => $session->customer_details->email,
@@ -119,29 +117,51 @@ if ($currency == '€' || $currency == 'eur') {
                     'currency' => strtoupper($session->currency),
                     'date' => now()->format('d-m-Y'),
                     'reservation_id' => uniqid('res_', true),
-                    'game' => $nextGame, 
+                    'game' => $nextGame,
                     'seats_reserved' => $quantityReserved,
                     'clubName' => $clubName,
                     'tribune_name' => $tribune->name,  // Ajout du type de ticket
                 ];
-    
-                $downloadUrl = route('download-pdf', ['id' => $reservationDetails['reservation_id']]);
-    
+
+                // Enregistrer les détails dans un fichier
+                $this->saveReservationToFile($reservationDetails);
+
                 // Générer le QR code en SVG et l'encoder en base64
                 $qrCode = base64_encode(QrCode::format('svg')->size(300)->generate(json_encode($reservationDetails)));
-    
+
                 // Générer le PDF avec le QR code et les détails de la réservation
                 $pdfPath = $this->generatePDF($reservationDetails, $qrCode);
-    
+
                 Mail::to($reservationDetails['email'])->send(new ReservationConfirmation($reservationDetails, $pdfPath, $qrCode));
-    
+
                 // Rediriger vers la page de succès avec les détails et le lien vers le PDF
                 return view('payment.success', compact('qrCode', 'reservationDetails', 'pdfPath', 'clubName'));
+            } else {
+                return redirect()->route('fanshop.index')->with('error', 'Not enough seats available.');
             }
         }
-    
-        return redirect()->route('fanshop.index')->with('error', 'Session ID not found.');
     }
+
+    return redirect()->route('fanshop.index')->with('error', 'Session ID not found.');
+}
+
+protected function saveReservationToFile($details)
+{
+    $filePath = storage_path('app/reservations.json');
+    $reservations = [];
+
+    // Vérifier si le fichier existe et lire son contenu
+    if (file_exists($filePath)) {
+        $json = file_get_contents($filePath);
+        $reservations = json_decode($json, true) ?? [];
+    }
+
+    // Ajouter la nouvelle réservation
+    $reservations[] = $details;
+
+    // Écrire les données mises à jour dans le fichier
+    file_put_contents($filePath, json_encode($reservations));
+}
     
 
 
