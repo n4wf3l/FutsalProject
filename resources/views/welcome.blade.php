@@ -1036,8 +1036,7 @@
     </div>
 
     <div class="background-container" 
-     style="position: relative; width: 100%; height: 60vh; background: url('{{ $backgroundImage && $backgroundImage->image_path ? asset('storage/' . $backgroundImage->image_path) : asset('storage/default-background.jpg') }}') no-repeat center center; background-size: cover; z-index: 500;" 
-     data-aos="zoom-out-up">
+     style="position: relative; width: 100%; height: 60vh; background: url('{{ $backgroundImage && $backgroundImage->image_path ? asset('storage/' . $backgroundImage->image_path) : asset('storage/default-background.jpg') }}') no-repeat center center; background-size: cover; z-index: 500;">
         @if($welcomeImage)
             <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; top:18vh; right: 100px; width: 550px; height: 500px;" data-aos="fade-up-left">
         @endif
