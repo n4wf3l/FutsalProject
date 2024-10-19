@@ -12,6 +12,31 @@
     @vite('resources/js/app.js')
     <!-- Bootstrap CSS -->
 
+    <!-- Open Graph Meta Tags -->
+<meta property="og:title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
+<meta property="og:description" content="Découvrez les dernières vidéos de {{ $clubName }}." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{ url()->current() }}" />
+<meta property="og:image" content="{{ asset('storage/' . $videos->first()->image) }}" />
+<meta property="og:site_name" content="{{ $clubName }}" />
+<meta property="og:locale" content="{{ app()->getLocale() }}" />
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
+<meta name="twitter:description" content="Découvrez les dernières vidéos de {{ $clubName }}." />
+<meta name="twitter:image" content="{{ asset('storage/' . $videos->first()->image) }}" />
+<meta name="twitter:url" content="{{ url()->current() }}" />
+
+<!-- Dublin Core Metadata -->
+<meta name="DC.title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
+<meta name="DC.creator" content="{{ $clubName }}" />
+<meta name="DC.date" content="{{ now()->format('Y-m-d') }}" />
+<meta name="DC.language" content="{{ app()->getLocale() }}" />
+<meta name="DC.publisher" content="{{ $clubName }}" />
+<meta name="DC.format" content="text/html" />
+<meta name="DC.identifier" content="{{ url()->current() }}" />
+
     <style>
 
         /* Styles existants */

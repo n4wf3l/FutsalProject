@@ -12,7 +12,7 @@ class Article extends Model
 
     protected $fillable = [
         'title',
-        'description',
+        'content', // Remplace description par content
         'image',
         'user_id',
         'slug',

@@ -10,6 +10,22 @@
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
+
+    <meta property="og:title" content="{{ $pressRelease->title }}" />
+<meta property="og:description" content="{{ Str::limit(strip_tags($pressRelease->content), 150) }}" />
+<meta property="og:image" content="{{ asset('storage/' . $pressRelease->image) }}" />
+<meta property="og:url" content="{{ url()->current() }}" />
+<meta property="og:site_name" content="{{ $clubName }}" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="{{ $pressRelease->created_at->toIso8601String() }}" />
+<meta property="article:author" content="{{ $pressRelease->author }}" />
+<meta name="DC.title" content="{{ $pressRelease->title }}" />
+<meta name="DC.creator" content="{{ $pressRelease->author }}" />
+<meta name="DC.date" content="{{ $pressRelease->created_at->format('Y-m-d') }}" />
+<meta name="DC.language" content="en" />
+<meta name="DC.publisher" content="{{ $clubName }}" />
+<meta name="DC.format" content="text/html" />
+<meta name="DC.identifier" content="{{ url()->current() }}" />
     <style>
         /* Conteneur principal de l'article */
         .article-container {
@@ -149,7 +165,11 @@
         <div class="main-article-section">
             <div class="arrow-line-container">
                 <div class="arrow-circle">
-                    <a href="{{ route('press_releases.index') }}">&larr;</a>
+                    <a href="{{ route('press_releases.index') }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6" style="color: {{ $primaryColor }};">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+                    </a>
                 </div>
                 <hr>
             </div>

@@ -9,34 +9,61 @@
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMV2lzP7xF6S7JvqUAMTh9Ir8O5c5X+I5mfYnL" crossorigin="anonymous">
+
     @vite('resources/css/app.css')
+
+<!-- Open Graph Meta Tags for Facebook -->
+<meta property="og:title" content="{{ $article->title }}" />
+<meta property="og:description" content="{{ Str::limit(strip_tags($article->description), 150) }}" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="{{ url()->current() }}" />
+<meta property="og:image" content="{{ asset('storage/' . $article->image) }}" />
+<meta property="og:site_name" content="Nom de ton site" />
+<meta property="article:published_time" content="{{ $article->created_at->toIso8601String() }}" />
+<meta property="article:author" content="{{ $article->user->name }}" />
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ $article->title }}" />
+<meta name="twitter:description" content="{{ Str::limit(strip_tags($article->description), 150) }}" />
+<meta name="twitter:image" content="{{ asset('storage/' . $article->image) }}" />
+
+    <!-- Dublin Core Metadata for Wikipedia -->
+<meta name="DC.title" content="{{ $article->title }}" />
+<meta name="DC.creator" content="{{ $article->user->name }}" />
+<meta name="DC.date" content="{{ $article->created_at->format('Y-m-d') }}" />
+<meta name="DC.language" content="en" />
+<meta name="DC.publisher" content="Nom de ton site" />
+<meta name="DC.format" content="text/html" />
+<meta name="DC.identifier" content="{{ url()->current() }}" />
     <style>
-        .article-container {
-            max-width: 1200px;
-            margin: 50px auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 0 20px;
-        }
+ .article-container {
+    max-width: 1400px; /* Augmenter la largeur maximale du conteneur */
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
+    width: 100%; /* Prendre toute la largeur */
+}
 
-        .main-article-section {
-            flex: 2;
-            padding: 2rem;
-            background-color: #ffffff;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+.main-article-section {
+    flex: 3; /* Donne plus de place à l'article principal */
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        .recent-articles-section {
-            flex: 1;
-            padding: 2rem;
-            background-color: #ffffff;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-height: fit-content;
-        }
-
+.recent-articles-section {
+    flex: 1; /* Réduit la largeur des articles récents */
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: fit-content;
+}
         .article-title {
             font-size: 2.5rem;
             font-weight: bold;
@@ -45,11 +72,11 @@
             margin-bottom: 1.5rem;
         }
 
-        @media (max-width: 767px) {
-            .article-title {
-                font-size: 1.75rem; /* Réduire la taille du titre sur les petits écrans */
-            }
-        }
+        @media (min-width: 768px) {
+    .article-container {
+        flex-direction: row;
+    }
+}
 
         .article-description {
             font-size: 1.2rem;
@@ -160,6 +187,7 @@
             }
         }
     </style>
+
 </head>
 
 <body class="bg-gray-100">
@@ -170,7 +198,11 @@
         <div class="main-article-section">
             <div class="arrow-line-container">
                 <div class="arrow-circle">
-                    <a href="{{ route('clubinfo') }}">&larr;</a>
+                <a href="{{ route('clubinfo') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6" style="color: {{ $primaryColor }};">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+    </a>
                 </div>
                 <hr>
             </div>

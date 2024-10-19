@@ -12,6 +12,32 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
+
+    <!-- Open Graph Meta Tags -->
+<meta property="og:title" content="{{ __('messages.sponsors') }} | {{ $clubName }}" />
+<meta property="og:description" content="Découvrez les sponsors de {{ $clubName }}." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{ url()->current() }}" />
+<meta property="og:image" content="{{ asset('storage/' . $logoPath) }}" />
+<meta property="og:site_name" content="{{ $clubName }}" />
+<meta property="og:locale" content="{{ app()->getLocale() }}" />
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ __('messages.sponsors') }} | {{ $clubName }}" />
+<meta name="twitter:description" content="Découvrez les sponsors de {{ $clubName }}." />
+<meta name="twitter:image" content="{{ asset('storage/' . $logoPath) }}" />
+<meta name="twitter:url" content="{{ url()->current() }}" />
+
+<!-- Dublin Core Metadata -->
+<meta name="DC.title" content="{{ __('messages.sponsors') }} | {{ $clubName }}" />
+<meta name="DC.creator" content="{{ $clubName }}" />
+<meta name="DC.date" content="{{ now()->format('Y-m-d') }}" />
+<meta name="DC.language" content="{{ app()->getLocale() }}" />
+<meta name="DC.publisher" content="{{ $clubName }}" />
+<meta name="DC.format" content="text/html" />
+<meta name="DC.identifier" content="{{ url()->current() }}" />
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
@@ -215,6 +241,8 @@
             }
         }
     </style>
+
+    
 </head>
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
     <x-navbar />

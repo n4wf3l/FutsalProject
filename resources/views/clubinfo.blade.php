@@ -151,6 +151,30 @@
             line-height: 1.5;
         }
     </style>
+    <!-- Open Graph Meta Tags -->
+<meta property="og:title" content="{{ __('messages.news_title') }} | {{ $clubName }}" />
+<meta property="og:description" content="Restez informé des dernières nouvelles de {{ $clubName }}." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{ url()->current() }}" />
+<meta property="og:image" content="{{ asset('storage/' . $articles->first()->image) }}" />
+<meta property="og:site_name" content="{{ $clubName }}" />
+<meta property="og:locale" content="{{ app()->getLocale() }}" />
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ __('messages.news_title') }} | {{ $clubName }}" />
+<meta name="twitter:description" content="Restez informé des dernières nouvelles de {{ $clubName }}." />
+<meta name="twitter:image" content="{{ asset('storage/' . $articles->first()->image) }}" />
+<meta name="twitter:url" content="{{ url()->current() }}" />
+
+<!-- Dublin Core Metadata -->
+<meta name="DC.title" content="{{ __('messages.news_title') }} | {{ $clubName }}" />
+<meta name="DC.creator" content="{{ $articles->first()->user->name }}" />
+<meta name="DC.date" content="{{ now()->format('Y-m-d') }}" />
+<meta name="DC.language" content="{{ app()->getLocale() }}" />
+<meta name="DC.publisher" content="{{ $clubName }}" />
+<meta name="DC.format" content="text/html" />
+<meta name="DC.identifier" content="{{ url()->current() }}" />
 </head>
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
 
