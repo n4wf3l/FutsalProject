@@ -175,8 +175,8 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 500px; /* Hauteur fixe pour le carousel */
                 overflow: hidden;
+                height: auto; 
             }
 
             .carousel-slide {
@@ -875,9 +875,8 @@
             }
 
             .main-article-image img {
-                width: 100% !important;
-                height: auto !important;
-                object-fit: cover !important;
+                height: auto; /* Adapter la hauteur de l'image au conteneur */
+                max-height: 500px; 
             }
 
             .main-article-content {
@@ -1093,7 +1092,7 @@
 
     <hr style="margin-bottom:50px;">
 
-<section>
+    <section class="news-section">
     <div style="text-align:center;">
         <x-page-title subtitle="🔔 {{ __('messages.stay_informed') }}">
             @lang('messages.latest_news')
@@ -1103,40 +1102,55 @@
     @if($articles->isEmpty())
         <p class="text-center text-gray-600">No news has been added yet.</p>
     @else
-        <div class="carousel-container" data-aos="fade-right" style="position: relative; width: 100%; min-height: 70vh; display: flex; justify-content: center; align-items: center;  z-index: 1000;">
-            <div class="carousel" style="display: flex; transition: transform 0.5s ease-in-out; width: 80%;">
+        <div class="carousel-container relative w-full min-h-screen flex justify-center items-center z-50" data-aos="fade-right">
+            <div class="carousel flex transition-transform duration-500 ease-in-out w-[80%]">
                 @foreach($articles as $index => $article)
-                    <div class="main-article-container" style="flex: 0 0 100%; display: flex; flex-direction: row; align-items: flex-start; position: relative;">
+                    <div class="main-article-container flex flex-col lg:flex-row flex-none w-full relative">
                         <!-- Main Article Image -->
-                        <div class="main-article-image" style="width: 100%;">
+                        <div class="main-article-image w-full h-full max-h-[500px]">
                             <a href="{{ route('articles.show', $article->slug) }}">
                                 @if($article->image)
-                                    <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}">
+                                    <img class="w-full h-full object-cover" src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}">
                                 @endif
                             </a>
                         </div>
 
-                        <!-- Main Article Content -->
-                        <div class="main-article-content" data-aos="fade-right" style="padding-left: 20px; display: flex; flex-direction: column; justify-content: center; position: absolute; bottom: 30px; left: 30px; color: white; max-width: 50%; background-color: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 8px;">
-                            <p style="background-color: {{ $primaryColor }};
-                        color: #ffffff;
-                        font-size: 0.875rem;
-                        margin-bottom: 1rem;
-                        text-transform: uppercase;
-                        font-weight: bold;
-                        padding: 4px 8px;
-                        display: inline-block;
-                        border-radius: 4px;">
+                        <!-- Main Article Content for Desktop and Tablet (Black Opacity Background) -->
+                        <div class="hidden lg:flex justify-center items-center absolute inset-0">
+                            <div class="bg-black bg-opacity-50 text-white w-1/2 p-8 rounded-lg flex flex-col justify-center items-center">
+                                <p class="bg-{{ $primaryColor }} text-white text-xs mb-4 uppercase font-bold px-2 py-1 rounded">
+                                    @lang('messages.news')
+                                </p>
+                                <h2 class="text-3xl font-bold mb-2 article-title text-center">
+                                    <strong>{{ $article->title }}</strong>
+                                </h2>
+                                <p class="text-sm mb-4 text-center">
+                                    @lang('messages.published_on'): {{ $article->created_at->format('d M Y, H:i') }} @lang('messages.by') {{ $article->user->name }}
+                                </p>
+                                <!-- Buttons Container -->
+                                <div class="flex mt-4 gap-4">
+                                    <x-button 
+                                        route="{{ route('articles.show', $article->slug) }}"
+                                        buttonText="{{ __('messages.read_more') }}" 
+                                        primaryColor="#B91C1C" 
+                                        secondaryColor="#DC2626" 
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Article Content for Mobile (Content Under Image) -->
+                        <div class="lg:hidden w-full flex flex-col items-center justify-center bg-gray-100 p-4 mx-auto">
+                            <p class="bg-{{ $primaryColor }} text-white text-xs mb-2 uppercase font-bold px-2 py-1 rounded w-max mx-auto">
                                 @lang('messages.news')
                             </p>
-                            <h2 class="text-3xl font-bold mb-2 article-title" style="font-size: 2.5rem; margin-bottom: 20px;">
+                            <h2 class="text-xl font-bold mb-2 text-center mx-auto">
                                 <strong>{{ $article->title }}</strong>
                             </h2>
-                            <p class="text-sm text-white" style="font-size: 1rem; margin-bottom: 15px;">
+                            <p class="text-sm mb-2 text-center mx-auto">
                                 @lang('messages.published_on'): {{ $article->created_at->format('d M Y, H:i') }} @lang('messages.by') {{ $article->user->name }}
                             </p>
-                            <!-- Buttons Container -->
-                            <div class="buttons-container" style="margin-top: 30px; display: flex; justify-content: flex-start; gap: 20px;">
+                            <div class="flex justify-center mt-2 mx-auto">
                                 <x-button 
                                     route="{{ route('articles.show', $article->slug) }}"
                                     buttonText="{{ __('messages.read_more') }}" 
@@ -1150,9 +1164,9 @@
             </div>
 
             <!-- Navigation Dots -->
-            <div class="navigation-dots" style="position: absolute; bottom: 20px; display: flex; justify-content: center; width: 100%;">
+            <div class="navigation-dots absolute bottom-20 flex justify-center w-full mt-10">
                 @foreach($articles as $index => $article)
-                    <div id="dot-{{ $index }}" class="dot" onclick="goToSlide({{ $index }})" style="margin: 0 5px; cursor: pointer;">
+                    <div id="dot-{{ $index }}" class="dot cursor-pointer mx-1" onclick="goToSlide({{ $index }})">
                         <span id="emoji-{{ $index }}">{{ $index === 0 ? '⚫️' : '⚪' }}</span>
                     </div>
                 @endforeach
@@ -1160,6 +1174,25 @@
         </div>
     @endif
 </section>
+
+<!-- Media Queries -->
+<style>
+    /* For screens with a width of 1020px or less */
+    @media screen and (max-width: 1020px) {
+        .carousel-container {
+            margin-bottom: 50px;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .navigation-dots {
+            bottom: -20px; /* Décalage vers le bas de 20px */
+        }
+    }
+
+    /* For screens with a width of 769px or less */
+
+</style>
 
     <hr class ="mt-10" style="margin-bottom:50px;">
 
