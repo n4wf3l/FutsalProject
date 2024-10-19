@@ -186,10 +186,52 @@
             box-shadow: 0 0 8px rgba(29, 78, 216, 0.3);
         }
         
+
+        @media only screen and (max-width: 1024px) {
+    body > * {
+        display: none; /* Cacher tout le contenu du body */
+    }
+
+    #tablet-warning {
+        display: flex; /* Afficher l'avertissement */
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Prendre toute la hauteur de l'écran */
+        text-align: center;
+        background-color: #f8d7da; /* Fond d'avertissement */
+        color: #721c24; /* Couleur du texte d'avertissement */
+        font-size: 1.5rem;
+        padding: 20px;
+    }
+}
+
+/* Avertissement caché par défaut */
+#tablet-warning {
+    display: none;
+}
     </style>
 </head>
 
 <body>
+<div id="tablet-warning" style="display: none; text-align: center; background-color: #f8d7da; color: #721c24; padding: 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 9999;">
+{{ __('messages.screen') }}
+</div>
+<script>
+       // Fonction pour vérifier la largeur de l'écran
+       function checkScreenWidth() {
+        if (window.innerWidth <= 1024) {
+            alert("{{ __('messages.screen') }}");
+            // Redirection après l'alerte
+            window.location.href = '/'; // Redirige vers la page d'accueil
+        }
+    }
+
+    // Appel initial lors du chargement de la page
+    checkScreenWidth();
+
+    // Ajouter un écouteur d'événement pour vérifier lorsque la fenêtre est redimensionnée
+    window.addEventListener('resize', checkScreenWidth);
+</script>
 <div class="sidebar">
     <!-- Dropdown for Dashboard -->
     <div class="dropdown">

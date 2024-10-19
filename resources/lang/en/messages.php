@@ -722,4 +722,5 @@ return [
     'save' => 'Save',
     'delete_confirmation' => 'Are you sure you want to delete this item?',
     'password' => 'Password',
+    'screen' => 'Use a desktop screen to be able to manage the admin panel.'
 ];
