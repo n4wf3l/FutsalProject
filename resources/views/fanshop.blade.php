@@ -278,14 +278,14 @@
                                     <span id="quantity-{{ $tribune->id }}">0</span>
                                     <span class="total-individual" id="total-{{ $tribune->id }}">0.00 {{ $tribune->currency }}</span>
                                     <button onclick="changeQuantity(this, {{ $tribune->price }}, {{ $tribune->available_seats }}, {{ $tribune->id }})">+</button>
-                                    <form action="{{ route('checkout') }}" method="POST" class="inline-block ml-4">
-                                        @csrf
-                                        <input type="hidden" name="tribune_id" value="{{ $tribune->id }}">
-                                        <input type="hidden" name="tribune_name" value="{{ $tribune->name }}">
-                                        <input type="hidden" name="total_amount" id="totalAmountInput-{{ $tribune->id }}" value="0">
-                                        <input type="hidden" name="quantity" id="quantityInput-{{ $tribune->id }}" value="0">
-                                        <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>{{ __('messages.pay') }}</button>
-                                    </form>
+                                    <form action="{{ route('checkout') }}" method="POST" class="inline-block ml-4" id="checkout-form-{{ $tribune->id }}">
+    @csrf
+    <input type="hidden" name="tribune_id" value="{{ $tribune->id }}">
+    <input type="hidden" name="tribune_name" value="{{ $tribune->name }}">
+    <input type="hidden" name="total_amount" id="totalAmountInput-{{ $tribune->id }}" value="0">
+    <input type="hidden" name="quantity" id="quantityInput-{{ $tribune->id }}" value="0">
+    <button type="submit" class="checkout-button ml-4" id="checkout-button-{{ $tribune->id }}" disabled>{{ __('messages.pay') }}</button>
+</form>
                                 </div>
                             @else
                                 <p class="text-red-500 font-bold">{{ __('messages.sold_out') }}</p>
@@ -305,6 +305,49 @@
     <x-footer />
     <script src="https://js.stripe.com/v3/"></script>
     <script>
+        function checkUserLocation(tribuneId) {
+    // Vérifier si le navigateur supporte la géolocalisation
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            successCallback(position, tribuneId);
+        }, errorCallback);
+    } else {
+        alert("{{ __('Geolocation is not supported by this browser.') }}");
+    }
+}
+
+// Fonction appelée si la géolocalisation est réussie
+function successCallback(position, tribuneId) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    console.log("Latitude:", latitude, "Longitude:", longitude);
+
+    // Vérification pour s'assurer que l'utilisateur est localisé au Maroc
+    // Plage de latitude et longitude pour le Maroc
+    if (latitude >= 21 && latitude <= 36 && longitude >= -17 && longitude <= -1) {
+        console.log("{{ __('User located in Morocco. Submitting the form.') }}");
+        document.getElementById('checkout-form-' + tribuneId).submit();
+    } else {
+        alert("{{ __('You must be located in Morocco to purchase tickets.') }}");
+        window.location.href = "/fanshop"; // Rediriger vers la page fanshop
+    }
+}
+
+// Fonction appelée si la géolocalisation échoue
+function errorCallback(error) {
+    alert("{{ __('Error retrieving location. Make sure you have allowed access to your location.') }}");
+}
+
+// Ajout d'un écouteur d'événement sur chaque bouton de soumission pour vérifier la localisation
+document.querySelectorAll('.checkout-button').forEach(button => {
+    button.addEventListener('click', function (event) {
+        event.preventDefault();
+        const tribuneId = button.id.split('-').pop(); // Récupérer l'ID de la tribune
+        checkUserLocation(tribuneId); // Appeler la fonction de vérification de la localisation
+    });
+});
+
 function changeQuantity(button, price, availableSeats, tribuneId, currency) {
     const quantityElement = document.getElementById('quantity-' + tribuneId);
     const totalElement = document.getElementById('total-' + tribuneId);

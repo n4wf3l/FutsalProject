@@ -18,56 +18,57 @@ use App\Mail\ReservationConfirmation;
 class PaymentController extends Controller
 {
     public function checkout(Request $request)
-    {
-        // Récupération de la clé API Stripe via config()
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-    
-        $tribuneId = $request->get('tribune_id');
-        $totalAmount = $request->get('total_amount') * 100;
-    
-        // Récupérer la tribune pour obtenir la devise
-        $tribune = Tribune::find($tribuneId);
-    
-        // Remplacer "dh" par "mad" si c'est du Dirham marocain
-$currency = strtolower($tribune->currency);
+{
+    // Récupération de la clé API Stripe via config()
+    \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
-// Vérifie et ajuste la devise pour qu'elle soit compatible avec Stripe
-if ($currency == '€' || $currency == 'eur') {
-    $currency = 'eur';
-} elseif ($currency == 'dh' || $currency == 'mad') {
-    $currency = 'mad';
-} elseif ($currency == '$' || $currency == 'usd') {
-    $currency = 'usd';
-}
-    
-        // Log the ID, amount, and currency to verify
-        Log::info("Creating Stripe session for Tribune ID: {$tribuneId}, Amount: {$totalAmount}, Currency: {$currency}");
-    
-        $session = StripeSession::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => $currency,
-                    'product_data' => [
-                        'name' => 'Ticket for ' . $request->get('tribune_name'),
-                    ],
-                    'unit_amount' => $totalAmount,
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => route('payment.cancel'),
-            'metadata' => [
-                'tribune_id' => $tribuneId,
-                'quantity' => $request->get('quantity') ?? 1,
-            ],
-        ]);
-    
-        Log::info("Session created with ID: {$session->id} and Tribune ID: {$tribuneId}");
-    
-        return redirect($session->url);
+    $tribuneId = $request->get('tribune_id');
+    $totalAmount = $request->get('total_amount') * 100;
+
+    // Récupérer la tribune pour obtenir la devise
+    $tribune = Tribune::find($tribuneId);
+
+    // Remplacer "dh" par "mad" si c'est du Dirham marocain
+    $currency = strtolower($tribune->currency);
+
+    // Vérifie et ajuste la devise pour qu'elle soit compatible avec Stripe
+    if ($currency == '€' || $currency == 'eur') {
+        $currency = 'eur';
+    } elseif ($currency == 'dh' || $currency == 'mad') {
+        $currency = 'mad';
+    } elseif ($currency == '$' || $currency == 'usd') {
+        $currency = 'usd';
     }
+
+    // Log the ID, amount, and currency to verify
+    Log::info("Creating Stripe session for Tribune ID: {$tribuneId}, Amount: {$totalAmount}, Currency: {$currency}");
+
+    $session = StripeSession::create([
+        'payment_method_types' => ['card'],
+        'line_items' => [[
+            'price_data' => [
+                'currency' => $currency,
+                'product_data' => [
+                    'name' => 'Ticket for ' . $request->get('tribune_name'),
+                ],
+                'unit_amount' => $totalAmount,
+            ],
+            'quantity' => 1,
+        ]],
+        'mode' => 'payment',
+        'success_url' => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
+        'cancel_url' => route('payment.cancel'),
+        'metadata' => [
+            'tribune_id' => $tribuneId,
+            'quantity' => $request->get('quantity') ?? 1,
+            'required_country' => 'MA', // On ajoute 'MA' pour le Maroc dans les métadonnées
+        ],
+    ]);
+
+    Log::info("Session created with ID: {$session->id} and Tribune ID: {$tribuneId}");
+
+    return redirect($session->url);
+}
 
     public function success(Request $request)
 {

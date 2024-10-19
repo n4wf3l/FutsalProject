@@ -722,5 +722,9 @@ return [
     'save' => 'Save',
     'delete_confirmation' => 'Are you sure you want to delete this item?',
     'password' => 'Password',
-    'screen' => 'Use a desktop screen to be able to manage the admin panel.'
+    'screen' => 'Use a desktop screen to be able to manage the admin panel.',
+    'Geolocation is not supported by this browser.' => 'Geolocation is not supported by this browser.',
+    'User located in Morocco. Submitting the form.' => 'User located in Morocco. Submitting the form.',
+    'You must be located in Morocco to purchase tickets.' => 'You must be located in Morocco to purchase tickets.',
+    'Error retrieving location. Make sure you have allowed access to your location.' => 'Error retrieving location. Make sure you have allowed access to your location.',
 ];
