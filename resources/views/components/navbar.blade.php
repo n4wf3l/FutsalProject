@@ -384,7 +384,7 @@
             @lang('messages.club') <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
         </a>
 
-        <div id="clubDropdown" class="hidden pl-4">
+        <div id="clubDropdown" class=" pl-4"  style="max-height: 0px; overflow: hidden; transition: max-height 0.5s ease;">
             <a href="{{ route('about.index') }}" class="block text-white py-2">@lang('messages.about')</a>
             <a href="{{ route('clubinfo') }}" class="block text-white py-2">@lang('messages.news')</a>
             <a href="{{ route('press_releases.index') }}" class="block text-white py-2">@lang('messages.press_releases')</a>
@@ -397,7 +397,7 @@
             @lang('messages.competition') <img src="{{ asset('bas.png') }}" alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
         </a>
 
-        <div id="competitionDropdown" class="hidden pl-4">
+        <div id="competitionDropdown" class=" pl-4"  style="max-height: 0px; overflow: hidden; transition: max-height 0.5s ease;">
             <a href="{{ route('calendar.show') }}#ranking-section" class="block text-white py-2">@lang('messages.ranking')</a>
             <a href="{{ route('calendar.show') }}#calendar-section" class="block text-white py-2">@lang('messages.calendar')</a>
         </div>
@@ -406,7 +406,7 @@
         <a href="#" class="block text-white py-2" onclick="toggleDropdown('teamsDropdown')" style="display: flex; align-items: center;">
             @lang('messages.teams') <img src="{{ asset('bas.png') }}"  alt="▼" style="width: 24px; height: 24px; margin-left: 5px;">
         </a>
-        <div id="teamsDropdown" class="hidden pl-4">
+        <div id="teamsDropdown" class=" pl-4"  style="max-height: 0px; overflow: hidden; transition: max-height 0.5s ease;">
             <a href="{{ route('teams') }}" class="block text-white py-2">@lang('messages.senior')</a>
             <a href="{{ route('playersu21.index') }}" class="block text-white py-2">@lang('messages.u21')</a>
         </div>
@@ -488,17 +488,16 @@
     });
 
     function toggleDropdown(dropdownId) {
-        console.log('Toggling: ', dropdownId); // Pour débogage
-        var dropdown = document.getElementById(dropdownId);
-        dropdown.classList.toggle('hidden');
-    }
+    var dropdown = document.getElementById(dropdownId);
 
-     // Fermer le modal si on clique en dehors
-     document.getElementById('mobile-menu-modal').addEventListener('click', function(e) {
-        if (e.target.id === 'mobile-menu-modal') {
-            closeMobileMenu();
-        }
-    });
+    if (dropdown.style.maxHeight === '0px' || dropdown.style.maxHeight === '') {
+        // On ouvre en ajustant la hauteur à la hauteur du contenu
+        dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+    } else {
+        // On referme en mettant la hauteur à 0
+        dropdown.style.maxHeight = '0px';
+    }
+}
 
     function closeMobileMenu() {
         document.getElementById('mobile-menu-modal').classList.remove('open');
