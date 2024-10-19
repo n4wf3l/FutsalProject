@@ -143,7 +143,7 @@
         .form-container {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 40px;
         }
 
         @media (min-width: 768px) {
@@ -160,12 +160,20 @@
         input[type="text"],
         input[type="email"],
         input[type="file"],
-        input[type="color"],
         select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="color"],
+        select {
+            width: 50%;
+            padding: 10px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
@@ -258,6 +266,7 @@
         <h1 class="text-3xl font-bold" style="color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">{{ __('messages.dashboard') }}</h1>
     </header>
 
+    <!-- Settings of Dashboard Colors -->
     <div id="settings-form-card" class=" card mt-4" >
     <h2>{{ __('messages.settings') }}</h2>
     <form action="{{ route('user.settings.update') }}" method="POST" enctype="multipart/form-data">
