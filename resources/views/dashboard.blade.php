@@ -629,7 +629,11 @@
                     <h4 class="mt-4 text-md font-semibold">{{ __('messages.reservations') }}:</h4>
                     <ul class="reservation-list space-y-1">
                         @php
-                            $reservations = json_decode(file_get_contents(storage_path('app/reservations.json')), true);
+                            $reservations = [];
+                            $reservationsFile = storage_path('app/reservations.json');
+                            if (file_exists($reservationsFile) && filesize($reservationsFile) > 0) {
+                                $reservations = json_decode(file_get_contents($reservationsFile), true);
+                            }
                         @endphp
                         @foreach($reservations as $reservation)
                             @if($reservation['tribune_name'] == $tribune->name)
@@ -646,7 +650,6 @@
         <p class="text-red-500">{{ __('messages.no_tribunes_available') }}</p>
     @endif
 </div>
-
 
 <!-- Section Players -->
 <div id="players-card" class="card mt-8" style="display: none;">
