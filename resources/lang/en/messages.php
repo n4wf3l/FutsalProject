@@ -614,7 +614,7 @@ return [
     'confirm_password' => 'Confirm Password',
     'already_registered' => 'Already registered?',
     'registration_closed' => 'Registration Closed',
-    'registration_closed_message' => 'Registrations are currently closed. Please check back later.',
+    'registration_closed_message' => 'Registrations are currently closed.',
     'welcome_to_club' => 'Welcome to the club!',
     'legal' => 'Legal',
     'legal_notices' => 'Legal Notices',
