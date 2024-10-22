@@ -726,4 +726,6 @@ return [
 'User located in Morocco. Submitting the form.' => 'المستخدم موجود في المغرب. يتم إرسال النموذج.',
 'You must be located in Morocco to purchase tickets.' => 'يجب أن تكون موجودًا في المغرب لشراء التذاكر.',
 'Error retrieving location. Make sure you have allowed access to your location.' => 'حدث خطأ أثناء استرجاع الموقع. تأكد من أنك قد سمحت بالوصول إلى موقعك.',
+'updated_on' => 'تم التحديث في',
+'by' => 'بواسطة'
 ];

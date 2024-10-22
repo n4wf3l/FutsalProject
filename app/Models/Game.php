@@ -18,4 +18,9 @@ class Game extends Model
     {
         return $this->belongsTo(Team::class, 'away_team_id');
     }
+
+public function updatedBy()
+{
+    return $this->belongsTo(User::class, 'updated_by_user_id');
+}
 }

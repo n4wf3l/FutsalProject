@@ -1,14 +1,13 @@
-@php
-    use Illuminate\Support\Facades\Route;
-@endphp
 
 @php
     use App\Models\ClubInfo;
+    use Illuminate\Support\Facades\Route;
 
     $clubInfo = ClubInfo::first();
-    $federationLogo = $clubInfo->federation_logo ? asset('storage/' . $clubInfo->federation_logo) : asset('unknown.png');
-    $organizationLogo = $clubInfo->organization_logo ? asset('storage/' . $clubInfo->organization_logo) : asset('unknown.png');
+    $federationLogo = $clubInfo && $clubInfo->federation_logo ? asset('storage/' . $clubInfo->federation_logo) : asset('unknown.png');
+    $organizationLogo = $clubInfo && $clubInfo->organization_logo ? asset('storage/' . $clubInfo->organization_logo) : null;
 @endphp
+
 
 <head>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>

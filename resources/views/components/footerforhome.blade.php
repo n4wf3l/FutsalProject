@@ -1,19 +1,16 @@
 @php
-    use Illuminate\Support\Facades\Route;
-@endphp
-
-@php
     if (isset($_COOKIE['locale'])) {
         app()->setLocale($_COOKIE['locale']);
     }
 @endphp
 
 @php
+    use Illuminate\Support\Facades\Route;
     use App\Models\ClubInfo;
 
     $clubInfo = ClubInfo::first();
-    $federationLogo = $clubInfo->federation_logo ? asset('storage/' . $clubInfo->federation_logo) : asset('unknown.png');
-    $organizationLogo = $clubInfo->organization_logo ? asset('storage/' . $clubInfo->organization_logo) : null;
+    $federationLogo = $clubInfo && $clubInfo->federation_logo ? asset('storage/' . $clubInfo->federation_logo) : asset('unknown.png');
+    $organizationLogo = $clubInfo && $clubInfo->organization_logo ? asset('storage/' . $clubInfo->organization_logo) : null;
 @endphp
 
 <style>

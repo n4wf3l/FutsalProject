@@ -446,7 +446,18 @@
         </tbody>
     </table>
         </div>
-
+<!-- Affichage de la date de dernière mise à jour et du nom de l'utilisateur -->
+@if($lastUpdatedGame)
+    @if($lastUpdatedGame->updated_at && $lastUpdatedGame->updatedBy)
+        <p class="text-center text-gray-500 mt-4">
+            {{ __('messages.updated_on') }} {{ $lastUpdatedGame->updated_at->translatedFormat('d F Y') }} {{ __('messages.by') }} {{ $lastUpdatedGame->updatedBy->name }}
+        </p>
+    @elseif($lastUpdatedGame->updated_at)
+        <p class="text-center text-gray-500 mt-4">
+            {{ __('messages.updated_on') }} {{ $lastUpdatedGame->updated_at->translatedFormat('d F Y') }}
+        </p>
+    @endif
+@endif
         <hr class="mt-20 mb-20">
 
         <a id="calendar-section"></a>

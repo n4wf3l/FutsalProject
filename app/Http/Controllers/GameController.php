@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Championship;
 use App\Models\BackgroundImage;
 use App\Models\SiteSetting;
+use Illuminate\Support\Facades\Auth;
 
 class GameController extends Controller
 {
@@ -27,7 +28,8 @@ class GameController extends Controller
         $today = now()->startOfDay();
 
         // Requête de base pour les matchs
-        $gamesQuery = Game::with(['homeTeam', 'awayTeam']);
+            $lastUpdatedGame = Game::with('updatedBy')->orderBy('updated_at', 'desc')->first();
+$gamesQuery = Game::with(['homeTeam', 'awayTeam', 'updatedBy']);
 
         // Filtrer par équipe si nécessaire
         if ($teamFilter === 'specific_team') {
@@ -63,7 +65,7 @@ class GameController extends Controller
         $backgroundImage = BackgroundImage::where('assigned_page', 'calendar')->latest()->first();
 
         // Retourner la vue avec les données
-        return view('calendar', compact('championship', 'games', 'teams', 'backgroundImage', 'clubName', 'clubNamePrefix'));
+        return view('calendar', compact('championship', 'games', 'teams', 'backgroundImage', 'clubName', 'clubNamePrefix', 'lastUpdatedGame'));
     }
 
     // Méthode pour l'API - afficher le calendrier et les équipes
@@ -96,6 +98,7 @@ class GameController extends Controller
         // Mettre à jour les scores
         $game->home_score = $request->input('home_team_score');
         $game->away_score = $request->input('away_team_score');
+$game->updated_by_user_id = Auth::id();
         $game->save();
 
         // Mettre à jour les statistiques des équipes

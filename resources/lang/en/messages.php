@@ -727,4 +727,6 @@ return [
     'User located in Morocco. Submitting the form.' => 'User located in Morocco. Submitting the form.',
     'You must be located in Morocco to purchase tickets.' => 'You must be located in Morocco to purchase tickets.',
     'Error retrieving location. Make sure you have allowed access to your location.' => 'Error retrieving location. Make sure you have allowed access to your location.',
+    'updated_on' => 'Updated on',
+    'by' => 'by'
 ];
