@@ -175,8 +175,8 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                height: 500px; /* Hauteur fixe pour le carousel */
                 overflow: hidden;
-                height: auto; 
             }
 
             .carousel-slide {
@@ -593,6 +593,9 @@
             object-fit: contain; /* Assure que l'image conserve ses proportions sans être déformée */
         }
 
+        .modal-background-dark {
+    background-color: rgba(0, 0, 0, 0.8); /* Couleur de fond sombre */
+}
         /* Ajouter ces propriétés pour gérer l'image dans la modal */
         .modal-content-wrapper {
             display: flex;
@@ -600,13 +603,18 @@
             align-items: center;
             width: 100%;
             height: 100%;
+            position: relative;
         }
+        .modal-content img {
+    filter: none; /* Pas d'effet sur l'image sélectionnée */
+}
 
         .modal-content {
             width: auto; /* Permet à l'image de s'adapter à sa taille d'origine */
             height: auto; /* Permet à l'image de s'adapter à sa taille d'origine */
             max-width: 90%; /* Limite la largeur maximale à 90% de la modal */
             max-height: 90%; /* Limite la hauteur maximale à 90% de la modal */
+            object-fit: contain;
         }
 
         /* Close button style for modals */
@@ -796,6 +804,9 @@
                 top: 80%; /* Ajuste la position pour mobile */
             }
 
+            .image-caption {
+          display: none;
+      }
             .match-info {
                 display: flex;
                 flex-direction: column;
@@ -875,8 +886,9 @@
             }
 
             .main-article-image img {
-                height: auto; /* Adapter la hauteur de l'image au conteneur */
-                max-height: 500px; 
+                width: 100% !important;
+                height: auto !important;
+                object-fit: cover !important;
             }
 
             .main-article-content {
@@ -1039,7 +1051,7 @@
         @if($welcomeImage)
             <img src="{{ asset('storage/' . $welcomeImage->image_path) }}" alt="Welcome Image" class="welcome-image" style="position: absolute; top:18vh; right: 100px; width: 550px; height: 500px;" data-aos="fade-up-left">
         @endif
-        <div id="typing-text" style="position: absolute;  left: 50%; transform: translateX(-50%); color: {{ $secondaryColor }}; font-family: 'Bebas Neue', sans-serif; font-size: 6rem; font-weight: bold; text-align: center; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); z-index: 1300;">
+        <div id="typing-text" style="position: absolute;  left: 50%; transform: translateX(-50%); color: {{ $secondaryColor }}; font-family: 'Bebas Neue', sans-serif; font-size: 4rem; font-weight: bold; text-align: center; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); z-index: 1300;">
 {{ $flashMessage->homemessage ?? '' }}
         </div>
 
@@ -1092,7 +1104,7 @@
 
     <hr style="margin-bottom:50px;">
 
-    <section class="news-section">
+<section>
     <div style="text-align:center;">
         <x-page-title subtitle="🔔 {{ __('messages.stay_informed') }}">
             @lang('messages.latest_news')
@@ -1102,55 +1114,40 @@
     @if($articles->isEmpty())
         <p class="text-center text-gray-600">No news has been added yet.</p>
     @else
-        <div class="carousel-container relative w-full min-h-screen flex justify-center items-center z-50" data-aos="fade-right">
-            <div class="carousel flex transition-transform duration-500 ease-in-out w-[80%]">
+        <div class="carousel-container" data-aos="fade-right" style="position: relative; width: 100%; min-height: 70vh; display: flex; justify-content: center; align-items: center;  z-index: 1000;">
+            <div class="carousel" style="display: flex; transition: transform 0.5s ease-in-out; width: 80%;">
                 @foreach($articles as $index => $article)
-                    <div class="main-article-container flex flex-col lg:flex-row flex-none w-full relative">
+                    <div class="main-article-container" style="flex: 0 0 100%; display: flex; flex-direction: row; align-items: flex-start; position: relative;">
                         <!-- Main Article Image -->
-                        <div class="main-article-image w-full h-full max-h-[500px]">
+                        <div class="main-article-image" style="width: 100%;">
                             <a href="{{ route('articles.show', $article->slug) }}">
                                 @if($article->image)
-                                    <img class="w-full h-full object-cover" src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}">
+                                    <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}">
                                 @endif
                             </a>
                         </div>
 
-                        <!-- Main Article Content for Desktop and Tablet (Black Opacity Background) -->
-                        <div class="hidden lg:flex justify-center items-center absolute inset-0">
-                            <div class="bg-black bg-opacity-50 text-white w-1/2 p-8 rounded-lg flex flex-col justify-center items-center">
-                                <p class="bg-{{ $primaryColor }} text-white text-xs mb-4 uppercase font-bold px-2 py-1 rounded">
-                                    @lang('messages.news')
-                                </p>
-                                <h2 class="text-3xl font-bold mb-2 article-title text-center">
-                                    <strong>{{ $article->title }}</strong>
-                                </h2>
-                                <p class="text-sm mb-4 text-center">
-                                    @lang('messages.published_on'): {{ $article->created_at->format('d M Y, H:i') }} @lang('messages.by') {{ $article->user->name }}
-                                </p>
-                                <!-- Buttons Container -->
-                                <div class="flex mt-4 gap-4">
-                                    <x-button 
-                                        route="{{ route('articles.show', $article->slug) }}"
-                                        buttonText="{{ __('messages.read_more') }}" 
-                                        primaryColor="#B91C1C" 
-                                        secondaryColor="#DC2626" 
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Main Article Content for Mobile (Content Under Image) -->
-                        <div class="lg:hidden w-full flex flex-col items-center justify-center bg-gray-100 p-4 mx-auto">
-                            <p class="bg-{{ $primaryColor }} text-white text-xs mb-2 uppercase font-bold px-2 py-1 rounded w-max mx-auto">
+                        <!-- Main Article Content -->
+                        <div class="main-article-content" data-aos="fade-right" style="padding-left: 20px; display: flex; flex-direction: column; justify-content: center; position: absolute; bottom: 30px; left: 30px; color: white; max-width: 50%; background-color: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 8px;">
+                            <p style="background-color: {{ $primaryColor }};
+                        color: #ffffff;
+                        font-size: 0.875rem;
+                        margin-bottom: 1rem;
+                        text-transform: uppercase;
+                        font-weight: bold;
+                        padding: 4px 8px;
+                        display: inline-block;
+                        border-radius: 4px;">
                                 @lang('messages.news')
                             </p>
-                            <h2 class="text-xl font-bold mb-2 text-center mx-auto">
+                            <h2 class="text-3xl font-bold mb-2 article-title" style="font-size: 2.5rem; margin-bottom: 20px;">
                                 <strong>{{ $article->title }}</strong>
                             </h2>
-                            <p class="text-sm mb-2 text-center mx-auto">
+                            <p class="text-sm text-white" style="font-size: 1rem; margin-bottom: 15px;">
                                 @lang('messages.published_on'): {{ $article->created_at->format('d M Y, H:i') }} @lang('messages.by') {{ $article->user->name }}
                             </p>
-                            <div class="flex justify-center mt-2 mx-auto">
+                            <!-- Buttons Container -->
+                            <div class="buttons-container" style="margin-top: 30px; display: flex; justify-content: flex-start; gap: 20px;">
                                 <x-button 
                                     route="{{ route('articles.show', $article->slug) }}"
                                     buttonText="{{ __('messages.read_more') }}" 
@@ -1164,9 +1161,9 @@
             </div>
 
             <!-- Navigation Dots -->
-            <div class="navigation-dots absolute bottom-20 flex justify-center w-full mt-10">
+            <div class="navigation-dots" style="position: absolute; bottom: 20px; display: flex; justify-content: center; width: 100%;">
                 @foreach($articles as $index => $article)
-                    <div id="dot-{{ $index }}" class="dot cursor-pointer mx-1" onclick="goToSlide({{ $index }})">
+                    <div id="dot-{{ $index }}" class="dot" onclick="goToSlide({{ $index }})" style="margin: 0 5px; cursor: pointer;">
                         <span id="emoji-{{ $index }}">{{ $index === 0 ? '⚫️' : '⚪' }}</span>
                     </div>
                 @endforeach
@@ -1174,25 +1171,6 @@
         </div>
     @endif
 </section>
-
-<!-- Media Queries -->
-<style>
-    /* For screens with a width of 1020px or less */
-    @media screen and (max-width: 1020px) {
-        .carousel-container {
-            margin-bottom: 50px;
-        }
-    }
-
-    @media screen and (max-width: 768px) {
-        .navigation-dots {
-            bottom: -20px; /* Décalage vers le bas de 20px */
-        }
-    }
-
-    /* For screens with a width of 769px or less */
-
-</style>
 
     <hr class ="mt-10" style="margin-bottom:50px;">
 
@@ -1342,153 +1320,148 @@
 </section>
 
 <script>
-      document.addEventListener("DOMContentLoaded", function() {
-            const typingElement = document.getElementById("typing-text");
-            const text = {!! json_encode($flashMessage->homemessage ?? "") !!};  // Utilisez json_encode pour traiter le texte
-            let index = 0;
-            const speed = window.innerWidth <= 768 ? 25 : 50;  // Vitesse d'écriture plus rapide sur mobile
+  // Effet de texte animé pour le message de bienvenue
+document.addEventListener("DOMContentLoaded", function() {
+    const typingElement = document.getElementById("typing-text");
+    const text = {!! json_encode($flashMessage->homemessage ?? "") !!};  // Utilisez json_encode pour traiter le texte
+    let index = 0;
+    const speed = window.innerWidth <= 768 ? 25 : 50;  // Vitesse d'écriture plus rapide sur mobile
 
-            // Fonction pour afficher le logo et le bouton
-            function showLogoAndButton() {
-                const logo = document.getElementById("club-logo");
-                const button = document.getElementById("reserve-button");
+    // Fonction pour afficher le logo et le bouton après le typing effect
+    function showLogoAndButton() {
+        const logo = document.getElementById("club-logo");
+        const button = document.getElementById("reserve-button");
 
-                logo.style.display = "block";
-                button.style.display = "inline-block";
+        logo.style.display = "block";
+        button.style.display = "inline-block";
 
-                // Ajuster les positions pour mobile ou non
-                if (window.innerWidth <= 768) {
-                    logo.style.marginTop = "5vh"; // Positionnement plus haut sur mobile
-                    button.style.marginTop = "30vh"; // Positionnement plus haut sur mobile
-                } else {
-                    logo.style.marginTop = "30vh"; // Positionnement par défaut sur desktop
-                    button.style.marginTop = "50vh"; // Positionnement par défaut sur desktop
-                }
-
-                setTimeout(() => {
-                    logo.style.opacity = "1";
-                }, 100);
-
-                setTimeout(() => {
-                    button.style.opacity = "1";
-                }, 500);
-            }
-
-            // Fonction pour formater le texte en insérant un saut de ligne après les 15 premiers caractères
-            function formatTextWithFirstLineBreak(text) {
-                if (text.length > 16) {
-                    // Insère un saut de ligne après les 15 premiers caractères
-                    return text.slice(0, 16) + '\n' + text.slice(15);
-                }
-                return text;  // Si le texte est plus court que 15 caractères, ne rien changer
-            }
-
-            // Fonction pour le typing effect
-            function typeWriter(formattedText) {
-                if (index < formattedText.length) {
-                    const char = formattedText.charAt(index);
-                    if (char === '\n') {
-                        typingElement.innerHTML += '<br>';
-                    } else {
-                        typingElement.innerHTML += char;
-                    }
-                    index++;
-                    setTimeout(() => typeWriter(formattedText), speed);
-                } else {
-                    showLogoAndButton();
-                }
-            }
-
-            // Efface le contenu de l'élément avant de commencer le typing effect
-            typingElement.innerHTML = "";
-
-            // Formater le texte pour inclure un saut de ligne après les 15 premiers caractères
-            const formattedText = formatTextWithFirstLineBreak(text);
-
-            // Lancer le typing effect si du texte est présent, sinon afficher immédiatement le logo et le bouton
-            if (formattedText && formattedText.length > 0) {
-                typeWriter(formattedText);
-            } else {
-                showLogoAndButton();
-            }
-        });
-
-    let slideIndex = 0;
-    let photos = @json($latestPhotos);
-
-    function openImageModal(index) {
-        slideIndex = index;
-        showSlide(slideIndex);
-        document.getElementById("imageModal").style.display = "flex";
-    }
-
-    function closeImageModal() {
-        document.getElementById("imageModal").style.display = "none";
-    }
-
-    function changeSlide(n) {
-        slideIndex += n;
-        if (slideIndex >= photos.length) slideIndex = 0;
-        if (slideIndex < 0) slideIndex = photos.length - 1;
-        showSlide(slideIndex);
-    }
-
-    function showSlide(index) {
-        let photo = photos[index];
-        document.getElementById("modalImage").src = `/storage/${photo.image}`;
-        document.getElementById("caption").innerText = photo.caption ? photo.caption : '';
-    }
-
-    let currentIndex = 0;
-    const slides = document.querySelectorAll('.carousel .main-article-container');
-    const dots = document.querySelectorAll('.dot span');
-    const intervalTime = 5000;
-
-    function goToSlide(index) {
-        // Assurez-vous que l'index est dans les limites
-        if (index < 0) {
-            index = slides.length - 1; // Aller au dernier article si on dépasse à gauche
-        } else if (index >= slides.length) {
-            index = 0; // Retourner au premier article si on dépasse à droite
+        // Ajuster les positions pour mobile ou non
+        if (window.innerWidth <= 768) {
+            logo.style.marginTop = "5vh"; // Positionnement plus haut sur mobile
+            button.style.marginTop = "30vh"; // Positionnement plus haut sur mobile
+        } else {
+            logo.style.marginTop = "30vh"; // Positionnement par défaut sur desktop
+            button.style.marginTop = "50vh"; // Positionnement par défaut sur desktop
         }
 
-        // Supprimer la classe active de tous les slides
-        slides.forEach(slide => slide.classList.remove('active'));
+        setTimeout(() => {
+            logo.style.opacity = "1";
+        }, 100);
 
-        // Ajouter la classe active au slide actuel
-        slides[index].classList.add('active');
-
-        // Déplacer le carousel
-        document.querySelector('.carousel').style.transform = `translateX(-${index * 100}%)`;
-
-        // Mise à jour des dots
-        dots.forEach((dot, i) => {
-            dot.textContent = i === index ? '⚫️' : '⚪'; // Mettre à jour le dot actif
-        });
-
-        // Mettre à jour l'index actuel
-        currentIndex = index;
+        setTimeout(() => {
+            button.style.opacity = "1";
+        }, 500);
     }
 
-    function startAutoSlide() {
-        setInterval(() => {
-            currentIndex++;
-            goToSlide(currentIndex);
-        }, intervalTime);
+    // Fonction pour formater le texte avec un saut de ligne après les 15 premiers caractères
+    function formatTextWithFirstLineBreak(text) {
+        if (text.length > 16) {
+            return text.slice(0, 16) + '\n' + text.slice(15);
+        }
+        return text;
     }
 
-    // Attacher les événements de clic aux dots
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            goToSlide(index); // Associer chaque dot à son slide correspondant
-        });
+    // Fonction pour l'effet d'écriture du texte
+    function typeWriter(formattedText) {
+        if (index < formattedText.length) {
+            const char = formattedText.charAt(index);
+            if (char === '\n') {
+                typingElement.innerHTML += '<br>';
+            } else {
+                typingElement.innerHTML += char;
+            }
+            index++;
+            setTimeout(() => typeWriter(formattedText), speed);
+        } else {
+            showLogoAndButton();
+        }
+    }
+
+    typingElement.innerHTML = "";  // Efface le contenu avant de commencer l'effet de texte
+    const formattedText = formatTextWithFirstLineBreak(text);
+
+    if (formattedText && formattedText.length > 0) {
+        typeWriter(formattedText);
+    } else {
+        showLogoAndButton();
+    }
+});
+
+// Gestion des images de la galerie (Latest Photos)
+let slideIndex = 0;
+let photos = @json($latestPhotos);  // Les photos de la galerie
+
+function openImageModal(index) {
+    slideIndex = index;
+    showSlide(slideIndex);
+    document.getElementById("imageModal").style.display = "flex";
+    document.body.style.overflow = "hidden"; // Désactive le scroll de la page
+    document.getElementById("imageModal").classList.add('modal-background-dark'); // Ajoute l'arrière-plan sombre
+}
+
+function closeImageModal() {
+    document.getElementById("imageModal").style.display = "none";
+    document.body.style.overflow = "auto"; // Réactive le scroll de la page
+    document.getElementById("imageModal").classList.remove('modal-background-dark'); // Retire l'arrière-plan sombre
+}
+
+function changeSlide(n) {
+    slideIndex += n;
+    if (slideIndex >= photos.length) slideIndex = 0;
+    if (slideIndex < 0) slideIndex = photos.length - 1;
+    showSlide(slideIndex);
+}
+
+function showSlide(index) {
+    let photo = photos[index];
+    document.getElementById("modalImage").src = `/storage/${photo.image}`;
+    document.getElementById("caption").innerText = photo.caption ? photo.caption : '';
+}
+
+// Gestion du carousel des articles (Latest Articles)
+let currentIndex = 0;
+const slides = document.querySelectorAll('.carousel .main-article-container');
+const dots = document.querySelectorAll('.dot span');
+const intervalTime = 5000; // 5 secondes entre chaque changement automatique de slide
+
+function goToSlide(index) {
+    if (index < 0) {
+        index = slides.length - 1;
+    } else if (index >= slides.length) {
+        index = 0;
+    }
+
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[index].classList.add('active');
+    document.querySelector('.carousel').style.transform = `translateX(-${index * 100}%)`;
+
+    dots.forEach((dot, i) => {
+        dot.textContent = i === index ? '⚫️' : '⚪';
     });
 
-    // Initialisation
-    document.addEventListener('DOMContentLoaded', function () {
-        goToSlide(currentIndex); // Afficher la première slide
-        startAutoSlide(); // Démarrer le défilement automatique
+    currentIndex = index;
+}
+
+function startAutoSlide() {
+    setInterval(() => {
+        currentIndex++;
+        goToSlide(currentIndex);
+    }, intervalTime);
+}
+
+// Événement pour chaque dot (point de navigation du carousel)
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        goToSlide(index);
     });
+});
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function () {
+    goToSlide(currentIndex); // Afficher la première slide
+    startAutoSlide(); // Démarrer le défilement automatique des articles
+});
+
 </script>
 
 <!-- Footer -->

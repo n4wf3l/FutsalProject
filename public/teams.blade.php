@@ -330,6 +330,7 @@ use Illuminate\Support\Facades\Auth;
                         <p><strong>{{ __('messages.birthdate') }}:</strong> {{ \Carbon\Carbon::parse($player->birthdate)->format('d-m-Y') }}</p>
                         <p><strong>{{ __('messages.position') }}:</strong> {{ $player->position }}</p>
                         <p><strong>{{ __('messages.nationality') }}:</strong> {{ $player->nationality }}</p>
+                        <p><strong>{{ __('messages.height') }}:</strong> {{ $player->height }} cm</p>
 
                         <!-- Delete and Edit buttons, visible only to authenticated users -->
                         @auth

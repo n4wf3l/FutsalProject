@@ -140,6 +140,15 @@
         margin: 0 auto;
     }
 
+    .sponsor-carousel-container {
+    width: 40%;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+
+
     @media (max-width: 767px) {
         .carousel-item {
             min-width: 100%; /* Chaque item prend la largeur de l'écran en mobile */
@@ -149,38 +158,35 @@
             max-width: 100%;
             height: auto;
         }
-         .sponsor-carousel-container .page-title {
-            font-size: 1.5rem; /* Adjust font size for mobile */
-            white-space: nowrap; /* Prevent wrapping */
-            overflow: hidden;
-            text-overflow: ellipsis; /* Adds ellipsis if the text is too long */
-        }
+
     }
 </style>
 
 @if($sponsors->isNotEmpty())
     <div class="sponsor-carousel-container">
-    <x-page-title>
-    {{ __('messages.sponsors_partners') }}
-    </x-page-title>
-    <div class="carousel-wrapper">
-        <div class="carousel">
-            @foreach($sponsors as $sponsor)
-                <div class="carousel-item">
-                    <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
-                </div>
-            @endforeach
-            <!-- Duplicate the items for the infinite loop effect -->
-            @foreach($sponsors as $sponsor)
-                <div class="carousel-item">
-                    <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
-                </div>
-            @endforeach
+        <!-- Application du style en ligne pour le titre -->
+        <x-page-title style="font-size: 1.2rem; font-weight: bold; text-align: center; white-space: nowrap;">
+            {{ __('messages.sponsors_partners') }}
+        </x-page-title>
+        
+        <div class="carousel-wrapper">
+            <div class="carousel">
+                @foreach($sponsors as $sponsor)
+                    <div class="carousel-item">
+                        <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
+                    </div>
+                @endforeach
+                <!-- Duplicate the items for the infinite loop effect -->
+                @foreach($sponsors as $sponsor)
+                    <div class="carousel-item">
+                        <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
+                    </div>
+                @endforeach
+            </div>
+            <button class="carousel-button prev">&#10094;</button>
+            <button class="carousel-button next">&#10095;</button>
         </div>
-        <button class="carousel-button prev">&#10094;</button>
-        <button class="carousel-button next">&#10095;</button>
     </div>
-</div>
 @endif
 
 
@@ -285,6 +291,15 @@
                     <a href="{{ $instagram }}" class="text-white hover:text-gray-300 flex items-center">
                         <img src="{{ asset('instagram.png') }}" alt="Instagram" class="h-6 w-6 mr-2"> 
                     </a>
+                                         <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/company/dina-k%C3%A9nitra-futsal-club/" class="text-white hover:text-gray-300 flex items-center">
+        <img src="{{ asset('linkedin.png') }}" alt="LinkedIn" class="h-6 w-6 mr-2"> 
+    </a>
+    
+    <!-- YouTube -->
+    <a href="https://www.youtube.com/@DINAFUTSAL" class="text-white hover:text-gray-300 flex items-center">
+        <img src="{{ asset('youtube.png') }}" alt="YouTube" class="h-6 w-6 mr-2"> 
+    </a>
                 </div>
             </div>
         </div>

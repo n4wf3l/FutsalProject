@@ -7,38 +7,39 @@
     @if($logoPath)
         <link rel="icon" href="{{ $logoPath }}" type="image/png">
     @endif
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <!-- Bootstrap CSS -->
 
     <!-- Open Graph Meta Tags -->
-<meta property="og:title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
-<meta property="og:description" content="Découvrez les dernières vidéos de {{ $clubName }}." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="{{ url()->current() }}" />
-<meta property="og:image" content="{{ asset('storage/' . $videos->first()->image) }}" />
-<meta property="og:site_name" content="{{ $clubName }}" />
-<meta property="og:locale" content="{{ app()->getLocale() }}" />
+    <meta property="og:title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
+    <meta property="og:description" content="Découvrez les dernières vidéos de {{ $clubName }}." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:image" content="{{ asset('storage/' . $videos->first()->image) }}" />
+    <meta property="og:site_name" content="{{ $clubName }}" />
+    <meta property="og:locale" content="{{ app()->getLocale() }}" />
 
-<!-- Twitter Card Meta Tags -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
-<meta name="twitter:description" content="Découvrez les dernières vidéos de {{ $clubName }}." />
-<meta name="twitter:image" content="{{ asset('storage/' . $videos->first()->image) }}" />
-<meta name="twitter:url" content="{{ url()->current() }}" />
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
+    <meta name="twitter:description" content="Découvrez les dernières vidéos de {{ $clubName }}." />
+    <meta name="twitter:image" content="{{ asset('storage/' . $videos->first()->image) }}" />
+    <meta name="twitter:url" content="{{ url()->current() }}" />
 
-<!-- Dublin Core Metadata -->
-<meta name="DC.title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
-<meta name="DC.creator" content="{{ $clubName }}" />
-<meta name="DC.date" content="{{ now()->format('Y-m-d') }}" />
-<meta name="DC.language" content="{{ app()->getLocale() }}" />
-<meta name="DC.publisher" content="{{ $clubName }}" />
-<meta name="DC.format" content="text/html" />
-<meta name="DC.identifier" content="{{ url()->current() }}" />
+    <!-- Dublin Core Metadata -->
+    <meta name="DC.title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
+    <meta name="DC.creator" content="{{ $clubName }}" />
+    <meta name="DC.date" content="{{ now()->format('Y-m-d') }}" />
+    <meta name="DC.language" content="{{ app()->getLocale() }}" />
+    <meta name="DC.publisher" content="{{ $clubName }}" />
+    <meta name="DC.format" content="text/html" />
+    <meta name="DC.identifier" content="{{ url()->current() }}" />
 
     <style>
-
+        
         /* Styles existants */
         .main-video-container {
             display: flex;
@@ -184,37 +185,24 @@
 
     <x-navbar />
     <div class="bootstrap-only">
-    <header class="text-center my-12">
-        <x-page-title subtitle="{{ __('messages.check_latest_videos') }}">
-            {{ __('messages.recent_videos') }}
-        </x-page-title>
-        @auth
-        <button 
-    type="button"
-    style="
-        background-color: {{ $primaryColor }};
-        color: white;
-        font-family: 'Bebas Neue', sans-serif;
-        font-weight: bold;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        letter-spacing: 1px;
-    "
-    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
-    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';"
-    data-bs-toggle="modal"
-    data-bs-target="#addVideoModal"
-    onclick="loadBootstrap()">
-    {{ __('messages.add_video') }}
-</button>
-        @endauth
-    </header>
+        <header class="text-center my-12">
+            <x-page-title subtitle="{{ __('messages.check_latest_videos') }}">
+                {{ __('messages.recent_videos') }}
+            </x-page-title>
+            @auth
+                <button 
+                    type="button"
+                    style="background-color: {{ $primaryColor }}; color: white; font-family: 'Bebas Neue', sans-serif; font-weight: bold; padding: 10px 20px; border: none; border-radius: 50px; cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); letter-spacing: 1px;"
+                    onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'; this.style.transform='scale(1.05)';"
+                    onmouseout="this.style.backgroundColor='{{ $primaryColor }}'; this.style.transform='scale(1)';"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addVideoModal">
+                    {{ __('messages.add_video') }}
+                </button>
+            @endauth
+        </header>
 
-    <div class="container mx-auto py-12">
+        <div class="container mx-auto py-12">
     <div class="main-video-container">
         @if($videos->isNotEmpty())
             <!-- Main Video -->
@@ -296,12 +284,12 @@
         </div>
     </div>
 </div>
-</div>
-    <x-footer />
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-     <!-- Add Video Modal -->
-     <div class="modal fade" id="addVideoModal" tabindex="-1" aria-labelledby="addVideoModalLabel" aria-hidden="true">
+    </div>
+
+    <x-footerforhome />
+
+    <!-- Modal to Add Video -->
+    <div class="modal fade" id="addVideoModal" tabindex="-1" aria-labelledby="addVideoModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form action="{{ route('videos.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -337,23 +325,7 @@
         </div>
     </div>
 
-    <script>
-           function loadBootstrap() {
-        if (!document.getElementById('bootstrap-css')) {
-            var link = document.createElement('link');
-            link.id = 'bootstrap-css';
-            link.rel = 'stylesheet';
-            link.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
-            document.head.appendChild(link);
-        }
-
-        if (!document.getElementById('bootstrap-js')) {
-            var script = document.createElement('script');
-            script.id = 'bootstrap-js';
-            script.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
-            document.body.appendChild(script);
-        }
-    }
-    </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

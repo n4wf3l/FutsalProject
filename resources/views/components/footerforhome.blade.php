@@ -174,6 +174,15 @@
                     <a href="{{ $instagram }}" class="text-white hover:text-gray-300 flex items-center">
                         <img src="{{ asset('instagram.png') }}" alt="Instagram" class="h-6 w-6 mr-2"> 
                     </a>
+                         <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/company/dina-k%C3%A9nitra-futsal-club/" class="text-white hover:text-gray-300 flex items-center">
+        <img src="{{ asset('linkedin.png') }}" alt="LinkedIn" class="h-6 w-6 mr-2"> 
+    </a>
+    
+    <!-- YouTube -->
+    <a href="https://www.youtube.com/@DINAFUTSAL" class="text-white hover:text-gray-300 flex items-center">
+        <img src="{{ asset('youtube.png') }}" alt="YouTube" class="h-6 w-6 mr-2"> 
+    </a>
                 </div>
             </div>
         </div>

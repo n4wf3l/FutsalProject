@@ -622,6 +622,7 @@
                             <option value="teamu21" @if($image->assigned_page == 'teamu21') selected @endif>{{ __('messages.u21_team_page') }}</option>
                             <option value="sponsor" @if($image->assigned_page == 'sponsor') selected @endif>{{ __('messages.sponsor_page') }}</option>
                             <option value="contact" @if($image->assigned_page == 'contact') selected @endif>{{ __('messages.contact_page') }}</option>
+                            <option value="fanshop" @if($image->assigned_page == 'fanshop') selected @endif>{{ __('messages.fanshop_page') }}</option>
                         </select>
                         <input type="hidden" name="image_id" value="{{ $image->id }}">
                         <button type="submit" class="ml-2 text-white font-bold py-1 px-4 rounded-full transition duration-200 shadow-lg text-center" style="background-color: {{ $userSettings->theme_color_primary ?? '#1D4ED8' }};">

@@ -19,7 +19,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="{{ url()->current() }}" />
 <meta property="og:image" content="{{ asset('storage/' . $article->image) }}" />
-<meta property="og:site_name" content="Nom de ton site" />
+<meta property="og:site_name" content="Dina Kenitra FC" />
 <meta property="article:published_time" content="{{ $article->created_at->toIso8601String() }}" />
 <meta property="article:author" content="{{ $article->user->name }}" />
 
@@ -34,7 +34,7 @@
 <meta name="DC.creator" content="{{ $article->user->name }}" />
 <meta name="DC.date" content="{{ $article->created_at->format('Y-m-d') }}" />
 <meta name="DC.language" content="en" />
-<meta name="DC.publisher" content="Nom de ton site" />
+<meta name="DC.publisher" content="Dina Kenitra FC" />
 <meta name="DC.format" content="text/html" />
 <meta name="DC.identifier" content="{{ url()->current() }}" />
     <style>
@@ -77,6 +77,11 @@
         flex-direction: row;
     }
 }
+
+.article-title {
+        font-size: 1.5rem; /* Ajuste la taille du titre pour mobile */
+        margin-bottom: 1rem;
+    }
 
         .article-description {
             font-size: 1.2rem;

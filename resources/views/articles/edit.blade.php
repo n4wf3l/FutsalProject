@@ -153,8 +153,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="description" class="form-label">@lang('messages.description'):</label>
-                        <textarea name="description" id="description" class="form-textarea" required>{{ old('description', $article->description) }}</textarea>
+                        <label for="content" class="form-label">@lang('messages.content'):</label>
+                        <textarea name="content" id="content" class="form-textarea" required>{{ old('content', $article->content) }}</textarea>
                     </div>
                 </div>
 
@@ -181,7 +181,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
     <script>
         ClassicEditor
-        .create(document.querySelector('#description'), {
+        .create(document.querySelector('#content'), {
             toolbar: {
                 items: [
                     'bold', 'italic', '|',

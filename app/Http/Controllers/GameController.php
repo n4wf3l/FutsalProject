@@ -14,60 +14,77 @@ class GameController extends Controller
 {
     public function showCalendar(Request $request)
     {
-        // Récupérer le premier championnat existant
         $championship = Championship::first();
-
-        // Récupérer les paramètres du site, en particulier le nom du club
         $siteSetting = SiteSetting::first();
-        $clubName = $siteSetting->club_name ?? 'Default Club Name'; // Nom par défaut si absent
-        $clubNamePrefix = substr($clubName, 0, 4); // Prefixe du nom du club pour filtrer les équipes
-
-        // Filtre par équipe et date
-        $teamFilter = $request->input('team_filter', 'all_teams');
+    
+        // Obtenir le nom du club depuis les paramètres du site ou définir une valeur par défaut
+        $clubName = $siteSetting->club_name ?? 'Default Club Name';
+    
+        // Tenter de trouver l'équipe par son nom, en ignorant la casse et les espaces
+        $team = Team::whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($clubName))])->first();
+    
+        if (!$team) {
+            // Équipe non trouvée; définir manuellement teamId pour les tests
+            $teamId = 1; // Remplacez 1 par l'ID réel de votre équipe
+            $teamNotFound = false;
+        } else {
+            $teamId = $team->id;
+            $teamNotFound = false;
+        }
+    
+        // Récupérer les filtres de la requête
+        $teamFilter = $request->input('team_filter', 'all');
         $dateFilter = $request->input('date_filter', 'results_and_upcoming');
         $today = now()->startOfDay();
-
+    
         // Requête de base pour les matchs
-            $lastUpdatedGame = Game::with('updatedBy')->orderBy('updated_at', 'desc')->first();
-$gamesQuery = Game::with(['homeTeam', 'awayTeam', 'updatedBy']);
-
-        // Filtrer par équipe si nécessaire
-        if ($teamFilter === 'specific_team') {
-            $gamesQuery->where(function ($query) use ($clubNamePrefix) {
-                $query->whereHas('homeTeam', function ($q) use ($clubNamePrefix) {
-                    $q->where('name', 'like', $clubNamePrefix . '%');
-                })->orWhereHas('awayTeam', function ($q) use ($clubNamePrefix) {
-                    $q->where('name', 'like', $clubNamePrefix . '%');
-                });
+        $gamesQuery = Game::with(['homeTeam', 'awayTeam', 'updatedBy']);
+    
+        // Appliquer le filtre d'équipe
+        if ($teamFilter === 'club' && $teamId) {
+            $gamesQuery->where(function ($query) use ($teamId) {
+                $query->where('home_team_id', $teamId)
+                      ->orWhere('away_team_id', $teamId);
             });
         }
-
-        // Filtrer par date (matchs à venir ou résultats)
+    
+        // Appliquer le filtre de date
         if ($dateFilter === 'upcoming') {
-            $gamesQuery->where('match_date', '>=', $today)
-                       ->whereNull('home_score')
-                       ->whereNull('away_score');
+            $gamesQuery->where('match_date', '>=', $today);
         } elseif ($dateFilter === 'results') {
-            $gamesQuery->whereNotNull('home_score')
-                       ->whereNotNull('away_score');
+            $gamesQuery->where('match_date', '<', $today);
         }
-
-        // Obtenir les matchs
+        // Si 'results_and_upcoming', aucun filtre de date n'est appliqué (tous les matchs sont affichés)
+    
+        // Récupérer les matchs
         $games = $gamesQuery->orderBy('match_date')->get();
-
-        // Récupérer les équipes classées par points, différence de buts et buts marqués
+    
+        // Récupérer le dernier match mis à jour
+        $lastUpdatedGame = Game::with('updatedBy')->orderBy('updated_at', 'desc')->first();
+    
+        // Récupérer les équipes pour le classement
         $teams = Team::orderBy('points', 'desc')
-            ->orderBy('goal_difference', 'desc')
-            ->orderBy('goals_for', 'desc')
-            ->get();
-
-        // Récupérer l'image de fond pour la page du calendrier
+                     ->orderBy('goal_difference', 'desc')
+                     ->orderBy('goals_for', 'desc')
+                     ->get();
+    
+        // Image de fond
         $backgroundImage = BackgroundImage::where('assigned_page', 'calendar')->latest()->first();
-
-        // Retourner la vue avec les données
-        return view('calendar', compact('championship', 'games', 'teams', 'backgroundImage', 'clubName', 'clubNamePrefix', 'lastUpdatedGame'));
+    
+        // Passer les variables à la vue
+        return view('calendar', compact(
+            'championship',
+            'games',
+            'teams',
+            'backgroundImage',
+            'clubName',
+            'teamId',
+            'teamFilter',
+            'dateFilter',
+            'lastUpdatedGame',
+            'teamNotFound'
+        ));
     }
-
     // Méthode pour l'API - afficher le calendrier et les équipes
     public function apiShowCalendar()
     {
