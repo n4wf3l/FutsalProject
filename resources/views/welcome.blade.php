@@ -437,6 +437,7 @@
             gap: 10px;
             grid-auto-flow: dense; /* Fill gaps effectively */
             margin-bottom:50px;
+            margin-top:20%;
         }
 
         /* Individual gallery item style for latest photos */
@@ -1224,7 +1225,7 @@
 @endif
 
 
-    <hr class ="mt-10" style="margin-bottom:50px;">
+    <hr class ="mt-50" style="margin-bottom:100px;">
 
   <section class="latest-photos">
     <div class="container" style="text-align:center">

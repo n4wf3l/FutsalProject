@@ -44,7 +44,6 @@
     .sponsor-carousel-container h2 {
         font-size: 2rem;
         font-weight: bold;
-        margin-bottom: 20px;
     }
 
     .carousel-wrapper {
@@ -92,7 +91,29 @@
         right: 0;
     }
 
+    .responsive-hr {
+      display: none; /* Masque le <hr> par défaut */
+  }
+
+  /* Le rend visible uniquement pour les écrans de largeur maximale 768px */
+  @media (max-width: 768px) {
+      .responsive-hr {
+          display: block;
+          border: 1px solid #ccc; /* Style du <hr>, modifie selon tes préférences */
+          margin: 16px 0;
+          width: 100%;
+      }
+  }
+
     @media (max-width: 767px) {
+
+        .sponsor-carousel-container h2 {
+        font-size: 1rem;
+        margin-top: 15px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
         .footer-center {
             display: flex;
             flex-direction: column;
@@ -140,15 +161,6 @@
         margin: 0 auto;
     }
 
-    .sponsor-carousel-container {
-    width: 40%;
-    margin: 0 auto;
-    text-align: center;
-    margin-bottom: 80px;
-}
-
-
-
     @media (max-width: 767px) {
         .carousel-item {
             min-width: 100%; /* Chaque item prend la largeur de l'écran en mobile */
@@ -158,28 +170,40 @@
             max-width: 100%;
             height: auto;
         }
-
     }
 </style>
 
 @if($sponsors->isNotEmpty())
-    <div class="sponsor-carousel-container">
-        <!-- Application du style en ligne pour le titre -->
-        <x-page-title style="font-size: 1.2rem; font-weight: bold; text-align: center; white-space: nowrap;">
-            {{ __('messages.sponsors_partners') }}
-        </x-page-title>
-        
+    <div class="sponsor-carousel-container mx-auto mb-8 text-center">
+        <div class="flex justify-center items-center space-x-3">
+            <!-- Barre verticale -->
+            <div class="w-1 h-10 bg-secondary-color"></div>
+
+            <!-- Texte centré et redimensionné -->
+            <x-page-title class="text-2xl font-bold sm:text-lg">
+                {{ __('messages.sponsors_partners') }}
+            </x-page-title>
+        </div>
+
         <div class="carousel-wrapper">
             <div class="carousel">
-                @foreach($sponsors as $sponsor)
+                @php
+                    $totalImages = count($sponsors);
+                    if ($totalImages === 1) {
+                        // Si une seule image, quadrupler pour obtenir 4 éléments
+                        $displayedSponsors = array_fill(0, 4, $sponsors[0]);
+                    } elseif ($totalImages === 2) {
+                        // Si deux images, les dupliquer pour obtenir 4 éléments
+                        $displayedSponsors = array_merge($sponsors->all(), $sponsors->all());
+                    } else {
+                        // Plus de 2 images, les afficher normalement puis dupliquer
+                        $displayedSponsors = array_merge($sponsors->all(), $sponsors->all());
+                    }
+                @endphp
+
+                @foreach($displayedSponsors as $sponsor)
                     <div class="carousel-item">
-                        <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
-                    </div>
-                @endforeach
-                <!-- Duplicate the items for the infinite loop effect -->
-                @foreach($sponsors as $sponsor)
-                    <div class="carousel-item">
-                        <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}">
+                        <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}" loading="lazy">
                     </div>
                 @endforeach
             </div>
@@ -244,6 +268,7 @@
                 </ul>
             </div>
 
+            <hr class="responsive-hr">
             <!-- Team Links -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
                 <h3 class="font-bold mb-4">@lang('messages.team')</h3>
@@ -256,6 +281,7 @@
                 </ul>
             </div>
 
+                        <hr class="responsive-hr">
             <!-- Matches -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
                 <h3 class="font-bold mb-4">@lang('messages.matches')</h3>
@@ -266,6 +292,7 @@
                 </ul>
             </div>
 
+            <hr class="responsive-hr">
             <!-- Contact Information -->
             <div class="w-full md:w-1/4 footer-contact">
                 <h3 class="font-bold mb-4">@lang('messages.contact')</h3>
@@ -321,76 +348,46 @@
 <script type="text/javascript">
  document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.querySelector('.carousel');
-    const carouselItems = document.querySelectorAll('.carousel-item');
-    const prevButton = document.querySelector('.carousel-button.prev');
-    const nextButton = document.querySelector('.carousel-button.next');
+    const carouselItems = Array.from(document.querySelectorAll('.carousel-item'));
     const itemWidth = carouselItems[0].offsetWidth;
     let currentIndex = 0;
-    let autoPlayInterval;
+    let isTransitioning = false;
 
-    // Dupliquer les premiers et derniers éléments pour créer l'effet de boucle infinie
-    const firstClone = carouselItems[0].cloneNode(true);
-    const lastClone = carouselItems[carouselItems.length - 1].cloneNode(true);
-
-    carousel.appendChild(firstClone);
-    carousel.insertBefore(lastClone, carouselItems[0]);
+    // Duplique les premiers et derniers éléments pour créer l'illusion de boucle infinie
+    carouselItems.forEach(item => {
+        const cloneStart = item.cloneNode(true);
+        const cloneEnd = item.cloneNode(true);
+        carousel.appendChild(cloneEnd);
+        carousel.insertBefore(cloneStart, carousel.firstChild);
+    });
 
     const totalItems = carousel.querySelectorAll('.carousel-item').length;
 
-    // Initialiser la position du carrousel pour ne pas afficher le clone de fin en premier
-    carousel.style.transform = `translateX(${-itemWidth}px)`;
+    // Position initiale du carrousel
+    carousel.style.transform = `translateX(${-itemWidth * carouselItems.length}px)`;
 
     function updateCarousel() {
-        const translateX = -(currentIndex + 1) * itemWidth;
-        carousel.style.transition = 'transform 0.3s ease-in-out';
-        carousel.style.transform = `translateX(${translateX}px)`;
-    }
+        if (!isTransitioning) {
+            isTransitioning = true;
+            currentIndex++;
+            carousel.style.transition = 'transform 0.3s ease-in-out';
+            carousel.style.transform = `translateX(${-((carouselItems.length + currentIndex) % totalItems) * itemWidth}px)`;
+        }
 
-    function showNext() {
-        currentIndex++;
-        updateCarousel();
-        if (currentIndex === totalItems - 2) {
-            // Transition vers le premier élément
-            setTimeout(() => {
+        // Réinitialisation invisible pour un cycle continu
+        carousel.addEventListener('transitionend', () => {
+            isTransitioning = false;
+            if (currentIndex >= carouselItems.length) {
                 carousel.style.transition = 'none';
                 currentIndex = 0;
-                carousel.style.transform = `translateX(${-itemWidth}px)`;
-            }, 300); // Correspond au temps de transition défini
-        }
-    }
-
-    function showPrev() {
-        currentIndex--;
-        updateCarousel();
-        if (currentIndex < 0) {
-            // Transition vers le dernier élément
-            setTimeout(() => {
-                carousel.style.transition = 'none';
-                currentIndex = totalItems - 3;
-                carousel.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
-            }, 300); // Correspond au temps de transition défini
-        }
+                carousel.style.transform = `translateX(${-itemWidth * carouselItems.length}px)`;
+            }
+        });
     }
 
     function startAutoPlay() {
-        autoPlayInterval = setInterval(showNext, 2000);
+        setInterval(updateCarousel, 2000);
     }
-
-    function stopAutoPlay() {
-        clearInterval(autoPlayInterval);
-    }
-
-    nextButton.addEventListener('click', () => {
-        stopAutoPlay();
-        showNext();
-        startAutoPlay();
-    });
-
-    prevButton.addEventListener('click', () => {
-        stopAutoPlay();
-        showPrev();
-        startAutoPlay();
-    });
 
     startAutoPlay();
 });

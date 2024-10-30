@@ -32,9 +32,9 @@ class GameController extends Controller
             $teamNotFound = false;
         }
     
-        // Récupérer les filtres de la requête
-        $teamFilter = $request->input('team_filter', 'all');
-        $dateFilter = $request->input('date_filter', 'results_and_upcoming');
+        // Définir les filtres par défaut
+        $teamFilter = $request->input('team_filter', 'club'); // Par défaut "club"
+        $dateFilter = $request->input('date_filter', 'upcoming'); // Par défaut "upcoming"
         $today = now()->startOfDay();
     
         // Requête de base pour les matchs

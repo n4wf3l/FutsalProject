@@ -549,11 +549,11 @@
         <!-- Filtre par équipe -->
         <label for="team_filter">{{ __('messages.show_matches_of') }}:</label>
         <select name="team_filter" id="team_filter" onchange="this.form.submit()">
-            <option value="all" {{ request('team_filter', 'all') == 'all' ? 'selected' : '' }}>
+            <option value="all" {{ request('team_filter') == 'all' ? 'selected' : '' }}>
                 {{ __('messages.all_teams') }}
             </option>
             @if(!$teamNotFound)
-                <option value="club" {{ request('team_filter') == 'club' ? 'selected' : '' }}>
+                <option value="club" {{ request('team_filter', 'club') == 'club' ? 'selected' : '' }}>
                     {{ $clubName }}
                 </option>
             @endif
@@ -564,10 +564,10 @@
     <div class="filter-group">
         <label for="date_filter">{{ __('messages.show') }}:</label>
         <select name="date_filter" id="date_filter" onchange="this.form.submit()">
-            <option value="results_and_upcoming" {{ request('date_filter', 'results_and_upcoming') == 'results_and_upcoming' ? 'selected' : '' }}>
+            <option value="results_and_upcoming" {{ request('date_filter') == 'results_and_upcoming' ? 'selected' : '' }}>
                 {{ __('messages.results_and_upcoming') }}
             </option>
-            <option value="upcoming" {{ request('date_filter') == 'upcoming' ? 'selected' : '' }}>
+            <option value="upcoming" {{ request('date_filter', 'upcoming') == 'upcoming' ? 'selected' : '' }}>
                 {{ __('messages.upcoming_matches') }}
             </option>
             <option value="results" {{ request('date_filter') == 'results' ? 'selected' : '' }}>

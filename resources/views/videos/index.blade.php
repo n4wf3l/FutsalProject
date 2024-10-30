@@ -18,7 +18,6 @@
     <meta property="og:description" content="Découvrez les dernières vidéos de {{ $clubName }}." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ url()->current() }}" />
-    <meta property="og:image" content="{{ asset('storage/' . $videos->first()->image) }}" />
     <meta property="og:site_name" content="{{ $clubName }}" />
     <meta property="og:locale" content="{{ app()->getLocale() }}" />
 
@@ -26,7 +25,6 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{ __('messages.videos') }} | {{ $clubName }}" />
     <meta name="twitter:description" content="Découvrez les dernières vidéos de {{ $clubName }}." />
-    <meta name="twitter:image" content="{{ asset('storage/' . $videos->first()->image) }}" />
     <meta name="twitter:url" content="{{ url()->current() }}" />
 
     <!-- Dublin Core Metadata -->

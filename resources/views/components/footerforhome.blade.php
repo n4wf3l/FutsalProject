@@ -70,6 +70,20 @@
             gap: 10px;
         }
     }
+
+    .responsive-hr {
+      display: none; /* Masque le <hr> par défaut */
+  }
+
+  /* Le rend visible uniquement pour les écrans de largeur maximale 768px */
+  @media (max-width: 768px) {
+      .responsive-hr {
+          display: block;
+          border: 1px solid #ccc; /* Style du <hr>, modifie selon tes préférences */
+          margin: 16px 0;
+          width: 100%;
+      }
+  }
 </style>
 <footer class="text-white py-12 mt-auto" style="background-color: {{ $primaryColor }};">
     <div class="footer-center container mx-auto px-6">
@@ -127,6 +141,8 @@
                 </ul>
             </div>
 
+            <hr class="responsive-hr">
+
             <!-- Team Links -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
                 <h3 class="font-bold mb-4">@lang('messages.team')</h3>
@@ -139,6 +155,8 @@
                 </ul>
             </div>
 
+            <hr class="responsive-hr">
+
             <!-- Matches -->
             <div class="w-full md:w-1/4 mb-6 md:mb-0 footer-links">
                 <h3 class="font-bold mb-4">@lang('messages.matches')</h3>
@@ -148,6 +166,8 @@
                     <li><a href="{{ route('calendar.show') }}#ranking-section" class="hover:text-gray-300">@lang('messages.general_calendar')</a></li>
                 </ul>
             </div>
+
+            <hr class="responsive-hr">
 
             <!-- Contact Information -->
             <div class="w-full md:w-1/4 footer-contact">

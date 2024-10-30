@@ -191,8 +191,9 @@
         </div>
 
         <div class="contact-form" data-aos="fade-left">
-            <form action="{{ route('contact.send') }}" method="POST">
+        <form action="{{ route('contact.send') }}" method="POST" id="contactForm">
                 @csrf
+                <input type="hidden" name="form_sent" id="formSent" value="0">
                 <div class="form-group">
                     <label for="firstname">{{ __('messages.first_name') }} *</label>
                     <input type="text" name="firstname" id="firstname" required>
@@ -219,5 +220,23 @@
     </div>
 
     <x-footer />
+
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('contactForm');
+        const formSent = document.getElementById('formSent');
+        
+        // Vérifie si le formulaire a été envoyé précédemment
+        if (sessionStorage.getItem('formSent') === 'true') {
+            alert("Your message has been successfully sent.");
+            sessionStorage.removeItem('formSent');  // Nettoie le stockage pour éviter l'alerte au prochain chargement
+        }
+
+        // À l'envoi du formulaire, enregistre dans le stockage de session
+        form.addEventListener('submit', function() {
+            sessionStorage.setItem('formSent', 'true');
+        });
+    });
+    </script>
 </body>
 </html>
