@@ -210,6 +210,39 @@
             color: green;
             font-weight: bold;
         }
+
+        /* Styles généraux pour le formulaire */
+.filter-form {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+/* Styles spécifiques pour les écrans de mobile */
+@media (max-width: 768px) {
+    .filter-form {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-group label {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+
+    .filter-group select {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+}
         
 
         /* Responsive Adjustments */
@@ -410,19 +443,19 @@
                 @elseif($loop->iteration >= $teams->count() - 3) bg-warning-light
                 @endif
             ">
-            <td data-aos="flip-up">{{ $loop->iteration }}</td>
-                <td data-aos="flip-up" class="club-name" style="{{ $team->name === $clubName ? 'border: 2px solid red;' : '' }}">
+            <td>{{ $loop->iteration }}</td>
+                <td class="club-name" style="{{ $team->name === $clubName ? 'border: 2px solid red;' : '' }}">
                     @if($team->logo_path)
                         <img src="{{ asset('storage/' . $team->logo_path) }}" alt="{{ $team->name }} {{ __('messages.logo') }}" class="club-logo">
                     @endif
                     <span>{{ $team->name }}</span>
                 </td>
-        <td data-aos="flip-up" class="points-cell">{{ $team->points }}</td>
-        <td data-aos="flip-up">{{ $team->games_played }}</td>
-        <td data-aos="flip-up">{{ $team->wins }}</td>
-        <td data-aos="flip-up">{{ $team->draws }}</td>
-        <td data-aos="flip-up">{{ $team->losses }}</td>
-        <td data-aos="flip-up">{{ $team->goal_difference }}</td>
+        <td class="points-cell">{{ $team->points }}</td>
+        <td>{{ $team->games_played }}</td>
+        <td>{{ $team->wins }}</td>
+        <td>{{ $team->draws }}</td>
+        <td>{{ $team->losses }}</td>
+        <td>{{ $team->goal_difference }}</td>
         @auth
         <td>
             <!-- Action buttons -->
@@ -598,8 +631,8 @@
             @else
                     @foreach(($games ?? collect())->sortBy('match_date') as $game)
                     <tr>
-                        <td data-aos="flip-up">{{ \Carbon\Carbon::parse($game->match_date)->format('d-m-Y') }}</td>
-                        <td data-aos="flip-up">
+                        <td>{{ \Carbon\Carbon::parse($game->match_date)->format('d-m-Y') }}</td>
+                        <td>
                             <div style="display: flex; align-items: center;">
                                 @if($game->homeTeam->logo_path)
                                 <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} {{ __('messages.logo') }}" class="club-logo">
@@ -607,7 +640,7 @@
                                 {{ $game->homeTeam->name }}
                             </div>
                         </td>
-                        <td data-aos="flip-up">
+                        <td>
                             <div style="display: flex; align-items: center;">
                                 @if($game->awayTeam->logo_path)
                                 <img src="{{ asset('storage/' . $game->awayTeam->logo_path) }}" alt="{{ $game->awayTeam->name }} {{ __('messages.logo') }}" class="club-logo">
@@ -615,7 +648,7 @@
                                 {{ $game->awayTeam->name }}
                             </div>
                         </td>
-                        <td data-aos="flip-up">
+                        <td>
                             @auth
                             <form action="{{ route('games.updateScores', $game->id) }}" method="POST">
                                 @csrf

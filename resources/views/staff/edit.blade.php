@@ -38,50 +38,50 @@
         @endif
 
         <!-- Edit Form -->
-        <form action="{{ route('staff.update', $staff->id) }}" method="POST">
-            @csrf
-            @method('PUT')
+        <form action="{{ route('staff.update', $staff->id) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
 
-            <!-- First Name -->
-            <div class="mb-4">
-                <label for="first_name" class="block text-sm font-medium text-gray-700">{{ __('messages.first_name') }}:</label>
-                <input type="text" name="first_name" id="first_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('first_name', $staff->first_name) }}" required>
-            </div>
-
-            <!-- Last Name -->
-            <div class="mb-4">
-                <label for="last_name" class="block text-sm font-medium text-gray-700">{{ __('messages.last_name') }}:</label>
-                <input type="text" name="last_name" id="last_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('last_name', $staff->last_name) }}" required>
-            </div>
-
-            <!-- Position -->
-            <div class="mb-4">
-                <label for="position" class="block text-sm font-medium text-gray-700">{{ __('messages.position') }}:</label>
-                <input type="text" name="position" id="position" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('position', $staff->position) }}" required>
-            </div>
-
-                <!-- Champ pour l'image -->
+    <!-- First Name -->
     <div class="mb-4">
-        <label for="photo" class="block text-sm font-medium text-gray-700">{{ __('messages.photo') }}:</label>
-        <input type="file" name="photo" id="photo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+        <label for="first_name" class="block text-sm font-medium text-gray-700">{{ __('messages.first_name') }}:</label>
+        <input type="text" name="first_name" id="first_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('first_name', $staff->first_name) }}" required>
     </div>
 
-            <!-- Submit Button -->
-            <div class="text-center">
-                <button type="submit" 
-                        class="text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-200"
-                        style="
-                            background-color: {{ $primaryColor }};
-                            margin-bottom: 20px; 
-                            font-size: 15px;
-                            transition: background-color 0.3s ease;
-                        "
-                        onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
-                        onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
-                    {{ __('messages.update_staff_member_button') }}
-                </button>
-            </div>
-        </form>
+    <!-- Last Name -->
+    <div class="mb-4">
+        <label for="last_name" class="block text-sm font-medium text-gray-700">{{ __('messages.last_name') }}:</label>
+        <input type="text" name="last_name" id="last_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('last_name', $staff->last_name) }}" required>
+    </div>
+
+    <!-- Position -->
+    <div class="mb-4">
+        <label for="position" class="block text-sm font-medium text-gray-700">{{ __('messages.position') }}:</label>
+        <input type="text" name="position" id="position" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="{{ old('position', $staff->position) }}" required>
+    </div>
+
+    <!-- Champ pour l'image -->
+    <div class="mb-4">
+        <label for="photo" class="block text-sm font-medium text-gray-700">{{ __('messages.photo') }}:</label>
+        <input type="file" name="photo" id="photo" accept="image/*" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+    </div>
+
+    <!-- Submit Button -->
+    <div class="text-center">
+        <button type="submit" 
+                class="text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-200"
+                style="
+                    background-color: {{ $primaryColor }};
+                    margin-bottom: 20px; 
+                    font-size: 15px;
+                    transition: background-color 0.3s ease;
+                "
+                onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+                onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+            {{ __('messages.update_staff_member_button') }}
+        </button>
+    </div>
+</form>
     </div>
 
     <x-footer />

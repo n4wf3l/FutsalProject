@@ -208,7 +208,7 @@
     @endauth
 
     <!-- Main content section with gallery grid -->
-    <main class="container mx-auto px-4 mb-20" data-aos="zoom-in-down">
+    <main class="container mx-auto px-4 mb-20" data-aos="fade-right">
         @if($photos->isEmpty())
             <p class="text-center text-gray-600">{{ __('messages.no_photos') }}</p>
         @else

@@ -188,7 +188,7 @@
             </div>
         @endauth
 
-        <div class="grid grid-cols-3 gap-6 mt-8" data-aos="flip-down">
+        <div class="grid grid-cols-3 gap-6 mt-8" data-aos="fade-right">
             @if($galleries->isEmpty())
                 <p class="text-center text-gray-600 col-span-3">{{ __('messages.no_albums') }}</p>
             @else

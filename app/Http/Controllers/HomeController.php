@@ -18,56 +18,56 @@ use App\Models\Video;
 class HomeController extends Controller
 {
     public function index()
-    {
-        $clubInfo = ClubInfo::first();
-        $city = $clubInfo->city ?? 'Default City';
-        $clubLocation = $clubInfo->sportcomplex_location ?? 'Default Location';  
-        $clubName = $clubInfo->club_name ?? 'Dina Kénitra FC';
-        $clubPrefix = substr($clubName, 0, 4);
-        $logoPath = $clubInfo->logo_path ?? null;
-        $flashMessage = FlashMessage::latest()->first();
-        
-        $apiKey = '005385f3666cb67a6f99bc58b9a3e4b9';
-        $weatherData = $this->getWeatherData($city, $apiKey);
+{
+    $clubInfo = ClubInfo::first();
+    $city = $clubInfo->city ?? 'Default City';
+    $clubLocation = $clubInfo->sportcomplex_location ?? 'Default Location';  
+    $clubName = $clubInfo->club_name ?? 'Dina Kénitra FC';
+    $clubPrefix = substr($clubName, 0, 4);
+    $logoPath = $clubInfo->logo_path ?? null;
+    $flashMessage = FlashMessage::latest()->first();
     
-        // Récupérer le prochain match unique
-        $nextGame = Game::where('match_date', '>=', now()->startOfDay())
-            ->where(function($query) use ($clubPrefix) {
-                $query->whereHas('homeTeam', function($q) use ($clubPrefix) {
-                    $q->where('name', 'LIKE', "$clubPrefix%");
-                })
-                ->orWhereHas('awayTeam', function($q) use ($clubPrefix) {
-                    $q->where('name', 'LIKE', "$clubPrefix%");
-                });
+    $apiKey = '005385f3666cb67a6f99bc58b9a3e4b9';
+    $weatherData = $this->getWeatherData($city, $apiKey);
+
+    // Récupérer le dernier match unique avant aujourd'hui
+    $lastGame = Game::where('match_date', '<', now()->startOfDay())
+        ->where(function($query) use ($clubPrefix) {
+            $query->whereHas('homeTeam', function($q) use ($clubPrefix) {
+                $q->where('name', 'LIKE', "$clubPrefix%");
             })
-            ->orderBy('match_date', 'asc')
-            ->first();
-    
-        // Récupérer les cinq prochains matchs maximum
-        $nextGames = Game::where('match_date', '>=', now()->startOfDay())
-            ->where(function($query) use ($clubPrefix) {
-                $query->whereHas('homeTeam', function($q) use ($clubPrefix) {
-                    $q->where('name', 'LIKE', "$clubPrefix%");
-                })
-                ->orWhereHas('awayTeam', function($q) use ($clubPrefix) {
-                    $q->where('name', 'LIKE', "$clubPrefix%");
-                });
+            ->orWhereHas('awayTeam', function($q) use ($clubPrefix) {
+                $q->where('name', 'LIKE', "$clubPrefix%");
+            });
+        })
+        ->orderBy('match_date', 'desc')
+        ->first();
+
+    // Récupérer les cinq prochains matchs maximum
+    $nextGames = Game::where('match_date', '>=', now()->startOfDay())
+        ->where(function($query) use ($clubPrefix) {
+            $query->whereHas('homeTeam', function($q) use ($clubPrefix) {
+                $q->where('name', 'LIKE', "$clubPrefix%");
             })
-            ->orderBy('match_date', 'asc')
-            ->take(5)
-            ->get();
-    
-        $articles = Article::latest()->take(4)->get();
-        $videos = Video::latest()->take(2)->get();
-    
-        // Récupérer la dernière image ajoutée
-        $welcomeImage = WelcomeImage::latest()->first();
-    
-        // Récupérer les 8 dernières images de la galerie
-        $latestPhotos = Photo::latest()->take(8)->get();
-    
-        return view('welcome', compact('weatherData', 'city', 'flashMessage', 'nextGame', 'nextGames', 'clubLocation', 'clubPrefix', 'clubName', 'articles', 'videos', 'welcomeImage', 'logoPath', 'latestPhotos'));
-    }
+            ->orWhereHas('awayTeam', function($q) use ($clubPrefix) {
+                $q->where('name', 'LIKE', "$clubPrefix%");
+            });
+        })
+        ->orderBy('match_date', 'asc')
+        ->take(5)
+        ->get();
+
+    $articles = Article::latest()->take(4)->get();
+    $videos = Video::latest()->take(2)->get();
+
+    // Récupérer la dernière image ajoutée
+    $welcomeImage = WelcomeImage::latest()->first();
+
+    // Récupérer les 8 dernières images de la galerie
+    $latestPhotos = Photo::latest()->take(8)->get();
+
+    return view('welcome', compact('weatherData', 'city', 'flashMessage', 'lastGame', 'nextGames', 'clubLocation', 'clubPrefix', 'clubName', 'articles', 'videos', 'welcomeImage', 'logoPath', 'latestPhotos'));
+}
     
     private function getWeatherData($city, $apiKey)
     {

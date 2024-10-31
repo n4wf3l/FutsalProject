@@ -48,25 +48,26 @@ class StaffController extends Controller
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'position' => 'required|max:255',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Valider l'image
+            // Retirez la ligne ci-dessous si vous voulez accepter tous les types de fichiers sans validation
+            // 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
+    
         // Préparer les données
         $data = $request->except('photo');
-
+    
         // Gérer l'image si elle est présente
         if ($request->hasFile('photo')) {
             // Supprimer l'ancienne image si elle existe
             if ($staff->photo) {
                 Storage::disk('public')->delete($staff->photo);
             }
-
+    
             $data['photo'] = $request->file('photo')->store('photos', 'public'); // Stocker la nouvelle image
         }
-
+    
         // Mettre à jour les informations du staff
         $staff->update($data);
-
+    
         return redirect()->route('teams')->with('success', 'Staff member updated successfully.');
     }
 

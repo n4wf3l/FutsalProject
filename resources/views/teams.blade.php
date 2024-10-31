@@ -62,6 +62,23 @@ use Illuminate\Support\Facades\Auth;
             font-weight: 600;
         }
 
+        .zoom-hover {
+    transition: transform 0.3s ease;
+}
+
+.zoom-hover:hover {
+    transform: scale(1.05);
+}
+
+/* Appliquer le style de zoom aux éléments */
+.player-item, .bg-coach, .staff-item {
+    transition: transform 0.3s ease;
+}
+
+.player-item:hover, .bg-coach:hover, .staff-item:hover {
+    transform: scale(1.05);
+}
+
         .player-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -140,19 +157,25 @@ use Illuminate\Support\Facades\Auth;
         }
 
         .club-logo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 10%;
-            height: auto;
-            z-index: 20;
-        }
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 10%;
+    height: auto;
+    z-index: 50; /* Augmentation du z-index */
+}
 
-        .staff-section {
-            color: black;
-            padding: 40px 0;
-            text-align: center; /* Centering the section title */
-        }
+@media (max-width: 768px) {
+    .club-logo {
+        display: block !important; /* Assurez-vous que le logo soit affiché sur mobile */
+        width: 15%; /* Ajustement de la taille si nécessaire */
+    }
+}
+.staff-section {
+    color: black;
+    padding: 40px 20px; /* Ajoute un padding horizontal pour mobile */
+    text-align: center;
+}
 
         .staff-title {
             font-size: 50px;
@@ -214,6 +237,15 @@ use Illuminate\Support\Facades\Auth;
 .staff-item a:hover,
 .staff-item button:hover {
     opacity: 0.8;
+}
+
+.framed-photo {
+    max-width: 200px; /* Contrôle la taille de l'image */
+    height: auto;
+    border-radius: 12px; /* Donne des coins arrondis */
+    padding: 10px; /* Espace entre l'image et le cadre */
+    background: {{ $secondaryColor }}; /* Dégradé pour le cadre */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Ombre pour donner de la profondeur */
 }
 
 .uniform-photo {
@@ -280,7 +312,7 @@ use Illuminate\Support\Facades\Auth;
 <body class="bg-gray-100" @if($backgroundImage) style="background: url('{{ asset('storage/' . $backgroundImage->image_path) }}') no-repeat center center fixed; background-size: cover;" @endif>
     <x-navbar />
 
-    <header class="text-center my-12">
+    <header class="text-center my-12 mx-auto px-4 max-w-md">
         <x-page-title subtitle="{{ __('messages.meet_players') }}">
             {{ __('messages.senior_squad') }} {{ $championship->season ?? 'N/A' }}
         </x-page-title>
@@ -325,31 +357,43 @@ use Illuminate\Support\Facades\Auth;
                         <span>{{ $player->first_name }} {{ $player->last_name }}</span>
                     </div>
 
-                    <!-- Player Info Overlay -->
-                    <div class="player-overlay p-4">
-                        <p><strong>{{ __('messages.birthdate') }}:</strong> {{ \Carbon\Carbon::parse($player->birthdate)->format('d-m-Y') }}</p>
-                        <p><strong>{{ __('messages.position') }}:</strong> {{ $player->position }}</p>
-                        <p><strong>{{ __('messages.nationality') }}:</strong> {{ $player->nationality }}</p>
+            <!-- Player Info Overlay with unique ID -->
+            <div id="player-info-{{ $player->id }}" class="player-overlay p-4 hidden">
+                <p><strong>{{ __('messages.birthdate') }}:</strong> {{ \Carbon\Carbon::parse($player->birthdate)->format('d-m-Y') }}</p>
+                <p><strong>{{ __('messages.position') }}:</strong> {{ $player->position }}</p>
+                <p><strong>{{ __('messages.nationality') }}:</strong> {{ $player->nationality }}</p>
 
-                        <!-- Delete and Edit buttons, visible only to authenticated users -->
-                        @auth
-    <div class="flex mt-4">
-        <!-- Delete Button -->
-        <form action="{{ route('players.destroy', $player->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');" class="mr-4">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="transform hover:scale-110 transition duration-200" title="{{ __('messages.delete') }}">
-                <i class="fas fa-trash-alt text-white hover:text-red-500 text-xl"></i>
-            </button>
-        </form>
+                <script>
+    function togglePlayerInfo(playerId) {
+        const playerInfo = document.getElementById(`player-info-${playerId}`);
+        if (playerInfo) {
+            playerInfo.classList.toggle('hidden');
+        }
+    }
+</script>
+                  <!-- Delete and Edit buttons, visible only to authenticated users -->
+                  @auth
+<div class="flex mt-4">
+    <!-- Edit Button -->
+    <a href="{{ route('players.edit', $player->id) }}" 
+       class="transform hover:scale-110 transition duration-200" 
+       title="{{ __('messages.edit') }}"
+       style="background-color: #d1ecf1; border: 1px solid #bee5eb; padding: 8px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px;">
+        <i class="fas fa-edit text-blue-600 hover:text-blue-800 text-xl"></i>
+    </a>
 
-        <!-- Edit Button -->
-        <a href="{{ route('players.edit', $player->id) }}" 
-           class="transform hover:scale-110 transition duration-200" 
-           title="{{ __('messages.edit') }}">
-            <i class="fas fa-edit text-white hover:text-blue-500 text-xl"></i>
-        </a>
-    </div>
+    <!-- Delete Button -->
+    <form action="{{ route('players.destroy', $player->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" 
+                class="transform hover:scale-110 transition duration-200" 
+                title="{{ __('messages.delete') }}"
+                style="background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+            <i class="fas fa-trash-alt text-red-600 hover:text-red-800 text-xl"></i>
+        </button>
+    </form>
+</div>
 @endauth
 
                     </div>
@@ -371,7 +415,6 @@ use Illuminate\Support\Facades\Auth;
                     <p class="text-lg  mb-6">{!! $coach->description !!}</p>
 
                     <div class="text-lg coach-info">
-                        <p class="mb-2"><strong>{{ __('messages.date_of_birth') }}:</strong> {{ \Carbon\Carbon::parse($coach->birth_date)->format('d F Y') }}</p>
                         <p class="mb-2"><strong>{{ __('messages.place_of_birth') }}:</strong> {{ $coach->birth_city }}</p>
                         <p class="mb-2"><strong>{{ __('messages.nationality') }}:</strong> {{ $coach->nationality }}</p>
                         <p class="mb-2"><strong>{{ __('messages.coaching_since') }}:</strong> {{ \Carbon\Carbon::parse($coach->coaching_since)->format('d F Y') }}</p>
@@ -381,30 +424,35 @@ use Illuminate\Support\Facades\Auth;
                 <!-- Coach Photo and Buttons -->
                 <div class="text-center flex flex-col items-center justify-center">
                     @if($coach->photo)
-                        <img src="{{ asset('storage/' . $coach->photo) }}" alt="{{ $coach->first_name }} {{ $coach->last_name }}" class="coach-photo">
+                    <img src="{{ asset('storage/' . $coach->photo) }}" alt="{{ $coach->first_name }} {{ $coach->last_name }}" class="coach-photo framed-photo">
                     @else
                         <img src="https://via.placeholder.com/256" alt="{{ __('messages.no_photo') }}" class="coach-photo">
                     @endif
 
                     <!-- Buttons for Edit and Delete -->
                     @auth
-    <div class="flex mt-6">
-        <!-- Edit Button -->
-        <a href="{{ route('coaches.edit', $coach->id) }}" 
-           class="hover:text-blue-700 transform hover:scale-110 transition duration-200" 
-           title="{{ __('messages.edit') }}">
-            <i class="fas fa-edit text-xl"></i>
-        </a>
+                    <div class="flex mt-6">
+    <!-- Edit Button -->
+    <a href="{{ route('coaches.edit', $coach->id) }}" 
+       class="transform hover:scale-110 transition duration-200" 
+       title="{{ __('messages.edit') }}"
+       style="background-color: #d1ecf1; border: 1px solid #bee5eb; padding: 8px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px;">
+        <i class="fas fa-edit text-blue-600 hover:text-blue-800 text-xl"></i>
+    </a>
 
-        <!-- Delete Button -->
-        <form action="{{ route('coaches.destroy', $coach->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');" class="ml-4">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="hover:text-red-500 transform hover:scale-110 transition duration-200" title="{{ __('messages.delete') }}">
-                <i class="fas fa-trash-alt text-xl"></i>
-            </button>
-        </form>
-    </div>
+    <!-- Delete Button -->
+    <form action="{{ route('coaches.destroy', $coach->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" 
+                class="transform hover:scale-110 transition duration-200" 
+                title="{{ __('messages.delete') }}"
+                style="background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+            <i class="fas fa-trash-alt text-red-600 hover:text-red-800 text-xl"></i>
+        </button>
+    </form>
+</div>
+
 @endauth
 
                 </div>
@@ -427,9 +475,11 @@ use Illuminate\Support\Facades\Auth;
 
     <!-- Staff Section -->
     <section class="staff-section" data-aos="flip-left" id="staff-section">
+        <div class="mx-auto px-2 max-w-md">
         <x-page-title subtitle="{{ __('messages.staff_subtitle') }}">
             {{ __('messages.technical_staff') }}
         </x-page-title>
+</div>
         @auth
         <x-button 
             route="{{ route('staff.create') }}"
@@ -466,19 +516,22 @@ use Illuminate\Support\Facades\Auth;
         <!-- Boutons Modifier et Supprimer -->
         @auth
     <div class="mt-4 flex justify-center space-x-4">
-        <!-- Bouton Supprimer -->
-        <form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="transform hover:scale-110 transition duration-200" title="{{ __('messages.delete') }}" style="background:none; border:none;">
-                <i class="fas fa-trash-alt text-black hover:text-red-500 text-xl"></i>
-            </button>
-        </form>
+      <!-- Bouton Supprimer -->
+<form action="{{ route('staff.destroy', $member->id) }}" method="POST" onsubmit="return confirm('{{ __('messages.delete_confirmation') }}');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="transform hover:scale-110 transition duration-200" title="{{ __('messages.delete') }}" 
+            style="background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 8px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+        <i class="fas fa-trash-alt text-red-600 hover:text-red-800 text-xl"></i>
+    </button>
+</form>
 
-        <!-- Bouton Modifier -->
-        <a href="{{ route('staff.edit', $member->id) }}" class="transform hover:scale-110 transition duration-200" title="{{ __('messages.edit') }}">
-            <i class="fas fa-edit text-black hover:text-blue-700 text-xl"></i>
-        </a>
+<!-- Bouton Modifier -->
+<a href="{{ route('staff.edit', $member->id) }}" class="transform hover:scale-110 transition duration-200" title="{{ __('messages.edit') }}" 
+   style="background-color: #d1ecf1; border: 1px solid #bee5eb; padding: 8px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+    <i class="fas fa-edit text-blue-600 hover:text-blue-800 text-xl"></i>
+</a>
+
     </div>
 @endauth
     </div>

@@ -52,12 +52,6 @@
                 @endif
             }
 
-            .background-container,
-            .cover-container,
-            .info-container {
-                z-index: 1100; /* S'assurer que c'est en dessous des modals */
-            }
-
             .cover-container {
                 position: relative;
                 width: 100%;
@@ -66,22 +60,6 @@
             }
 
             /* White container positioned at the center */
-            .info-container {
-                border: 4px solid {{ $primaryColor }};
-                border-radius: 15px;
-                background-color: white;
-                width: 40%;
-                padding: 20px;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                position: absolute;
-                top: 60%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
 
             .team-logo {
                 height: 80px;
@@ -175,7 +153,6 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 500px; /* Hauteur fixe pour le carousel */
                 overflow: hidden;
             }
 
@@ -313,78 +290,7 @@
                 filter: grayscale(0%);
             }
 
-            .containerization {
-            width: 100%;
-            max-width: 900px;
-            margin: auto;
-            border: 4px solid {{ $primaryColor }};
-            border-radius: 15px;
-            margin-bottom: 100px;
-            margin-top: 30px;
-        }
 
-        .match-card {
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2px; /* Réduit le padding vertical */
-            text-align: center;
-            transition: background-color 0.3s ease;
-            border-bottom: 1px solid #ddd; /* Séparation entre les cartes */
-        }
-
-        .match-card.even {
-            background-color: #f9f9f9;
-        }
-
-        .match-card.odd {
-            background-color: #e9e9e9;
-        }
-
-        .match-card:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .match-date {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 2px; /* Réduit l'espace en dessous de la date */
-            font-weight: bold;
-        }
-
-        .match-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 2px; /* Réduit l'espace en dessous des détails du match */
-            padding: 0 20px; /* Réduit le padding latéral pour centrer le texte entre les logos */
-        }
-
-        .team-logo img {
-            width: 75px; /* Ajuste légèrement la taille des logos */
-            height: 75px;
-            object-fit: contain;
-            transition: transform 0.3s ease; /* Ajoute une transition au survol */
-        }
-
-        .match-info {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-            flex-grow: 1; /* Fait que le texte occupe l'espace restant */
-            line-height: 1.2; /* Réduit l'espacement vertical du texte */
-        }
-
-        .match-location {
-            font-size: 16px;
-            color: #555;
-            font-weight: bold;
-            margin-top: 5px; /* Réduit l'espace au-dessus de l'emplacement */
-        }
 
         .see-all-container {
             text-align: center;
@@ -437,7 +343,6 @@
             gap: 10px;
             grid-auto-flow: dense; /* Fill gaps effectively */
             margin-bottom:50px;
-            margin-top:20%;
         }
 
         /* Individual gallery item style for latest photos */
@@ -753,7 +658,6 @@
 
         /* Style du bouton */
         #reserve-button {
-            margin-top: 30vh;
             padding: 15px 30px;
             background-color: {{ $secondaryColor }};
             color: white;
@@ -801,42 +705,12 @@
             }
 
             .info-container {
-                width: 90%; /* Rend le conteneur plus large sur mobile */
-                top: 80%; /* Ajuste la position pour mobile */
+
             }
 
             .image-caption {
           display: none;
       }
-            .match-info {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .match-details {
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .match-info span {
-                display: none; /* Cache les noms des clubs */
-            }
-
-            .team-logo img {
-                width: 90px; /* Ajuste la taille des logos pour mobile */
-                height: 90px;
-            }
-
-            .vs-text {
-                font-size: 1.5rem; /* Réduit la taille du texte "VS" */
-                margin: 0 10px; /* Ajuste l'espacement */
-            }
-
-            .match-location, .match-date {
-                font-size: 1rem; /* Ajuste la taille du texte */
-            }
 
             .latest-photos .gallery-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -862,9 +736,7 @@
             .info-container,
             .main-article-container,
             .gallery-item {
-                max-width: 100%;
-                width: 100%; /* Ensure width is capped at 100% */
-                overflow-x: hidden; /* Hide overflow */
+
             }
 
             .containerization {
@@ -876,7 +748,6 @@
         @media (max-width: 768px) {
             .carousel-container {
                 width: 100% !important;
-                min-height: 20vh !important;
                 overflow: hidden !important;
             }
 
@@ -955,7 +826,11 @@
             .info-container{
 
             }
-        }
+    }
+
+    .font-bebas {
+    font-family: 'Bebas Neue', sans-serif;
+}
     </style>
 </head>
 <body class="bg-gray-100">
@@ -965,8 +840,13 @@
     <div class="flash-message-container">
         <div class="weather-info">
             <li class="d-flex align-items-center justify-content-center">
-                <img src="{{ asset('weather.png') }}" alt="Position" class="h-6 w-6 mr-2 ml-2"> 
-                <div class="mr-2">{{ $city }} | <span style="font-weight: bold;">{{ $weatherData['main']['temp'] ?? 'N/A' }}°C</span></div>
+            <img src="{{ asset('weather.png') }}" alt="Position" class="h-6 w-6 mr-2 ml-2">
+<div class="mr-2">
+    {{ $city }} | 
+    <span style="font-weight: bold;">
+        {{ isset($weatherData['main']['temp']) ? round($weatherData['main']['temp']) : 'N/A' }}°C
+    </span>
+</div>
                 @auth
                     <button type="button" class="btn btn-sm btn-light mr-2" data-bs-toggle="modal" data-bs-target="#editFlashMessageModal">
                         EDIT
@@ -1058,54 +938,227 @@
 
         <img id="club-logo" src="{{ $logoPath ? asset($logoPath) : '' }}" alt="Club Logo" style="display:none; width: 150px; position: absolute; left: 50%; transform: translateX(-50%); margin-top: 30vh; opacity: 0; transition: opacity 1s ease-in-out;">
 
-        <a id="reserve-button" href="{{ route('fanshop.index') }}" style="display:none; padding: 15px 30px; color: white; font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; position: absolute; left: 50%; transform: translateX(-50%); margin-top: 50vh; opacity: 0; transition: opacity 1s ease-in-out;" onmouseover="this.style.backgroundColor='{{ $primaryColor }}';"
+        <a id="reserve-button" href="{{ route('fanshop.index') }}" style="display:none; padding: 15px 30px; color: white; font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; position: absolute; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 1s ease-in-out;" onmouseover="this.style.backgroundColor='{{ $primaryColor }}';"
         onmouseout="this.style.backgroundColor='{{ $secondaryColor }}';">
             @lang('messages.reserve_your_ticket')
         </a>
     </div>
 
-<div class="info-container" style="top:105vh; z-index: 1300;">
-    <div class="title">@lang('messages.next_game')</div>
-    @if($nextGame)
-        <div class="match-info">
-            <!-- Affichage du lieu du match -->
-            @if(Str::startsWith($nextGame->homeTeam->name, $clubPrefix))
-                <li class="d-flex align-items-center justify-content-center">
-                    <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
-                    <div class="match-location">{{ $clubLocation }}, {{ $city }}</div>
-                </li>
-            @else
-                <li class="d-flex align-items-center justify-content-center">
-                    <img src="{{ asset('position.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
-                    <div class="match-location">@lang('messages.away')</div>
-                </li>
-            @endif
 
-            <div class="d-flex align-items-center justify-content-center mt-4">
-                <img src="{{ asset('storage/' . $nextGame->homeTeam->logo_path) }}" alt="Home Team Logo" class="team-logo">
-                <div class="vs-text">VS</div>
-                <img src="{{ asset('storage/' . $nextGame->awayTeam->logo_path) }}" alt="Away Team Logo" class="team-logo">
-            </div>
-            <div class="d-flex align-items-center justify-content-center mt-3">
-                <span>{{ $nextGame->homeTeam->name }}</span>
-                <span class="vs-text">-</span>
-                <span>{{ $nextGame->awayTeam->name }}</span>
-            </div>
-            <li class="d-flex align-items-center justify-content-center">
-                <img src="{{ asset('date.png') }}" alt="Position" class="h-6 w-6 mr-2"> 
-                <div class="match-location">{{ \Carbon\Carbon::parse($nextGame->match_date)->format('d-m-Y') }}</div>
-            </li>
+<!-- Container Dernier Score -->
+<section class="last-game-container">
+    <div class="last-game-card">
+        <h2 class="last-game-title">Last Game</h2>
+        
+        <!-- Localisation avec condition d'affichage -->
+        <div class="location">
+            <img src="{{ asset('position.png') }}" alt="Location" class="location-icon">
+            @if(Str::startsWith($lastGame->homeTeam->name, $clubPrefix))
+                <span>{{ $clubLocation }}, {{ $city }}</span>
+            @else
+                <span>@lang('messages.away')</span>
+            @endif
         </div>
-    @else
-        <div class="no-match">
-            <p style="text-align: center; font-size: 16px; font-weight: bold;">@lang('messages.no_upcoming_games')</p>
+        
+        <div class="match-details">
+            <!-- Équipe Domicile -->
+            <div class="team">
+                <img src="{{ asset('storage/' . $lastGame->homeTeam->logo_path) }}" alt="Home Team Logo" class="team-logo" data-aos="flip-right">
+                <h3 class="team-name">{{ $lastGame->homeTeam->name }}</h3>
+            </div>
+            
+            <!-- Score -->
+            <div class="score">
+                <span>{{ $lastGame->home_score }} - {{ $lastGame->away_score }}</span>
+                <p class="score-text">Final Score</p>
+            </div>
+
+            <!-- Équipe Visiteur -->
+            <div class="team">
+                <img src="{{ asset('storage/' . $lastGame->awayTeam->logo_path) }}" alt="Away Team Logo" class="team-logo" data-aos="flip-left">
+                <h3 class="team-name">{{ $lastGame->awayTeam->name }}</h3>
+            </div>
         </div>
-    @endif
-</div>
+        
+        <!-- Date du match -->
+        <div class="match-date">
+            <img src="{{ asset('date.png') }}" alt="Date" class="date-icon">
+            <span>{{ \Carbon\Carbon::parse($lastGame->match_date)->format('d-m-Y') }}</span>
+        </div>
+    </div>
+</section>
+
+<div class="albums-link-container">
+
+<a href="{{ route('calendar.show', ['team_filter' => 'club', 'date_filter' => 'results']) }}#calendar-section" style="
+       display: inline-block;
+       background-color: {{ $primaryColor }};
+       color: white;
+       font-size: 18px;
+       font-weight: bold;
+       padding: 10px 20px;
+       border-radius: 8px;
+       cursor: pointer;
+       transition: background-color 0.3s;
+       font-family: 'Bebas Neue', sans-serif;
+       letter-spacing: 1px;
+   "
+   onmouseover="this.style.backgroundColor='{{ $secondaryColor }}'"
+   onmouseout="this.style.backgroundColor='{{ $primaryColor }}'">
+        @lang('messages.results')
+    </a>
+        
+        </div>
+<style>
+  .last-game-container {
+    padding: 3rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.last-game-card {
+    background-color: #fff;
+    border: 8px solid {{ $secondaryColor }};
+    border-radius: 0.5rem;
+    padding: 2rem;
+    max-width: 60rem;
+    text-align: center;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+/* Titre */
+.last-game-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: {{ $secondaryColor }};
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Localisation */
+.location {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a5568;
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+}
+
+.location-icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-right: 0.25rem; /* Réduire la marge pour un alignement plus proche */
+}
+
+/* Détails du match */
+.match-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Style de l'équipe */
+.team {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.team-logo {
+    height: 6rem;
+    width: 6rem;
+    object-fit: cover;
+    margin: 0 auto;
+    display: block;
+}
+
+.team-name {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    color: #2d3748;
+}
+
+/* Score */
+.score {
+    font-size: 3rem;
+    font-weight: bold;
+    color: {{ $secondaryColor }};
+}
+
+.score-text {
+    font-size: 1rem;
+    color: {{ $secondaryColor }};
+    margin-top: 0.5rem;
+}
+
+/* Date du match */
+.match-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a5568;
+    font-size: 1.125rem;
+}
+
+.date-icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-right: 0.25rem;
+}
+
+/* Disposition en ligne pour les écrans larges */
+@media (min-width: 768px) {
+    .match-details {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .team-logo {
+        height: 8rem;
+        width: 8rem;
+    }
+
+    .score {
+        font-size: 4rem;
+    }
+
+    .last-game-title {
+        font-size: 3rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .location,
+    .match-date {
+        font-size: 1.25rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .last-game-title {
+        font-size: 3.5rem;
+    }
+
+    .location,
+    .match-date {
+        font-size: 1.5rem;
+    }
+
+    .score {
+        font-size: 5rem;
+    }
+}
+</style>
 
     <hr style="margin-bottom:50px;">
 
-<section>
+    <section class="mt-20 md:mt-0">
     <div style="text-align:center;">
         <x-page-title subtitle="🔔 {{ __('messages.stay_informed') }}">
             @lang('messages.latest_news')
@@ -1115,7 +1168,7 @@
     @if($articles->isEmpty())
         <p class="text-center text-gray-600">No news has been added yet.</p>
     @else
-        <div class="carousel-container" data-aos="fade-right" style="position: relative; width: 100%; min-height: 70vh; display: flex; justify-content: center; align-items: center;  z-index: 1000;">
+        <div class="carousel-container" data-aos="fade-right" style="position: relative; width: 100%; display: flex; justify-content: center; align-items: center;  z-index: 1000;">
             <div class="carousel" style="display: flex; transition: transform 0.5s ease-in-out; width: 80%;">
                 @foreach($articles as $index => $article)
                     <div class="main-article-container" style="flex: 0 0 100%; display: flex; flex-direction: row; align-items: flex-start; position: relative;">
@@ -1171,45 +1224,59 @@
             </div>
         </div>
     @endif
+
+    <div class="albums-link-container">
+            <x-button 
+                route="{{ route('articles.index') }}"
+                buttonText="{{ __('messages.recent_articles') }}" 
+                primaryColor="#B91C1C" 
+                secondaryColor="#DC2626" 
+            />
+        </div>
 </section>
 
     <hr class ="mt-10" style="margin-bottom:50px;">
 
-<!-- Section pour les 5 prochains matchs -->
-<div style="text-align:center">
-    <x-page-title style="text-align:center" subtitle="{{ __('messages.get_ready') }}">
-        @lang('messages.upcoming_matches')
-    </x-page-title>
-</div>
+    <section style="width: 100%; padding: 20px 0;">
+    <div style="text-align:center; margin-bottom: 20px;">
+        <x-page-title style="text-align:center" subtitle="{{ __('messages.get_ready') }}">
+            @lang('messages.upcoming_matches')
+        </x-page-title>
+    </div>
 
-@if($nextGames->isNotEmpty())
-    <div class="containerization" data-aos="fade-right">
+    <div class="matches-row">
         @foreach($nextGames as $index => $game)
-            <div class="match-card {{ $index % 2 == 0 ? 'even' : 'odd' }}">
-                <div class="match-date">
-                    {{ \Carbon\Carbon::parse($game->match_date)->format('d F Y') }}
-                </div>
-                <div class="match-location">
-                    @if(Str::startsWith($game->homeTeam->name, $clubPrefix))
-                        {{ $clubLocation }} (@lang('messages.home'))
-                    @else
-                        @lang('messages.away')
-                    @endif
-                </div>
-                <div class="match-details">
-                    <div class="team-logo" data-aos="fade-right">
-                        <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} Logo">
+            <div class="match-card">
+                <!-- Date et Lieu -->
+                <div class="match-info-top">
+                    <div class="match-date">
+                        {{ \Carbon\Carbon::parse($game->match_date)->format('d F Y') }}
                     </div>
-                    <div class="match-info">
-                        <p>{{ $game->homeTeam->name }} <strong>vs</strong> {{ $game->awayTeam->name }}</p>
+                    <div class="match-location">
+                        @if(Str::startsWith($game->homeTeam->name, $clubPrefix))
+                            {{ $clubLocation }} (@lang('messages.home'))
+                        @else
+                            @lang('messages.away')
+                        @endif
                     </div>
-                    <div class="team-logo" data-aos="fade-left">
-                        <img src="{{ asset('storage/' . $game->awayTeam->logo_path) }}" alt="{{ $game->awayTeam->name }} Logo">
+                </div>
+
+                <!-- Logos et VS -->
+                <div class="logos-row">
+                    <div class="team">
+                        <img src="{{ asset('storage/' . $game->homeTeam->logo_path) }}" alt="{{ $game->homeTeam->name }} Logo" class="team-logo" data-aos="fade-right">
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="team">
+                        <img src="{{ asset('storage/' . $game->awayTeam->logo_path) }}" alt="{{ $game->awayTeam->name }} Logo" class="team-logo" data-aos="fade-left">
                     </div>
                 </div>
             </div>
         @endforeach
-        <div class="see-all-container">
+    </div>
+</section>
+
+<div class="see-all-container">
             <x-button 
                 route="{{ route('calendar.show', ['team_filter' => 'specific_team', 'date_filter' => 'upcoming']) }}#calendar-section"
                 buttonText="{{ __('messages.see_all_matches') }}" 
@@ -1217,15 +1284,90 @@
                 secondaryColor="#DC2626" 
             />
         </div>
-    </div>
-@else
-    <div style="text-align:center; margin-top: 20px;">
-        <p class="text-center text-gray-600">@lang('messages.no_upcoming_games')</p>
-    </div>
-@endif
+<style>
+    .matches-row {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 0 10px;
+        flex-wrap: wrap;
+    }
+
+    .match-card {
+        width: 200px;
+        text-align: center;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .match-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .match-info-top {
+        margin-bottom: 10px;
+    }
+
+    .match-date {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .match-location {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .logos-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .team-logo {
+        width: 60px;
+        height: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    .team-logo:hover {
+        transform: scale(1.1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .matches-row {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .match-card {
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .match-card {
+            width: 100%;
+        }
+
+        .logos-row .vs {
+            font-size: 14px;
+        }
+    }
+</style>
 
 
-    <hr class ="mt-50" style="margin-bottom:100px;">
+    <hr class ="mt-50" style="margin-bottom:100px; margin-top:100px;">
 
   <section class="latest-photos">
     <div class="container" style="text-align:center">
@@ -1342,7 +1484,7 @@ document.addEventListener("DOMContentLoaded", function() {
             button.style.marginTop = "30vh"; // Positionnement plus haut sur mobile
         } else {
             logo.style.marginTop = "30vh"; // Positionnement par défaut sur desktop
-            button.style.marginTop = "50vh"; // Positionnement par défaut sur desktop
+            button.style.marginTop = "60vh"; // Positionnement par défaut sur desktop
         }
 
         setTimeout(() => {
