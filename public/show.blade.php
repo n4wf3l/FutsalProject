@@ -201,33 +201,21 @@
     <div class="article-container">
         <!-- Main Article Section -->
         <div class="main-article-section">
-        <div class="arrow-line-container" style="display: flex; align-items: center;">
-    <div class="returnIcon" style="margin-right: 10px; margin-bottom: 20px; transition: transform 0.3s ease;">
-        <a href="{{ route('clubinfo') }}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6" style="color: {{ $primaryColor }};">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-        </a>
-    </div>
-    <p class="newsText" style="background-color: {{ $primaryColor }};
-            color: #ffffff;
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-left: auto;">
-        @lang('messages.news')
-    </p>
-</div>
+            <div class="arrow-line-container">
+                <div class="arrow-circle">
+                <a href="{{ route('clubinfo') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6" style="color: {{ $primaryColor }};">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+    </a>
+                </div>
+                <hr>
+            </div>
             <h1 class="article-title">{{ $article->title }}</h1>
             @if($article->image)
             <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="article-image">
             @endif
-            <p class="article-meta" style="font-weight: bold;">
-    {{ __('messages.published_on') }} {{ $article->created_at->format('d M Y, H:i') }} {{ __('messages.by') }} {{ $article->user->name }}
-</p>
+            <p class="article-meta">{{ __('messages.published_on') }}: {{ $article->created_at->format('d M Y, H:i') }} {{ __('messages.by') }} {{ $article->user->name }}</p>
             <p class="article-description">{!! $article->description !!}</p>
 
             @auth

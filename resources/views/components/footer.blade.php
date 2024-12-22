@@ -70,16 +70,21 @@
     .carousel-item img {
         max-height: 100px;
         width: auto;
+        transition: transform 0.3s ease;
+    }
+
+    .carousel-item img:hover {
+        transform: scale(1.1);
     }
 
     .carousel-button {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
+        color: {{ $secondaryColor }};
         border: none;
-        padding: 10px;
+        background: none;
+        font-size: 2rem;
         cursor: pointer;
     }
 
@@ -171,6 +176,16 @@
             height: auto;
         }
     }
+
+    .carousel-item img,
+    .footer-social img {
+        transition: transform 0.3s ease; /* Animation pour le survol */
+    }
+
+    .carousel-item img:hover,
+    .footer-social img:hover {
+        transform: scale(1.1); /* Agrandit l'image à 110% */
+    }
 </style>
 
 @if($sponsors->isNotEmpty())
@@ -203,7 +218,9 @@
 
                 @foreach($displayedSponsors as $sponsor)
                     <div class="carousel-item">
-                        <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}" loading="lazy">
+                        <a href="{{ $sponsor->website }}" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('storage/' . $sponsor->logo) }}" alt="{{ $sponsor->name }}" loading="lazy">
+                        </a>
                     </div>
                 @endforeach
             </div>
@@ -346,12 +363,15 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script type="text/javascript">
- document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const carousel = document.querySelector('.carousel');
+    const prevButton = document.querySelector('.carousel-button.prev');
+    const nextButton = document.querySelector('.carousel-button.next');
     const carouselItems = Array.from(document.querySelectorAll('.carousel-item'));
     const itemWidth = carouselItems[0].offsetWidth;
     let currentIndex = 0;
     let isTransitioning = false;
+    let autoPlayInterval;
 
     // Duplique les premiers et derniers éléments pour créer l'illusion de boucle infinie
     carouselItems.forEach(item => {
@@ -366,29 +386,46 @@
     // Position initiale du carrousel
     carousel.style.transform = `translateX(${-itemWidth * carouselItems.length}px)`;
 
-    function updateCarousel() {
+    function updateCarousel(direction = 1) {
         if (!isTransitioning) {
             isTransitioning = true;
-            currentIndex++;
+            currentIndex += direction;
             carousel.style.transition = 'transform 0.3s ease-in-out';
             carousel.style.transform = `translateX(${-((carouselItems.length + currentIndex) % totalItems) * itemWidth}px)`;
-        }
 
-        // Réinitialisation invisible pour un cycle continu
-        carousel.addEventListener('transitionend', () => {
-            isTransitioning = false;
-            if (currentIndex >= carouselItems.length) {
-                carousel.style.transition = 'none';
-                currentIndex = 0;
-                carousel.style.transform = `translateX(${-itemWidth * carouselItems.length}px)`;
-            }
-        });
+            carousel.addEventListener('transitionend', () => {
+                isTransitioning = false;
+                if (currentIndex >= carouselItems.length) {
+                    carousel.style.transition = 'none';
+                    currentIndex = 0;
+                    carousel.style.transform = `translateX(${-itemWidth * carouselItems.length}px)`;
+                } else if (currentIndex < -carouselItems.length) {
+                    carousel.style.transition = 'none';
+                    currentIndex = 0;
+                    carousel.style.transform = `translateX(${-itemWidth * carouselItems.length}px)`;
+                }
+            }, { once: true });
+        }
     }
 
     function startAutoPlay() {
-        setInterval(updateCarousel, 2000);
+        autoPlayInterval = setInterval(() => updateCarousel(1), 2000);
     }
 
+    function stopAutoPlay() {
+        clearInterval(autoPlayInterval);
+    }
+
+    // Navigation en cliquant sur les boutons
+    prevButton.addEventListener('click', () => updateCarousel(-1));
+    nextButton.addEventListener('click', () => updateCarousel(1));
+
+    // Arrête l'auto-play au survol, et le redémarre lorsque la souris quitte
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+
+    // Démarrage de l'auto-play
     startAutoPlay();
 });
 </script>
+

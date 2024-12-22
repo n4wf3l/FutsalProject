@@ -587,6 +587,14 @@
             z-index: 300; /* Ensure caption is above image */
         }
 
+        .main-article-image img {
+    transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1); /* Transition plus lente et fluide avec une courbe cubic-bezier */
+}
+
+.main-article-container:hover .main-article-image img {
+    transform: scale(1.01); /* Zoom très léger de 101% pour un effet à peine perceptible */
+}
+
         .video-item {
                 position: relative;
                 display: block;
@@ -1021,12 +1029,14 @@
     border: 8px solid {{ $secondaryColor }};
     border-radius: 0.5rem;
     padding: 2rem;
-    max-width: 60rem;
+    width: 100%; /* Utiliser la largeur complète du conteneur */
+    max-width: 70rem; /* Augmente la largeur maximum si besoin */
+    min-height: 35rem; /* Augmente légèrement la hauteur pour un look plus équilibré */
     text-align: center;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
     font-family: 'Bebas Neue', sans-serif;
+    margin: 0 auto; /* Centre la carte */
 }
-
 /* Titre */
 .last-game-title {
     font-size: 2.5rem;
@@ -1072,8 +1082,8 @@
 }
 
 .team-logo {
-    height: 6rem;
-    width: 6rem;
+    height: 8rem !important;
+    width: 8rem !important;
     object-fit: cover;
     margin: 0 auto;
     display: block;
@@ -1235,7 +1245,7 @@
         </div>
 </section>
 
-    <hr class ="mt-10" style="margin-bottom:50px;">
+<hr class ="mt-10" style="margin-bottom:50px;">
 
     <section style="width: 100%; padding: 20px 0;">
     <div style="text-align:center; margin-bottom: 20px;">
@@ -1403,7 +1413,7 @@
 </section>
 
 
-        <hr class="mt-10" style="margin-bottom:50px;">
+<hr class ="mt-10" style="margin-bottom:50px;">
 
         <!-- Section des deux dernières vidéos -->
         <section class="latest-videos" data-aos="fade-right">
@@ -1585,25 +1595,30 @@ function goToSlide(index) {
     currentIndex = index;
 }
 
+let autoSlideInterval;
+
 function startAutoSlide() {
-    setInterval(() => {
+    autoSlideInterval = setInterval(() => {
         currentIndex++;
         goToSlide(currentIndex);
     }, intervalTime);
 }
 
-// Événement pour chaque dot (point de navigation du carousel)
-dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-        goToSlide(index);
-    });
+function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+}
+
+document.querySelectorAll('.main-article-container').forEach(container => {
+    container.addEventListener('mouseenter', stopAutoSlide); // Arrête le défilement au survol
+    container.addEventListener('mouseleave', startAutoSlide); // Redémarre le défilement quand la souris quitte
 });
 
-// Initialisation
 document.addEventListener('DOMContentLoaded', function () {
-    goToSlide(currentIndex); // Afficher la première slide
-    startAutoSlide(); // Démarrer le défilement automatique des articles
+    goToSlide(currentIndex); // Affiche la première slide
+    startAutoSlide(); // Démarre le défilement automatique des articles
 });
+// Initialisation
+
 
 </script>
 

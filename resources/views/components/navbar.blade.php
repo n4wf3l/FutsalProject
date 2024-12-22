@@ -128,16 +128,22 @@
 .dropdown-content a:not(:last-child) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
+
+.no-scroll {
+    overflow: hidden;
+}
+
 #mobile-menu-modal {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw; 
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.8);
     transform: translateX(-100%); /* Position initiale en dehors de l'écran à gauche */
     transition: transform 0.3s ease-in-out;
     z-index: 1400;
+    overflow: hidden;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 25px;
 }
@@ -147,6 +153,9 @@
     color: white !important;
     font-family: 'Bebas Neue', sans-serif;
     z-index: 1050;
+    max-height: 150vh; /* Limite la hauteur à la taille de l'écran */
+    overflow-y: auto; /* Ajoute le défilement vertical */
+    padding-bottom: 20px;
 }
 
 #mobile-menu-modal .w-64 a {
@@ -420,7 +429,7 @@
     </div>
 </div>
 
-<div id="scroll-to-top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1000; cursor: pointer;">
+<div id="scroll-to-top" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 2000; cursor: pointer;">
     <img src="{{ asset('haut.png') }}"  alt="" width="35px">
 </div>
 
@@ -467,25 +476,28 @@
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-        const hamburgerButton = document.getElementById('hamburger-button');
-        const mobileMenuModal = document.getElementById('mobile-menu-modal');
-        const closeButton = document.getElementById('close-button');
+    const hamburgerButton = document.getElementById('hamburger-button');
+    const mobileMenuModal = document.getElementById('mobile-menu-modal');
+    const closeButton = document.getElementById('close-button');
 
-        hamburgerButton.addEventListener('click', function () {
-            mobileMenuModal.classList.add('open');  // Ajoute la classe pour afficher le modal avec l'animation
-        });
-
-        closeButton.addEventListener('click', function () {
-            mobileMenuModal.classList.remove('open');  // Retire la classe pour lancer l'animation de fermeture
-        });
-
-        // Ferme le menu modal si on clique en dehors du menu
-        mobileMenuModal.addEventListener('click', function(e) {
-            if (e.target.id === 'mobile-menu-modal') {
-                mobileMenuModal.classList.remove('open');  // Ferme le menu si on clique en dehors du menu
-            }
-        });
+    hamburgerButton.addEventListener('click', function () {
+        mobileMenuModal.classList.add('open');  // Affiche la modal
+        document.body.classList.add('no-scroll');  // Désactive le défilement de l'arrière-plan
     });
+
+    closeButton.addEventListener('click', function () {
+        mobileMenuModal.classList.remove('open');  // Cache la modal
+        document.body.classList.remove('no-scroll');  // Réactive le défilement de l'arrière-plan
+    });
+
+    // Ferme la modal si on clique en dehors
+    mobileMenuModal.addEventListener('click', function(e) {
+        if (e.target.id === 'mobile-menu-modal') {
+            mobileMenuModal.classList.remove('open');
+            document.body.classList.remove('no-scroll');
+        }
+    });
+});
 
     function toggleDropdown(dropdownId) {
     var dropdown = document.getElementById(dropdownId);

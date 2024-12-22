@@ -195,7 +195,7 @@
     </header>
 
     <div class="flex justify-center mb-6" data-aos="fade-down">
-        <form action="{{ route('clubinfo') }}" method="GET" class="w-full max-w-md">
+    <form action="{{ route('news') }}" method="GET" class="w-full max-w-md">
             <div class="flex items-center border-b border-b-2 border-gray-500 py-2">
                 <input
                     type="text"

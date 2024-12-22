@@ -414,7 +414,7 @@
 
         
         <div class="container table-container transform transition-transform duration-200 hover:scale-105">
-            <table class="rounded-table">
+            <table id="teams" class="rounded-table">
                 <thead data-aos="flip-left">
                     <tr>
                         <th>#</th>
@@ -581,7 +581,7 @@
     <div class="filter-group">
         <!-- Filtre par équipe -->
         <label for="team_filter">{{ __('messages.show_matches_of') }}:</label>
-        <select name="team_filter" id="team_filter" onchange="this.form.submit()">
+        <select name="team_filter" id="team_filter">
             <option value="all" {{ request('team_filter') == 'all' ? 'selected' : '' }}>
                 {{ __('messages.all_teams') }}
             </option>
@@ -596,7 +596,7 @@
     <!-- Filtre par date -->
     <div class="filter-group">
         <label for="date_filter">{{ __('messages.show') }}:</label>
-        <select name="date_filter" id="date_filter" onchange="this.form.submit()">
+        <select name="date_filter" id="date_filter">
             <option value="results_and_upcoming" {{ request('date_filter') == 'results_and_upcoming' ? 'selected' : '' }}>
                 {{ __('messages.results_and_upcoming') }}
             </option>
@@ -610,14 +610,15 @@
     </div>
 </form>
 
+
         <div class="container table-container transform transition-transform duration-200 hover:scale-105">
-            <table class="rounded-table">
+            <table id="games" class="rounded-table">
                 <thead data-aos="flip-up">
                     <tr>
                         <th>{{ __('messages.date') }}</th>
                         <th>{{ __('messages.home') }}</th>
-                        <th>{{ __('messages.away') }}</th>
                         <th>{{ __('messages.score') }}</th>
+                        <th>{{ __('messages.away') }}</th>
                         @auth
                         <th>{{ __('messages.actions') }}</th>
                         @endauth
@@ -641,6 +642,38 @@
                             </div>
                         </td>
                         <td>
+    @auth
+    <form action="/games/{{ $game->id }}/scores" 
+      method="POST" 
+      class="update-score-form" 
+      style="display: flex; align-items: center;">
+    @csrf
+    <input type="number" name="home_team_score" 
+           value="{{ $game->home_score ?? '' }}" 
+           min="0" 
+           class="form-control score-input me-1" 
+           placeholder="Home" 
+           style="width: 60px;" 
+           required>
+    <span class="mx-1">-</span>
+    <input type="number" name="away_team_score" 
+           value="{{ $game->away_score ?? '' }}" 
+           min="0" 
+           class="form-control score-input me-1" 
+           placeholder="Away" 
+           style="width: 60px;" 
+           required>
+    <button type="submit" class="btn btn-sm btn-success">{{ __('messages.ok') }}</button>
+</form>
+    @else
+        @if($game->home_score !== null && $game->away_score !== null)
+            {{ $game->home_score }} - {{ $game->away_score }}
+        @else
+            ---
+        @endif
+    @endauth
+</td>
+                        <td>
                             <div style="display: flex; align-items: center;">
                                 @if($game->awayTeam->logo_path)
                                 <img src="{{ asset('storage/' . $game->awayTeam->logo_path) }}" alt="{{ $game->awayTeam->name }} {{ __('messages.logo') }}" class="club-logo">
@@ -648,19 +681,7 @@
                                 {{ $game->awayTeam->name }}
                             </div>
                         </td>
-                        <td>
-                            @auth
-                            <form action="{{ route('games.updateScores', $game->id) }}" method="POST">
-                                @csrf
-                                <input type="number" name="home_team_score" value="{{ old('home_team_score', $game->home_score) }}" min="0" class="score-input {{ $game->home_score !== null ? 'green-text' : 'gray-text' }}">
-                                <span> - </span>
-                                <input type="number" name="away_team_score" value="{{ old('away_team_score', $game->away_score) }}" min="0" class="score-input {{ $game->away_score !== null ? 'green-text' : 'gray-text' }}">
-                                <button type="submit" class="update-scores-button">{{ __('messages.ok') }}</button>
-                            </form>
-                            @else
-                            {{ $game->home_score }} - {{ $game->away_score }}
-                            @endauth
-                        </td>
+                
                         @auth
                         <td>
                         <button type="button" data-bs-toggle="modal" class="w-4 mr-2 transform hover:text-blue-500 hover:scale-110" data-bs-target="#editGameModal-{{ $game->id }}">
@@ -759,53 +780,300 @@ function openEditTeamModal(teamId, teamName, logoPath) {
     var modal = new bootstrap.Modal(document.getElementById('editTeamModal'));
     modal.show();
 }
+
+$(document).ready(function () {
+    /**
+     * Met à jour le tableau des matchs via AJAX
+     */
+    function updateCalendar() {
+        const teamFilter = $('#team_filter').val();
+        const dateFilter = $('#date_filter').val();
+
+        $.ajax({
+            url: '/calendar', // URL pour récupérer les données
+            type: 'GET',
+            data: {
+                team_filter: teamFilter,
+                date_filter: dateFilter,
+            },
+            success: function (response) {
+                console.log("Réponse AJAX reçue:", response);
+
+                // Vide le tableau des matchs existant
+                const tbodyGames = $('table#games tbody');
+                tbodyGames.empty();
+
+                // Vérifie s'il y a des matchs dans la réponse
+                if (response.games && response.games.length > 0) {
+                    response.games.forEach(game => {
+                        const homeTeamLogo = game.home_team?.logo_path
+                            ? `<img src="/storage/${game.home_team.logo_path}" class="club-logo" alt="${game.home_team.name}">`
+                            : '';
+                        const awayTeamLogo = game.away_team?.logo_path
+                            ? `<img src="/storage/${game.away_team.logo_path}" class="club-logo" alt="${game.away_team.name}">`
+                            : '';
+
+                        // Ajoute une ligne au tableau des matchs
+                        let actionsColumn = ''; // Initialisation vide de la colonne Actions
+
+                        // Si l'utilisateur est authentifié, ajoute la colonne Actions
+                        if (response.isAuthenticated) {
+                            actionsColumn = `
+                                <td>
+                                    <!-- Icone Edit -->
+                                    <button type="button" class="edit-game-btn w-4 mr-2 transform hover:text-blue-500 hover:scale-110"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editGameModal"
+                                        data-game-id="${game.id}"
+                                        data-match-date="${game.match_date}"
+                                        data-home-team-id="${game.home_team.id}"
+                                        data-away-team-id="${game.away_team.id}"
+                                        data-home-score="${game.home_score}"
+                                        data-away-score="${game.away_score}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <!-- Icone Trash -->
+                                    <form class="delete-game-form" action="/games/${game.id}" method="POST" style="display:inline;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="${response.csrf_token}">
+                                        <button type="submit" class="delete-game-btn w-4 mr-2 transform hover:text-red-500 hover:scale-110"
+                                            onclick="return confirm('Are you sure you want to delete this game?');">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            `;
+                        }
+
+                        // Ajoute une ligne de match avec la colonne "Score" entre "Home" et "Away"
+                        tbodyGames.append(`
+                            <tr data-game-id="${game.id}">
+                                <td>${new Date(game.match_date).toLocaleDateString()}</td>
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        ${homeTeamLogo} ${game.home_team.name}
+                                    </div>
+                                </td>
+                                <td>
+                                    ${response.isAuthenticated
+                                        ? `<form class="update-score-form" action="/games/${game.id}/scores" method="POST" style="display: flex; align-items: center;">
+                                               <input type="hidden" name="_token" value="${response.csrf_token}">
+                                               <input type="number" name="home_team_score" value="${game.home_score ?? ''}" min="0" class="form-control score-input me-1" style="width: 60px;" required>
+                                               <span class="mx-1">-</span>
+                                               <input type="number" name="away_team_score" value="${game.away_score ?? ''}" min="0" class="form-control score-input me-1" style="width: 60px;" required>
+                                               <button type="submit" class="btn btn-sm btn-success">OK</button>
+                                           </form>`
+                                        : `${game.home_score !== null && game.away_score !== null ? `${game.home_score} - ${game.away_score}` : '---'}`}
+                                </td>
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        ${awayTeamLogo} ${game.away_team.name}
+                                    </div>
+                                </td>
+                                ${actionsColumn} <!-- Colonne Actions conditionnée -->
+                            </tr>
+                        `);
+                    });
+                } else {
+                    tbodyGames.append(`
+                        <tr>
+                            <td colspan="5" class="text-center text-gray-600">
+                                ${response.no_games_message || 'No games available.'}
+                            </td>
+                        </tr>
+                    `);
+                }
+
+                // Réinitialiser les événements pour les nouveaux éléments
+                initializeEvents();
+            },
+            error: function (xhr, status, error) {
+                console.error("Erreur AJAX:", {
+                    status: status,
+                    error: error,
+                    response: xhr.responseText
+                });
+                alert('Une erreur est survenue lors du chargement des données.');
+            }
+        });
+    }
+
+    /**
+     * Initialise les événements pour les boutons et formulaires
+     */
+    function initializeEvents() {
+        // Soumission des scores via AJAX
+        $(document).off('submit', '.update-score-form').on('submit', '.update-score-form', function (e) {
+            e.preventDefault();
+
+            const form = $(this);
+            const actionUrl = form.attr('action');
+            const formData = form.serialize();
+
+            $.ajax({
+                url: actionUrl,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    // Mise à jour dynamique de la ligne de match après l'update du score
+                    const updatedGameRow = `
+                        <td>${new Date(response.game.match_date).toLocaleDateString()}</td>
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                <img src="/storage/${response.game.home_team.logo_path}" class="club-logo" alt="${response.game.home_team.name}"> ${response.game.home_team.name}
+                            </div>
+                        </td>
+                        <td>
+                            ${response.game.home_score} - ${response.game.away_score}
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                <img src="/storage/${response.game.away_team.logo_path}" class="club-logo" alt="${response.game.away_team.name}"> ${response.game.away_team.name}
+                            </div>
+                        </td>
+                        ${response.isAuthenticated ? `
+                            <td>
+                                <button type="button" class="edit-game-btn w-4 mr-2 transform hover:text-blue-500 hover:scale-110"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editGameModal"
+                                    data-game-id="${response.game.id}"
+                                    data-match-date="${response.game.match_date}"
+                                    data-home-team-id="${response.game.home_team.id}"
+                                    data-home-score="${response.game.home_score}"
+                                    data-away-score="${response.game.away_score}"
+                                    data-away-team-id="${response.game.away_team.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <form class="delete-game-form" action="/games/${response.game.id}" method="POST" style="display:inline;">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="${response.csrf_token}">
+                                    <button type="submit" class="delete-game-btn w-4 mr-2 transform hover:text-red-500 hover:scale-110"
+                                        onclick="return confirm('Are you sure you want to delete this game?');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        ` : ''}
+                    `;
+
+                    // Remplacer la ligne de match dans le tableau
+                    $(`tr[data-game-id="${response.game.id}"]`).html(updatedGameRow);
+
+                    // Affiche une notification de succès
+                    alert('Scores updated successfully!');
+                },
+                error: function (xhr, status, error) {
+                    console.error("Erreur lors de la mise à jour des scores:", error);
+                    alert('Une erreur est survenue lors de la mise à jour des scores.');
+                }
+            });
+        });
+
+        // Boutons Edit
+        $(document).off('click', '.edit-game-btn').on('click', '.edit-game-btn', function () {
+            const gameId = $(this).data('game-id');
+            const matchDate = $(this).data('match-date');
+            const homeTeamId = $(this).data('home-team-id');
+            const homeScore = $(this).data('home-score');
+            const awayScore = $(this).data('away-score');
+            const awayTeamId = $(this).data('away-team-id');
+
+            // Pré-remplit le modal avec les données du match
+            $('#editGameModal #match_date').val(matchDate);
+            $('#editGameModal #home_team_id').val(homeTeamId);
+            $('#editGameModal #home_score').val(homeScore);
+            $('#editGameModal #away_score').val(awayScore);
+            $('#editGameModal #away_team_id').val(awayTeamId);
+
+            // Met à jour l'action du formulaire
+            $('#editGameForm').attr('action', `/games/${gameId}`);
+        });
+
+        // Boutons Delete
+        $(document).off('submit', '.delete-game-form').on('submit', '.delete-game-form', function (e) {
+            e.preventDefault();
+
+            const form = $(this);
+            if (confirm('Are you sure you want to delete this game?')) {
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function () {
+                        alert('Game deleted successfully!');
+                        updateCalendar(); // Met à jour le tableau après suppression
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Erreur lors de la suppression:', error);
+                        alert('Erreur lors de la suppression.');
+                    }
+                });
+            }
+        });
+    }
+
+    // Attache les événements de changement pour les filtres
+    $('#team_filter').on('change', updateCalendar);
+    $('#date_filter').on('change', updateCalendar);
+
+    // Initialise les événements au chargement
+    initializeEvents();
+});
+
+
 </script>
 
 @if($games->isNotEmpty())
     @foreach($games as $game)
         <!--  modal Edit Game -->
-        <div class="modal fade" id="editGameModal-{{ $game->id }}" tabindex="-1" aria-labelledby="editGameModalLabel-{{ $game->id }}" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editGameModalLabel-{{ $game->id }}">{{ __('messages.edit_match') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
-                    </div>
-                    <form action="{{ route('games.update', $game->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="modal-body">
-                        <div class="mb-4">
-                                                    <label for="match_date" class="block text-sm font-medium text-gray-700">{{ __('messages.match_date') }}</label>
-                                                    <input type="date" name="match_date" id="match_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" value="{{ $game->match_date }}" required>
-                                                </div>
-
-                                                <div class="mb-4">
-                                                    <label for="home_team_id" class="block text-sm font-medium text-gray-700">{{ __('messages.home_team') }}</label>
-                                                    <select name="home_team_id" id="home_team_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-                                                        @foreach($teams as $team)
-                                                        <option value="{{ $team->id }}" {{ $team->id == $game->home_team_id ? 'selected' : '' }}>{{ $team->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-
-                                                <div class="mb-4">
-                                                    <label for="away_team_id" class="block text-sm font-medium text-gray-700">{{ __('messages.away_team') }}</label>
-                                                    <select name="away_team_id" id="away_team_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-                                                        @foreach($teams as $team)
-                                                        <option value="{{ $team->id }}" {{ $team->id == $game->away_team_id ? 'selected' : '' }}>{{ $team->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                            <button type="submit" class="btn btn-primary">{{ __('messages.save_changes') }}</button>
-                        </div>
-                    </form>
-                </div>
+        <div class="modal fade" id="editGameModal" tabindex="-1" aria-labelledby="editGameModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editGameModalLabel">Edit Match</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form id="editGameForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="match_date" class="form-label">Match Date</label>
+                        <input type="date" name="match_date" id="match_date" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="home_team_id" class="form-label">Home Team</label>
+                        <select name="home_team_id" id="home_team_id" class="form-select" required>
+                            @foreach($teams as $team)
+                                <option value="{{ $team->id }}">{{ $team->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="away_team_id" class="form-label">Away Team</label>
+                        <select name="away_team_id" id="away_team_id" class="form-select" required>
+                            @foreach($teams as $team)
+                                <option value="{{ $team->id }}">{{ $team->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="home_score" class="form-label">Home Score</label>
+                        <input type="number" name="home_score" id="home_score" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="away_score" class="form-label">Away Score</label>
+                        <input type="number" name="away_score" id="away_score" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
     @endforeach
 @endif
                             

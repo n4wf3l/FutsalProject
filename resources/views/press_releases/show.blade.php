@@ -161,25 +161,38 @@
     <x-navbar />
 
     <div class="article-container">
-        <!-- Section principale de l'article -->
-        <div class="main-article-section">
-            <div class="arrow-line-container">
-                <div class="arrow-circle">
-                    <a href="{{ route('press_releases.index') }}">
+    <!-- Section principale de l'article -->
+    <div class="main-article-section">
+        <div class="arrow-line-container" style="display: flex; align-items: center;">
+            <div class="returnIcon" style="margin-right: 10px; margin-bottom: 20px; transition: transform 0.3s ease;">
+                <a href="{{ route('press_releases.index') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6" style="color: {{ $primaryColor }};">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-                    </a>
-                </div>
-                <hr>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
             </div>
-            <h1 class="article-title">{{ $pressRelease->title }}</h1>
-            @if($pressRelease->image)
-            <img src="{{ asset('storage/' . $pressRelease->image) }}" alt="{{ $pressRelease->title }}" class="article-image">
-            @endif
-            <p class="article-meta">{{ __('messages.press_release') }} / {{ \Carbon\Carbon::parse($pressRelease->created_at)->format('l j F Y') }}</p>
-            <p class="article-description">{!! nl2br(e($pressRelease->content)) !!}</p>
+            <p class="newsText" style="background-color: {{ $primaryColor }};
+                color: #ffffff;
+                font-size: 0.875rem;
+                margin-bottom: 1rem;
+                text-transform: uppercase;
+                font-weight: bold;
+                padding: 4px 8px;
+                border-radius: 4px;
+                margin-left: auto;">
+                @lang('messages.press_release')
+            </p>
         </div>
+
+        <h1 class="article-title">{{ $pressRelease->title }}</h1>
+        @if($pressRelease->image)
+        <img src="{{ asset('storage/' . $pressRelease->image) }}" alt="{{ $pressRelease->title }}" class="article-image">
+        @endif
+        <p class="article-meta" style="font-weight: bold;">
+            {{ __('messages.published_on') }} {{ \Carbon\Carbon::parse($pressRelease->created_at)->format('d M Y, H:i') }}
+        </p>
+        <p class="article-description">{!! nl2br(e($pressRelease->content)) !!}</p>
+    </div>
 
         <!-- Section des articles récents -->
         <div class="recent-articles-section">

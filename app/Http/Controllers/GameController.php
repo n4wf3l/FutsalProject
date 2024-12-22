@@ -16,31 +16,23 @@ class GameController extends Controller
     {
         $championship = Championship::first();
         $siteSetting = SiteSetting::first();
-    
-        // Obtenir le nom du club depuis les paramètres du site ou définir une valeur par défaut
         $clubName = $siteSetting->club_name ?? 'Default Club Name';
-    
-        // Tenter de trouver l'équipe par son nom, en ignorant la casse et les espaces
         $team = Team::whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($clubName))])->first();
     
         if (!$team) {
-            // Équipe non trouvée; définir manuellement teamId pour les tests
-            $teamId = 1; // Remplacez 1 par l'ID réel de votre équipe
+            $teamId = 1;
             $teamNotFound = false;
         } else {
             $teamId = $team->id;
             $teamNotFound = false;
         }
     
-        // Définir les filtres par défaut
-        $teamFilter = $request->input('team_filter', 'club'); // Par défaut "club"
-        $dateFilter = $request->input('date_filter', 'upcoming'); // Par défaut "upcoming"
+        $teamFilter = $request->input('team_filter', 'club');
+        $dateFilter = $request->input('date_filter', 'upcoming');
         $today = now()->startOfDay();
     
-        // Requête de base pour les matchs
         $gamesQuery = Game::with(['homeTeam', 'awayTeam', 'updatedBy']);
     
-        // Appliquer le filtre d'équipe
         if ($teamFilter === 'club' && $teamId) {
             $gamesQuery->where(function ($query) use ($teamId) {
                 $query->where('home_team_id', $teamId)
@@ -48,30 +40,33 @@ class GameController extends Controller
             });
         }
     
-        // Appliquer le filtre de date
         if ($dateFilter === 'upcoming') {
             $gamesQuery->where('match_date', '>=', $today);
         } elseif ($dateFilter === 'results') {
             $gamesQuery->where('match_date', '<', $today);
         }
-        // Si 'results_and_upcoming', aucun filtre de date n'est appliqué (tous les matchs sont affichés)
     
-        // Récupérer les matchs
-        $games = $gamesQuery->orderBy('match_date')->get();
+        // Appliquer l'ordre décroissant sur la date
+        $games = $gamesQuery->orderBy('match_date', 'desc')->get(); // Tri par date décroissante
     
-        // Récupérer le dernier match mis à jour
         $lastUpdatedGame = Game::with('updatedBy')->orderBy('updated_at', 'desc')->first();
     
-        // Récupérer les équipes pour le classement
         $teams = Team::orderBy('points', 'desc')
                      ->orderBy('goal_difference', 'desc')
                      ->orderBy('goals_for', 'desc')
                      ->get();
+        
+        if ($request->ajax()) {
+            return response()->json([
+                'games' => $games,
+                'teams' => $teams, // Inclure le classement des équipes dans la réponse
+                'isAuthenticated' => Auth::check(),
+                'csrf_token' => csrf_token(),
+            ], 200); // Code HTTP 200 pour succès
+        }
     
-        // Image de fond
         $backgroundImage = BackgroundImage::where('assigned_page', 'calendar')->latest()->first();
     
-        // Passer les variables à la vue
         return view('calendar', compact(
             'championship',
             'games',
@@ -85,6 +80,7 @@ class GameController extends Controller
             'teamNotFound'
         ));
     }
+    
     // Méthode pour l'API - afficher le calendrier et les équipes
     public function apiShowCalendar()
     {
@@ -108,19 +104,30 @@ class GameController extends Controller
             'home_team_score' => 'required|integer|min:0',
             'away_team_score' => 'required|integer|min:0',
         ]);
-
+    
         // Réinitialiser les statistiques de l'ancien score
         $this->resetTeamStats($game);
-
+    
         // Mettre à jour les scores
         $game->home_score = $request->input('home_team_score');
         $game->away_score = $request->input('away_team_score');
-$game->updated_by_user_id = Auth::id();
+        $game->updated_by_user_id = Auth::id();
         $game->save();
-
+    
         // Mettre à jour les statistiques des équipes
         $this->updateTeamStats($game);
-
+    
+        // Retourner une réponse JSON pour les requêtes AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Scores updated successfully.',
+                'home_score' => $game->home_score,
+                'away_score' => $game->away_score,
+            ]);
+        }
+    
+        // Sinon, rediriger l'utilisateur (non AJAX)
         return redirect()->route('calendar.show')->with('success', 'Scores updated successfully.');
     }
 
