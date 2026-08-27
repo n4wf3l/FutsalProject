@@ -5,16 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Gallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class GalleryController extends Controller
 {
     public function index()
     {
-        // Récupérer les galeries avec pagination (10 galeries par page par exemple)
-        $galleries = Gallery::paginate(10);
-    
-        // Retourner la vue pour afficher les galeries
-        return view('galleries.index', compact('galleries'));
+        return Inertia::render('Galleries', [
+            'galleries' => Gallery::withCount('photos')->latest()->paginate(12),
+        ]);
     }
 
     public function show($id)
@@ -22,7 +21,10 @@ class GalleryController extends Controller
         $gallery = Gallery::findOrFail($id);
         $photos = $gallery->photos;
 
-        return view('galleries.show', compact('gallery', 'photos'));
+        return Inertia::render('GalleryShow', [
+            'gallery' => $gallery,
+            'photos' => $photos,
+        ]);
     }
 
     public function store(Request $request)

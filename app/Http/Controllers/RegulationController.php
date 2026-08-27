@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Models\Regulation;
 use App\Models\AboutSection;
 use App\Models\ClubInfo;
@@ -13,16 +14,10 @@ class RegulationController extends Controller
 {
     public function index()
     {
-        $regulations = Regulation::all();
-
-        // Récupérer les données pour la section About
-        $sections = AboutSection::all();
-        $clubInfo = ClubInfo::first(); 
-        $clubName = 'FTA Clubinfo'; 
-        $backgroundImage = BackgroundImage::where('assigned_page', 'about')->latest()->first();
-        
-        // Passez toutes les variables à la vue
-        return view('about.index', compact('regulations', 'sections', 'clubInfo', 'clubName', 'backgroundImage'));
+        return Inertia::render('About', [
+            'regulations' => Regulation::all(),
+            'sections' => AboutSection::all(),
+        ]);
     }
 
     public function create()

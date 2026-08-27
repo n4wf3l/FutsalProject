@@ -8,6 +8,10 @@
 .env
 .env.backup
 .env.production
+.env.*.backup
+/_pre_react_backup
+/.claude
+/database/database.sqlite
 .phpactor.json
 .phpunit.result.cache
 Homestead.json

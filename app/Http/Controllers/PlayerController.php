@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Player;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use App\Models\Staff;
 use App\Models\Coach;
 use App\Models\Championship;
@@ -14,13 +15,12 @@ class PlayerController extends Controller
 {
     public function index()
     {
-        $players = Player::all();
-        $staff = Staff::all(); 
-        $coach = Coach::first(); // Supposons que vous n'avez qu'un seul coach principal
-        $championship = Championship::first(); 
-        $backgroundImage = BackgroundImage::where('assigned_page', 'team')->latest()->first();
-        // Passer les données à la vue
-        return view('teams', compact('players', 'staff', 'coach', 'championship', 'backgroundImage'));
+        return Inertia::render('Teams', [
+            'players' => Player::orderBy('number', 'asc')->get(),
+            'staff' => Staff::all(),
+            'coach' => Coach::first(),
+            'championship' => Championship::first(),
+        ]);
     }
 
     public function create()

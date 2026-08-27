@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Models\ClubInfo;
 use App\Models\Game;
 use App\Models\Team;
 use App\Models\FlashMessage;
 use App\Models\Article;
-use App\Models\WelcomeImage; // Importez le modèle WelcomeImage
+use App\Models\WelcomeImage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -30,8 +31,8 @@ class HomeController extends Controller
     $apiKey = '005385f3666cb67a6f99bc58b9a3e4b9';
     $weatherData = $this->getWeatherData($city, $apiKey);
 
-    // Récupérer le dernier match unique avant aujourd'hui
-    $lastGame = Game::where('match_date', '<', now()->startOfDay())
+    $lastGame = Game::with(['homeTeam', 'awayTeam'])
+        ->where('match_date', '<', now()->startOfDay())
         ->where(function($query) use ($clubPrefix) {
             $query->whereHas('homeTeam', function($q) use ($clubPrefix) {
                 $q->where('name', 'LIKE', "$clubPrefix%");
@@ -43,8 +44,8 @@ class HomeController extends Controller
         ->orderBy('match_date', 'desc')
         ->first();
 
-    // Récupérer les cinq prochains matchs maximum
-    $nextGames = Game::where('match_date', '>=', now()->startOfDay())
+    $nextGames = Game::with(['homeTeam', 'awayTeam'])
+        ->where('match_date', '>=', now()->startOfDay())
         ->where(function($query) use ($clubPrefix) {
             $query->whereHas('homeTeam', function($q) use ($clubPrefix) {
                 $q->where('name', 'LIKE', "$clubPrefix%");
@@ -59,14 +60,24 @@ class HomeController extends Controller
 
     $articles = Article::latest()->take(4)->get();
     $videos = Video::latest()->take(2)->get();
-
-    // Récupérer la dernière image ajoutée
     $welcomeImage = WelcomeImage::latest()->first();
-
-    // Récupérer les 8 dernières images de la galerie
     $latestPhotos = Photo::latest()->take(8)->get();
 
-    return view('welcome', compact('weatherData', 'city', 'flashMessage', 'lastGame', 'nextGames', 'clubLocation', 'clubPrefix', 'clubName', 'articles', 'videos', 'welcomeImage', 'logoPath', 'latestPhotos'));
+    return Inertia::render('Home', [
+        'clubName' => $clubName,
+        'city' => $city,
+        'clubLocation' => $clubLocation,
+        'clubPrefix' => $clubPrefix,
+        'logoPath' => $logoPath,
+        'flashMessage' => $flashMessage,
+        'lastGame' => $lastGame,
+        'nextGames' => $nextGames,
+        'articles' => $articles,
+        'videos' => $videos,
+        'welcomeImage' => $welcomeImage,
+        'latestPhotos' => $latestPhotos,
+        'weatherData' => $weatherData,
+    ]);
 }
     
     private function getWeatherData($city, $apiKey)
