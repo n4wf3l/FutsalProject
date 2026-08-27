@@ -1,86 +1,92 @@
 import { FormEventHandler } from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import { Head, useForm } from '@inertiajs/react';
+import { KeyRound, Loader2, Lock, Mail } from 'lucide-react';
+import AuthLayout from '@/Layouts/AuthLayout';
+import { Button } from '@/Components/ui/Button';
+import { Input } from '@/Components/ui/Input';
+import { Field } from '@/Components/ui/Field';
 
-export default function ResetPassword({ token, email }: { token: string, email: string }) {
+interface Props {
+    token: string;
+    email: string;
+}
+
+export default function ResetPassword({ token, email }: Props) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        token: token,
-        email: email,
+        token,
+        email,
         password: '',
         password_confirmation: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
         post(route('password.store'), {
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
 
     return (
-        <GuestLayout>
-            <Head title="Reset Password" />
+        <AuthLayout
+            title="Nouveau mot de passe"
+            subtitle="Choisis un nouveau mot de passe sécurisé pour ton compte."
+        >
+            <Head title="Réinitialiser le mot de passe" />
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+            <form onSubmit={submit} className="space-y-5">
+                <Field label="Email" required error={errors.email}>
+                    <div className="relative">
+                        <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            type="email"
+                            name="email"
+                            value={data.email}
+                            autoComplete="username"
+                            required
+                            onChange={(e) => setData('email', e.target.value)}
+                            className="pl-10"
+                        />
+                    </div>
+                </Field>
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
+                <Field label="Nouveau mot de passe" required error={errors.password} hint="8 caractères minimum">
+                    <div className="relative">
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            type="password"
+                            name="password"
+                            value={data.password}
+                            autoComplete="new-password"
+                            required
+                            autoFocus
+                            placeholder="••••••••"
+                            onChange={(e) => setData('password', e.target.value)}
+                            className="pl-10"
+                        />
+                    </div>
+                </Field>
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
+                <Field label="Confirmer le mot de passe" required error={errors.password_confirmation}>
+                    <div className="relative">
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            type="password"
+                            name="password_confirmation"
+                            value={data.password_confirmation}
+                            autoComplete="new-password"
+                            required
+                            placeholder="••••••••"
+                            onChange={(e) => setData('password_confirmation', e.target.value)}
+                            className="pl-10"
+                        />
+                    </div>
+                </Field>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        isFocused={true}
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-
-                    <TextInput
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
-                    />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Reset Password
-                    </PrimaryButton>
-                </div>
+                <Button type="submit" size="lg" disabled={processing} className="w-full">
+                    {processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <KeyRound className="h-4 w-4" />}
+                    Réinitialiser
+                </Button>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }

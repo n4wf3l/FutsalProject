@@ -1,14 +1,13 @@
 import { useRef, useState, FormEventHandler } from 'react';
-import DangerButton from '@/Components/DangerButton';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import Modal from '@/Components/Modal';
-import SecondaryButton from '@/Components/SecondaryButton';
-import TextInput from '@/Components/TextInput';
 import { useForm } from '@inertiajs/react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { AlertTriangle, Loader2, Trash2, X } from 'lucide-react';
+import { Button } from '@/Components/ui/Button';
+import { Input } from '@/Components/ui/Input';
+import { Field } from '@/Components/ui/Field';
 
-export default function DeleteUserForm({ className = '' }: { className?: string }) {
-    const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
+export default function DeleteUserForm({ className }: { className?: string }) {
+    const [open, setOpen] = useState(false);
     const passwordInput = useRef<HTMLInputElement>(null);
 
     const {
@@ -22,78 +21,113 @@ export default function DeleteUserForm({ className = '' }: { className?: string 
         password: '',
     });
 
-    const confirmUserDeletion = () => {
-        setConfirmingUserDeletion(true);
+    const close = () => {
+        setOpen(false);
+        reset();
     };
 
-    const deleteUser: FormEventHandler = (e) => {
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
         destroy(route('profile.destroy'), {
             preserveScroll: true,
-            onSuccess: () => closeModal(),
+            onSuccess: () => close(),
             onError: () => passwordInput.current?.focus(),
             onFinish: () => reset(),
         });
     };
 
-    const closeModal = () => {
-        setConfirmingUserDeletion(false);
-
-        reset();
-    };
-
     return (
-        <section className={`space-y-6 ${className}`}>
+        <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Delete Account</h2>
-
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Once your account is deleted, all of its resources and data will be permanently deleted. Before
-                    deleting your account, please download any data or information that you wish to retain.
+                <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-plasma">
+                    <AlertTriangle className="h-3 w-3" />
+                    Zone dangereuse
+                </div>
+                <h2 className="mt-2 font-display text-xl font-bold">Supprimer le compte</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                    Une fois ton compte supprimé, toutes tes données seront perdues. Cette action est
+                    irréversible — sauvegarde ce qui compte avant.
                 </p>
             </header>
 
-            <DangerButton onClick={confirmUserDeletion}>Delete Account</DangerButton>
+            <div className="mt-6">
+                <Button variant="destructive" onClick={() => setOpen(true)}>
+                    <Trash2 className="h-4 w-4" />
+                    Supprimer mon compte
+                </Button>
+            </div>
 
-            <Modal show={confirmingUserDeletion} onClose={closeModal}>
-                <form onSubmit={deleteUser} className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                        Are you sure you want to delete your account?
-                    </h2>
+            <AnimatePresence>
+                {open && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={close}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-obsidian/80 p-4 backdrop-blur-sm"
+                    >
+                        <motion.form
+                            onSubmit={submit}
+                            onClick={(e) => e.stopPropagation()}
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="relative w-full max-w-md overflow-hidden rounded-2xl border border-plasma/30 bg-card p-6 shadow-2xl"
+                        >
+                            <button
+                                type="button"
+                                onClick={close}
+                                className="absolute right-4 top-4 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
 
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        Once your account is deleted, all of its resources and data will be permanently deleted. Please
-                        enter your password to confirm you would like to permanently delete your account.
-                    </p>
+                            <div className="flex items-start gap-3">
+                                <div className="rounded-full border border-plasma/30 bg-plasma/10 p-2.5">
+                                    <AlertTriangle className="h-4 w-4 text-plasma" />
+                                </div>
+                                <div>
+                                    <h3 className="font-display text-lg font-bold">
+                                        Confirmer la suppression ?
+                                    </h3>
+                                    <p className="mt-1 text-sm text-muted-foreground">
+                                        Ton mot de passe est nécessaire pour confirmer cette action définitive.
+                                    </p>
+                                </div>
+                            </div>
 
-                    <div className="mt-6">
-                        <InputLabel htmlFor="password" value="Password" className="sr-only" />
+                            <div className="mt-6">
+                                <Field label="Mot de passe" required error={errors.password}>
+                                    <Input
+                                        ref={passwordInput}
+                                        type="password"
+                                        value={data.password}
+                                        onChange={(e) => setData('password', e.target.value)}
+                                        autoFocus
+                                        required
+                                        placeholder="••••••••"
+                                    />
+                                </Field>
+                            </div>
 
-                        <TextInput
-                            id="password"
-                            type="password"
-                            name="password"
-                            ref={passwordInput}
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            className="mt-1 block w-3/4"
-                            isFocused
-                            placeholder="Password"
-                        />
-
-                        <InputError message={errors.password} className="mt-2" />
-                    </div>
-
-                    <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>Cancel</SecondaryButton>
-
-                        <DangerButton className="ms-3" disabled={processing}>
-                            Delete Account
-                        </DangerButton>
-                    </div>
-                </form>
-            </Modal>
+                            <div className="mt-6 flex justify-end gap-2">
+                                <Button type="button" variant="outline" onClick={close}>
+                                    Annuler
+                                </Button>
+                                <Button type="submit" variant="destructive" disabled={processing}>
+                                    {processing ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <Trash2 className="h-4 w-4" />
+                                    )}
+                                    Supprimer définitivement
+                                </Button>
+                            </div>
+                        </motion.form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use App\Models\UserSetting;
 use App\Models\ClubInfo;
 use App\Models\BackgroundImage;
@@ -20,6 +21,10 @@ use App\Models\Staff;
 use App\Models\Coach;
 use App\Models\Tribune;
 use App\Models\PlayerU21;
+use App\Models\Article;
+use App\Models\Game;
+use App\Models\Video;
+use App\Models\Photo;
 
 
 class DashboardController extends Controller
@@ -27,19 +32,32 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $clubInfo = ClubInfo::first();
-        $userSettings = UserSetting::where('user_id', $user->id)->first();
-        $backgroundImages = BackgroundImage::all(); // Récupérer les images de fond
-        $users = User::all();
-        $registrationOpen = config('app.registration_open', false) ? 'true' : 'false';
-        $players = Player::all();
-        $staff = Staff::all();
-        $coach = Coach::first();
-        $playersU21 = PlayerU21::orderBy('number', 'asc')->get();
-        $tribunes = Tribune::all();
-        $reservations = $this->getReservationsFromFile();
-        // Passer toutes les variables à la vue, y compris $registrationOpen
-        return view('dashboard', compact('clubInfo', 'userSettings', 'backgroundImages', 'registrationOpen', 'users', 'players', 'staff', 'coach', 'playersU21', 'tribunes','reservations'));
+        $today = now()->startOfDay();
+
+        return Inertia::render('Admin/Dashboard', [
+            'stats' => [
+                'players' => Player::count(),
+                'playersU21' => PlayerU21::count(),
+                'staff' => Staff::count(),
+                'coaches' => Coach::count(),
+                'games' => Game::count(),
+                'articles' => Article::count(),
+                'videos' => Video::count(),
+                'photos' => Photo::count(),
+                'tribunes' => Tribune::count(),
+                'users' => User::count(),
+                'upcomingGames' => Game::where('match_date', '>=', $today)->count(),
+                'pastGames' => Game::where('match_date', '<', $today)->count(),
+            ],
+            'recentArticles' => Article::latest()->take(4)->get(),
+            'upcomingGames' => Game::with(['homeTeam', 'awayTeam'])
+                ->where('match_date', '>=', $today)
+                ->orderBy('match_date', 'asc')
+                ->take(3)
+                ->get(),
+            'recentUsers' => User::latest()->take(5)->get(['id', 'name', 'email', 'created_at']),
+            'registrationOpen' => config('app.registration_open', false),
+        ]);
     }
 
     public function update(Request $request)

@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Player;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use App\Models\Staff;
 use App\Models\Coach;
 use App\Models\Championship;
-use App\Models\BackgroundImage;
 
 class PlayerController extends Controller
 {
-    public function index()
+    public function publicRoster()
     {
         return Inertia::render('Teams', [
             'players' => Player::orderBy('number', 'asc')->get(),
@@ -23,14 +23,23 @@ class PlayerController extends Controller
         ]);
     }
 
+    public function index()
+    {
+        return Inertia::render('Admin/Players/Index', [
+            'players' => Player::orderBy('number', 'asc')->get(),
+        ]);
+    }
+
     public function create()
     {
-        return view('players.create');
+        return Inertia::render('Admin/Players/Form', [
+            'player' => null,
+        ]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -42,27 +51,25 @@ class PlayerController extends Controller
             'contract_until' => 'required|date',
         ]);
 
-        $player = new Player($request->all());
-
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('photos', 'public');
-            $player->photo = $path;
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
         }
 
-        $player->save();
+        Player::create($data);
 
-        return redirect()->route('players.index')->with('success', 'Player added successfully');
+        return redirect()->route('players.index')->with('success', 'Joueur ajouté.');
     }
+
     public function edit(Player $player)
     {
-        $userSettings = Auth::user()->userSettings; // Récupère les paramètres utilisateur pour la personnalisation
-    
-        return view('players.edit', compact('player', 'userSettings'));
+        return Inertia::render('Admin/Players/Form', [
+            'player' => $player,
+        ]);
     }
 
     public function update(Request $request, Player $player)
     {
-        $request->validate([
+        $data = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -74,40 +81,31 @@ class PlayerController extends Controller
             'contract_until' => 'required|date',
         ]);
 
-        $player->fill($request->all());
-
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('photos', 'public');
-            $player->photo = $path;
+            if ($player->photo) {
+                Storage::disk('public')->delete($player->photo);
+            }
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
         }
 
-        $player->save();
+        $player->update($data);
 
-        return redirect()->route('players.index')->with('success', 'Player updated successfully');
+        return redirect()->route('players.index')->with('success', 'Joueur mis à jour.');
     }
 
     public function destroy(Player $player)
     {
-        \Log::info('Received request to delete Player ID:', [$player ? $player->id : 'null']);
-    
         if ($player->photo) {
-            \Log::info('Deleting photo for Player ID:', [$player->id]);
             Storage::disk('public')->delete($player->photo);
         }
-    
+
         $player->delete();
-    
-        \Log::info('Player deleted successfully:', [$player->id]);
-    
-        return redirect()->route('players.index')->with('success', 'Player deleted successfully.');
+
+        return redirect()->route('players.index')->with('success', 'Joueur supprimé.');
     }
 
     public function dashboard()
-{
-    $players = Player::all();
-    $staff = Staff::all(); 
-    $coach = Coach::first();
-    
-    return view('dashboard', compact('players', 'staff', 'coach'));
-}
+    {
+        return redirect()->route('dashboard');
+    }
 }

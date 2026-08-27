@@ -1,46 +1,59 @@
-import GuestLayout from '@/Layouts/GuestLayout';
-import PrimaryButton from '@/Components/PrimaryButton';
-import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { CheckCircle2, LogOut, Mail, RefreshCw } from 'lucide-react';
+import AuthLayout from '@/Layouts/AuthLayout';
+import { Button } from '@/Components/ui/Button';
 
 export default function VerifyEmail({ status }: { status?: string }) {
     const { post, processing } = useForm({});
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
         post(route('verification.send'));
     };
 
     return (
-        <GuestLayout>
-            <Head title="Email Verification" />
+        <AuthLayout
+            title="Vérifie ton email"
+            subtitle="On t'a envoyé un lien pour confirmer ton adresse — clique dessus pour activer ton compte."
+        >
+            <Head title="Vérification email" />
 
-            <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                Thanks for signing up! Before getting started, could you verify your email address by clicking on the
-                link we just emailed to you? If you didn't receive the email, we will gladly send you another.
+            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-champagne/30 bg-champagne/10 p-4 text-sm">
+                <div className="rounded-full border border-champagne/30 bg-background p-2">
+                    <Mail className="h-4 w-4 text-champagne" />
+                </div>
+                <div>
+                    <div className="font-semibold text-champagne">Email envoyé</div>
+                    <p className="text-xs text-muted-foreground">
+                        Vérifie ta boîte de réception (et les spams).
+                    </p>
+                </div>
             </div>
 
             {status === 'verification-link-sent' && (
-                <div className="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-                    A new verification link has been sent to the email address you provided during registration.
+                <div className="mb-6 flex items-center gap-2 rounded-lg border border-mint/30 bg-mint/10 px-4 py-3 text-sm text-mint">
+                    <CheckCircle2 className="h-4 w-4" />
+                    Un nouveau lien de vérification a été envoyé.
                 </div>
             )}
 
-            <form onSubmit={submit}>
-                <div className="mt-4 flex items-center justify-between">
-                    <PrimaryButton disabled={processing}>Resend Verification Email</PrimaryButton>
+            <form onSubmit={submit} className="space-y-3">
+                <Button type="submit" size="lg" disabled={processing} className="w-full">
+                    <RefreshCw className="h-4 w-4" />
+                    Renvoyer l'email
+                </Button>
 
-                    <Link
-                        href={route('logout')}
-                        method="post"
-                        as="button"
-                        className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                    >
-                        Log Out
-                    </Link>
-                </div>
+                <Link
+                    href={route('logout')}
+                    method="post"
+                    as="button"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                    <LogOut className="h-3.5 w-3.5" />
+                    Se déconnecter
+                </Link>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }

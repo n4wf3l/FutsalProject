@@ -1,12 +1,12 @@
 import { useRef, FormEventHandler } from 'react';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import { useForm } from '@inertiajs/react';
-import { Transition } from '@headlessui/react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { CheckCircle2, KeyRound, Loader2, Lock, Save } from 'lucide-react';
+import { Button } from '@/Components/ui/Button';
+import { Input } from '@/Components/ui/Input';
+import { Field } from '@/Components/ui/Field';
 
-export default function UpdatePasswordForm({ className = '' }: { className?: string }) {
+export default function UpdatePasswordForm({ className }: { className?: string }) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
@@ -16,19 +16,17 @@ export default function UpdatePasswordForm({ className = '' }: { className?: str
         password_confirmation: '',
     });
 
-    const updatePassword: FormEventHandler = (e) => {
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
         put(route('password.update'), {
             preserveScroll: true,
             onSuccess: () => reset(),
-            onError: (errors) => {
-                if (errors.password) {
+            onError: (err) => {
+                if (err.password) {
                     reset('password', 'password_confirmation');
                     passwordInput.current?.focus();
                 }
-
-                if (errors.current_password) {
+                if (err.current_password) {
                     reset('current_password');
                     currentPasswordInput.current?.focus();
                 }
@@ -39,73 +37,84 @@ export default function UpdatePasswordForm({ className = '' }: { className?: str
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Update Password</h2>
-
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Ensure your account is using a long, random password to stay secure.
+                <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne">
+                    <KeyRound className="h-3 w-3" />
+                    Sécurité
+                </div>
+                <h2 className="mt-2 font-display text-xl font-bold">Mot de passe</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                    Un mot de passe long et unique garde ton compte en sécurité.
                 </p>
             </header>
 
-            <form onSubmit={updatePassword} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel htmlFor="current_password" value="Current Password" />
+            <form onSubmit={submit} className="mt-6 space-y-5">
+                <Field label="Mot de passe actuel" error={errors.current_password}>
+                    <div className="relative">
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            ref={currentPasswordInput}
+                            id="current_password"
+                            type="password"
+                            value={data.current_password}
+                            onChange={(e) => setData('current_password', e.target.value)}
+                            autoComplete="current-password"
+                            className="pl-10"
+                        />
+                    </div>
+                </Field>
 
-                    <TextInput
-                        id="current_password"
-                        ref={currentPasswordInput}
-                        value={data.current_password}
-                        onChange={(e) => setData('current_password', e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                    />
+                <Field label="Nouveau mot de passe" error={errors.password}>
+                    <div className="relative">
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            ref={passwordInput}
+                            id="password"
+                            type="password"
+                            value={data.password}
+                            onChange={(e) => setData('password', e.target.value)}
+                            autoComplete="new-password"
+                            className="pl-10"
+                        />
+                    </div>
+                </Field>
 
-                    <InputError message={errors.current_password} className="mt-2" />
-                </div>
+                <Field label="Confirmer le mot de passe" error={errors.password_confirmation}>
+                    <div className="relative">
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            id="password_confirmation"
+                            type="password"
+                            value={data.password_confirmation}
+                            onChange={(e) => setData('password_confirmation', e.target.value)}
+                            autoComplete="new-password"
+                            className="pl-10"
+                        />
+                    </div>
+                </Field>
 
-                <div>
-                    <InputLabel htmlFor="password" value="New Password" />
+                <div className="flex items-center gap-4 pt-2">
+                    <Button type="submit" disabled={processing}>
+                        {processing ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                            <Save className="h-4 w-4" />
+                        )}
+                        Enregistrer
+                    </Button>
 
-                    <TextInput
-                        id="password"
-                        ref={passwordInput}
-                        value={data.password}
-                        onChange={(e) => setData('password', e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-
-                    <TextInput
-                        id="password_confirmation"
-                        value={data.password_confirmation}
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                    />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
-
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
-                    >
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Saved.</p>
-                    </Transition>
+                    <AnimatePresence>
+                        {recentlySuccessful && (
+                            <motion.span
+                                initial={{ opacity: 0, x: -8 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0 }}
+                                className="inline-flex items-center gap-1.5 text-sm text-mint"
+                            >
+                                <CheckCircle2 className="h-4 w-4" />
+                                Enregistré
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
                 </div>
             </form>
         </section>

@@ -71,7 +71,7 @@ Route::get('/fanshop', [TribuneController::class, 'index'])->name('fanshop.index
 Route::resource('tribunes', TribuneController::class)->except(['index'])->middleware('auth');
 
 // Autres routes
-Route::get('/teams', [PlayerController::class, 'index'])->name('teams');
+Route::get('/teams', [PlayerController::class, 'publicRoster'])->name('teams');
 Route::get('/clubinfo', function () {
     return redirect()->route('news');
 })->name('clubinfo');
