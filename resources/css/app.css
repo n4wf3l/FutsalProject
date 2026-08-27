@@ -1,3 +1,153 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        /* Light mode — Alabaster + Coal, warm neutrals */
+        --background: 42 30% 94%;          /* Alabaster #F4F1EA */
+        --foreground: 30 5% 10%;           /* Coal #1A1918 */
+
+        --card: 42 40% 97%;
+        --card-foreground: 30 5% 10%;
+
+        --popover: 42 40% 97%;
+        --popover-foreground: 30 5% 10%;
+
+        --muted: 40 20% 88%;
+        --muted-foreground: 30 5% 35%;
+
+        --border: 40 15% 82%;
+        --input: 40 15% 82%;
+        --ring: 358 74% 38%;
+
+        /* Club identity */
+        --crimson: 358 74% 38%;             /* #A81A1F */
+        --crimson-foreground: 42 30% 96%;
+        --champagne: 39 51% 57%;            /* #C8A25C */
+        --champagne-foreground: 30 5% 10%;
+
+        /* Signature accents */
+        --plasma: 350 100% 62%;             /* #FF3A5C */
+        --mint: 172 60% 68%;                /* #7DE2D1 */
+        --amber: 38 92% 50%;                /* #F59E0B */
+
+        --primary: 358 74% 38%;
+        --primary-foreground: 42 30% 96%;
+        --secondary: 30 5% 12%;
+        --secondary-foreground: 42 30% 96%;
+        --accent: 39 51% 57%;
+        --accent-foreground: 30 5% 10%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 42 30% 96%;
+
+        --radius: 0.75rem;
+    }
+
+    .dark {
+        /* Dark mode — Obsidian + Bone, unique cool-black + warm-white asymmetry */
+        --background: 225 15% 5%;           /* Obsidian #0B0C10 */
+        --foreground: 42 30% 90%;           /* Bone #E9E3D5 */
+
+        --card: 225 15% 8%;
+        --card-foreground: 42 30% 90%;
+
+        --popover: 225 15% 8%;
+        --popover-foreground: 42 30% 90%;
+
+        --muted: 225 15% 12%;
+        --muted-foreground: 42 15% 60%;
+
+        --border: 225 12% 16%;
+        --input: 225 12% 16%;
+        --ring: 358 80% 55%;
+
+        --crimson: 358 80% 55%;
+        --crimson-foreground: 42 30% 96%;
+        --champagne: 39 65% 65%;
+        --champagne-foreground: 225 15% 8%;
+
+        --plasma: 350 100% 68%;
+        --mint: 172 70% 72%;
+        --amber: 38 95% 60%;
+
+        --primary: 358 80% 55%;
+        --primary-foreground: 42 30% 96%;
+        --secondary: 225 15% 14%;
+        --secondary-foreground: 42 30% 90%;
+        --accent: 39 65% 65%;
+        --accent-foreground: 225 15% 8%;
+        --destructive: 0 70% 50%;
+        --destructive-foreground: 42 30% 96%;
+    }
+
+    * {
+        @apply border-border;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-background text-foreground font-sans antialiased;
+        font-feature-settings: 'ss01', 'cv11', 'cv02';
+    }
+
+    ::selection {
+        background: hsl(var(--crimson) / 0.35);
+        color: hsl(var(--foreground));
+    }
+
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: hsl(var(--background)); }
+    ::-webkit-scrollbar-thumb {
+        background: hsl(var(--muted));
+        border-radius: 6px;
+        border: 2px solid hsl(var(--background));
+    }
+    ::-webkit-scrollbar-thumb:hover { background: hsl(var(--crimson)); }
+}
+
+@layer components {
+    .container-tight {
+        @apply container max-w-6xl;
+    }
+
+    .text-gradient-crimson {
+        background: linear-gradient(135deg, hsl(var(--crimson)), hsl(var(--champagne)));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .glass {
+        background: hsl(var(--card) / 0.7);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid hsl(var(--border) / 0.6);
+    }
+
+    .glass-strong {
+        background: hsl(var(--card) / 0.85);
+        backdrop-filter: blur(24px) saturate(200%);
+        -webkit-backdrop-filter: blur(24px) saturate(200%);
+    }
+
+    .grid-bg {
+        background-image:
+            linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent);
+        -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent);
+    }
+
+    .live-dot {
+        @apply relative inline-flex h-2 w-2 rounded-full bg-plasma;
+    }
+    .live-dot::after {
+        content: '';
+        @apply absolute inset-0 rounded-full bg-plasma animate-ping;
+    }
+}

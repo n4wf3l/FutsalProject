@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Models\Championship;
 use App\Models\BackgroundImage;
 use App\Models\SiteSetting;
+use App\Models\ClubInfo;
 use Illuminate\Support\Facades\Auth;
 
 class GameController extends Controller
@@ -15,70 +17,46 @@ class GameController extends Controller
     public function showCalendar(Request $request)
     {
         $championship = Championship::first();
-        $siteSetting = SiteSetting::first();
-        $clubName = $siteSetting->club_name ?? 'Default Club Name';
-        $team = Team::whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($clubName))])->first();
-    
-        if (!$team) {
-            $teamId = 1;
-            $teamNotFound = false;
-        } else {
-            $teamId = $team->id;
-            $teamNotFound = false;
-        }
-    
+        $clubInfo = ClubInfo::first();
+        $clubName = $clubInfo->club_name ?? 'Dina Kénitra FC';
+        $clubPrefix = substr($clubName, 0, 4);
+
         $teamFilter = $request->input('team_filter', 'club');
-        $dateFilter = $request->input('date_filter', 'upcoming');
+        $dateFilter = $request->input('date_filter', 'all');
         $today = now()->startOfDay();
-    
+
         $gamesQuery = Game::with(['homeTeam', 'awayTeam', 'updatedBy']);
-    
-        if ($teamFilter === 'club' && $teamId) {
-            $gamesQuery->where(function ($query) use ($teamId) {
-                $query->where('home_team_id', $teamId)
-                      ->orWhere('away_team_id', $teamId);
+
+        if ($teamFilter === 'club') {
+            $gamesQuery->where(function ($q) use ($clubPrefix) {
+                $q->whereHas('homeTeam', fn($sub) => $sub->where('name', 'LIKE', "$clubPrefix%"))
+                  ->orWhereHas('awayTeam', fn($sub) => $sub->where('name', 'LIKE', "$clubPrefix%"));
             });
         }
-    
+
         if ($dateFilter === 'upcoming') {
             $gamesQuery->where('match_date', '>=', $today);
         } elseif ($dateFilter === 'results') {
             $gamesQuery->where('match_date', '<', $today);
         }
-    
-        // Appliquer l'ordre décroissant sur la date
-        $games = $gamesQuery->orderBy('match_date', 'desc')->get(); // Tri par date décroissante
-    
-        $lastUpdatedGame = Game::with('updatedBy')->orderBy('updated_at', 'desc')->first();
-    
+
+        $games = $gamesQuery->orderBy('match_date', 'desc')->get();
+
         $teams = Team::orderBy('points', 'desc')
                      ->orderBy('goal_difference', 'desc')
                      ->orderBy('goals_for', 'desc')
                      ->get();
-        
-        if ($request->ajax()) {
-            return response()->json([
-                'games' => $games,
-                'teams' => $teams, // Inclure le classement des équipes dans la réponse
-                'isAuthenticated' => Auth::check(),
-                'csrf_token' => csrf_token(),
-            ], 200); // Code HTTP 200 pour succès
-        }
-    
-        $backgroundImage = BackgroundImage::where('assigned_page', 'calendar')->latest()->first();
-    
-        return view('calendar', compact(
-            'championship',
-            'games',
-            'teams',
-            'backgroundImage',
-            'clubName',
-            'teamId',
-            'teamFilter',
-            'dateFilter',
-            'lastUpdatedGame',
-            'teamNotFound'
-        ));
+
+        return Inertia::render('Calendar', [
+            'championship' => $championship,
+            'games' => $games,
+            'teams' => $teams,
+            'clubPrefix' => $clubPrefix,
+            'filters' => [
+                'team' => $teamFilter,
+                'date' => $dateFilter,
+            ],
+        ]);
     }
     
     // Méthode pour l'API - afficher le calendrier et les équipes

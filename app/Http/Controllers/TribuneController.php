@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Models\Tribune;
 use App\Models\Game;
 use App\Models\ClubInfo;
@@ -14,21 +15,25 @@ class TribuneController extends Controller
 {
     public function index()
     {
-        $tribunes = Tribune::all();
         $championship = Championship::first();
-        $backgroundImage = BackgroundImage::where('assigned_page', 'fanshop')->latest()->first();
         $clubInfo = ClubInfo::first();
         $clubName = $clubInfo->club_name ?? 'Dina Kénitra FC';
         $clubPrefix = substr($clubName, 0, 4);
-    
-        $nextGame = Game::where('match_date', '>=', now()->startOfDay())
+
+        $nextGame = Game::with(['homeTeam', 'awayTeam'])
+            ->where('match_date', '>=', now()->startOfDay())
             ->whereHas('homeTeam', function ($query) use ($clubPrefix) {
                 $query->where('name', 'LIKE', "$clubPrefix%");
             })
             ->orderBy('match_date', 'asc')
             ->first();
-    
-        return view('fanshop', compact('tribunes', 'nextGame', 'backgroundImage', 'championship'));
+
+        return Inertia::render('Fanshop', [
+            'tribunes' => Tribune::all(),
+            'nextGame' => $nextGame,
+            'championship' => $championship,
+            'clubPrefix' => $clubPrefix,
+        ]);
     }
 
     public function create()

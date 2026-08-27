@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Inertia;
 use App\Models\ClubInfo;
 use App\Models\BackgroundImage;
 
@@ -11,8 +12,7 @@ class ContactController extends Controller
 
     public function showForm()
     {
-        $backgroundImage = BackgroundImage::where('assigned_page', 'contact')->latest()->first();
-        return view('contact', compact('backgroundImage'));
+        return Inertia::render('Contact');
     }
 
     public function sendEmail(Request $request)

@@ -13,11 +13,27 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+
+
         User::create([
-            'name' => 'Test User',          // Change avec le nom que tu veux
-            'email' => 'nawfel@hotmail.com',  // Change avec l'email que tu veux
-            'password' => Hash::make('Nawfel123.'),  // Change avec le mot de passe que tu veux
-            'email_verified_at' => now(),  // Optionnel : marquer le compte comme vérifié
+            'name' => 'Abderrahmane Gayedi',
+            'email' => 'a.gayedi@dkfc.ma',
+            'password' => Hash::make('a.gayedi7789'),
+            'email_verified_at' => now(),
+        ]);
+
+        User::create([
+            'name' => 'Mouad Benallal',
+            'email' => 'm.benallal@dkfc.ma',
+            'password' => Hash::make('m.benallal6655'),
+            'email_verified_at' => now(),
+        ]);
+
+        User::create([
+            'name' => 'Karim Bouabdeli',
+            'email' => 'k.bouabdeli@dkfc.ma',
+            'password' => Hash::make('k.bouabdeli4472'),
+            'email_verified_at' => now(),
         ]);
     }
 }

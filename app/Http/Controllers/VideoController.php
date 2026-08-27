@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 use App\Models\BackgroundImage;
 
 class VideoController extends Controller
 {
     public function index()
-{
-    // Utiliser paginate(10) pour récupérer les vidéos avec pagination
-    $videos = Video::latest()->paginate(10); 
-    $backgroundImage = BackgroundImage::where('assigned_page', 'videos')->latest()->first();
-    return view('videos.index', compact('videos', 'backgroundImage'));
-}
+    {
+        return Inertia::render('Videos', [
+            'videos' => Video::latest()->paginate(9),
+        ]);
+    }
 
     public function store(Request $request)
     {
