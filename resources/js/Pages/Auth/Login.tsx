@@ -1,13 +1,18 @@
 import { FormEventHandler } from 'react';
-import Checkbox from '@/Components/Checkbox';
-import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { CheckCircle2, Loader2, LogIn, Mail, Lock } from 'lucide-react';
+import AuthLayout from '@/Layouts/AuthLayout';
+import { Button } from '@/Components/ui/Button';
+import { Input } from '@/Components/ui/Input';
+import { Field } from '@/Components/ui/Field';
+import { Checkbox } from '@/Components/ui/Checkbox';
 
-export default function Login({ status, canResetPassword }: { status?: string, canResetPassword: boolean }) {
+interface Props {
+    status?: string;
+    canResetPassword: boolean;
+}
+
+export default function Login({ status, canResetPassword }: Props) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -16,78 +21,93 @@ export default function Login({ status, canResetPassword }: { status?: string, c
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
         post(route('login'), {
             onFinish: () => reset('password'),
         });
     };
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
+        <AuthLayout
+            title="Connexion"
+            subtitle="Accède à ton espace membre pour gérer ton profil et suivre le club."
+            footer={
+                <p>
+                    Pas encore de compte ?{' '}
+                    <Link href={route('register')} className="font-semibold text-crimson hover:underline">
+                        Crée-en un
+                    </Link>
+                </p>
+            }
+        >
+            <Head title="Connexion" />
 
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
-
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
+            {status && (
+                <div className="mb-6 flex items-center gap-2 rounded-lg border border-mint/30 bg-mint/10 px-4 py-3 text-sm text-mint">
+                    <CheckCircle2 className="h-4 w-4" />
+                    {status}
                 </div>
+            )}
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="block mt-4">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
+            <form onSubmit={submit} className="space-y-5">
+                <Field label="Email" required error={errors.email}>
+                    <div className="relative">
+                        <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            type="email"
+                            name="email"
+                            value={data.email}
+                            autoComplete="username"
+                            autoFocus
+                            required
+                            placeholder="tu@example.com"
+                            onChange={(e) => setData('email', e.target.value)}
+                            className="pl-10"
                         />
-                        <span className="ms-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
-                    </label>
-                </div>
+                    </div>
+                </Field>
 
-                <div className="flex items-center justify-end mt-4">
+                <Field label="Mot de passe" required error={errors.password}>
+                    <div className="relative">
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            type="password"
+                            name="password"
+                            value={data.password}
+                            autoComplete="current-password"
+                            required
+                            placeholder="••••••••"
+                            onChange={(e) => setData('password', e.target.value)}
+                            className="pl-10"
+                        />
+                    </div>
+                </Field>
+
+                <div className="flex items-center justify-between">
+                    <Checkbox
+                        name="remember"
+                        checked={data.remember}
+                        onChange={(e) => setData('remember', e.target.checked)}
+                        label="Se souvenir de moi"
+                    />
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                            className="text-sm text-muted-foreground transition-colors hover:text-crimson"
                         >
-                            Forgot your password?
+                            Mot de passe oublié ?
                         </Link>
                     )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
                 </div>
+
+                <Button type="submit" size="lg" disabled={processing} className="w-full">
+                    {processing ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                        <LogIn className="h-4 w-4" />
+                    )}
+                    Se connecter
+                </Button>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }
