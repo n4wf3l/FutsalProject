@@ -1,4 +1,5 @@
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { ArrowRight, Image, ImagePlus } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -16,12 +17,15 @@ interface Props {
 export default function Galleries({ galleries }: Props) {
     return (
         <SiteLayout>
-            <Head title="Galerie photos" />
+            <SEO
+                title="Galerie photos"
+                description="Les meilleurs instants de Dina Kenitra FC en images : matchs, coulisses, entraînements et événements du club."
+            />
 
             <PageHeader
                 kicker="En images"
-                title="Galerie photos"
-                subtitle="Les meilleurs instants du club — matchs, coulisses, entraînements et événements."
+                title="Instants"
+                subtitle="Ce qu'on a vu au parquet, sur le terrain, en tribune, dans les vestiaires."
                 breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Galerie' }]}
             />
 
@@ -67,7 +71,7 @@ function GalleryCard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.5, delay: (index % 6) * 0.06 }}
-            className="group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40 hover:shadow-glow-crimson"
+            className="group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40"
         >
             <Link href={`/galleries/${gallery.id}`} className="block">
                 <div className="relative aspect-[4/3] overflow-hidden bg-muted">

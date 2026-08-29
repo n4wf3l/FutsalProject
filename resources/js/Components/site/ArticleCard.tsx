@@ -59,7 +59,7 @@ export function ArticleCard({ article, index = 0, variant = 'default', className
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.5, delay: (index % 8) * 0.06 }}
             className={cn(
-                'group relative overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40 hover:shadow-glow-crimson',
+                'group relative overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40',
                 isFeatured && 'lg:grid lg:grid-cols-2',
                 className
             )}

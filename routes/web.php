@@ -25,6 +25,9 @@ use App\Http\Controllers\PlayerU21Controller;
 use App\Http\Controllers\RegulationController;
 use App\Http\Middleware\CheckRegistrationStatus;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\PlayerApplicationController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
 // Route d'accueil
@@ -137,9 +140,59 @@ Route::middleware(['guest', CheckRegistrationStatus::class])->group(function () 
 
 Route::resource('videos', VideoController::class);
 
-Route::get('/legal', function () {
-    return view('legal');
-})->name('legal');
+// —————————— La Voix du Futsal (Interviews) ——————————
+// Public
+Route::get('/interviews', [InterviewController::class, 'publicIndex'])->name('interviews.index');
+Route::get('/interviews/{slug}', [InterviewController::class, 'publicShow'])->name('interviews.show');
+
+// —————————— Candidatures joueurs (public form) ——————————
+Route::get('/rejoindre', [PlayerApplicationController::class, 'create'])->name('rejoindre.create');
+Route::post('/rejoindre', [PlayerApplicationController::class, 'store'])->name('rejoindre.store');
+
+// —————————— Self-service RGPD / Loi 09-08 ——————————
+Route::get('/candidature/supprimer', [PlayerApplicationController::class, 'requestDeletion'])
+    ->name('candidature.deletion.request');
+Route::post('/candidature/supprimer', [PlayerApplicationController::class, 'sendDeletionLink'])
+    ->name('candidature.deletion.send');
+Route::get('/candidature/{token}', [PlayerApplicationController::class, 'showByToken'])
+    ->where('token', '[A-Za-z0-9]{48}')
+    ->name('candidature.show');
+Route::delete('/candidature/{token}', [PlayerApplicationController::class, 'destroyByToken'])
+    ->where('token', '[A-Za-z0-9]{48}')
+    ->name('candidature.destroy');
+
+// —————————— Pages légales publiques ——————————
+Route::get('/confidentialite', fn () => Inertia\Inertia::render('Legal/Privacy'))
+    ->name('legal.privacy');
+Route::get('/legal', fn () => Inertia\Inertia::render('Legal/Mentions'))
+    ->name('legal');
+
+// —————————— SEO ——————————
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+// —————————— Admin CRUD ——————————
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    // Interviews
+    Route::get('/interviews', [InterviewController::class, 'index'])->name('interviews.index');
+    Route::get('/interviews/create', [InterviewController::class, 'create'])->name('interviews.create');
+    Route::post('/interviews', [InterviewController::class, 'store'])->name('interviews.store');
+    Route::get('/interviews/{interview:id}/edit', [InterviewController::class, 'edit'])->name('interviews.edit');
+    Route::patch('/interviews/{interview:id}', [InterviewController::class, 'update'])->name('interviews.update');
+    Route::delete('/interviews/{interview:id}', [InterviewController::class, 'destroy'])->name('interviews.destroy');
+
+    // Candidatures joueurs (admin view)
+    Route::get('/applications', [PlayerApplicationController::class, 'index'])->name('applications.index');
+    Route::get('/applications/{application}', [PlayerApplicationController::class, 'show'])->name('applications.show');
+    Route::patch('/applications/{application}/status', [PlayerApplicationController::class, 'updateStatus'])->name('applications.updateStatus');
+    Route::delete('/applications/{application}', [PlayerApplicationController::class, 'destroy'])->name('applications.destroy');
+});
+
+
+if (app()->environment('local')) {
+    Route::get('/storage/{path}', function (string $path) {
+        return redirect('https://dinakenitrafc.ma/storage/' . $path, 302);
+    })->where('path', '.*');
+}
 
 // Routes API
 //Route::prefix('api')->group(function () {

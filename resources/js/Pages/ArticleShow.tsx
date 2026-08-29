@@ -1,8 +1,10 @@
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Share2 } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { ArticleCard } from '@/Components/site/ArticleCard';
+import { Monogram, Ornament } from '@/Components/site/Ornament';
 import { Badge } from '@/Components/ui/Badge';
 import { Button } from '@/Components/ui/Button';
 import { formatMatchDate } from '@/lib/utils';
@@ -15,10 +17,51 @@ interface Props {
 
 export default function ArticleShow({ article, recentArticles }: Props) {
     const date = formatMatchDate(article.created_at);
+    const plainDescription = (article.description ?? '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 200);
+
+    const articleLd = {
+        '@context': 'https://schema.org',
+        '@type': 'NewsArticle',
+        headline: article.title,
+        description: plainDescription,
+        image: article.image
+            ? [`${typeof window !== 'undefined' ? window.location.origin : ''}/storage/${article.image}`]
+            : undefined,
+        datePublished: article.created_at,
+        dateModified: article.created_at,
+        author: { '@type': 'Organization', name: 'Dina Kenitra FC' },
+        publisher: {
+            '@type': 'Organization',
+            name: 'Dina Kenitra FC',
+            logo: {
+                '@type': 'ImageObject',
+                url:
+                    (typeof window !== 'undefined' ? window.location.origin : '') +
+                    '/logo-dinakenitra.png',
+            },
+        },
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': typeof window !== 'undefined' ? window.location.href : '',
+        },
+    };
 
     return (
         <SiteLayout>
-            <Head title={article.title} />
+            <SEO
+                title={article.title}
+                description={plainDescription || `Article Dina Kenitra FC : ${article.title}`}
+                image={article.image}
+                type="article"
+                publishedAt={article.created_at}
+                author="Dina Kenitra FC"
+                section="Actualités"
+                jsonLd={articleLd}
+            />
 
             <article className="mx-auto max-w-4xl px-4 py-8">
                 <Link
@@ -42,7 +85,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                             {date.day} {date.month} {date.year}
                         </div>
                     </div>
-                    <h1 className="mt-4 font-display text-display-xl leading-tight">
+                    <h1 className="mt-4 font-editorial text-4xl font-medium leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                         {article.title}
                     </h1>
                 </motion.header>
@@ -69,10 +112,15 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                     className="prose-content mt-8"
                 >
                     <div
-                        className="text-lg leading-relaxed text-foreground/90 [&>p]:mb-5 [&>h2]:mt-10 [&>h2]:mb-4 [&>h2]:font-display [&>h2]:text-2xl [&>h2]:font-semibold [&>h3]:mt-8 [&>h3]:mb-3 [&>h3]:font-display [&>h3]:text-xl [&>ul]:my-4 [&>ul]:list-disc [&>ul]:pl-6 [&>a]:text-crimson [&>a]:underline [&>blockquote]:my-6 [&>blockquote]:border-l-4 [&>blockquote]:border-champagne [&>blockquote]:pl-4 [&>blockquote]:italic"
+                        className="text-lg leading-relaxed text-foreground/90 [&>p]:mb-5 [&>h2]:mt-10 [&>h2]:mb-4 [&>h2]:font-editorial [&>h2]:text-3xl [&>h2]:font-medium [&>h2]:leading-tight [&>h3]:mt-8 [&>h3]:mb-3 [&>h3]:font-editorial [&>h3]:text-2xl [&>h3]:font-medium [&>ul]:my-4 [&>ul]:list-disc [&>ul]:pl-6 [&>a]:text-crimson [&>a]:underline [&>blockquote]:my-10 [&>blockquote]:font-editorial [&>blockquote]:text-2xl [&>blockquote]:italic [&>blockquote]:text-champagne [&>blockquote]:leading-snug"
                         dangerouslySetInnerHTML={{ __html: article.description ?? '' }}
                     />
                 </motion.div>
+
+                <div className="mt-10 flex flex-col items-center gap-3">
+                    <Ornament />
+                    <Monogram />
+                </div>
 
                 <div className="mt-12 flex items-center justify-between border-t border-border pt-6">
                     <Button asChild variant="outline" size="sm">
@@ -101,8 +149,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                 <section className="mx-auto max-w-7xl px-4 py-16">
                     <div className="mb-8 flex items-end justify-between">
                         <div>
-                            <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                                <span className="h-px w-8 bg-champagne" />
+                            <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
                                 Aussi à lire
                             </div>
                             <h2 className="mt-3 font-display text-display-lg">Articles récents</h2>

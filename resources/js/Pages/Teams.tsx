@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Head } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { Trophy, User, Users, UserCog } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -36,12 +36,17 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
 
     return (
         <SiteLayout>
-            <Head title="Équipe" />
+            <SEO
+                title="L'effectif"
+                description="L'équipe Dina Kenitra FC saison 2025-2026. Joueurs, coach et staff du club de futsal de Kénitra."
+            />
 
             <PageHeader
-                kicker="L'effectif"
-                title="Notre équipe"
-                subtitle="Découvrez les hommes qui portent les couleurs de Dina Kenitra FC — joueurs, staff et coachs qui font vivre le club."
+                kicker="L'effectif · Saison 2025-2026"
+                kickerRight={new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                title="Ceux qui portent le maillot"
+                subtitle="Joueurs, staff et coach. Les visages qui font Dina Kenitra FC cette saison."
+                variant="editorial"
             >
                 {championship && (
                     <Badge variant="champagne" className="text-xs">
@@ -105,7 +110,7 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
             {coach && (
                 <section className="mx-auto max-w-7xl px-4 py-16">
                     <SectionHeader kicker="Le coach" title="À la tête de l'équipe" />
-                    <div className="mt-10 overflow-hidden rounded-3xl border border-champagne/20 bg-gradient-to-br from-card via-card to-champagne/10">
+                    <div className="mt-10 overflow-hidden rounded-3xl border border-champagne/20 bg-card">
                         <div className="grid gap-8 lg:grid-cols-[1fr_1.4fr]">
                             <div className="relative aspect-[3/4] overflow-hidden lg:aspect-auto">
                                 {coach.photo ? (
@@ -157,9 +162,10 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
                                 </div>
 
                                 {coach.description && (
-                                    <p className="mt-6 leading-relaxed text-muted-foreground">
-                                        {coach.description}
-                                    </p>
+                                    <div
+                                        className="mt-6 leading-relaxed text-muted-foreground [&>p]:mb-4 [&>p:last-child]:mb-0 [&>a]:text-crimson [&>a]:underline [&>ul]:my-4 [&>ul]:list-disc [&>ul]:pl-6"
+                                        dangerouslySetInnerHTML={{ __html: coach.description }}
+                                    />
                                 )}
                             </div>
                         </div>

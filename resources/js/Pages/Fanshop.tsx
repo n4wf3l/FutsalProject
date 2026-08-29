@@ -1,4 +1,5 @@
-import { Head, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Ticket, Trophy, Users, ShieldCheck } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -20,12 +21,15 @@ interface Props {
 export default function Fanshop({ tribunes, nextGame, championship, clubPrefix }: Props) {
     return (
         <SiteLayout>
-            <Head title="Billetterie" />
+            <SEO
+                title="Billetterie"
+                description="Achète ta place pour les matchs de Dina Kenitra FC. Choix des tribunes, paiement sécurisé Stripe, e-ticket immédiat."
+            />
 
             <PageHeader
-                kicker="Billetterie"
-                title="Prends ta place"
-                subtitle="Choisis ta tribune, achète ton ticket et viens vibrer avec nous au prochain match."
+                kicker="Billetterie · Prochain match"
+                title="Ta place au parquet"
+                subtitle="Choisis ta tribune et rejoins-nous. Paiement Stripe, e-ticket immédiat, ambiance garantie."
                 breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Fanshop' }]}
             >
                 {championship && (
@@ -43,7 +47,7 @@ export default function Fanshop({ tribunes, nextGame, championship, clubPrefix }
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="relative overflow-hidden rounded-3xl border border-champagne/20 bg-gradient-to-br from-card via-card to-crimson/5 p-8"
+                        className="relative overflow-hidden rounded-3xl border border-champagne/20 bg-card p-8"
                     >
                         <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-crimson/20 blur-3xl" aria-hidden />
 
@@ -169,7 +173,7 @@ function TribuneCard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.5, delay: (index % 6) * 0.06 }}
-            className="group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40 hover:shadow-glow-crimson"
+            className="group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40"
         >
             <div className="relative aspect-video overflow-hidden bg-muted">
                 {tribune.photo ? (

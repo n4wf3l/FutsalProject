@@ -15,7 +15,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
     return (
         <AuthLayout
             title="Vérifie ton email"
-            subtitle="On t'a envoyé un lien pour confirmer ton adresse — clique dessus pour activer ton compte."
+            subtitle="On t'a envoyé un lien pour confirmer ton adresse. Clique dessus pour activer ton compte."
         >
             <Head title="Vérification email" />
 

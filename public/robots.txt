@@ -1,2 +1,21 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /login
+Disallow: /register
+Disallow: /password
+Disallow: /email
+Disallow: /verify-email
+Disallow: /confirm-password
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /settings
+Disallow: /checkout
+Disallow: /payment-success
+Disallow: /payment-cancel
+Disallow: /reservation
+Disallow: /download-pdf
+
+Sitemap: https://dinakenitrafc.ma/sitemap.xml

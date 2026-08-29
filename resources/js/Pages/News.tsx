@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
-import { Head, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { Newspaper, Search } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
@@ -28,13 +29,18 @@ export default function News({ articles, search }: NewsProps) {
 
     return (
         <SiteLayout>
-            <Head title="Actualités" />
+            <SEO
+                title="Nouvelles du club"
+                description="Toutes les actualités de Dina Kenitra FC : résultats, coulisses, communiqués et décisions. La chronique semaine après semaine."
+            />
 
             <PageHeader
-                kicker="News du club"
-                title="Actualités"
-                subtitle="Résultats, coulisses, communiqués : tout ce qui bouge chez Dina Kenitra FC."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Actualités' }]}
+                kicker="Nouvelles du club"
+                kickerRight={new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                title="Ce qu'on raconte"
+                subtitle="Résultats, coulisses, décisions. La chronique semaine après semaine."
+                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Nouvelles' }]}
+                variant="editorial"
             >
                 <form onSubmit={submit} className="mt-2 flex w-full max-w-md gap-2">
                     <div className="relative flex-1">

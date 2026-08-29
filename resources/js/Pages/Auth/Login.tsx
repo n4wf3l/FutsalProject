@@ -28,13 +28,13 @@ export default function Login({ status, canResetPassword }: Props) {
 
     return (
         <AuthLayout
-            title="Connexion"
-            subtitle="Accède à ton espace membre pour gérer ton profil et suivre le club."
+            title="Connexion staff"
+            subtitle="Espace réservé au staff et à l'administration de Dina Kenitra FC."
             footer={
                 <p>
-                    Pas encore de compte ?{' '}
-                    <Link href={route('register')} className="font-semibold text-crimson hover:underline">
-                        Crée-en un
+                    Envie de rejoindre le club en tant que joueur ?{' '}
+                    <Link href="/rejoindre" className="font-semibold text-champagne hover:underline">
+                        Envoie ta candidature
                     </Link>
                 </p>
             }

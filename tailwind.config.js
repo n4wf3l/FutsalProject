@@ -92,6 +92,7 @@ export default {
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
                 display: ['"Space Grotesk"', ...defaultTheme.fontFamily.sans],
+                editorial: ['Fraunces', 'Georgia', ...defaultTheme.fontFamily.serif],
                 mono: ['"JetBrains Mono"', ...defaultTheme.fontFamily.mono],
             },
             fontSize: {

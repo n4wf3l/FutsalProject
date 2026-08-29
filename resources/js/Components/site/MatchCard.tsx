@@ -42,9 +42,13 @@ export function MatchCard({ game, variant = 'result', clubPrefix, venue }: Props
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all hover:border-crimson/40 hover:shadow-glow-crimson"
+            className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-colors hover:border-crimson/40"
         >
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-crimson/0 via-transparent to-champagne/0 opacity-0 transition-opacity group-hover:opacity-100" />
+            {/* Left accent slides in on hover */}
+            <span
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 left-0 w-0.5 -translate-x-1 bg-crimson opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+            />
 
             <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">

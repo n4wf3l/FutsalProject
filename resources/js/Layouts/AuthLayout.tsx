@@ -25,7 +25,7 @@ export default function AuthLayout({ title, subtitle, footer, children }: PropsW
             </div>
 
             {/* Left: brand column */}
-            <aside className="relative hidden overflow-hidden lg:flex lg:w-[45%] lg:flex-col lg:justify-between lg:border-r lg:border-border lg:bg-gradient-to-br lg:from-card lg:via-card lg:to-crimson/10 lg:p-12">
+            <aside className="relative hidden overflow-hidden lg:flex lg:w-[45%] lg:flex-col lg:justify-between lg:border-r lg:border-border lg:bg-card lg:p-12">
                 <div className="pointer-events-none absolute inset-0">
                     <div className="absolute -left-32 -top-32 h-[400px] w-[400px] rounded-full bg-crimson/25 blur-[120px]" />
                     <div className="absolute -bottom-32 -right-32 h-[420px] w-[420px] rounded-full bg-champagne/15 blur-[120px]" />
@@ -59,12 +59,11 @@ export default function AuthLayout({ title, subtitle, footer, children }: PropsW
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                     >
-                        <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                            <span className="h-px w-8 bg-champagne" />
+                        <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
                             Espace privé
                         </div>
-                        <h2 className="mt-3 font-display text-3xl font-bold leading-tight">
-                            Bienvenue chez <span className="text-gradient-crimson">Dina Kenitra FC</span>
+                        <h2 className="mt-3 font-editorial text-3xl font-medium leading-tight">
+                            Bienvenue chez <span className="italic text-champagne">Dina Kenitra FC</span>
                         </h2>
                         <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
                             La plateforme officielle du club — accède aux billets, ton profil membre

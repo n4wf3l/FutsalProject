@@ -1,4 +1,5 @@
-import { Head, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { Download, FileText, MapPin, Trophy, Users } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -18,18 +19,22 @@ export default function About({ regulations, sections }: Props) {
 
     return (
         <SiteLayout>
-            <Head title="Le club" />
+            <SEO
+                title="Le club"
+                description="L'histoire de Dina Kenitra Futsal Club depuis sa fondation en 2011. Formation, ambitions et parcours d'un club engagé à Kénitra."
+            />
 
             <PageHeader
-                kicker="Le club"
-                title="Notre histoire"
-                subtitle="Depuis 2011, Dina Kenitra FC porte les couleurs de la ville sur le parquet — passion, discipline et esprit d'équipe."
+                kicker="Fondé à Kénitra · 2011"
+                title="L'histoire d'un club"
+                subtitle="Comment un projet local est devenu une école, une famille, une ambition. Quinze ans en quelques chapitres."
                 breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Le club' }]}
+                variant="editorial"
             />
 
             {/* Identity block */}
             <section className="mx-auto max-w-7xl px-4 pb-8">
-                <div className="relative overflow-hidden rounded-3xl border border-champagne/20 bg-gradient-to-br from-card via-card to-crimson/5 p-8 lg:p-12">
+                <div className="relative overflow-hidden rounded-3xl border border-champagne/20 bg-card p-8 lg:p-12">
                     <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-crimson/20 blur-3xl" aria-hidden />
                     <div className="absolute inset-0 bg-noise opacity-[0.04]" aria-hidden />
 
@@ -44,9 +49,11 @@ export default function About({ regulations, sections }: Props) {
                                 <Trophy className="h-3 w-3" />
                                 Fondé en 2011
                             </Badge>
-                            <h2 className="font-display text-display-lg">
-                                <span className="block text-muted-foreground">Dina Kenitra</span>
-                                <span className="text-gradient-crimson">Futsal Club</span>
+                            <h2 className="text-foreground">
+                                <span className="block font-display text-display-lg">Dina Kenitra</span>
+                                <span className="block font-editorial text-4xl italic text-champagne sm:text-5xl">
+                                    Futsal Club
+                                </span>
                             </h2>
                             <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
                                 Club de futsal basé à {club?.city ?? 'Kénitra'}, engagé dans le championnat marocain
@@ -81,8 +88,7 @@ export default function About({ regulations, sections }: Props) {
                                 viewport={{ once: true, margin: '-40px' }}
                                 transition={{ duration: 0.5, delay: (i % 4) * 0.06 }}
                             >
-                                <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                                    <span className="h-px w-8 bg-champagne" />
+                                <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
                                     Chapitre {String(i + 1).padStart(2, '0')}
                                 </div>
                                 <h3 className="mt-3 font-display text-display-lg text-foreground">
@@ -101,8 +107,7 @@ export default function About({ regulations, sections }: Props) {
             {/* Regulations */}
             <section className="mx-auto max-w-4xl px-4 pb-16">
                 <div className="mb-8">
-                    <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                        <span className="h-px w-8 bg-champagne" />
+                    <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
                         Documents officiels
                     </div>
                     <h2 className="mt-3 font-display text-display-lg">Règlements</h2>
@@ -122,7 +127,7 @@ export default function About({ regulations, sections }: Props) {
                                     href={`/storage/${reg.pdf_path}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-all hover:border-crimson/40 hover:shadow-glow-crimson"
+                                    className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-all hover:border-crimson/40"
                                 >
                                     <div className="rounded-full border border-border bg-background p-3">
                                         <FileText className="h-4 w-4 text-crimson" />
