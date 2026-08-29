@@ -19,7 +19,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
     return (
         <AuthLayout
             title="Mot de passe oublié"
-            subtitle="Entre ton email — on t'envoie un lien pour définir un nouveau mot de passe."
+            subtitle="Entre ton email. On t'envoie un lien pour définir un nouveau mot de passe."
             footer={
                 <Link
                     href={route('login')}

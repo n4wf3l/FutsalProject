@@ -121,6 +121,49 @@ export interface AboutSection {
     content: string;
 }
 
+export interface PlayerApplication {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    birthdate: string;
+    nationality: string | null;
+    city: string | null;
+    category: string;
+    position_preference: string | null;
+    current_club: string | null;
+    experience_years: number | null;
+    message: string | null;
+    cv_path: string | null;
+    status: string;
+    reviewed_by_user_id: number | null;
+    reviewed_at: string | null;
+    admin_notes: string | null;
+    reviewer?: { id: number; name: string } | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Interview {
+    id: number;
+    title: string;
+    slug: string;
+    interviewee_name: string;
+    interviewee_role: string;
+    interviewee_affiliation: string | null;
+    hero_image: string | null;
+    interviewee_photo: string | null;
+    video_url: string | null;
+    excerpt: string | null;
+    quote_highlight: string | null;
+    content: string;
+    user_id: number | null;
+    published_at: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface FlashMessage {
     id: number;
     message: string;

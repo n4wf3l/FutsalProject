@@ -46,7 +46,7 @@ export default function DeleteUserForm({ className }: { className?: string }) {
                 <h2 className="mt-2 font-display text-xl font-bold">Supprimer le compte</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
                     Une fois ton compte supprimé, toutes tes données seront perdues. Cette action est
-                    irréversible — sauvegarde ce qui compte avant.
+                    irréversible. Sauvegarde ce qui compte avant.
                 </p>
             </header>
 

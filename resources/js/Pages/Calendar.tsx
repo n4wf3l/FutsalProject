@@ -1,4 +1,5 @@
-import { Head, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { CalendarDays, Trophy } from 'lucide-react';
 import { useMemo } from 'react';
@@ -55,12 +56,57 @@ export default function Calendar({ championship, games, teams, clubPrefix, filte
 
     return (
         <SiteLayout>
-            <Head title="Calendrier" />
+            <SEO
+                title="Calendrier & classement"
+                description="Calendrier des matchs Dina Kenitra FC saison 2025-2026. Prochains matchs, résultats du championnat marocain de futsal et classement en temps réel."
+                jsonLd={{
+                    '@context': 'https://schema.org',
+                    '@type': 'ItemList',
+                    itemListElement: games.slice(0, 20).map((g, i) => ({
+                        '@type': 'ListItem',
+                        position: i + 1,
+                        item: {
+                            '@type': 'SportsEvent',
+                            name: `${g.homeTeam?.name ?? 'TBD'} vs ${g.awayTeam?.name ?? 'TBD'}`,
+                            startDate: g.match_date,
+                            sport: 'Futsal',
+                            eventStatus: new Date(g.match_date) < today
+                                ? 'https://schema.org/EventCompleted'
+                                : 'https://schema.org/EventScheduled',
+                            location: {
+                                '@type': 'Place',
+                                name: 'Complexe Sportif Municipal',
+                                address: {
+                                    '@type': 'PostalAddress',
+                                    addressLocality: 'Kénitra',
+                                    addressCountry: 'MA',
+                                },
+                            },
+                            homeTeam: {
+                                '@type': 'SportsTeam',
+                                name: g.homeTeam?.name ?? 'TBD',
+                                sport: 'Futsal',
+                            },
+                            awayTeam: {
+                                '@type': 'SportsTeam',
+                                name: g.awayTeam?.name ?? 'TBD',
+                                sport: 'Futsal',
+                            },
+                            ...(g.home_score !== null && g.away_score !== null
+                                ? {
+                                      homeTeamScore: g.home_score,
+                                      awayTeamScore: g.away_score,
+                                  }
+                                : {}),
+                        },
+                    })),
+                }}
+            />
 
             <PageHeader
-                kicker="Compétition"
-                title="Calendrier & classement"
-                subtitle="Tous les matchs de la saison — résultats, prochains coups d'envoi et classement du championnat."
+                kicker="Le parquet · Saison 2025-2026"
+                title="Le calendrier"
+                subtitle="Les prochains coups d'envoi, les résultats, le classement. Tout ce qui compte cette saison."
                 breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Calendrier' }]}
             >
                 {championship && (
@@ -115,8 +161,7 @@ export default function Calendar({ championship, games, teams, clubPrefix, filte
 
                     {/* Standings */}
                     <aside className="lg:sticky lg:top-24 lg:self-start">
-                        <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                            <span className="h-px w-8 bg-champagne" />
+                        <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
                             Classement
                         </div>
                         <StandingsTable teams={teams} clubPrefix={clubPrefix} />

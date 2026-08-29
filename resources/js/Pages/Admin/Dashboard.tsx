@@ -64,15 +64,14 @@ export default function Dashboard({ stats, recentArticles, upcomingGames, recent
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="relative overflow-hidden rounded-3xl border border-champagne/20 bg-gradient-to-br from-card via-card to-crimson/10 p-8"
+                className="relative overflow-hidden rounded-3xl border border-champagne/20 bg-card p-8"
             >
                 <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-crimson/20 blur-3xl" aria-hidden />
                 <div className="absolute inset-0 bg-noise opacity-[0.04]" aria-hidden />
 
                 <div className="relative flex flex-wrap items-center justify-between gap-6">
                     <div>
-                        <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                            <span className="h-px w-8 bg-champagne" />
+                        <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
                             {new Date().toLocaleDateString('fr-FR', {
                                 weekday: 'long',
                                 day: 'numeric',
@@ -80,10 +79,10 @@ export default function Dashboard({ stats, recentArticles, upcomingGames, recent
                             })}
                         </div>
                         <h1 className="mt-3 font-display text-3xl font-bold sm:text-4xl">
-                            Bienvenue, <span className="text-gradient-crimson">{userName}</span>
+                            Bienvenue, <span className="italic text-champagne">{userName}</span>
                         </h1>
                         <p className="mt-2 max-w-lg text-muted-foreground">
-                            Voici l'état du club en un coup d'œil — matchs à venir, actualités récentes et
+                            Voici l'état du club en un coup d'œil. Matchs à venir, actualités récentes et
                             statistiques globales.
                         </p>
                     </div>
@@ -151,7 +150,7 @@ export default function Dashboard({ stats, recentArticles, upcomingGames, recent
                         <Link
                             key={action.href}
                             href={action.href}
-                            className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 transition-all hover:border-crimson/50 hover:shadow-glow-crimson"
+                            className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 transition-all hover:border-crimson/50 "
                         >
                             <div className="rounded-lg border border-border bg-background p-2.5 transition-colors group-hover:border-crimson/50">
                                 <action.icon className="h-4 w-4 text-crimson" />
@@ -286,7 +285,7 @@ function StatCard({
     return (
         <Link
             href={href}
-            className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all hover:border-crimson/40 hover:shadow-glow-crimson"
+            className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all hover:border-crimson/40 "
         >
             <div className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${toneClasses}`}>
                 <Icon className="h-3 w-3" />

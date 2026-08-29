@@ -101,8 +101,10 @@ export function Footer() {
 
                 <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row">
                     <p>© {new Date().getFullYear()} Dina Kenitra FC — Tous droits réservés.</p>
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-wrap items-center gap-3">
                         <Link href="/legal" className="hover:text-foreground">Mentions légales</Link>
+                        <span className="opacity-30">·</span>
+                        <Link href="/confidentialite" className="hover:text-foreground">Confidentialité</Link>
                         <span className="opacity-30">·</span>
                         <span className="font-mono uppercase tracking-widest">EST. 2011</span>
                     </div>

@@ -1,18 +1,11 @@
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
-import {
-    ArrowRight,
-    Calendar,
-    ChevronRight,
-    Newspaper,
-    Play,
-    Sparkles,
-    Trophy,
-    Users,
-} from 'lucide-react';
+import { ArrowRight, CalendarOff, ChevronRight, Newspaper } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { Button } from '@/Components/ui/Button';
 import { Badge } from '@/Components/ui/Badge';
+import { EmptyState } from '@/Components/site/EmptyState';
 import { MatchCard } from '@/Components/site/MatchCard';
 import { TeamBadge } from '@/Components/site/TeamBadge';
 import { formatMatchDate } from '@/lib/utils';
@@ -36,13 +29,6 @@ interface HomeProps {
     } | null;
 }
 
-const STATS = [
-    { icon: Trophy, label: 'Fondé en', value: '2011' },
-    { icon: Users, label: 'Joueurs actifs', value: '48+' },
-    { icon: Sparkles, label: 'Trophées', value: '12' },
-    { icon: Calendar, label: 'Matchs joués', value: '350+' },
-];
-
 export default function Home({
     clubName,
     city,
@@ -62,7 +48,10 @@ export default function Home({
 
     return (
         <SiteLayout>
-            <Head title={`${clubName} — Club de futsal`} />
+            <SEO
+                title="Dina Kenitra Futsal Club"
+                description={`Club de futsal de Kénitra depuis 2011. Prochains matchs, résultats, effectif, actualités et billetterie du ${clubName}.`}
+            />
 
             {/* ————————————————— HERO ————————————————— */}
             <section className="relative overflow-hidden">
@@ -72,56 +61,65 @@ export default function Home({
                     <div className="absolute bottom-0 right-1/4 h-[300px] w-[500px] rounded-full bg-champagne/10 blur-[100px]" />
                 </div>
 
+                {flashMessage?.homemessage && (
+                    <div className="pointer-events-none absolute inset-0 -z-[5] flex items-center justify-center overflow-hidden select-none">
+                        <div className="flex flex-wrap justify-center gap-x-[0.35em] gap-y-[0.05em] px-4 text-center font-display font-black uppercase leading-[0.85] tracking-tighter text-crimson/[0.07] dark:text-crimson/[0.10]" style={{ fontSize: 'clamp(3.5rem, 14vw, 13rem)' }}>
+                            {flashMessage.homemessage.split(/\s+/).filter(Boolean).map((word, i) => (
+                                <motion.span
+                                    key={`${word}_${i}`}
+                                    initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+                                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                    transition={{ duration: 0.9, delay: 0.25 + i * 0.18, ease: [0.22, 1, 0.36, 1] }}
+                                >
+                                    {word}
+                                </motion.span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 <div className="mx-auto max-w-7xl px-4 py-16 lg:py-24">
                     <div className="grid gap-16 lg:grid-cols-[1.4fr_1fr] lg:items-center">
                         <div>
-                            {flashMessage?.homemessage && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="mb-6 inline-flex items-center gap-2 rounded-full border border-plasma/30 bg-plasma/10 px-4 py-1.5 text-xs font-medium text-plasma"
-                                >
-                                    <span className="live-dot" />
-                                    {flashMessage.homemessage}
-                                </motion.div>
-                            )}
-
                             <motion.div
-                                initial={{ opacity: 0, y: 16 }}
+                                initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                                className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne"
+                                transition={{ duration: 0.6 }}
+                                className="border-b border-border pb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-champagne"
                             >
-                                <span className="h-px w-8 bg-champagne" />
-                                Club de futsal · {city}
+                                Club de futsal · {city} · Est. 2011
                             </motion.div>
 
                             <motion.h1
                                 initial={{ opacity: 0, y: 24 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                                className="mt-4 font-display text-display-2xl"
+                                transition={{ duration: 0.7, delay: 0.1 }}
+                                className="mt-6 text-foreground"
                             >
-                                <span className="block text-foreground">Dina Kenitra</span>
-                                <span className="block text-gradient-crimson">Futsal Club</span>
+                                <span className="block font-display text-display-2xl leading-[0.9]">
+                                    Dina Kenitra
+                                </span>
+                                <span className="mt-1 block font-editorial text-4xl italic text-champagne sm:text-5xl lg:text-6xl">
+                                    Futsal Club
+                                </span>
                             </motion.h1>
 
                             <motion.p
                                 initial={{ opacity: 0, y: 16 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.25 }}
-                                className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground"
+                                className="mt-8 max-w-lg text-lg leading-relaxed text-muted-foreground"
                             >
-                                Depuis 2011, on porte les couleurs de Kénitra sur le parquet.
-                                Passion, discipline et esprit d'équipe — l'ADN d'un club qui vise
-                                haut.
+                                Depuis 2011, on porte les couleurs de Kénitra sur les parquets du
+                                Maroc. Championnat, formation des jeunes, et une équipe qui vise
+                                toujours plus haut.
                             </motion.p>
 
                             <motion.div
                                 initial={{ opacity: 0, y: 16 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.4 }}
-                                className="mt-8 flex flex-wrap items-center gap-3"
+                                className="mt-10 flex flex-wrap items-center gap-3"
                             >
                                 <Button asChild size="lg">
                                     <Link href="/calendar">
@@ -134,26 +132,48 @@ export default function Home({
                                 </Button>
                             </motion.div>
 
+                            {/* Bento asymmetric stats */}
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.8, delay: 0.6 }}
-                                className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-4"
+                                className="mt-14 grid gap-3 sm:grid-cols-6"
                             >
-                                {STATS.map((stat) => (
-                                    <div
-                                        key={stat.label}
-                                        className="glass rounded-xl p-3.5"
-                                    >
-                                        <stat.icon className="h-4 w-4 text-champagne" />
-                                        <div className="mt-2 font-display text-2xl font-bold tabular-nums">
-                                            {stat.value}
-                                        </div>
-                                        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                                            {stat.label}
-                                        </div>
+                                <div className="rounded-2xl border border-champagne/20 bg-card p-5 sm:col-span-3 sm:row-span-2">
+                                    <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                        Depuis
                                     </div>
-                                ))}
+                                    <div className="mt-1 font-editorial text-6xl italic leading-none text-champagne sm:text-7xl">
+                                        2011
+                                    </div>
+                                    <div className="mt-4 text-sm text-muted-foreground">
+                                        Quinze ans de futsal à Kénitra, sans discontinuer.
+                                    </div>
+                                </div>
+                                <div className="rounded-2xl border border-border bg-card p-4 sm:col-span-3">
+                                    <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                        Joueurs actifs
+                                    </div>
+                                    <div className="mt-2 font-display text-3xl font-bold tabular-nums">
+                                        48+
+                                    </div>
+                                </div>
+                                <div className="rounded-2xl border border-border bg-card p-4 sm:col-span-2">
+                                    <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                        Trophées
+                                    </div>
+                                    <div className="mt-2 font-display text-3xl font-bold tabular-nums">
+                                        12
+                                    </div>
+                                </div>
+                                <div className="rounded-2xl border border-border bg-card p-4 sm:col-span-1">
+                                    <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                        Matchs
+                                    </div>
+                                    <div className="mt-2 font-display text-2xl font-bold tabular-nums">
+                                        350
+                                    </div>
+                                </div>
                             </motion.div>
                         </div>
 
@@ -259,39 +279,56 @@ export default function Home({
             {/* ————————————————— LAST GAME + UPCOMING ————————————————— */}
             <section className="mx-auto max-w-7xl px-4 py-16">
                 <SectionHeader
-                    kicker="Compétition"
-                    title="Derniers résultats & prochains matchs"
-                    action={{ label: 'Voir tout', href: '/calendar' }}
+                    kicker="Le parquet"
+                    title="Résultats & prochains rendez-vous"
+                    action={{ label: 'Le calendrier complet', href: '/calendar' }}
                 />
 
-                <div className="mt-10 grid gap-5 lg:grid-cols-2">
-                    {lastGame && (
-                        <MatchCard
-                            game={lastGame}
-                            variant="result"
-                            clubPrefix={clubPrefix}
-                            venue={`${clubLocation}, ${city}`}
-                        />
-                    )}
-                    {upcomingRest.slice(0, lastGame ? 1 : 2).map((g) => (
-                        <MatchCard
-                            key={g.id}
-                            game={g}
-                            variant="upcoming"
-                            clubPrefix={clubPrefix}
-                            venue={`${clubLocation}, ${city}`}
-                        />
-                    ))}
-                </div>
+                {lastGame || upcomingRest.length > 0 ? (
+                    <div className="mt-10 grid gap-5 lg:grid-cols-2">
+                        {lastGame && (
+                            <MatchCard
+                                game={lastGame}
+                                variant="result"
+                                clubPrefix={clubPrefix}
+                                venue={`${clubLocation}, ${city}`}
+                            />
+                        )}
+                        {upcomingRest.slice(0, lastGame ? 1 : 2).map((g) => (
+                            <MatchCard
+                                key={g.id}
+                                game={g}
+                                variant="upcoming"
+                                clubPrefix={clubPrefix}
+                                venue={`${clubLocation}, ${city}`}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <EmptyState
+                        className="mt-10"
+                        icon={CalendarOff}
+                        title="Aucun match à afficher"
+                        description="Aucun résultat récent ni rencontre programmée pour l'instant. Le calendrier sera mis à jour dès la reprise."
+                        action={
+                            <Button asChild variant="outline" size="sm">
+                                <Link href="/calendar">
+                                    Ouvrir le calendrier
+                                    <ChevronRight className="h-4 w-4" />
+                                </Link>
+                            </Button>
+                        }
+                    />
+                )}
             </section>
 
             {/* ————————————————— NEWS ————————————————— */}
             {articles?.length > 0 && (
                 <section className="mx-auto max-w-7xl px-4 py-16">
                     <SectionHeader
-                        kicker="Actualités"
-                        title="Ce qui bouge au club"
-                        action={{ label: 'Toutes les news', href: '/news' }}
+                        kicker="Nouvelles du vestiaire"
+                        title="Ce qui se passe au club"
+                        action={{ label: 'Toutes les nouvelles', href: '/news' }}
                     />
 
                     <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -307,8 +344,8 @@ export default function Home({
                 <section className="mx-auto max-w-7xl px-4 py-16">
                     <SectionHeader
                         kicker="En images"
-                        title="Les moments forts"
-                        action={{ label: 'Galerie complète', href: '/galleries' }}
+                        title="Instants du club"
+                        action={{ label: 'Toute la galerie', href: '/galleries' }}
                     />
 
                     <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -341,7 +378,7 @@ export default function Home({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="relative overflow-hidden rounded-3xl border border-crimson/30 bg-gradient-to-br from-crimson/20 via-card to-champagne/10 p-12"
+                    className="relative overflow-hidden rounded-3xl border border-crimson/30 bg-card p-12"
                 >
                     <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-crimson/30 blur-3xl" aria-hidden />
                     <div className="absolute inset-0 bg-noise opacity-[0.06]" aria-hidden />
@@ -353,19 +390,20 @@ export default function Home({
                                 Envie de jouer avec nous ?
                             </h3>
                             <p className="mt-3 max-w-xl text-muted-foreground">
-                                Détections ouvertes pour les catégories U15, U17, U21 et senior.
-                                Contacte-nous et rejoins la famille Dina Kenitra FC.
+                                Détections ouvertes pour les équipes junior, féminine et senior masculine.
+                                Remplis le formulaire de candidature avec ton CV. Notre staff te
+                                recontacte pour un essai.
                             </p>
                         </div>
                         <div className="flex flex-wrap gap-3">
                             <Button asChild size="lg" variant="champagne">
-                                <Link href="/contact">
-                                    Nous contacter
+                                <Link href="/rejoindre">
+                                    Postuler pour rejoindre
                                     <ArrowRight className="h-4 w-4" />
                                 </Link>
                             </Button>
                             <Button asChild size="lg" variant="outline">
-                                <Link href="/register">Créer un compte</Link>
+                                <Link href="/contact">Nous contacter</Link>
                             </Button>
                         </div>
                     </div>
@@ -385,18 +423,17 @@ function SectionHeader({
     action?: { label: string; href: string };
 }) {
     return (
-        <div className="flex items-end justify-between gap-4">
+        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-4">
             <div>
-                <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                    <span className="h-px w-8 bg-champagne" />
+                <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
                     {kicker}
                 </div>
-                <h2 className="mt-3 font-display text-display-lg text-foreground">{title}</h2>
+                <h2 className="mt-2 font-display text-display-lg text-foreground">{title}</h2>
             </div>
             {action && (
                 <Link
                     href={action.href}
-                    className="hidden shrink-0 items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:border-crimson/50 hover:text-foreground sm:inline-flex"
+                    className="hidden shrink-0 items-center gap-1.5 border-b border-champagne/40 pb-1 text-sm font-medium text-champagne transition-colors hover:border-champagne sm:inline-flex"
                 >
                     {action.label}
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -414,7 +451,7 @@ function NewsCard({ article, index }: { article: Article; index: number }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="group relative overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40 hover:shadow-glow-crimson"
+            className="group relative overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40"
         >
             <Link href={`/articles/${article.slug}`} className="block">
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted">

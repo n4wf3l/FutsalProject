@@ -21,7 +21,7 @@ export default function ConfirmPassword() {
     return (
         <AuthLayout
             title="Confirmation requise"
-            subtitle="Zone sensible — confirme ton mot de passe pour continuer."
+            subtitle="Zone sensible. Confirme ton mot de passe pour continuer."
         >
             <Head title="Confirmer le mot de passe" />
 
@@ -30,7 +30,7 @@ export default function ConfirmPassword() {
                     <ShieldCheck className="h-4 w-4 text-champagne" />
                 </div>
                 <p className="text-muted-foreground">
-                    Ta session est déjà ouverte — on te redemande le mot de passe pour cette action sensible.
+                    Ta session est déjà ouverte. On te redemande le mot de passe pour cette action sensible.
                 </p>
             </div>
 

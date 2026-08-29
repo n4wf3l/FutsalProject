@@ -1,4 +1,5 @@
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Loader2, Mail, MapPin, Phone, Send } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -29,12 +30,14 @@ export default function Contact() {
 
     return (
         <SiteLayout>
-            <Head title="Contact" />
+            <SEO
+                title="Contact"
+                description="Nous joindre : email, téléphone, adresse à Kénitra. On répond sous 24-48h ouvrées."
+            />
 
             <PageHeader
-                kicker="Nous joindre"
-                title="Une question ? Écris-nous"
-                subtitle="On répond sous 24-48h ouvrées. Pour les urgences match, préfère le téléphone."
+                title="Une question ?"
+                subtitle="Écris-nous. On répond sous 24-48h ouvrées. Pour les urgences match, préfère le téléphone."
                 breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Contact' }]}
             />
 

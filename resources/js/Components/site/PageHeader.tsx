@@ -4,21 +4,27 @@ import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PageHeaderProps {
+    /** Small over-title text — treated as an editorial masthead */
     kicker?: string;
+    /** Optional date/context shown to the right of kicker */
+    kickerRight?: string;
     title: string;
     subtitle?: string;
     breadcrumb?: Array<{ label: string; href?: string }>;
     align?: 'left' | 'center';
+    variant?: 'display' | 'editorial';
     className?: string;
     children?: React.ReactNode;
 }
 
 export function PageHeader({
     kicker,
+    kickerRight,
     title,
     subtitle,
     breadcrumb,
     align = 'left',
+    variant = 'display',
     className,
     children,
 }: PageHeaderProps) {
@@ -30,21 +36,13 @@ export function PageHeader({
                 className
             )}
         >
-            <div
-                className={cn(
-                    'flex flex-col gap-4',
-                    align === 'center' && 'items-center'
-                )}
-            >
+            <div className={cn('flex flex-col gap-5', align === 'center' && 'items-center')}>
                 {breadcrumb && breadcrumb.length > 0 && (
                     <nav className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         {breadcrumb.map((crumb, i) => (
                             <span key={i} className="flex items-center gap-1.5">
                                 {crumb.href ? (
-                                    <Link
-                                        href={crumb.href}
-                                        className="hover:text-foreground transition-colors"
-                                    >
+                                    <Link href={crumb.href} className="transition-colors hover:text-foreground">
                                         {crumb.label}
                                     </Link>
                                 ) : (
@@ -58,18 +56,20 @@ export function PageHeader({
                     </nav>
                 )}
 
-                {kicker && (
+                {(kicker || kickerRight) && (
                     <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         transition={{ duration: 0.4 }}
                         className={cn(
-                            'flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne',
-                            align === 'center' && 'justify-center'
+                            'flex items-baseline justify-between border-b border-border pb-3 font-mono text-[11px] uppercase tracking-[0.18em]',
+                            align === 'center' && 'justify-center gap-6'
                         )}
                     >
-                        <span className="h-px w-8 bg-champagne" />
-                        {kicker}
+                        {kicker && <span className="text-champagne">{kicker}</span>}
+                        {kickerRight && (
+                            <span className="text-muted-foreground">{kickerRight}</span>
+                        )}
                     </motion.div>
                 )}
 
@@ -77,7 +77,12 @@ export function PageHeader({
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.05 }}
-                    className="font-display text-display-xl text-foreground"
+                    className={cn(
+                        'text-foreground',
+                        variant === 'editorial'
+                            ? 'font-editorial text-4xl font-medium leading-[1.02] tracking-tight sm:text-5xl lg:text-[5.5rem]'
+                            : 'font-display text-display-xl'
+                    )}
                 >
                     {title}
                 </motion.h1>

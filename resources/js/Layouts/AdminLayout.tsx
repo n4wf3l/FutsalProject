@@ -12,6 +12,8 @@ import {
     Handshake,
     Ticket,
     FileText,
+    Mic,
+    Inbox,
     Settings2,
     LogOut,
     User,
@@ -52,6 +54,7 @@ const NAV: NavGroup[] = [
             { label: 'Joueurs U21', href: '/playersu21', icon: ShieldPlus },
             { label: 'Coachs', href: '/coaches', icon: UserCog },
             { label: 'Staff', href: '/staff', icon: UserCog },
+            { label: 'Candidatures', href: '/admin/applications', icon: Inbox },
         ],
     },
     {
@@ -65,6 +68,7 @@ const NAV: NavGroup[] = [
         label: 'Contenu',
         items: [
             { label: 'Articles', href: '/articles', icon: Newspaper },
+            { label: 'Interviews', href: '/admin/interviews', icon: Mic },
             { label: 'Galeries', href: '/galleries', icon: ImageIcon },
             { label: 'Vidéos', href: '/videos', icon: Video },
         ],

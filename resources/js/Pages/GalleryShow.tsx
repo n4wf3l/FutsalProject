@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -31,7 +32,11 @@ export default function GalleryShow({ gallery, photos }: Props) {
 
     return (
         <SiteLayout>
-            <Head title={gallery.name} />
+            <SEO
+                title={gallery.name}
+                description={gallery.description ?? `Photos de ${gallery.name} — Dina Kenitra FC.`}
+                image={gallery.cover_image}
+            />
 
             <PageHeader
                 kicker="Galerie"

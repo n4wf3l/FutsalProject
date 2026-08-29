@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Head } from '@inertiajs/react';
+import { SEO } from '@/Components/SEO';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Play, Video as VideoIcon, X } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -38,12 +38,15 @@ export default function Videos({ videos }: Props) {
 
     return (
         <SiteLayout>
-            <Head title="Vidéos" />
+            <SEO
+                title="Vidéos"
+                description="Résumés de matchs, buts et moments forts de Dina Kenitra FC en vidéo."
+            />
 
             <PageHeader
-                kicker="Multimédia"
-                title="Vidéos"
-                subtitle="Résumés, buts et moments forts du club en vidéo."
+                kicker="Vidéo"
+                title="En mouvement"
+                subtitle="Résumés, buts, coulisses. À regarder au calme ou entre deux entraînements."
                 breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Vidéos' }]}
             />
 
