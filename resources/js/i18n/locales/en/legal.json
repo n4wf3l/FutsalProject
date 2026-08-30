@@ -1,0 +1,59 @@
+{
+    "privacy": {
+        "kicker": "Law 09-08 · CNDP",
+        "title": "Privacy policy",
+        "subtitle": "How Dina Kenitra FC collects, uses and protects your personal data.",
+        "breadcrumb": "Privacy",
+        "intro": "This document explains in plain terms how we comply with {{law}} on the protection of individuals with regard to personal data processing in Morocco, under the supervision of the {{authority}}.",
+        "intro_law": "Law No. 09-08",
+        "intro_authority": "CNDP",
+        "sections": {
+            "responsible": "1. Who is responsible for the processing",
+            "collected": "2. Which data we collect",
+            "purposes": "3. Why we collect this data",
+            "basis": "4. Legal basis",
+            "retention": "5. Retention period",
+            "access": "6. Who accesses your data",
+            "security": "7. Security",
+            "rights": "8. Your rights",
+            "cndp": "9. Recourse with the CNDP",
+            "minors": "10. Minors",
+            "transfers": "11. Transfers outside Morocco",
+            "updates": "12. Updates to this policy"
+        },
+        "how_to_exercise": "How to exercise these rights",
+        "how_body_prefix": "Write to us at",
+        "how_body_middle": "with 'Personal data' in the subject. We reply within 30 days maximum.",
+        "how_body_suffix_prefix": "If you applied to join the club, you can also",
+        "how_body_link": "request the deletion of your application directly",
+        "how_body_suffix_end": "using your personal link received by email.",
+        "last_update": "Last updated:"
+    },
+    "mentions": {
+        "kicker": "Legal information",
+        "title": "Legal notice",
+        "subtitle": "Information about the publisher and the hosting of the dinakenitrafc.ma site.",
+        "breadcrumb": "Legal notice",
+        "sections": {
+            "editor": "Publisher of the site",
+            "director": "Publication director",
+            "hosting": "Hosting",
+            "ip": "Intellectual property",
+            "data": "Personal data",
+            "cookies": "Cookies",
+            "liability": "Limitation of liability",
+            "law": "Applicable law"
+        },
+        "fields": {
+            "raison_sociale": "Legal name",
+            "forme": "Form",
+            "fondation": "Founded",
+            "siege": "Headquarters",
+            "president": "President",
+            "email": "Email",
+            "phone": "Phone"
+        },
+        "editor_note": "Complete administrative details (Trade Register, Tax ID, ICE, CNSS number where applicable) are available upon written request to the club's headquarters.",
+        "last_update": "Last updated:"
+    }
+}

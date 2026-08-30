@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, CheckCircle2, FileText, Loader2, Mail, Phone, Trash2, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { SEO } from '@/Components/SEO';
@@ -24,14 +25,6 @@ interface Props {
     };
 }
 
-const STATUS_LABELS: Record<string, string> = {
-    pending: 'En attente',
-    reviewed: 'Étudiée',
-    contacted: 'Contactée',
-    accepted: 'Acceptée',
-    rejected: 'Refusée',
-};
-
 const STATUS_VARIANT: Record<string, 'soon' | 'muted' | 'default' | 'win' | 'live'> = {
     pending: 'soon',
     reviewed: 'muted',
@@ -41,11 +34,13 @@ const STATUS_VARIANT: Record<string, 'soon' | 'muted' | 'default' | 'win' | 'liv
 };
 
 export default function CandidatureManage({ application }: Props) {
+    const { t } = useTranslation('join');
     const { props } = usePage<{ flash: { success?: string } }>();
     const flash = props.flash;
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const submitted = formatMatchDate(application.created_at);
+    const statusLabel = t(`manage.status_${application.status}`, { defaultValue: application.status });
 
     const deleteAccount = () => {
         setDeleting(true);
@@ -57,15 +52,15 @@ export default function CandidatureManage({ application }: Props) {
     return (
         <SiteLayout>
             <SEO
-                title="Ma candidature"
-                description="Consulte les données de ta candidature et exerce ton droit de suppression."
+                title={t('manage.title')}
+                description={t('manage.subtitle')}
                 noindex
             />
 
             <PageHeader
-                kicker="Loi 09-08 · Espace personnel"
-                title="Ma candidature"
-                subtitle="Consulte les données que Dina Kenitra FC détient sur toi, ou exerce ton droit de suppression à tout moment."
+                kicker={t('manage.kicker')}
+                title={t('manage.title')}
+                subtitle={t('manage.subtitle')}
                 variant="editorial"
             />
 
@@ -90,25 +85,25 @@ export default function CandidatureManage({ application }: Props) {
                     <div className="flex flex-wrap items-start justify-between gap-4">
                         <div>
                             <div className="font-mono text-[11px] uppercase tracking-widest text-champagne">
-                                Candidature reçue le {submitted.day} {submitted.month} {submitted.year}
+                                {t('manage.received_on')} {submitted.day} {submitted.month} {submitted.year}
                             </div>
                             <h2 className="mt-2 font-editorial text-3xl font-medium">
                                 {application.first_name} {application.last_name}
                             </h2>
                         </div>
                         <Badge variant={STATUS_VARIANT[application.status] ?? 'muted'}>
-                            {STATUS_LABELS[application.status] ?? application.status}
+                            {statusLabel}
                         </Badge>
                     </div>
 
                     <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                        <InfoRow icon={Mail} label="Email" value={application.email} />
-                        <InfoRow icon={Phone} label="Téléphone" value={application.phone} />
-                        <InfoRow icon={User} label="Équipe visée" value={application.category} />
+                        <InfoRow icon={Mail} label={t('manage.field_email')} value={application.email} />
+                        <InfoRow icon={Phone} label={t('manage.field_phone')} value={application.phone} />
+                        <InfoRow icon={User} label={t('manage.field_category')} value={application.category} />
                         <InfoRow
                             icon={FileText}
-                            label="CV"
-                            value={application.has_cv ? 'Téléversé' : 'Aucun fichier'}
+                            label={t('manage.field_cv')}
+                            value={application.has_cv ? t('manage.cv_uploaded') : t('manage.cv_none')}
                         />
                     </div>
                 </motion.div>
@@ -120,30 +115,23 @@ export default function CandidatureManage({ application }: Props) {
                     transition={{ delay: 0.05 }}
                     className="mt-6 rounded-2xl border border-border bg-card p-6 sm:p-8"
                 >
-                    <h3 className="font-editorial text-2xl font-medium">Tes droits</h3>
+                    <h3 className="font-editorial text-2xl font-medium">{t('manage.rights_title')}</h3>
                     <p className="mt-2 text-sm text-muted-foreground">
-                        Conformément à la Loi 09-08 sur la protection des données personnelles
-                        au Maroc, tu peux à tout moment :
+                        {t('manage.rights_intro')}
                     </p>
                     <ul className="mt-4 space-y-2 text-sm text-foreground/90">
                         <li>
-                            <strong>Corriger</strong> une information erronée : écris à{' '}
+                            {t('manage.rights_correct_prefix')}{' '}
                             <a
                                 href="mailto:contact@dinakenitrafc.ma?subject=Rectification%20de%20mes%20donn%C3%A9es"
                                 className="text-crimson underline hover:no-underline"
                             >
                                 contact@dinakenitrafc.ma
                             </a>
-                            .
+                            {t('manage.rights_correct_suffix')}
                         </li>
-                        <li>
-                            <strong>Retirer ton consentement</strong> et supprimer définitivement
-                            ta candidature (bouton ci-dessous).
-                        </li>
-                        <li>
-                            <strong>Consulter</strong> à tout moment cette page via ton lien
-                            personnel.
-                        </li>
+                        <li>{t('manage.rights_withdraw')}</li>
+                        <li>{t('manage.rights_consult')}</li>
                     </ul>
                 </motion.div>
 
@@ -158,12 +146,10 @@ export default function CandidatureManage({ application }: Props) {
                         <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-plasma" />
                         <div className="flex-1">
                             <h3 className="font-editorial text-xl font-medium">
-                                Supprimer ma candidature
+                                {t('manage.danger_title')}
                             </h3>
                             <p className="mt-2 text-sm text-muted-foreground">
-                                Ta candidature, ton CV et toutes les informations associées
-                                seront effacés définitivement de nos serveurs. Cette action
-                                est irréversible.
+                                {t('manage.danger_body')}
                             </p>
                             <Button
                                 variant="destructive"
@@ -171,16 +157,16 @@ export default function CandidatureManage({ application }: Props) {
                                 onClick={() => setConfirmDelete(true)}
                             >
                                 <Trash2 className="h-4 w-4" />
-                                Supprimer définitivement
+                                {t('manage.danger_button')}
                             </Button>
                         </div>
                     </div>
                 </motion.div>
 
                 <div className="mt-8 text-center text-sm text-muted-foreground">
-                    Retour au{' '}
+                    {t('manage.back_to_site_prefix')}{' '}
                     <Link href="/" className="text-crimson underline hover:no-underline">
-                        site public
+                        {t('manage.back_to_site_link')}
                     </Link>
                     .
                 </div>
@@ -188,9 +174,9 @@ export default function CandidatureManage({ application }: Props) {
 
             <ConfirmDialog
                 open={confirmDelete}
-                title="Confirmer la suppression"
-                description="Tes données (nom, contact, CV, message) seront effacées définitivement. Notre staff ne pourra plus étudier ta candidature. Confirmes-tu ?"
-                confirmLabel={deleting ? 'Suppression…' : 'Oui, tout supprimer'}
+                title={t('manage.confirm_title')}
+                description={t('manage.confirm_body')}
+                confirmLabel={deleting ? t('manage.confirm_loading') : t('manage.confirm_button')}
                 variant="destructive"
                 onCancel={() => setConfirmDelete(false)}
                 onConfirm={() => {
@@ -203,7 +189,7 @@ export default function CandidatureManage({ application }: Props) {
                 <div className="fixed inset-0 z-[60] flex items-center justify-center bg-obsidian/70 backdrop-blur-sm">
                     <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-6 py-4">
                         <Loader2 className="h-4 w-4 animate-spin text-crimson" />
-                        <span className="text-sm">Suppression en cours…</span>
+                        <span className="text-sm">{t('manage.deleting_toast')}</span>
                     </div>
                 </div>
             )}

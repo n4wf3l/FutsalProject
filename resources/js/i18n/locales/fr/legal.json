@@ -1,0 +1,59 @@
+{
+    "privacy": {
+        "kicker": "Loi 09-08 · CNDP",
+        "title": "Politique de confidentialité",
+        "subtitle": "Comment Dina Kenitra FC collecte, utilise et protège tes données personnelles.",
+        "breadcrumb": "Confidentialité",
+        "intro": "Ce document explique en clair comment nous respectons la {{law}} relative à la protection des personnes physiques à l'égard du traitement des données à caractère personnel au Maroc, sous le contrôle de la {{authority}}.",
+        "intro_law": "Loi n° 09-08",
+        "intro_authority": "CNDP",
+        "sections": {
+            "responsible": "1. Qui est responsable du traitement",
+            "collected": "2. Quelles données nous collectons",
+            "purposes": "3. Pourquoi nous collectons ces données",
+            "basis": "4. Base légale",
+            "retention": "5. Durée de conservation",
+            "access": "6. Qui accède à tes données",
+            "security": "7. Sécurité",
+            "rights": "8. Tes droits",
+            "cndp": "9. Recours auprès de la CNDP",
+            "minors": "10. Mineurs",
+            "transfers": "11. Transferts hors du Maroc",
+            "updates": "12. Mise à jour de cette politique"
+        },
+        "how_to_exercise": "Comment exercer ces droits",
+        "how_body_prefix": "Écris-nous à",
+        "how_body_middle": "avec l'objet « Données personnelles ». Nous répondons sous 30 jours maximum.",
+        "how_body_suffix_prefix": "Si tu as postulé pour rejoindre le club, tu peux aussi",
+        "how_body_link": "demander directement la suppression de ta candidature",
+        "how_body_suffix_end": "avec ton lien personnel reçu par email.",
+        "last_update": "Dernière mise à jour :"
+    },
+    "mentions": {
+        "kicker": "Informations légales",
+        "title": "Mentions légales",
+        "subtitle": "Informations relatives à l'éditeur et à l'hébergement du site dinakenitrafc.ma.",
+        "breadcrumb": "Mentions légales",
+        "sections": {
+            "editor": "Éditeur du site",
+            "director": "Directeur de la publication",
+            "hosting": "Hébergement",
+            "ip": "Propriété intellectuelle",
+            "data": "Données personnelles",
+            "cookies": "Cookies",
+            "liability": "Limitation de responsabilité",
+            "law": "Droit applicable"
+        },
+        "fields": {
+            "raison_sociale": "Raison sociale",
+            "forme": "Forme",
+            "fondation": "Fondation",
+            "siege": "Siège",
+            "president": "Président",
+            "email": "Email",
+            "phone": "Téléphone"
+        },
+        "editor_note": "Les mentions administratives complètes (RC, IF, ICE, numéro CNSS le cas échéant) sont disponibles sur simple demande écrite au siège du club.",
+        "last_update": "Dernière mise à jour :"
+    }
+}

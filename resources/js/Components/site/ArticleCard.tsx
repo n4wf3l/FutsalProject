@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/react';
 import { ArrowRight, Newspaper } from 'lucide-react';
 import type { Article } from '@/types/models';
 import { Badge } from '@/Components/ui/Badge';
+import { SmartImage } from './SmartImage';
 import { formatMatchDate, cn } from '@/lib/utils';
 
 interface Props {
@@ -26,11 +27,10 @@ export function ArticleCard({ article, index = 0, variant = 'default', className
             >
                 <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-muted">
                     {article.image ? (
-                        <img
+                        <SmartImage
                             src={`/storage/${article.image}`}
                             alt=""
-                            loading="lazy"
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex h-full w-full items-center justify-center">
@@ -72,11 +72,10 @@ export function ArticleCard({ article, index = 0, variant = 'default', className
                     )}
                 >
                     {article.image ? (
-                        <img
+                        <SmartImage
                             src={`/storage/${article.image}`}
                             alt=""
-                            loading="lazy"
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex h-full w-full items-center justify-center">

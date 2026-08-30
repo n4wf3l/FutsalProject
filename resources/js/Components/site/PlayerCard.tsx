@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { User } from 'lucide-react';
 import type { Player } from '@/types/models';
 import { cn } from '@/lib/utils';
+import { SmartImage } from './SmartImage';
 
 interface Props {
     player: Player;
@@ -12,8 +12,6 @@ interface Props {
 export function PlayerCard({ player, index = 0 }: Props) {
     const age = new Date().getFullYear() - new Date(player.birthdate).getFullYear();
     const src = player.photo ? `/storage/${player.photo}` : null;
-    const [loaded, setLoaded] = useState(false);
-    const imgRef = useRef<HTMLImageElement | null>(null);
 
     return (
         <motion.article
@@ -23,7 +21,6 @@ export function PlayerCard({ player, index = 0 }: Props) {
             transition={{ duration: 0.5, delay: (index % 8) * 0.04 }}
             className="group relative overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40"
         >
-
             {/* Number */}
             <div className="absolute right-4 top-3 z-10 font-editorial text-7xl italic leading-none text-champagne/25 transition-all duration-500 group-hover:-translate-y-1 group-hover:text-champagne">
                 {player.number}
@@ -32,29 +29,11 @@ export function PlayerCard({ player, index = 0 }: Props) {
             {/* Photo */}
             <div className="relative aspect-[3/4] overflow-hidden bg-muted">
                 {src ? (
-                    <>
-                        <div
-                            aria-hidden
-                            className={cn(
-                                'absolute inset-0 bg-gradient-to-br from-muted via-card to-muted transition-opacity duration-700',
-                                loaded ? 'opacity-0' : 'animate-pulse opacity-100',
-                            )}
-                        />
-                        <img
-                            ref={(node) => {
-                                imgRef.current = node;
-                                if (node?.complete && node.naturalHeight > 0) setLoaded(true);
-                            }}
-                            src={src}
-                            alt={`${player.first_name} ${player.last_name}`}
-                            loading="lazy"
-                            onLoad={() => setLoaded(true)}
-                            className={cn(
-                                'relative h-full w-full object-cover transition-[opacity,filter,transform] duration-700 ease-out group-hover:scale-105',
-                                loaded ? 'opacity-100 blur-0' : 'scale-[1.03] opacity-0 blur-md',
-                            )}
-                        />
-                    </>
+                    <SmartImage
+                        src={src}
+                        alt={`${player.first_name} ${player.last_name}`}
+                        className="group-hover:scale-105"
+                    />
                 ) : (
                     <div className="flex h-full w-full items-center justify-center bg-gradient-to-b from-muted to-card">
                         <User className="h-24 w-24 text-muted-foreground/30" strokeWidth={1} />

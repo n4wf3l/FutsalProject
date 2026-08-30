@@ -1,4 +1,5 @@
 import { useForm, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Loader2, Mail, MapPin, Phone, Send } from 'lucide-react';
@@ -9,6 +10,7 @@ import { Input, Textarea } from '@/Components/ui/Input';
 import type { ClubInfoShared } from '@/types/models';
 
 export default function Contact() {
+    const { t } = useTranslation('contact');
     const { props } = usePage<{ club: ClubInfoShared; flash: { success?: string } }>();
     const club = props.club;
     const flash = props.flash;
@@ -19,6 +21,7 @@ export default function Contact() {
         email: '',
         phone: '',
         message: '',
+        consent: false as boolean,
     });
 
     const submit = (e: React.FormEvent) => {
@@ -31,14 +34,14 @@ export default function Contact() {
     return (
         <SiteLayout>
             <SEO
-                title="Contact"
-                description="Nous joindre : email, téléphone, adresse à Kénitra. On répond sous 24-48h ouvrées."
+                title={t('page.kicker')}
+                description={t('page.subtitle')}
             />
 
             <PageHeader
-                title="Une question ?"
-                subtitle="Écris-nous. On répond sous 24-48h ouvrées. Pour les urgences match, préfère le téléphone."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Contact' }]}
+                title={t('page.title')}
+                subtitle={t('page.subtitle')}
+                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: t('page.kicker') }]}
             />
 
             <section className="mx-auto max-w-7xl px-4 pb-16">
@@ -63,63 +66,91 @@ export default function Contact() {
                         )}
 
                         <div className="grid gap-5 sm:grid-cols-2">
-                            <Field label="Prénom" error={errors.firstname}>
+                            <Field label={t('form.firstname')} error={errors.firstname}>
                                 <Input
                                     value={data.firstname}
                                     onChange={(e) => setData('firstname', e.target.value)}
-                                    placeholder="Youssef"
+                                    placeholder={t('form.firstname_placeholder')}
                                     required
                                 />
                             </Field>
-                            <Field label="Nom" error={errors.lastname}>
+                            <Field label={t('form.lastname')} error={errors.lastname}>
                                 <Input
                                     value={data.lastname}
                                     onChange={(e) => setData('lastname', e.target.value)}
-                                    placeholder="Amrani"
+                                    placeholder={t('form.lastname_placeholder')}
                                     required
                                 />
                             </Field>
-                            <Field label="Email" error={errors.email}>
+                            <Field label={t('form.email')} error={errors.email}>
                                 <Input
                                     type="email"
                                     value={data.email}
                                     onChange={(e) => setData('email', e.target.value)}
-                                    placeholder="tu@example.com"
+                                    placeholder={t('form.email_placeholder')}
                                     required
                                 />
                             </Field>
-                            <Field label="Téléphone" error={errors.phone}>
+                            <Field label={t('form.phone')} error={errors.phone}>
                                 <Input
                                     type="tel"
                                     value={data.phone}
                                     onChange={(e) => setData('phone', e.target.value)}
-                                    placeholder="+212 6 00 00 00 00"
+                                    placeholder={t('form.phone_placeholder')}
                                     required
                                 />
                             </Field>
                         </div>
 
-                        <Field label="Message" error={errors.message} className="mt-5">
+                        <Field label={t('form.message')} error={errors.message} className="mt-5">
                             <Textarea
                                 value={data.message}
                                 onChange={(e) => setData('message', e.target.value)}
-                                placeholder="Explique-nous ta demande…"
+                                placeholder={t('form.message_placeholder')}
                                 rows={6}
                                 required
                             />
                         </Field>
 
+                        {/* Consent (Loi 09-08) */}
+                        <div className="mt-6 rounded-2xl border border-crimson/20 bg-card p-5">
+                            <p className="text-sm leading-relaxed text-muted-foreground">
+                                {t('consent.body_prefix')}{' '}
+                                <a href={t('consent.policy_link')} className="font-semibold text-crimson hover:underline">
+                                    /confidentialite
+                                </a>
+                                .
+                            </p>
+
+                            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-lg border border-border bg-background p-3">
+                                <input
+                                    type="checkbox"
+                                    checked={data.consent}
+                                    onChange={(e) => setData('consent', e.target.checked)}
+                                    className="mt-0.5 h-4 w-4 shrink-0 rounded border-input text-crimson focus:ring-2 focus:ring-crimson/40"
+                                    required
+                                />
+                                <span className="text-sm text-foreground">
+                                    <strong>{t('consent.checkbox_bold')}</strong>{' '}
+                                    {t('consent.checkbox_body')}
+                                </span>
+                            </label>
+                            {errors.consent && (
+                                <p className="mt-2 text-xs text-plasma">{errors.consent}</p>
+                            )}
+                        </div>
+
                         <div className="mt-6 flex items-center justify-between gap-4">
                             <p className="text-xs text-muted-foreground">
-                                On protège tes données. Pas de spam, promis.
+                                {t('form.privacy_note')}
                             </p>
-                            <Button type="submit" size="lg" disabled={processing}>
+                            <Button type="submit" size="lg" disabled={processing || !data.consent}>
                                 {processing ? (
                                     <Loader2 className="h-4 w-4 animate-spin" />
                                 ) : (
                                     <Send className="h-4 w-4" />
                                 )}
-                                Envoyer
+                                {t('form.submit')}
                             </Button>
                         </div>
                     </motion.form>
@@ -133,18 +164,18 @@ export default function Contact() {
                     >
                         <ContactInfoCard
                             icon={MapPin}
-                            title="Adresse"
+                            title={t('info.address')}
                             lines={[club?.location ?? 'Complexe Sportif Municipal', club?.city ?? 'Kénitra, Maroc']}
                         />
                         <ContactInfoCard
                             icon={Mail}
-                            title="Email"
+                            title={t('info.email')}
                             lines={[club?.email ?? 'contact@dinakenitrafc.ma']}
                             href={`mailto:${club?.email ?? 'contact@dinakenitrafc.ma'}`}
                         />
                         <ContactInfoCard
                             icon={Phone}
-                            title="Téléphone"
+                            title={t('info.phone')}
                             lines={[club?.phone ?? '+212 000 000 000']}
                             href={`tel:${(club?.phone ?? '').replace(/\s+/g, '')}`}
                         />
@@ -155,7 +186,7 @@ export default function Contact() {
                                     src={`https://www.openstreetmap.org/export/embed.html?bbox=${club.longitude - 0.01},${club.latitude - 0.01},${club.longitude + 0.01},${club.latitude + 0.01}&marker=${club.latitude},${club.longitude}`}
                                     className="aspect-square w-full"
                                     loading="lazy"
-                                    title="Carte du club"
+                                    title={t('info.map_alt')}
                                 />
                             </div>
                         )}

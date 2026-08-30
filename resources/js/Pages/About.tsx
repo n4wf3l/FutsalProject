@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { Download, FileText, MapPin, Trophy, Users } from 'lucide-react';
@@ -14,21 +15,22 @@ interface Props {
 }
 
 export default function About({ regulations, sections }: Props) {
+    const { t } = useTranslation(['pages', 'nav']);
     const { props } = usePage<{ club: ClubInfoShared }>();
     const club = props.club;
 
     return (
         <SiteLayout>
             <SEO
-                title="Le club"
-                description="L'histoire de Dina Kenitra Futsal Club depuis sa fondation en 2011. Formation, ambitions et parcours d'un club engagé à Kénitra."
+                title={t('pages:about.seo_title')}
+                description={t('pages:about.seo_description')}
             />
 
             <PageHeader
-                kicker="Fondé à Kénitra · 2011"
-                title="L'histoire d'un club"
-                subtitle="Comment un projet local est devenu une école, une famille, une ambition. Quinze ans en quelques chapitres."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Le club' }]}
+                kicker={t('pages:about.kicker')}
+                title={t('pages:about.title')}
+                subtitle={t('pages:about.subtitle')}
+                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:about.breadcrumb') }]}
                 variant="editorial"
             />
 
@@ -47,7 +49,7 @@ export default function About({ regulations, sections }: Props) {
                         <div>
                             <Badge variant="champagne" className="mb-4">
                                 <Trophy className="h-3 w-3" />
-                                Fondé en 2011
+                                {t('pages:about.identity_badge')}
                             </Badge>
                             <h2 className="text-foreground">
                                 <span className="block font-display text-display-lg">Dina Kenitra</span>
@@ -56,20 +58,19 @@ export default function About({ regulations, sections }: Props) {
                                 </span>
                             </h2>
                             <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
-                                Club de futsal basé à {club?.city ?? 'Kénitra'}, engagé dans le championnat marocain
-                                depuis plus d'une décennie. Une équipe, une famille, une identité forte.
+                                {t('pages:about.identity_body', { city: club?.city ?? 'Kénitra' })}
                             </p>
 
                             <div className="mt-6 grid gap-3 sm:grid-cols-3">
                                 {club?.president && (
-                                    <InfoStrip icon={Users} label="Président" value={club.president} />
+                                    <InfoStrip icon={Users} label={t('pages:about.identity_president')} value={club.president} />
                                 )}
                                 <InfoStrip
                                     icon={MapPin}
-                                    label="Ville"
+                                    label={t('pages:about.identity_city')}
                                     value={club?.city ?? 'Kénitra, Maroc'}
                                 />
-                                <InfoStrip icon={Trophy} label="Depuis" value="2011" />
+                                <InfoStrip icon={Trophy} label={t('pages:about.identity_since')} value="2011" />
                             </div>
                         </div>
                     </div>
@@ -89,7 +90,7 @@ export default function About({ regulations, sections }: Props) {
                                 transition={{ duration: 0.5, delay: (i % 4) * 0.06 }}
                             >
                                 <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
-                                    Chapitre {String(i + 1).padStart(2, '0')}
+                                    {t('pages:about.chapter', { number: String(i + 1).padStart(2, '0') })}
                                 </div>
                                 <h3 className="mt-3 font-display text-display-lg text-foreground">
                                     {section.title}
@@ -108,16 +109,16 @@ export default function About({ regulations, sections }: Props) {
             <section className="mx-auto max-w-4xl px-4 pb-16">
                 <div className="mb-8">
                     <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
-                        Documents officiels
+                        {t('pages:about.regulations_kicker')}
                     </div>
-                    <h2 className="mt-3 font-display text-display-lg">Règlements</h2>
+                    <h2 className="mt-3 font-display text-display-lg">{t('pages:about.regulations_title')}</h2>
                 </div>
 
                 {regulations.length === 0 ? (
                     <EmptyState
                         icon={FileText}
-                        title="Aucun document disponible"
-                        description="Les règlements du club seront publiés ici."
+                        title={t('pages:about.regulations_empty_title')}
+                        description={t('pages:about.regulations_empty_description')}
                     />
                 ) : (
                     <ul className="grid gap-3 sm:grid-cols-2">

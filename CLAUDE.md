@@ -2,20 +2,80 @@
 
 Notes durables pour les futures sessions Claude Code sur ce projet.
 
-## Règles de style (impératif)
+## Règles de style (impératif absolu pour toute IA travaillant sur ce repo)
 
-### Jamais de tirets
+### Zéro tiret long
 
-Ne **jamais** utiliser de tirets dans le texte : ni tiret cadratin `—`, ni tiret demi-cadratin `–`, ni tiret d'union `-` employé comme séparateur de phrase.
+Ne **jamais jamais** utiliser dans du texte produit par IA :
 
-S'applique aux réponses en chat, aux commits, aux messages de PR, aux commentaires de code, à la documentation, et aux fichiers markdown de ce repo (y compris ce CLAUDE.md).
+* le tiret cadratin `—` (em dash, U+2014)
+* le tiret demi-cadratin `–` (en dash, U+2013)
+* le tiret d'union `-` employé comme séparateur de phrase ou d'incise
 
-À la place :
-* utiliser des virgules, des points, des deux-points
+Interdit dans : réponses en chat, messages de commit, descriptions de PR, commentaires de code, documentation markdown, contenu écrit dans les fichiers du repo, chaînes UI, JSON i18n, seeders, textes stockés en base via l'admin.
+
+À la place, utiliser :
+
+* la virgule
+* le point
+* les deux-points
 * ou reformuler la phrase
-* ou utiliser des listes à puces
+* ou utiliser une liste à puces
 
-Le tiret d'union reste autorisé dans les noms composés propres (ex : `Dina Kenitra`, `dinakenitrafc.ma`, noms de branches Git comme `feat/phase-2-auth-admin`).
+Le tiret d'union `-` reste autorisé uniquement dans les noms composés propres, identifiants, slugs, noms de fichiers, noms de branches Git (exemples : `Dina Kenitra`, `dinakenitrafc.ma`, `feat/phase-2-auth-admin`, `applications-cv`).
+
+### Zéro emoji
+
+Ne **jamais jamais** utiliser d'emoji dans quoi que ce soit produit par IA :
+
+* pas d'emoji dans les réponses de chat, sauf si l'utilisateur en met explicitement lui-même dans son message
+* pas d'emoji dans les commits, les descriptions de PR, les comments de code, la doc markdown
+* pas d'emoji dans les fichiers de traduction (`resources/js/i18n/locales/**`)
+* pas d'emoji dans les chaînes UI, les seeders, ou tout contenu qui pourrait finir affiché sur le site
+* pas d'emoji comme puce de liste ou marqueur visuel (interdits : `⚡ 🎯 🛡️ 🔥 ✔ 🤝 🏆 💙 📢 📌 🚀 💡 ✅ ❌ ⚠️` etc.)
+
+À la place, utiliser :
+
+* des puces markdown standard `*` ou `-` en début de ligne
+* du texte descriptif
+* si un pictogramme visuel est vraiment nécessaire dans l'UI, utiliser un composant icône `lucide-react` déjà présent dans le projet (par exemple `<Trophy />`, `<Shield />`, `<Zap />`), jamais un emoji unicode
+
+Raison : les emojis se rendent différemment selon les OS et les fonts, ils cassent la cohérence visuelle du design system, et l'utilisateur les considère peu professionnels sur ce site de club.
+
+## Règles de design (impératif pour l'esthétique du site)
+
+### Éviter les patterns visuels qui trahissent une IA
+
+L'utilisateur repère et rejette immédiatement les designs qui sentent le landing SaaS généré par IA. Les motifs suivants sont à éviter ou à utiliser avec extrême parcimonie :
+
+* **gros blobs de dégradé diffus en background** (`bg-crimson/20 blur-[120px]`, `bg-champagne/10 blur-[100px]`, etc.), surtout centrés ou spectaculaires. C'est le tell numéro un des landings Dribbble et Framer templates
+* **glassmorphism agressif** (`glass-strong`, `backdrop-blur-*` sur des grandes surfaces avec bordure blanche translucide), typique des dashboards SaaS
+* **dégradés violet/rose/turquoise** (Stripe, Linear, Vercel), même en accent
+* **pills flottantes avec live-dot rouge** pour du contenu qui n'est pas live (par exemple sur une card article statique). Le live-dot doit rester réservé au vrai temps réel (match en cours, notification urgente)
+* **coins ultra arrondis** (`rounded-3xl` sur tout, `rounded-full` sur tout) qui donnent le look "Notion / Framer starter"
+* **shadow neon** (`shadow-*/50 shadow-crimson`) sur les éléments courants
+* **animations flottantes** en `translateY` infini sur des éléments non-décoratifs
+* **fond noise / grain SVG en overlay** utilisé pour "vieillir" artificiellement une surface
+
+### Ce qu'on fait à la place
+
+Pour rester sur l'esthétique d'un vrai club sportif ambitieux, référentiel Real Madrid, PSG, Bayern, Inter :
+
+* **photos réelles ou vidéos** en fond quand c'est possible (ici on n'en a pas, on compose autrement)
+* **typographie éditoriale forte** (display bold + editorial italique) comme colonne vertébrale de l'identité, déjà en place
+* **couleurs solides** (crimson plein, champagne plein, obsidian plein) plutôt que des voiles transparents
+* **bordures nettes** en `border border-border` ou `border-champagne/20`, sans blur derrière
+* **cartes rectangulaires ou légèrement arrondies** (`rounded-2xl` max, `rounded-lg` par défaut)
+* **contraste franc** entre les éléments plutôt qu'un dégradé qui adoucit tout
+* **texture réservée aux moments forts** (grain sur un hero éditorial une fois, pas partout)
+
+### Comment auto-tester avant de valider un design
+
+Se poser trois questions :
+
+1. Si je retire ce design du contexte du club, est-ce qu'il pourrait servir tel quel pour vendre un SaaS de gestion de temps ? Si oui, c'est mauvais.
+2. Est-ce que le focus visuel est sur le contenu (nom du club, actu, joueur, match) ou sur des effets décoratifs ?
+3. Un supporter lambda perçoit-il tout de suite le sérieux et l'ambition du club, ou l'impression d'un site de startup ?
 
 ## Règles de sécurité (impératif)
 
@@ -33,6 +93,17 @@ Règles à ne jamais enfreindre :
 * la réponse de `POST /candidature/supprimer` doit toujours renvoyer le même message générique, quelle que soit l'existence de l'email en base, afin d'empêcher l'énumération d'adresses
 
 Un utilisateur ne peut accéder qu'à SES propres données via son lien personnel reçu par email lors de la soumission du formulaire de candidature.
+
+### Comptes seedés jamais exposés en production
+
+La page `resources/js/Pages/Auth/Login.tsx` affiche une liste de comptes seedés (email + mot de passe en clair) pour faciliter la connexion en développement. Ce bloc n'apparaît que si `app.env !== 'production'`, valeur partagée par `HandleInertiaRequests` sous la clé `app.env`.
+
+Règles à ne jamais enfreindre :
+
+* le bloc `DEV_ACCOUNTS` dans Login.tsx doit toujours être gardé derrière `isDev`
+* `HandleInertiaRequests` doit toujours exposer `app.env` (via `app()->environment()`)
+* toute nouvelle page qui exposerait des données sensibles pour le confort du dev doit suivre le même pattern (`props.app.env !== 'production'`)
+* ne jamais utiliser une simple `import.meta.env.DEV` ou `import.meta.env.PROD` de Vite, car ces valeurs sont figées au build et deviennent faussement `false` si le build est fait sur un poste local puis déployé
 
 ## Chantiers planifiés (à ne pas oublier)
 

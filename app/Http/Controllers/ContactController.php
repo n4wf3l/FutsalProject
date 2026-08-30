@@ -23,8 +23,11 @@ class ContactController extends Controller
             'email' => 'required|email',
             'phone' => 'required',
             'message' => 'required',
+            'consent' => 'accepted',
+        ], [
+            'consent.accepted' => 'Ton consentement est requis pour envoyer le message.',
         ]);
-    
+
         // Utiliser l'email configuré dans le fichier .env ou un email statique
         $toEmail = env('MAIL_FROM_ADDRESS', 'info@nainnovations.be');
     

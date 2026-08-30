@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -17,8 +17,10 @@ import {
     X,
     type LucideIcon,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { Button } from '@/Components/ui/Button';
 import { MegaMenu, type MegaItem } from './MegaMenu';
 import { cn } from '@/lib/utils';
@@ -27,56 +29,10 @@ type NavGroup =
     | { kind: 'link'; label: string; href: string; hrefMatches: string[] }
     | { kind: 'menu'; label: string; items: MegaItem[]; hrefMatches: string[] };
 
-const NAV: NavGroup[] = [
-    { kind: 'link', label: 'Accueil', href: '/', hrefMatches: ['/'] },
-    {
-        kind: 'menu',
-        label: "L'équipe",
-        hrefMatches: ['/teams', '/coaches', '/staff', '/about'],
-        items: [
-            { label: 'Effectif', href: '/teams', icon: Users, description: 'Joueurs, staff et coach' },
-            { label: 'Notre histoire', href: '/about', icon: Trophy, description: 'Le club depuis 2011' },
-        ],
-    },
-    {
-        kind: 'menu',
-        label: 'Compétition',
-        hrefMatches: ['/calendar', '/games'],
-        items: [
-            { label: 'Calendrier', href: '/calendar', icon: Calendar, description: 'Matchs à venir et résultats' },
-            { label: 'Classement', href: '/calendar', icon: Trophy, description: 'Tableau du championnat' },
-        ],
-    },
-    {
-        kind: 'menu',
-        label: 'Média',
-        hrefMatches: ['/news', '/interviews', '/galleries', '/videos', '/articles'],
-        items: [
-            { label: 'Actualités', href: '/news', icon: Newspaper, description: 'News du club' },
-            { label: 'La Voix du Futsal', href: '/interviews', icon: Mic, description: 'Interviews du futsal marocain' },
-            { label: 'Galerie', href: '/galleries', icon: ImageIcon, description: 'Les photos du club' },
-            { label: 'Vidéos', href: '/videos', icon: Video, description: 'Résumés et moments forts' },
-        ],
-    },
-    { kind: 'link', label: 'Fanshop', href: '/fanshop', hrefMatches: ['/fanshop'] },
-];
-
-// Mobile flat list (all links, no dropdown)
-const MOBILE_NAV: Array<{ label: string; href: string; icon: LucideIcon }> = [
-    { label: 'Accueil', href: '/', icon: Trophy },
-    { label: 'Effectif', href: '/teams', icon: Users },
-    { label: 'Calendrier', href: '/calendar', icon: Calendar },
-    { label: 'Actualités', href: '/news', icon: Newspaper },
-    { label: 'La Voix du Futsal', href: '/interviews', icon: Mic },
-    { label: 'Galerie', href: '/galleries', icon: ImageIcon },
-    { label: 'Vidéos', href: '/videos', icon: Video },
-    { label: 'Fanshop', href: '/fanshop', icon: Ticket },
-    { label: 'Notre histoire', href: '/about', icon: FileText },
-    { label: 'Contact', href: '/contact', icon: UserCog },
-];
-
 export function Navbar() {
     const { url } = usePage();
+    const { t } = useTranslation('nav');
+    const { t: tCommon } = useTranslation('common');
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -90,6 +46,58 @@ export function Navbar() {
     useEffect(() => {
         setMobileOpen(false);
     }, [url]);
+
+    const NAV: NavGroup[] = useMemo(
+        () => [
+            { kind: 'link', label: t('items.home'), href: '/', hrefMatches: ['/'] },
+            {
+                kind: 'menu',
+                label: t('items.team_group'),
+                hrefMatches: ['/teams', '/coaches', '/staff', '/about'],
+                items: [
+                    { label: t('items.team_roster'), href: '/teams', icon: Users, description: t('items.team_roster_desc') },
+                    { label: t('items.team_history'), href: '/about', icon: Trophy, description: t('items.team_history_desc') },
+                ],
+            },
+            {
+                kind: 'menu',
+                label: t('items.competition_group'),
+                hrefMatches: ['/calendar', '/games'],
+                items: [
+                    { label: t('items.competition_calendar'), href: '/calendar', icon: Calendar, description: t('items.competition_calendar_desc') },
+                ],
+            },
+            {
+                kind: 'menu',
+                label: t('items.media_group'),
+                hrefMatches: ['/news', '/interviews', '/galleries', '/videos', '/articles'],
+                items: [
+                    { label: t('items.media_news'), href: '/news', icon: Newspaper, description: t('items.media_news_desc') },
+                    { label: t('items.media_interviews'), href: '/interviews', icon: Mic, description: t('items.media_interviews_desc') },
+                    { label: t('items.media_gallery'), href: '/galleries', icon: ImageIcon, description: t('items.media_gallery_desc') },
+                    { label: t('items.media_videos'), href: '/videos', icon: Video, description: t('items.media_videos_desc') },
+                ],
+            },
+            { kind: 'link', label: t('items.fanshop'), href: '/fanshop', hrefMatches: ['/fanshop'] },
+        ],
+        [t]
+    );
+
+    const MOBILE_NAV: Array<{ label: string; href: string; icon: LucideIcon }> = useMemo(
+        () => [
+            { label: t('items.home'), href: '/', icon: Trophy },
+            { label: t('items.team_roster'), href: '/teams', icon: Users },
+            { label: t('items.competition_calendar'), href: '/calendar', icon: Calendar },
+            { label: t('items.media_news'), href: '/news', icon: Newspaper },
+            { label: t('items.media_interviews'), href: '/interviews', icon: Mic },
+            { label: t('items.media_gallery'), href: '/galleries', icon: ImageIcon },
+            { label: t('items.media_videos'), href: '/videos', icon: Video },
+            { label: t('items.fanshop'), href: '/fanshop', icon: Ticket },
+            { label: t('items.team_history'), href: '/about', icon: FileText },
+            { label: t('items.contact'), href: '/contact', icon: UserCog },
+        ],
+        [t]
+    );
 
     const isActive = (matches: string[]) =>
         matches.some((m) => (m === '/' ? url === '/' : url.startsWith(m)));
@@ -150,6 +158,7 @@ export function Navbar() {
                     </nav>
 
                     <div className="flex items-center gap-2">
+                        <LanguageSwitcher />
                         <ThemeToggle />
                         <Button
                             asChild
@@ -158,7 +167,7 @@ export function Navbar() {
                             className="hidden sm:inline-flex"
                         >
                             <Link href="/login">
-                                Espace staff
+                                {tCommon('app.staff_area')}
                                 <ChevronRight className="h-3.5 w-3.5" />
                             </Link>
                         </Button>
@@ -166,7 +175,7 @@ export function Navbar() {
                             type="button"
                             onClick={() => setMobileOpen((o) => !o)}
                             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card/60 text-foreground lg:hidden"
-                            aria-label="Ouvrir le menu"
+                            aria-label={t('items.home')}
                         >
                             {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
                         </button>
@@ -206,7 +215,7 @@ export function Navbar() {
                             href="/login"
                             className="mt-2 flex items-center justify-between rounded-lg border border-crimson bg-crimson px-4 py-3 text-sm font-semibold text-crimson-foreground"
                         >
-                            Espace staff
+                            {tCommon('app.staff_area')}
                             <ChevronRight className="h-4 w-4" />
                         </Link>
                     </motion.div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Play, Video as VideoIcon, X } from 'lucide-react';
@@ -6,6 +7,7 @@ import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { Pagination } from '@/Components/site/Pagination';
+import { SmartImage } from '@/Components/site/SmartImage';
 import { formatMatchDate } from '@/lib/utils';
 import type { Paginated, Video } from '@/types/models';
 
@@ -24,6 +26,7 @@ function getVimeoId(url: string): string | null {
 }
 
 export default function Videos({ videos }: Props) {
+    const { t } = useTranslation(['pages', 'nav']);
     const [playing, setPlaying] = useState<Video | null>(null);
 
     const embedUrl = playing
@@ -39,23 +42,23 @@ export default function Videos({ videos }: Props) {
     return (
         <SiteLayout>
             <SEO
-                title="Vidéos"
-                description="Résumés de matchs, buts et moments forts de Dina Kenitra FC en vidéo."
+                title={t('pages:videos.seo_title')}
+                description={t('pages:videos.seo_description')}
             />
 
             <PageHeader
-                kicker="Vidéo"
-                title="En mouvement"
-                subtitle="Résumés, buts, coulisses. À regarder au calme ou entre deux entraînements."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Vidéos' }]}
+                kicker={t('pages:videos.kicker')}
+                title={t('pages:videos.title')}
+                subtitle={t('pages:videos.subtitle')}
+                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:videos.breadcrumb') }]}
             />
 
             <section className="mx-auto max-w-7xl px-4 pb-16">
                 {videos.data.length === 0 ? (
                     <EmptyState
                         icon={VideoIcon}
-                        title="Aucune vidéo disponible"
-                        description="Les prochaines vidéos du club seront publiées ici."
+                        title={t('pages:videos.empty_title')}
+                        description={t('pages:videos.empty_description')}
                     />
                 ) : (
                     <>
@@ -72,7 +75,11 @@ export default function Videos({ videos }: Props) {
 
                         <div className="mt-12 flex items-center justify-between gap-4">
                             <div className="text-sm text-muted-foreground">
-                                {videos.from ?? 0}–{videos.to ?? 0} sur {videos.total}
+                                {t('pages:videos.pagination_summary', {
+                                    from: videos.from ?? 0,
+                                    to: videos.to ?? 0,
+                                    total: videos.total,
+                                })}
                             </div>
                             <Pagination links={videos.links} />
                         </div>
@@ -158,11 +165,10 @@ function VideoCard({
             <button onClick={onPlay} className="block w-full text-left">
                 <div className="relative aspect-video overflow-hidden bg-muted">
                     {video.image ? (
-                        <img
+                        <SmartImage
                             src={`/storage/${video.image}`}
                             alt={video.title}
-                            loading="lazy"
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex h-full w-full items-center justify-center">

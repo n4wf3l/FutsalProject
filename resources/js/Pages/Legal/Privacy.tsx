@@ -1,23 +1,25 @@
 import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { SEO } from '@/Components/SEO';
 
 export default function Privacy() {
+    const { t } = useTranslation(['legal', 'nav']);
     return (
         <SiteLayout>
             <SEO
-                title="Politique de confidentialité"
-                description="Politique de confidentialité de Dina Kenitra FC — conforme à la Loi 09-08 sur la protection des données personnelles au Maroc et à la CNDP."
+                title={t('legal:privacy.title')}
+                description={t('legal:privacy.subtitle')}
             />
 
             <PageHeader
-                kicker="Loi 09-08 · CNDP"
-                title="Politique de confidentialité"
-                subtitle="Comment Dina Kenitra FC collecte, utilise et protège tes données personnelles."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Confidentialité' }]}
+                kicker={t('legal:privacy.kicker')}
+                title={t('legal:privacy.title')}
+                subtitle={t('legal:privacy.subtitle')}
+                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('legal:privacy.breadcrumb') }]}
                 variant="editorial"
             />
 
@@ -30,12 +32,15 @@ export default function Privacy() {
                 >
                     <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-champagne" />
                     <p className="text-sm leading-relaxed text-muted-foreground">
-                        Ce document explique en clair comment nous respectons la <strong className="text-foreground">Loi n° 09-08</strong> relative à la protection des personnes physiques à l'égard du traitement des données à caractère personnel au Maroc, sous le contrôle de la <strong className="text-foreground">CNDP</strong>.
+                        {t('legal:privacy.intro', {
+                            law: t('legal:privacy.intro_law'),
+                            authority: t('legal:privacy.intro_authority'),
+                        })}
                     </p>
                 </motion.div>
 
                 <div className="space-y-10 text-foreground/90">
-                    <Section title="1. Qui est responsable du traitement">
+                    <Section title={t('legal:privacy.sections.responsible')}>
                         <p>
                             Le responsable du traitement est <strong>Dina Kenitra Futsal Club</strong>,
                             association sportive de droit marocain établie à Kénitra, joignable à{' '}
@@ -47,7 +52,7 @@ export default function Privacy() {
                         </p>
                     </Section>
 
-                    <Section title="2. Quelles données nous collectons">
+                    <Section title={t('legal:privacy.sections.collected')}>
                         <ul className="ml-5 list-disc space-y-2">
                             <li>
                                 <strong>Formulaire de contact</strong> : prénom, nom, email,
@@ -62,7 +67,8 @@ export default function Privacy() {
                             </li>
                             <li>
                                 <strong>Espace staff / admin</strong> : email et mot de passe
-                                chiffré, réservés au personnel du club.
+                                haché avec bcrypt (jamais stocké en clair, jamais réversible),
+                                réservés au personnel du club.
                             </li>
                             <li>
                                 <strong>Billetterie</strong> : les données de paiement sont
@@ -75,7 +81,7 @@ export default function Privacy() {
                         </ul>
                     </Section>
 
-                    <Section title="3. Pourquoi nous collectons ces données">
+                    <Section title={t('legal:privacy.sections.purposes')}>
                         <ul className="ml-5 list-disc space-y-2">
                             <li>Répondre aux messages envoyés via le formulaire de contact.</li>
                             <li>
@@ -91,7 +97,7 @@ export default function Privacy() {
                         </ul>
                     </Section>
 
-                    <Section title="4. Base légale">
+                    <Section title={t('legal:privacy.sections.basis')}>
                         <p>
                             La base légale du traitement est ton <strong>consentement libre,
                             spécifique et éclairé</strong>, matérialisé par la case à cocher
@@ -100,7 +106,7 @@ export default function Privacy() {
                         </p>
                     </Section>
 
-                    <Section title="5. Durée de conservation">
+                    <Section title={t('legal:privacy.sections.retention')}>
                         <ul className="ml-5 list-disc space-y-2">
                             <li>
                                 <strong>Candidatures joueurs non retenues</strong> : 6 mois à
@@ -113,8 +119,10 @@ export default function Privacy() {
                                 administratives).
                             </li>
                             <li>
-                                <strong>Messages de contact</strong> : 12 mois après le dernier
-                                échange.
+                                <strong>Messages de contact</strong> : non archivés dans notre
+                                base de données. Ils sont transmis par email au staff, qui peut
+                                les conserver dans sa boîte de réception selon ses besoins
+                                opérationnels et sa propre politique de rétention.
                             </li>
                             <li>
                                 <strong>Comptes staff</strong> : durée de la mission au sein du
@@ -127,7 +135,7 @@ export default function Privacy() {
                         </ul>
                     </Section>
 
-                    <Section title="6. Qui accède à tes données">
+                    <Section title={t('legal:privacy.sections.access')}>
                         <p>
                             Uniquement le staff sportif et administratif de Dina Kenitra FC,
                             dûment autorisé. Nous <strong>ne vendons ni ne partageons jamais</strong>{' '}
@@ -138,7 +146,7 @@ export default function Privacy() {
                         </p>
                     </Section>
 
-                    <Section title="7. Sécurité">
+                    <Section title={t('legal:privacy.sections.security')}>
                         <ul className="ml-5 list-disc space-y-2">
                             <li>Transport HTTPS (chiffrement TLS) sur tout le site.</li>
                             <li>Mots de passe stockés avec bcrypt (jamais en clair).</li>
@@ -152,7 +160,7 @@ export default function Privacy() {
                         </ul>
                     </Section>
 
-                    <Section title="8. Tes droits">
+                    <Section title={t('legal:privacy.sections.rights')}>
                         <p className="mb-3">
                             Conformément à la Loi 09-08, tu disposes à tout moment des droits
                             suivants :
@@ -184,35 +192,34 @@ export default function Privacy() {
                                 <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-crimson" />
                                 <div className="text-sm">
                                     <p className="font-semibold text-foreground">
-                                        Comment exercer ces droits
+                                        {t('legal:privacy.how_to_exercise')}
                                     </p>
                                     <p className="mt-2 text-muted-foreground">
-                                        Écris-nous à{' '}
+                                        {t('legal:privacy.how_body_prefix')}{' '}
                                         <a
                                             href="mailto:contact@dinakenitrafc.ma?subject=Donn%C3%A9es%20personnelles"
                                             className="text-crimson underline hover:no-underline"
                                         >
                                             contact@dinakenitrafc.ma
                                         </a>
-                                        {' '}avec l'objet « Données personnelles ». Nous répondons
-                                        sous 30 jours maximum.
+                                        {' '}{t('legal:privacy.how_body_middle')}
                                     </p>
                                     <p className="mt-3 text-muted-foreground">
-                                        Si tu as postulé pour rejoindre le club, tu peux aussi{' '}
+                                        {t('legal:privacy.how_body_suffix_prefix')}{' '}
                                         <Link
                                             href="/candidature/supprimer"
                                             className="text-crimson underline hover:no-underline"
                                         >
-                                            demander directement la suppression de ta candidature
+                                            {t('legal:privacy.how_body_link')}
                                         </Link>{' '}
-                                        avec ton lien personnel reçu par email.
+                                        {t('legal:privacy.how_body_suffix_end')}
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </Section>
 
-                    <Section title="9. Recours auprès de la CNDP">
+                    <Section title={t('legal:privacy.sections.cndp')}>
                         <p>
                             Si tu estimes que tes droits ne sont pas respectés, tu peux
                             introduire une réclamation auprès de la Commission Nationale de
@@ -229,7 +236,7 @@ export default function Privacy() {
                         </p>
                     </Section>
 
-                    <Section title="10. Mineurs">
+                    <Section title={t('legal:privacy.sections.minors')}>
                         <p>
                             Pour les candidats de moins de 18 ans, nous demandons le consentement
                             d'un parent ou tuteur légal au moment de l'envoi du formulaire de
@@ -239,7 +246,7 @@ export default function Privacy() {
                         </p>
                     </Section>
 
-                    <Section title="11. Transferts hors du Maroc">
+                    <Section title={t('legal:privacy.sections.transfers')}>
                         <p>
                             Nos serveurs et sauvegardes sont hébergés au Maroc. Certains outils
                             techniques (envoi d'email, paiement) peuvent transiter par des
@@ -248,7 +255,7 @@ export default function Privacy() {
                         </p>
                     </Section>
 
-                    <Section title="12. Mise à jour de cette politique">
+                    <Section title={t('legal:privacy.sections.updates')}>
                         <p>
                             Cette politique peut évoluer pour rester conforme à la
                             réglementation ou refléter des changements dans nos traitements.
@@ -259,7 +266,7 @@ export default function Privacy() {
                     </Section>
 
                     <p className="border-t border-border pt-6 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                        Dernière mise à jour : {new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                        {t('legal:privacy.last_update')} {new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}
                     </p>
                 </div>
             </article>

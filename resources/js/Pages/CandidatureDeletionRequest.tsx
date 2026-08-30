@@ -2,6 +2,7 @@ import { FormEventHandler } from 'react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Loader2, Mail, Send } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { SEO } from '@/Components/SEO';
@@ -10,6 +11,7 @@ import { Input } from '@/Components/ui/Input';
 import { Field } from '@/Components/ui/Field';
 
 export default function CandidatureDeletionRequest() {
+    const { t } = useTranslation('join');
     const { props } = usePage<{ flash: { success?: string } }>();
     const flash = props.flash;
 
@@ -25,15 +27,15 @@ export default function CandidatureDeletionRequest() {
     return (
         <SiteLayout>
             <SEO
-                title="Supprimer ma candidature"
-                description="Demande le lien de gestion pour consulter ou supprimer ta candidature à Dina Kenitra FC."
+                title={t('deletion_request.title')}
+                description={t('deletion_request.subtitle')}
                 noindex
             />
 
             <PageHeader
-                kicker="Loi 09-08 · Droit à la suppression"
-                title="Retrouver mon dossier"
-                subtitle="Entre l'email utilisé lors de ta candidature. Si un dossier existe, nous te renvoyons ton lien personnel pour le consulter ou le supprimer."
+                kicker={t('deletion_request.kicker')}
+                title={t('deletion_request.title')}
+                subtitle={t('deletion_request.subtitle')}
                 variant="editorial"
             />
 
@@ -55,7 +57,7 @@ export default function CandidatureDeletionRequest() {
                     animate={{ opacity: 1, y: 0 }}
                     className="rounded-2xl border border-border bg-card p-6 sm:p-8"
                 >
-                    <Field label="Email utilisé lors de la candidature" required error={errors.email}>
+                    <Field label={t('deletion_request.email')} required error={errors.email}>
                         <div className="relative">
                             <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
@@ -65,7 +67,7 @@ export default function CandidatureDeletionRequest() {
                                 required
                                 autoFocus
                                 autoComplete="email"
-                                placeholder="tu@example.com"
+                                placeholder={t('deletion_request.email_placeholder')}
                                 className="pl-10"
                             />
                         </div>
@@ -77,33 +79,31 @@ export default function CandidatureDeletionRequest() {
                         ) : (
                             <Send className="h-4 w-4" />
                         )}
-                        Recevoir mon lien de gestion
+                        {t('deletion_request.submit')}
                     </Button>
 
                     <p className="mt-4 text-center text-xs text-muted-foreground">
-                        Pour ta sécurité, nous ne confirmons jamais si une adresse est ou non
-                        dans notre base. Si un dossier existe, l'email arrive dans quelques
-                        minutes.
+                        {t('deletion_request.privacy_note')}
                     </p>
                 </motion.form>
 
                 <div className="mt-8 space-y-3 text-center text-sm text-muted-foreground">
                     <p>
-                        Tu peux aussi écrire directement à{' '}
+                        {t('deletion_request.fallback_prefix')}{' '}
                         <a
                             href="mailto:contact@dinakenitrafc.ma?subject=Suppression%20de%20mes%20donn%C3%A9es"
                             className="text-crimson underline hover:no-underline"
                         >
                             contact@dinakenitrafc.ma
                         </a>
-                        {' '}avec l'objet « Suppression de mes données ».
+                        {' '}{t('deletion_request.fallback_suffix')}
                     </p>
                     <p>
                         <Link
                             href="/confidentialite"
                             className="text-champagne underline hover:no-underline"
                         >
-                            Politique de confidentialité complète
+                            {t('deletion_request.policy_link')}
                         </Link>
                     </p>
                 </div>

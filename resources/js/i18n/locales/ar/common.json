@@ -1,0 +1,47 @@
+{
+    "brand": {
+        "club_name": "دينا القنيطرة",
+        "club_sub": "نادي كرة القدم داخل القاعة",
+        "monogram": "DKFC",
+        "est": "تأسس 2011",
+        "futsal_year": "كرة قدم داخل القاعة · 2011"
+    },
+    "action": {
+        "submit": "إرسال",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "delete": "حذف",
+        "edit": "تعديل",
+        "back": "رجوع",
+        "next": "التالي",
+        "previous": "السابق",
+        "close": "إغلاق",
+        "confirm": "تأكيد",
+        "read_more": "قراءة المزيد",
+        "read_article": "قراءة المقال",
+        "read_interview": "قراءة المقابلة",
+        "share": "مشاركة",
+        "view_all": "عرض الكل",
+        "loading": "جارٍ التحميل…",
+        "sending": "جارٍ الإرسال…",
+        "saved": "تم الحفظ"
+    },
+    "form": {
+        "required": "إجباري",
+        "optional": "اختياري",
+        "select_placeholder": "— اختر —",
+        "search": "بحث"
+    },
+    "date": {
+        "at": "على الساعة",
+        "on": "في"
+    },
+    "app": {
+        "staff_area": "فضاء الطاقم",
+        "public_site": "عرض الموقع العام",
+        "member_area": "فضاء الأعضاء",
+        "language": "اللغة",
+        "language_active": "نشطة",
+        "esc_to_close": "للإغلاق"
+    }
+}

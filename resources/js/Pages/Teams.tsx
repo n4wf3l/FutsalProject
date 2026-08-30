@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { Trophy, User, Users, UserCog } from 'lucide-react';
@@ -7,6 +8,7 @@ import { PageHeader } from '@/Components/site/PageHeader';
 import { SectionHeader } from '@/Components/site/Section';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { PlayerCard } from '@/Components/site/PlayerCard';
+import { SmartImage } from '@/Components/site/SmartImage';
 import { Badge } from '@/Components/ui/Badge';
 import { cn } from '@/lib/utils';
 import type { Championship, Coach, Player, Staff } from '@/types/models';
@@ -18,34 +20,35 @@ interface TeamsProps {
     championship: Championship | null;
 }
 
-const POSITION_GROUPS = [
-    { key: 'all', label: 'Tous', match: () => true },
-    { key: 'GK', label: 'Gardiens', match: (p: Player) => /gardien|goal|gk/i.test(p.position) },
-    { key: 'DEF', label: 'Défenseurs', match: (p: Player) => /d[éeè]f/i.test(p.position) },
-    { key: 'MID', label: 'Milieux', match: (p: Player) => /milieu|mid/i.test(p.position) },
-    { key: 'FWD', label: 'Attaquants', match: (p: Player) => /attaqu|forward|piv|fwd|ail/i.test(p.position) },
+const POSITION_MATCHERS = [
+    { key: 'all', match: () => true },
+    { key: 'gk', match: (p: Player) => /gardien|goal|gk/i.test(p.position) },
+    { key: 'def', match: (p: Player) => /d[éeè]f/i.test(p.position) },
+    { key: 'mid', match: (p: Player) => /milieu|mid/i.test(p.position) },
+    { key: 'fwd', match: (p: Player) => /attaqu|forward|piv|fwd|ail/i.test(p.position) },
 ];
 
 export default function Teams({ players, staff, coach, championship }: TeamsProps) {
+    const { t, i18n } = useTranslation('pages');
     const [filter, setFilter] = useState('all');
 
     const filteredPlayers = useMemo(() => {
-        const group = POSITION_GROUPS.find((g) => g.key === filter) ?? POSITION_GROUPS[0];
+        const group = POSITION_MATCHERS.find((g) => g.key === filter) ?? POSITION_MATCHERS[0];
         return players.filter(group.match);
     }, [players, filter]);
 
     return (
         <SiteLayout>
             <SEO
-                title="L'effectif"
-                description="L'équipe Dina Kenitra FC saison 2025-2026. Joueurs, coach et staff du club de futsal de Kénitra."
+                title={t('teams.seo_title')}
+                description={t('teams.seo_description')}
             />
 
             <PageHeader
-                kicker="L'effectif · Saison 2025-2026"
-                kickerRight={new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}
-                title="Ceux qui portent le maillot"
-                subtitle="Joueurs, staff et coach. Les visages qui font Dina Kenitra FC cette saison."
+                kicker={t('teams.kicker')}
+                kickerRight={new Date().toLocaleDateString(i18n.language, { day: '2-digit', month: 'long', year: 'numeric' })}
+                title={t('teams.title')}
+                subtitle={t('teams.subtitle')}
                 variant="editorial"
             >
                 {championship && (
@@ -59,7 +62,7 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
             {/* Filters */}
             <section className="mx-auto max-w-7xl px-4">
                 <div className="flex flex-wrap items-center gap-2 border-b border-border pb-4">
-                    {POSITION_GROUPS.map((g) => {
+                    {POSITION_MATCHERS.map((g) => {
                         const count = players.filter(g.match).length;
                         return (
                             <button
@@ -72,7 +75,7 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
                                         : 'border-border bg-transparent text-muted-foreground hover:border-crimson/40 hover:text-foreground'
                                 )}
                             >
-                                {g.label}
+                                {t(`teams.positions.${g.key}`)}
                                 <span
                                     className={cn(
                                         'inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 font-mono text-[10px] font-semibold',
@@ -100,8 +103,8 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
                 ) : (
                     <EmptyState
                         icon={Users}
-                        title="Aucun joueur dans cette catégorie"
-                        description="Change le filtre pour voir d'autres postes."
+                        title={t('teams.empty_title')}
+                        description={t('teams.empty_description')}
                     />
                 )}
             </section>
@@ -109,15 +112,14 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
             {/* Coach Spotlight */}
             {coach && (
                 <section className="mx-auto max-w-7xl px-4 py-16">
-                    <SectionHeader kicker="Le coach" title="À la tête de l'équipe" />
+                    <SectionHeader kicker={t('teams.coach_kicker')} title={t('teams.coach_title')} />
                     <div className="mt-10 overflow-hidden rounded-3xl border border-champagne/20 bg-card">
                         <div className="grid gap-8 lg:grid-cols-[1fr_1.4fr]">
                             <div className="relative aspect-[3/4] overflow-hidden lg:aspect-auto">
                                 {coach.photo ? (
-                                    <img
+                                    <SmartImage
                                         src={`/storage/${coach.photo}`}
                                         alt={`${coach.first_name} ${coach.last_name}`}
-                                        className="h-full w-full object-cover"
                                     />
                                 ) : (
                                     <div className="flex h-full w-full items-center justify-center bg-muted">
@@ -128,7 +130,7 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
                             </div>
                             <div className="flex flex-col justify-center p-8 lg:p-12">
                                 <Badge variant="champagne" className="mb-4 self-start">
-                                    Head Coach
+                                    {t('teams.coach_badge')}
                                 </Badge>
                                 <h3 className="font-display text-display-lg">
                                     <span className="block text-muted-foreground">
@@ -139,20 +141,20 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
 
                                 <div className="mt-8 grid grid-cols-2 gap-4 border-y border-border py-6">
                                     {coach.nationality && (
-                                        <CoachStat label="Nationalité" value={coach.nationality} />
+                                        <CoachStat label={t('teams.coach_stat_nationality')} value={coach.nationality} />
                                     )}
                                     {coach.birth_city && (
-                                        <CoachStat label="Origine" value={coach.birth_city} />
+                                        <CoachStat label={t('teams.coach_stat_origin')} value={coach.birth_city} />
                                     )}
                                     {coach.coaching_since && (
                                         <CoachStat
-                                            label="Coach depuis"
+                                            label={t('teams.coach_stat_since')}
                                             value={new Date(coach.coaching_since).getFullYear().toString()}
                                         />
                                     )}
                                     {coach.birth_date && (
                                         <CoachStat
-                                            label="Âge"
+                                            label={t('teams.coach_stat_age')}
                                             value={String(
                                                 new Date().getFullYear() -
                                                     new Date(coach.birth_date).getFullYear()
@@ -177,9 +179,9 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
             {staff.length > 0 && (
                 <section className="mx-auto max-w-7xl px-4 py-16">
                     <SectionHeader
-                        kicker="Encadrement"
-                        title="Le staff"
-                        description="Les hommes de l'ombre qui rendent tout possible."
+                        kicker={t('teams.staff_kicker')}
+                        title={t('teams.staff_title')}
+                        description={t('teams.staff_description')}
                     />
                     <div className="mt-10 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         {staff.map((member, i) => (
@@ -214,11 +216,10 @@ function StaffCard({ member, index }: { member: Staff; index: number }) {
         >
             <div className="relative aspect-square overflow-hidden bg-muted">
                 {member.photo ? (
-                    <img
+                    <SmartImage
                         src={`/storage/${member.photo}`}
                         alt={`${member.first_name} ${member.last_name}`}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="group-hover:scale-105"
                     />
                 ) : (
                     <div className="flex h-full w-full items-center justify-center">

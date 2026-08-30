@@ -1,0 +1,33 @@
+{
+    "page": {
+        "kicker": "Reach us",
+        "title": "Any question?",
+        "subtitle": "Write to us. We reply within 24 to 48 working hours. For match emergencies, prefer the phone."
+    },
+    "form": {
+        "firstname": "First name",
+        "firstname_placeholder": "Youssef",
+        "lastname": "Last name",
+        "lastname_placeholder": "Amrani",
+        "email": "Email",
+        "email_placeholder": "you@example.com",
+        "phone": "Phone",
+        "phone_placeholder": "+212 6 00 00 00 00",
+        "message": "Message",
+        "message_placeholder": "Tell us what you need…",
+        "privacy_note": "We protect your data. No spam, promise.",
+        "submit": "Send"
+    },
+    "consent": {
+        "body_prefix": "By sending this message you entrust Dina Kenitra FC with your contact details (identity, contact) solely to reply to you. In line with Law 09-08, no automatic archiving is done in our database: your message is forwarded by email to the staff. Full policy:",
+        "policy_link": "/confidentialite",
+        "checkbox_bold": "I agree",
+        "checkbox_body": "that Dina Kenitra FC uses this information to process my request."
+    },
+    "info": {
+        "address": "Address",
+        "email": "Email",
+        "phone": "Phone",
+        "map_alt": "Club map"
+    }
+}

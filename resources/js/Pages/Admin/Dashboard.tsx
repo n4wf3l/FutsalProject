@@ -3,25 +3,42 @@ import { motion } from 'framer-motion';
 import {
     ArrowRight,
     Calendar,
+    CheckCircle2,
     Image as ImageIcon,
+    Inbox,
     LayoutDashboard,
+    Mic,
     Newspaper,
     Plus,
-    ShieldPlus,
     Ticket,
     Trophy,
     Users,
     UserCog,
-    Video,
     type LucideIcon,
 } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
-import { Badge } from '@/Components/ui/Badge';
 import { TeamBadge } from '@/Components/site/TeamBadge';
 import { EmptyState } from '@/Components/site/EmptyState';
-import { formatMatchDate } from '@/lib/utils';
+import { formatMatchDate, cn } from '@/lib/utils';
 import type { Article, ClubInfoShared, Game } from '@/types/models';
+
+interface PendingApplication {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    category: string;
+    created_at: string;
+}
+
+interface DraftInterview {
+    id: number;
+    title: string;
+    interviewee_name: string;
+    interviewee_role: string;
+    updated_at: string;
+}
 
 interface DashboardProps {
     stats: {
@@ -38,11 +55,23 @@ interface DashboardProps {
         upcomingGames: number;
         pastGames: number;
     };
+    inbox: {
+        applicationsPending: number;
+        interviewsDraft: number;
+    };
+    pendingApplications: PendingApplication[];
+    draftInterviews: DraftInterview[];
     recentArticles: Article[];
     upcomingGames: Game[];
     recentUsers: Array<{ id: number; name: string; email: string; created_at: string }>;
     registrationOpen: boolean;
 }
+
+const CATEGORY_LABELS: Record<string, string> = {
+    junior: 'Junior',
+    feminine: 'Féminine',
+    senior_masculine: 'Senior M.',
+};
 
 const QUICK_ACTIONS: Array<{ label: string; href: string; icon: LucideIcon; hint: string }> = [
     { label: 'Nouvel article', href: '/articles/create', icon: Newspaper, hint: 'Publier une news' },
@@ -51,9 +80,18 @@ const QUICK_ACTIONS: Array<{ label: string; href: string; icon: LucideIcon; hint
     { label: 'Nouvelle galerie', href: '/galleries/create', icon: ImageIcon, hint: 'Créer un album photo' },
 ];
 
-export default function Dashboard({ stats, recentArticles, upcomingGames, recentUsers }: DashboardProps) {
+export default function Dashboard({
+    stats,
+    inbox,
+    pendingApplications,
+    draftInterviews,
+    recentArticles,
+    upcomingGames,
+    recentUsers,
+}: DashboardProps) {
     const { props } = usePage<{ auth: { user: { name: string } }, club: ClubInfoShared }>();
     const userName = props.auth?.user?.name ?? 'Coach';
+    const hasInboxItems = inbox.applicationsPending > 0 || inbox.interviewsDraft > 0;
 
     return (
         <AdminLayout>
@@ -103,6 +141,170 @@ export default function Dashboard({ stats, recentArticles, upcomingGames, recent
                     </div>
                 </div>
             </motion.div>
+
+            {/* À traiter */}
+            <section className="mt-8">
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                        <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-crimson">
+                            <Inbox className="h-3 w-3" />
+                            À traiter
+                        </div>
+                        <h2 className="mt-2 font-display text-2xl font-bold">
+                            {hasInboxItems ? (
+                                <>
+                                    {inbox.applicationsPending + inbox.interviewsDraft} élément
+                                    {inbox.applicationsPending + inbox.interviewsDraft > 1 ? 's' : ''}{' '}
+                                    en attente
+                                </>
+                            ) : (
+                                'Tout est propre'
+                            )}
+                        </h2>
+                    </div>
+                </div>
+
+                <div className="mt-4 grid gap-4 lg:grid-cols-2">
+                    {/* Candidatures en attente */}
+                    <div className={cn(
+                        'relative overflow-hidden rounded-2xl border p-5',
+                        inbox.applicationsPending > 0
+                            ? 'border-plasma/40 bg-plasma/5'
+                            : 'border-border bg-card'
+                    )}>
+                        <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                                <div className={cn(
+                                    'rounded-lg border p-2.5',
+                                    inbox.applicationsPending > 0
+                                        ? 'border-plasma/40 bg-plasma/10 text-plasma'
+                                        : 'border-border bg-background text-muted-foreground'
+                                )}>
+                                    <Inbox className="h-4 w-4" />
+                                </div>
+                                <div>
+                                    <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                        Candidatures joueurs
+                                    </div>
+                                    <div className="mt-0.5 font-display text-xl font-bold">
+                                        {inbox.applicationsPending} en attente
+                                    </div>
+                                </div>
+                            </div>
+                            <Button asChild size="sm" variant={inbox.applicationsPending > 0 ? 'default' : 'outline'}>
+                                <Link href={route('admin.applications.index', { status: 'pending' })}>
+                                    Traiter
+                                    <ArrowRight className="h-3.5 w-3.5" />
+                                </Link>
+                            </Button>
+                        </div>
+
+                        {pendingApplications.length > 0 ? (
+                            <ul className="mt-4 divide-y divide-border">
+                                {pendingApplications.map((app) => {
+                                    const d = formatMatchDate(app.created_at);
+                                    return (
+                                        <li key={app.id}>
+                                            <Link
+                                                href={route('admin.applications.show', app.id)}
+                                                className="group flex items-center gap-3 py-2.5 transition-colors hover:text-crimson"
+                                            >
+                                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-plasma/15 font-mono text-xs font-bold text-plasma">
+                                                    {app.first_name.charAt(0)}
+                                                    {app.last_name.charAt(0)}
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="truncate text-sm font-semibold">
+                                                        {app.first_name} {app.last_name}
+                                                    </div>
+                                                    <div className="truncate font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                                        {CATEGORY_LABELS[app.category] ?? app.category} · reçue {d.day} {d.month}
+                                                    </div>
+                                                </div>
+                                                <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+                                            </Link>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        ) : (
+                            <div className="mt-4 flex items-center gap-2 rounded-lg border border-dashed border-border bg-background/40 px-3 py-4 text-xs text-muted-foreground">
+                                <CheckCircle2 className="h-4 w-4 text-mint" />
+                                Aucune candidature à examiner pour le moment.
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Interviews en brouillon */}
+                    <div className={cn(
+                        'relative overflow-hidden rounded-2xl border p-5',
+                        inbox.interviewsDraft > 0
+                            ? 'border-amber/40 bg-amber/5'
+                            : 'border-border bg-card'
+                    )}>
+                        <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                                <div className={cn(
+                                    'rounded-lg border p-2.5',
+                                    inbox.interviewsDraft > 0
+                                        ? 'border-amber/40 bg-amber/10 text-amber'
+                                        : 'border-border bg-background text-muted-foreground'
+                                )}>
+                                    <Mic className="h-4 w-4" />
+                                </div>
+                                <div>
+                                    <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                        Interviews en brouillon
+                                    </div>
+                                    <div className="mt-0.5 font-display text-xl font-bold">
+                                        {inbox.interviewsDraft} à publier
+                                    </div>
+                                </div>
+                            </div>
+                            <Button asChild size="sm" variant={inbox.interviewsDraft > 0 ? 'champagne' : 'outline'}>
+                                <Link href={route('admin.interviews.index')}>
+                                    Ouvrir
+                                    <ArrowRight className="h-3.5 w-3.5" />
+                                </Link>
+                            </Button>
+                        </div>
+
+                        {draftInterviews.length > 0 ? (
+                            <ul className="mt-4 divide-y divide-border">
+                                {draftInterviews.map((draft) => {
+                                    const d = formatMatchDate(draft.updated_at);
+                                    return (
+                                        <li key={draft.id}>
+                                            <Link
+                                                href={route('admin.interviews.edit', draft.id)}
+                                                className="group flex items-center gap-3 py-2.5 transition-colors hover:text-champagne"
+                                            >
+                                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber/15 text-amber">
+                                                    <Mic className="h-3.5 w-3.5" />
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="line-clamp-1 text-sm font-semibold">
+                                                        {draft.title}
+                                                    </div>
+                                                    <div className="truncate font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                                        {draft.interviewee_name} · maj {d.day} {d.month}
+                                                    </div>
+                                                </div>
+                                                <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+                                            </Link>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        ) : (
+                            <div className="mt-4 flex items-center gap-2 rounded-lg border border-dashed border-border bg-background/40 px-3 py-4 text-xs text-muted-foreground">
+                                <CheckCircle2 className="h-4 w-4 text-mint" />
+                                Aucun brouillon en attente.
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </section>
 
             {/* Stats grid */}
             <section className="mt-8">

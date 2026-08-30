@@ -33,6 +33,7 @@ interface NavItem {
     href: string;
     icon: LucideIcon;
     match?: (url: string) => boolean;
+    badgeKey?: 'applicationsPending' | 'interviewsDraft';
 }
 
 interface NavGroup {
@@ -48,13 +49,23 @@ const NAV: NavGroup[] = [
         ],
     },
     {
-        label: 'Équipes',
+        label: 'Réception',
+        items: [
+            {
+                label: 'Candidatures',
+                href: '/admin/applications',
+                icon: Inbox,
+                badgeKey: 'applicationsPending',
+            },
+        ],
+    },
+    {
+        label: 'Effectif',
         items: [
             { label: 'Joueurs', href: '/players', icon: Users },
             { label: 'Joueurs U21', href: '/playersu21', icon: ShieldPlus },
             { label: 'Coachs', href: '/coaches', icon: UserCog },
             { label: 'Staff', href: '/staff', icon: UserCog },
-            { label: 'Candidatures', href: '/admin/applications', icon: Inbox },
         ],
     },
     {
@@ -68,7 +79,12 @@ const NAV: NavGroup[] = [
         label: 'Contenu',
         items: [
             { label: 'Articles', href: '/articles', icon: Newspaper },
-            { label: 'Interviews', href: '/admin/interviews', icon: Mic },
+            {
+                label: 'Interviews',
+                href: '/admin/interviews',
+                icon: Mic,
+                badgeKey: 'interviewsDraft',
+            },
             { label: 'Galeries', href: '/galleries', icon: ImageIcon },
             { label: 'Vidéos', href: '/videos', icon: Video },
         ],
@@ -83,14 +99,24 @@ const NAV: NavGroup[] = [
     },
 ];
 
+interface AdminInbox {
+    applicationsPending: number;
+    interviewsDraft: number;
+    total: number;
+}
+
 interface Props {
     title?: string;
     header?: ReactNode;
 }
 
 export default function AdminLayout({ title, header, children }: PropsWithChildren<Props>) {
-    const { props, url } = usePage<{ auth: { user: { name: string; email: string } | null } }>();
+    const { props, url } = usePage<{
+        auth: { user: { name: string; email: string } | null };
+        adminInbox: AdminInbox | null;
+    }>();
     const user = props.auth?.user;
+    const inbox = props.adminInbox ?? { applicationsPending: 0, interviewsDraft: 0, total: 0 };
     const [mobileOpen, setMobileOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -122,6 +148,7 @@ export default function AdminLayout({ title, header, children }: PropsWithChildr
                 {/* Sidebar */}
                 <Sidebar
                     currentUrl={url}
+                    inbox={inbox}
                     className="hidden lg:flex"
                     user={user}
                     userMenuOpen={userMenuOpen}
@@ -147,6 +174,7 @@ export default function AdminLayout({ title, header, children }: PropsWithChildr
                             >
                                 <Sidebar
                                     currentUrl={url}
+                                    inbox={inbox}
                                     onClose={() => setMobileOpen(false)}
                                     user={user}
                                     userMenuOpen={userMenuOpen}
@@ -184,6 +212,7 @@ export default function AdminLayout({ title, header, children }: PropsWithChildr
 
 function Sidebar({
     currentUrl,
+    inbox,
     className,
     onClose,
     user,
@@ -191,6 +220,7 @@ function Sidebar({
     setUserMenuOpen,
 }: {
     currentUrl: string;
+    inbox: AdminInbox;
     className?: string;
     onClose?: () => void;
     user: { name: string; email: string } | null;
@@ -230,6 +260,7 @@ function Sidebar({
                                 const isActive = item.match
                                     ? item.match(currentUrl)
                                     : currentUrl.startsWith(item.href);
+                                const badge = item.badgeKey ? inbox[item.badgeKey] : 0;
                                 return (
                                     <li key={item.href}>
                                         <Link
@@ -250,6 +281,21 @@ function Sidebar({
                                             )}
                                             <item.icon className="h-4 w-4" />
                                             <span className="flex-1">{item.label}</span>
+                                            {badge > 0 && (
+                                                <span
+                                                    className={cn(
+                                                        'relative inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 font-mono text-[10px] font-bold tabular-nums',
+                                                        item.badgeKey === 'applicationsPending'
+                                                            ? 'bg-plasma text-crimson-foreground'
+                                                            : 'bg-amber text-obsidian',
+                                                    )}
+                                                >
+                                                    {item.badgeKey === 'applicationsPending' && (
+                                                        <span className="absolute inset-0 -z-10 rounded-full bg-plasma opacity-60 animate-ping" />
+                                                    )}
+                                                    {badge > 99 ? '99+' : badge}
+                                                </span>
+                                            )}
                                         </Link>
                                     </li>
                                 );

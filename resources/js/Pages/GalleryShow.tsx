@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { EmptyState } from '@/Components/site/EmptyState';
+import { SmartImage } from '@/Components/site/SmartImage';
 import { Image as ImageIcon } from 'lucide-react';
 import type { Gallery, Photo } from '@/types/models';
 
@@ -15,6 +17,7 @@ interface Props {
 }
 
 export default function GalleryShow({ gallery, photos }: Props) {
+    const { t } = useTranslation(['pages', 'nav']);
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     useEffect(() => {
@@ -34,17 +37,17 @@ export default function GalleryShow({ gallery, photos }: Props) {
         <SiteLayout>
             <SEO
                 title={gallery.name}
-                description={gallery.description ?? `Photos de ${gallery.name} — Dina Kenitra FC.`}
+                description={gallery.description ?? t('pages:gallery_show.seo_description_fallback', { name: gallery.name })}
                 image={gallery.cover_image}
             />
 
             <PageHeader
-                kicker="Galerie"
+                kicker={t('pages:gallery_show.breadcrumb_root')}
                 title={gallery.name}
                 subtitle={gallery.description ?? undefined}
                 breadcrumb={[
-                    { label: 'Accueil', href: '/' },
-                    { label: 'Galerie', href: '/galleries' },
+                    { label: t('nav:items.home'), href: '/' },
+                    { label: t('pages:gallery_show.breadcrumb_root'), href: '/galleries' },
                     { label: gallery.name },
                 ]}
             >
@@ -53,7 +56,7 @@ export default function GalleryShow({ gallery, photos }: Props) {
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-crimson"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Toutes les galeries
+                    {t('pages:gallery_show.all_galleries')}
                 </Link>
             </PageHeader>
 
@@ -61,8 +64,8 @@ export default function GalleryShow({ gallery, photos }: Props) {
                 {photos.length === 0 ? (
                     <EmptyState
                         icon={ImageIcon}
-                        title="Aucune photo dans cette galerie"
-                        description="Les photos seront ajoutées prochainement."
+                        title={t('pages:gallery_show.empty_title')}
+                        description={t('pages:gallery_show.empty_description')}
                     />
                 ) : (
                     <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
@@ -76,11 +79,10 @@ export default function GalleryShow({ gallery, photos }: Props) {
                                 transition={{ duration: 0.4, delay: (i % 12) * 0.03 }}
                                 className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson"
                             >
-                                <img
+                                <SmartImage
                                     src={`/storage/${photo.image}`}
                                     alt={photo.caption ?? ''}
-                                    loading="lazy"
-                                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    className="group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-obsidian/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                             </motion.button>

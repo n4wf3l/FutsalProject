@@ -1,4 +1,5 @@
 import { useForm } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Ticket, Trophy, Users, ShieldCheck } from 'lucide-react';
@@ -6,6 +7,7 @@ import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { TeamBadge } from '@/Components/site/TeamBadge';
+import { SmartImage } from '@/Components/site/SmartImage';
 import { Button } from '@/Components/ui/Button';
 import { Badge } from '@/Components/ui/Badge';
 import { formatMatchDate } from '@/lib/utils';
@@ -19,18 +21,19 @@ interface Props {
 }
 
 export default function Fanshop({ tribunes, nextGame, championship, clubPrefix }: Props) {
+    const { t } = useTranslation(['pages', 'nav']);
     return (
         <SiteLayout>
             <SEO
-                title="Billetterie"
-                description="Achète ta place pour les matchs de Dina Kenitra FC. Choix des tribunes, paiement sécurisé Stripe, e-ticket immédiat."
+                title={t('pages:fanshop.seo_title')}
+                description={t('pages:fanshop.seo_description')}
             />
 
             <PageHeader
-                kicker="Billetterie · Prochain match"
-                title="Ta place au parquet"
-                subtitle="Choisis ta tribune et rejoins-nous. Paiement Stripe, e-ticket immédiat, ambiance garantie."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Fanshop' }]}
+                kicker={t('pages:fanshop.kicker')}
+                title={t('pages:fanshop.title')}
+                subtitle={t('pages:fanshop.subtitle')}
+                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:fanshop.breadcrumb') }]}
             >
                 {championship && (
                     <Badge variant="champagne">
@@ -55,7 +58,7 @@ export default function Fanshop({ tribunes, nextGame, championship, clubPrefix }
                             <div>
                                 <Badge variant="live">
                                     <span className="live-dot" />
-                                    Prochain match à domicile
+                                    {t('pages:fanshop.next_home_match')}
                                 </Badge>
                                 <div className="mt-4 grid grid-cols-[auto_auto_auto] items-center gap-6">
                                     <div className="flex flex-col items-center gap-2">
@@ -97,7 +100,7 @@ export default function Fanshop({ tribunes, nextGame, championship, clubPrefix }
                                 </div>
                                 <div className="flex items-center justify-end gap-2 text-sm text-muted-foreground">
                                     <MapPin className="h-4 w-4 text-crimson" />
-                                    Complexe Sportif Municipal
+                                    {t('pages:fanshop.venue_default')}
                                 </div>
                             </div>
                         </div>
@@ -110,13 +113,13 @@ export default function Fanshop({ tribunes, nextGame, championship, clubPrefix }
                 {tribunes.length === 0 ? (
                     <EmptyState
                         icon={Ticket}
-                        title="Aucune tribune ouverte pour l'instant"
-                        description="La billetterie ouvrira dès la programmation du prochain match."
+                        title={t('pages:fanshop.empty_title')}
+                        description={t('pages:fanshop.empty_description')}
                     />
                 ) : (
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {tribunes.map((t, i) => (
-                            <TribuneCard key={t.id} tribune={t} index={i} game={nextGame} />
+                        {tribunes.map((tribune, i) => (
+                            <TribuneCard key={tribune.id} tribune={tribune} index={i} game={nextGame} />
                         ))}
                     </div>
                 )}
@@ -126,9 +129,9 @@ export default function Fanshop({ tribunes, nextGame, championship, clubPrefix }
             <section className="mx-auto max-w-7xl px-4 pb-16">
                 <div className="grid gap-4 sm:grid-cols-3">
                     {[
-                        { icon: ShieldCheck, title: 'Paiement sécurisé', desc: 'Powered by Stripe · TLS 1.3' },
-                        { icon: Ticket, title: 'E-ticket instantané', desc: 'PDF + QR code par email' },
-                        { icon: Users, title: 'Support 7j/7', desc: 'contact@dinakenitrafc.ma' },
+                        { icon: ShieldCheck, title: t('pages:fanshop.trust_secure_title'), desc: t('pages:fanshop.trust_secure_desc') },
+                        { icon: Ticket, title: t('pages:fanshop.trust_ticket_title'), desc: t('pages:fanshop.trust_ticket_desc') },
+                        { icon: Users, title: t('pages:fanshop.trust_support_title'), desc: t('pages:fanshop.trust_support_desc') },
                     ].map((f) => (
                         <div
                             key={f.title}
@@ -154,6 +157,7 @@ function TribuneCard({
     index: number;
     game: Game | null;
 }) {
+    const { t } = useTranslation('pages');
     const { data, setData, post, processing } = useForm({
         tribune_id: tribune.id,
         game_id: game?.id ?? null,
@@ -177,11 +181,10 @@ function TribuneCard({
         >
             <div className="relative aspect-video overflow-hidden bg-muted">
                 {tribune.photo ? (
-                    <img
+                    <SmartImage
                         src={`/storage/${tribune.photo}`}
                         alt={tribune.name}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="group-hover:scale-105"
                     />
                 ) : (
                     <div className="flex h-full w-full items-center justify-center">
@@ -190,9 +193,9 @@ function TribuneCard({
                 )}
                 <div className="absolute left-4 top-4">
                     {soldOut ? (
-                        <Badge variant="live">Complet</Badge>
+                        <Badge variant="live">{t('fanshop.sold_out')}</Badge>
                     ) : (
-                        <Badge variant="win">{tribune.available_seats} places</Badge>
+                        <Badge variant="win">{t('fanshop.seats_available', { count: tribune.available_seats })}</Badge>
                     )}
                 </div>
             </div>
@@ -252,7 +255,7 @@ function TribuneCard({
                         className="flex-1"
                     >
                         <Ticket className="h-4 w-4" />
-                        {soldOut ? 'Complet' : !game ? 'Bientôt' : 'Acheter'}
+                        {soldOut ? t('fanshop.sold_out') : !game ? t('fanshop.soon') : t('fanshop.buy')}
                     </Button>
                 </div>
             </form>

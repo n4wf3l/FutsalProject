@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { ArrowRight, Image, ImagePlus } from 'lucide-react';
@@ -6,6 +7,7 @@ import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { Pagination } from '@/Components/site/Pagination';
+import { SmartImage } from '@/Components/site/SmartImage';
 import { Badge } from '@/Components/ui/Badge';
 import { formatMatchDate } from '@/lib/utils';
 import type { Gallery, Paginated } from '@/types/models';
@@ -15,26 +17,27 @@ interface Props {
 }
 
 export default function Galleries({ galleries }: Props) {
+    const { t } = useTranslation(['pages', 'nav']);
     return (
         <SiteLayout>
             <SEO
-                title="Galerie photos"
-                description="Les meilleurs instants de Dina Kenitra FC en images : matchs, coulisses, entraînements et événements du club."
+                title={t('pages:galleries.seo_title')}
+                description={t('pages:galleries.seo_description')}
             />
 
             <PageHeader
-                kicker="En images"
-                title="Instants"
-                subtitle="Ce qu'on a vu au parquet, sur le terrain, en tribune, dans les vestiaires."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Galerie' }]}
+                kicker={t('pages:galleries.kicker')}
+                title={t('pages:galleries.title')}
+                subtitle={t('pages:galleries.subtitle')}
+                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:galleries.breadcrumb') }]}
             />
 
             <section className="mx-auto max-w-7xl px-4 pb-16">
                 {galleries.data.length === 0 ? (
                     <EmptyState
                         icon={ImagePlus}
-                        title="Aucune galerie disponible"
-                        description="Les premières galeries photos du club arriveront bientôt."
+                        title={t('pages:galleries.empty_title')}
+                        description={t('pages:galleries.empty_description')}
                     />
                 ) : (
                     <>
@@ -46,7 +49,11 @@ export default function Galleries({ galleries }: Props) {
 
                         <div className="mt-12 flex items-center justify-between gap-4">
                             <div className="text-sm text-muted-foreground">
-                                {galleries.from ?? 0}–{galleries.to ?? 0} sur {galleries.total}
+                                {t('pages:galleries.pagination_summary', {
+                                    from: galleries.from ?? 0,
+                                    to: galleries.to ?? 0,
+                                    total: galleries.total,
+                                })}
                             </div>
                             <Pagination links={galleries.links} />
                         </div>
@@ -64,6 +71,7 @@ function GalleryCard({
     gallery: Gallery & { photos_count?: number };
     index: number;
 }) {
+    const { t } = useTranslation('pages');
     const created = gallery.created_at ? formatMatchDate(gallery.created_at) : null;
     return (
         <motion.article
@@ -76,11 +84,10 @@ function GalleryCard({
             <Link href={`/galleries/${gallery.id}`} className="block">
                 <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                     {gallery.cover_image ? (
-                        <img
+                        <SmartImage
                             src={`/storage/${gallery.cover_image}`}
                             alt={gallery.name}
-                            loading="lazy"
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex h-full w-full items-center justify-center">
@@ -92,7 +99,7 @@ function GalleryCard({
                         <div className="absolute right-4 top-4">
                             <Badge variant="champagne">
                                 <Image className="h-3 w-3" />
-                                {gallery.photos_count} photo{gallery.photos_count > 1 ? 's' : ''}
+                                {t('galleries.photos_count', { count: gallery.photos_count })}
                             </Badge>
                         </div>
                     )}
@@ -112,7 +119,7 @@ function GalleryCard({
                         </p>
                     )}
                     <div className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-crimson">
-                        Voir la galerie
+                        {t('galleries.view_gallery')}
                         <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
                     </div>
                 </div>

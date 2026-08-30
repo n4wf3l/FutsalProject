@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 export function Logo({ className, showText = true }: { className?: string; showText?: boolean }) {
+    const { t } = useTranslation('common');
     return (
         <div className={cn('flex items-center gap-3', className)}>
             <div className="relative">
@@ -14,10 +16,10 @@ export function Logo({ className, showText = true }: { className?: string; showT
             {showText && (
                 <div className="flex flex-col leading-none">
                     <span className="font-display text-sm font-bold tracking-widest text-foreground">
-                        DINA KENITRA
+                        {t('brand.club_name').toUpperCase()}
                     </span>
                     <span className="font-mono text-[10px] font-medium uppercase tracking-[0.3em] text-champagne">
-                        Futsal · 2011
+                        {t('brand.futsal_year')}
                     </span>
                 </div>
             )}

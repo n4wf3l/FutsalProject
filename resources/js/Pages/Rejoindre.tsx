@@ -1,5 +1,6 @@
 import { FormEventHandler, useState } from 'react';
 import { useForm, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import {
@@ -29,13 +30,14 @@ interface Props {
     positions: string[];
 }
 
-const CATEGORY_META: Record<string, { icon: React.ComponentType<{ className?: string }>; hint: string }> = {
-    junior: { icon: Users2, hint: 'U15 · U17 · U21' },
-    feminine: { icon: Sparkles, hint: 'Équipe féminine' },
-    senior_masculine: { icon: Trophy, hint: 'Équipe première' },
+const CATEGORY_META: Record<string, { icon: React.ComponentType<{ className?: string }>; hintKey: string }> = {
+    junior: { icon: Users2, hintKey: 'category.junior_hint' },
+    feminine: { icon: Sparkles, hintKey: 'category.feminine_hint' },
+    senior_masculine: { icon: Trophy, hintKey: 'category.senior_masculine_hint' },
 };
 
 export default function Rejoindre({ categories, positions }: Props) {
+    const { t } = useTranslation('join');
     const { props } = usePage<{ flash: { success?: string } }>();
     const flash = props.flash;
 
@@ -90,14 +92,14 @@ export default function Rejoindre({ categories, positions }: Props) {
     return (
         <SiteLayout>
             <SEO
-                title="Rejoindre le club"
-                description="Postule pour rejoindre Dina Kenitra FC. Détections ouvertes pour les équipes junior, féminine et senior masculine."
+                title={t('page.title')}
+                description={t('page.subtitle')}
             />
 
             <PageHeader
-                title="Rejoindre le club"
-                subtitle="Envoie ta candidature pour les équipes junior, féminine ou senior masculine. Notre staff étudie chaque dossier et te recontacte pour un essai."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Rejoindre le club' }]}
+                title={t('page.title')}
+                subtitle={t('page.subtitle')}
+                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: t('page.title') }]}
             />
 
             <section className="mx-auto max-w-6xl px-4 pb-16">
@@ -112,7 +114,7 @@ export default function Rejoindre({ categories, positions }: Props) {
                         </div>
                         <div>
                             <div className="font-display font-semibold text-mint">
-                                Candidature envoyée !
+                                {t('page.success_title')}
                             </div>
                             <p className="mt-1 text-sm text-muted-foreground">{flash.success}</p>
                         </div>
@@ -127,9 +129,9 @@ export default function Rejoindre({ categories, positions }: Props) {
                             animate={{ opacity: 1, y: 0 }}
                             className="rounded-2xl border border-border bg-card p-6 sm:p-8"
                         >
-                            <SectionTitle kicker="Étape 1" title="Pour quelle équipe postules-tu ?" />
+                            <SectionTitle kicker={t('step1.kicker')} title={t('step1.title')} />
                             <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                                {Object.entries(categories).map(([key, label]) => {
+                                {Object.keys(categories).map((key) => {
                                     const meta = CATEGORY_META[key];
                                     const Icon = meta?.icon ?? Users2;
                                     const selected = data.category === key;
@@ -157,11 +159,11 @@ export default function Rejoindre({ categories, positions }: Props) {
                                             </div>
                                             <div>
                                                 <div className={cn('font-display text-sm font-semibold', selected && 'text-crimson')}>
-                                                    {label}
+                                                    {t(`category.${key}`)}
                                                 </div>
-                                                {meta?.hint && (
+                                                {meta?.hintKey && (
                                                     <div className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                                                        {meta.hint}
+                                                        {t(meta.hintKey)}
                                                     </div>
                                                 )}
                                             </div>
@@ -179,27 +181,27 @@ export default function Rejoindre({ categories, positions }: Props) {
                             transition={{ delay: 0.05 }}
                             className="rounded-2xl border border-border bg-card p-6 sm:p-8"
                         >
-                            <SectionTitle kicker="Étape 2" title="Ton identité" />
+                            <SectionTitle kicker={t('step2.kicker')} title={t('step2.title')} />
                             <div className="mt-4 grid gap-5 sm:grid-cols-2">
-                                <Field label="Prénom" required error={errors.first_name}>
+                                <Field label={t('form.first_name')} required error={errors.first_name}>
                                     <Input
                                         value={data.first_name}
                                         onChange={(e) => setData('first_name', e.target.value)}
                                         required
-                                        placeholder="Youssef"
+                                        placeholder={t('form.first_name_placeholder')}
                                         autoComplete="given-name"
                                     />
                                 </Field>
-                                <Field label="Nom" required error={errors.last_name}>
+                                <Field label={t('form.last_name')} required error={errors.last_name}>
                                     <Input
                                         value={data.last_name}
                                         onChange={(e) => setData('last_name', e.target.value)}
                                         required
-                                        placeholder="Amrani"
+                                        placeholder={t('form.last_name_placeholder')}
                                         autoComplete="family-name"
                                     />
                                 </Field>
-                                <Field label="Email" required error={errors.email}>
+                                <Field label={t('form.email')} required error={errors.email}>
                                     <div className="relative">
                                         <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                         <Input
@@ -207,13 +209,13 @@ export default function Rejoindre({ categories, positions }: Props) {
                                             value={data.email}
                                             onChange={(e) => setData('email', e.target.value)}
                                             required
-                                            placeholder="tu@example.com"
+                                            placeholder={t('form.email_placeholder')}
                                             className="pl-10"
                                             autoComplete="email"
                                         />
                                     </div>
                                 </Field>
-                                <Field label="Téléphone" required error={errors.phone}>
+                                <Field label={t('form.phone')} required error={errors.phone}>
                                     <div className="relative">
                                         <Phone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                         <Input
@@ -221,13 +223,13 @@ export default function Rejoindre({ categories, positions }: Props) {
                                             value={data.phone}
                                             onChange={(e) => setData('phone', e.target.value)}
                                             required
-                                            placeholder="+212 6 00 00 00 00"
+                                            placeholder={t('form.phone_placeholder')}
                                             className="pl-10"
                                             autoComplete="tel"
                                         />
                                     </div>
                                 </Field>
-                                <Field label="Date de naissance" required error={errors.birthdate}>
+                                <Field label={t('form.birthdate')} required error={errors.birthdate}>
                                     <Input
                                         type="date"
                                         value={data.birthdate}
@@ -235,20 +237,20 @@ export default function Rejoindre({ categories, positions }: Props) {
                                         required
                                     />
                                 </Field>
-                                <Field label="Nationalité" error={errors.nationality}>
+                                <Field label={t('form.nationality')} error={errors.nationality}>
                                     <Input
                                         value={data.nationality}
                                         onChange={(e) => setData('nationality', e.target.value)}
-                                        placeholder="Marocaine"
+                                        placeholder={t('form.nationality_placeholder')}
                                     />
                                 </Field>
-                                <Field label="Ville" error={errors.city} className="sm:col-span-2">
+                                <Field label={t('form.city')} error={errors.city} className="sm:col-span-2">
                                     <div className="relative">
                                         <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                         <Input
                                             value={data.city}
                                             onChange={(e) => setData('city', e.target.value)}
-                                            placeholder="Kénitra"
+                                            placeholder={t('form.city_placeholder')}
                                             className="pl-10"
                                             autoComplete="address-level2"
                                         />
@@ -264,15 +266,15 @@ export default function Rejoindre({ categories, positions }: Props) {
                             transition={{ delay: 0.1 }}
                             className="rounded-2xl border border-border bg-card p-6 sm:p-8"
                         >
-                            <SectionTitle kicker="Étape 3" title="Ton profil sportif" />
+                            <SectionTitle kicker={t('step3.kicker')} title={t('step3.title')} />
                             <div className="mt-4 grid gap-5 sm:grid-cols-2">
-                                <Field label="Poste préféré" error={errors.position_preference}>
+                                <Field label={t('form.position')} error={errors.position_preference}>
                                     <select
                                         value={data.position_preference}
                                         onChange={(e) => setData('position_preference', e.target.value)}
                                         className="flex h-10 w-full rounded-lg border border-input bg-card px-4 py-2 text-sm focus:border-crimson focus:outline-none focus:ring-2 focus:ring-crimson/20"
                                     >
-                                        <option value="">— Sélectionner —</option>
+                                        <option value="">— {t('form.position')} —</option>
                                         {positions.map((p) => (
                                             <option key={p} value={p}>
                                                 {p}
@@ -280,7 +282,7 @@ export default function Rejoindre({ categories, positions }: Props) {
                                         ))}
                                     </select>
                                 </Field>
-                                <Field label="Années d'expérience" error={errors.experience_years}>
+                                <Field label={t('form.experience_years')} error={errors.experience_years}>
                                     <Input
                                         type="number"
                                         min="0"
@@ -291,20 +293,20 @@ export default function Rejoindre({ categories, positions }: Props) {
                                     />
                                 </Field>
                                 <Field
-                                    label="Club actuel / ancien club"
-                                    hint="Facultatif. Aide notre staff à évaluer ton profil."
+                                    label={t('form.current_club')}
+                                    hint={t('form.current_club_hint')}
                                     error={errors.current_club}
                                     className="sm:col-span-2"
                                 >
                                     <Input
                                         value={data.current_club}
                                         onChange={(e) => setData('current_club', e.target.value)}
-                                        placeholder="Nom du club"
+                                        placeholder={t('form.current_club_placeholder')}
                                     />
                                 </Field>
                                 <Field
-                                    label="Message (facultatif)"
-                                    hint="Motivation, palmarès, disponibilités…"
+                                    label={t('form.message')}
+                                    hint={t('form.message_hint')}
                                     error={errors.message}
                                     className="sm:col-span-2"
                                 >
@@ -312,7 +314,7 @@ export default function Rejoindre({ categories, positions }: Props) {
                                         value={data.message}
                                         onChange={(e) => setData('message', e.target.value)}
                                         rows={5}
-                                        placeholder="Raconte-nous pourquoi tu veux rejoindre Dina Kenitra FC…"
+                                        placeholder={t('form.message_placeholder')}
                                     />
                                 </Field>
                             </div>
@@ -320,28 +322,20 @@ export default function Rejoindre({ categories, positions }: Props) {
 
                         {/* Consent (Loi 09-08) */}
                         <div className="rounded-2xl border border-crimson/20 bg-card p-6">
-                            <SectionTitle kicker="Étape 5" title="Consentement" />
+                            <SectionTitle kicker={t('step5.kicker')} title={t('step5.title')} />
                             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                                En envoyant cette candidature tu confies à Dina Kenitra FC des
-                                données personnelles (identité, contact, CV). Conformément à la
-                                <span className="whitespace-nowrap"> Loi 09-08</span> sur la
-                                protection des données personnelles au Maroc, elles sont
-                                collectées pour évaluer ta candidature, conservées 6 mois
-                                (candidatures non retenues) et accessibles uniquement au staff
-                                sportif du club. Tu disposes d'un droit d'accès, de
-                                rectification, d'opposition et de suppression que tu peux exercer
-                                à tout moment via{' '}
+                                {t('consent.body')}{' '}
                                 <a
                                     href="mailto:contact@dinakenitrafc.ma?subject=Donn%C3%A9es%20personnelles"
                                     className="font-semibold text-crimson hover:underline"
                                 >
                                     contact@dinakenitrafc.ma
                                 </a>
-                                {' '}ou en{' '}
+                                {' '}{t('consent.body_or')}{' '}
                                 <a href="/candidature/supprimer" className="font-semibold text-crimson hover:underline">
-                                    demandant la suppression
+                                    {t('consent.body_delete_link')}
                                 </a>
-                                . Politique complète :{' '}
+                                {t('consent.body_policy_prefix')}{' '}
                                 <a href="/confidentialite" className="font-semibold text-crimson hover:underline">
                                     /confidentialite
                                 </a>
@@ -357,8 +351,8 @@ export default function Rejoindre({ categories, positions }: Props) {
                                     required
                                 />
                                 <span className="text-sm text-foreground">
-                                    <strong>J'accepte</strong> que Dina Kenitra FC traite mes
-                                    données personnelles aux fins et conditions décrites ci-dessus.
+                                    <strong>{t('consent.checkbox_bold')}</strong>{' '}
+                                    {t('consent.checkbox_body')}
                                 </span>
                             </label>
                             {errors.consent && (
@@ -368,12 +362,10 @@ export default function Rejoindre({ categories, positions }: Props) {
                             {isMinor && (
                                 <div className="mt-4 space-y-3 rounded-lg border border-amber/30 bg-amber/10 p-4">
                                     <p className="text-sm font-semibold text-amber">
-                                        Candidat·e mineur·e détecté·e
+                                        {t('consent.minor_title')}
                                     </p>
                                     <p className="text-xs text-muted-foreground">
-                                        Comme tu as moins de 18 ans, la loi impose le consentement
-                                        d'un parent ou tuteur légal. En cochant la case ci-dessous
-                                        tu confirmes que ce consentement a été obtenu.
+                                        {t('consent.minor_body')}
                                     </p>
                                     <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-amber/30 bg-background p-3">
                                         <input
@@ -384,9 +376,8 @@ export default function Rejoindre({ categories, positions }: Props) {
                                             required
                                         />
                                         <span className="text-sm text-foreground">
-                                            <strong>Un parent ou tuteur légal a donné son accord</strong>{' '}
-                                            pour cette candidature et pour le traitement de mes
-                                            données personnelles.
+                                            <strong>{t('consent.minor_checkbox_bold')}</strong>{' '}
+                                            {t('consent.minor_checkbox_body')}
                                         </span>
                                     </label>
                                     {errors.parental_consent && (
@@ -404,7 +395,7 @@ export default function Rejoindre({ categories, positions }: Props) {
                                 ) : (
                                     <Send className="h-4 w-4" />
                                 )}
-                                Envoyer ma candidature
+                                {t('form.submit')}
                             </Button>
                         </div>
                     </div>
@@ -418,9 +409,9 @@ export default function Rejoindre({ categories, positions }: Props) {
                     >
                         {/* CV */}
                         <div className="rounded-2xl border border-champagne/20 bg-card p-6">
-                            <SectionTitle kicker="Étape 4" title="Ton CV" />
+                            <SectionTitle kicker={t('step4.kicker')} title={t('step4.title')} />
                             <p className="mt-2 text-xs text-muted-foreground">
-                                PDF, JPG ou PNG · 5 Mo max
+                                {t('cv.hint')}
                             </p>
 
                             <label className="mt-4 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border bg-background/50 px-4 py-8 text-center transition-colors hover:border-champagne/50 hover:bg-champagne/5">
@@ -434,7 +425,7 @@ export default function Rejoindre({ categories, positions }: Props) {
                                                 {cvName}
                                             </div>
                                             <div className="mt-1 font-mono text-[10px] uppercase tracking-widest text-champagne">
-                                                Cliquer pour changer
+                                                {t('cv.change')}
                                             </div>
                                         </div>
                                     </>
@@ -445,10 +436,10 @@ export default function Rejoindre({ categories, positions }: Props) {
                                         </div>
                                         <div>
                                             <div className="text-sm font-semibold text-foreground">
-                                                Téléverser un CV
+                                                {t('cv.upload_title')}
                                             </div>
                                             <div className="mt-1 text-xs text-muted-foreground">
-                                                Glisse un fichier ou clique ici
+                                                {t('cv.upload_hint')}
                                             </div>
                                         </div>
                                     </>
@@ -471,7 +462,7 @@ export default function Rejoindre({ categories, positions }: Props) {
                                     className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg py-2 text-xs text-plasma hover:bg-plasma/10"
                                 >
                                     <Trash2 className="h-3.5 w-3.5" />
-                                    Retirer le CV
+                                    {t('cv.remove')}
                                 </button>
                             )}
 
@@ -488,14 +479,9 @@ export default function Rejoindre({ categories, positions }: Props) {
 
                         {/* What happens next */}
                         <div className="rounded-2xl border border-border bg-card p-6">
-                            <SectionTitle kicker="Après ton envoi" title="La suite" />
+                            <SectionTitle kicker={t('next_steps.kicker')} title={t('next_steps.title')} />
                             <ol className="mt-4 space-y-3 text-sm">
-                                {[
-                                    'Notre staff étudie ta candidature',
-                                    'On te contacte par email sous 7 jours',
-                                    'Convocation à un essai au complexe',
-                                    'Retour et intégration si validé',
-                                ].map((step, i) => (
+                                {(t('next_steps.steps', { returnObjects: true }) as string[]).map((step, i) => (
                                     <li key={i} className="flex items-start gap-3">
                                         <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-crimson/10 font-mono text-[10px] font-bold text-crimson">
                                             {i + 1}
@@ -509,14 +495,12 @@ export default function Rejoindre({ categories, positions }: Props) {
                         <div className="rounded-2xl border border-border bg-card p-6 text-sm text-muted-foreground">
                             <div className="flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-widest text-champagne">
                                 <User className="h-3 w-3" />
-                                Loi 09-08 · CNDP
+                                {t('privacy_note.kicker')}
                             </div>
                             <p className="mt-2 leading-relaxed">
-                                Tes données sont traitées conformément à la loi marocaine
-                                sur la protection des données personnelles. Détails complets
-                                dans notre{' '}
+                                {t('privacy_note.body')}{' '}
                                 <a href="/confidentialite" className="text-crimson underline hover:no-underline">
-                                    politique de confidentialité
+                                    {t('privacy_note.link')}
                                 </a>
                                 .
                             </p>

@@ -1,0 +1,142 @@
+{
+    "page": {
+        "kicker": "Détections ouvertes",
+        "title": "Rejoindre le club",
+        "subtitle": "Envoie ta candidature pour les équipes junior, féminine ou senior masculine. Notre staff étudie chaque dossier et te recontacte pour un essai.",
+        "success_title": "Candidature envoyée !",
+        "success_body": "Ta candidature a été envoyée. Un email de confirmation avec le lien de gestion de tes données vient de partir."
+    },
+    "step1": {
+        "kicker": "Étape 1",
+        "title": "Pour quelle équipe postules-tu ?"
+    },
+    "category": {
+        "junior": "Équipe junior",
+        "junior_hint": "U15 · U17 · U21",
+        "feminine": "Équipe féminine",
+        "feminine_hint": "Équipe féminine",
+        "senior_masculine": "Équipe senior masculine",
+        "senior_masculine_hint": "Équipe première"
+    },
+    "step2": {
+        "kicker": "Étape 2",
+        "title": "Ton identité"
+    },
+    "step3": {
+        "kicker": "Étape 3",
+        "title": "Ton profil sportif"
+    },
+    "step4": {
+        "kicker": "Étape 4",
+        "title": "Ton CV"
+    },
+    "step5": {
+        "kicker": "Étape 5",
+        "title": "Consentement"
+    },
+    "form": {
+        "first_name": "Prénom",
+        "first_name_placeholder": "Youssef",
+        "last_name": "Nom",
+        "last_name_placeholder": "Amrani",
+        "email": "Email",
+        "email_placeholder": "tu@example.com",
+        "phone": "Téléphone",
+        "phone_placeholder": "+212 6 00 00 00 00",
+        "birthdate": "Date de naissance",
+        "nationality": "Nationalité",
+        "nationality_placeholder": "Marocaine",
+        "city": "Ville",
+        "city_placeholder": "Kénitra",
+        "position": "Poste préféré",
+        "experience_years": "Années d'expérience",
+        "current_club": "Club actuel ou ancien club",
+        "current_club_hint": "Facultatif. Aide notre staff à évaluer ton profil.",
+        "current_club_placeholder": "Nom du club",
+        "message": "Message (facultatif)",
+        "message_hint": "Motivation, palmarès, disponibilités…",
+        "message_placeholder": "Raconte-nous pourquoi tu veux rejoindre Dina Kenitra FC…",
+        "submit": "Envoyer ma candidature"
+    },
+    "cv": {
+        "hint": "PDF, JPG ou PNG · 5 Mo max",
+        "upload_title": "Téléverser un CV",
+        "upload_hint": "Glisse un fichier ou clique ici",
+        "change": "Cliquer pour changer",
+        "remove": "Retirer le CV"
+    },
+    "consent": {
+        "body": "En envoyant cette candidature tu confies à Dina Kenitra FC des données personnelles (identité, contact, CV). Conformément à la Loi 09-08 sur la protection des données personnelles au Maroc, elles sont collectées pour évaluer ta candidature, conservées 6 mois (candidatures non retenues) et accessibles uniquement au staff sportif du club. Tu disposes d'un droit d'accès, de rectification, d'opposition et de suppression que tu peux exercer à tout moment via",
+        "body_or": "ou en",
+        "body_delete_link": "demandant la suppression",
+        "body_policy_prefix": ". Politique complète :",
+        "checkbox_bold": "J'accepte",
+        "checkbox_body": "que Dina Kenitra FC traite mes données personnelles aux fins et conditions décrites ci-dessus.",
+        "minor_title": "Candidat·e mineur·e détecté·e",
+        "minor_body": "Comme tu as moins de 18 ans, la loi impose le consentement d'un parent ou tuteur légal. En cochant la case ci-dessous tu confirmes que ce consentement a été obtenu.",
+        "minor_checkbox_bold": "Un parent ou tuteur légal a donné son accord",
+        "minor_checkbox_body": "pour cette candidature et pour le traitement de mes données personnelles."
+    },
+    "next_steps": {
+        "kicker": "Après ton envoi",
+        "title": "La suite",
+        "steps": [
+            "Notre staff étudie ta candidature",
+            "On te contacte par email sous 7 jours",
+            "Convocation à un essai au complexe",
+            "Retour et intégration si validé"
+        ]
+    },
+    "privacy_note": {
+        "kicker": "Loi 09-08 · CNDP",
+        "body": "Tes données sont traitées conformément à la loi marocaine sur la protection des données personnelles. Détails complets dans notre",
+        "link": "politique de confidentialité"
+    },
+    "manage": {
+        "kicker": "Loi 09-08 · Espace personnel",
+        "title": "Ma candidature",
+        "subtitle": "Consulte les données que Dina Kenitra FC détient sur toi, ou exerce ton droit de suppression à tout moment.",
+        "status_pending": "En attente",
+        "status_reviewed": "Étudiée",
+        "status_contacted": "Contactée",
+        "status_accepted": "Acceptée",
+        "status_rejected": "Refusée",
+        "received_on": "Candidature reçue le",
+        "field_email": "Email",
+        "field_phone": "Téléphone",
+        "field_category": "Équipe visée",
+        "field_cv": "CV",
+        "cv_uploaded": "Téléversé",
+        "cv_none": "Aucun fichier",
+        "rights_title": "Tes droits",
+        "rights_intro": "Conformément à la Loi 09-08 sur la protection des données personnelles au Maroc, tu peux à tout moment :",
+        "rights_correct_prefix": "Corriger une information erronée : écris à",
+        "rights_correct_suffix": ".",
+        "rights_withdraw": "Retirer ton consentement et supprimer définitivement ta candidature (bouton ci-dessous).",
+        "rights_consult": "Consulter à tout moment cette page via ton lien personnel.",
+        "danger_title": "Supprimer ma candidature",
+        "danger_body": "Ta candidature, ton CV et toutes les informations associées seront effacés définitivement de nos serveurs. Cette action est irréversible.",
+        "danger_button": "Supprimer définitivement",
+        "confirm_title": "Confirmer la suppression",
+        "confirm_body": "Tes données (nom, contact, CV, message) seront effacées définitivement. Notre staff ne pourra plus étudier ta candidature. Confirmes-tu ?",
+        "confirm_button": "Oui, tout supprimer",
+        "confirm_loading": "Suppression…",
+        "back_to_site_prefix": "Retour au",
+        "back_to_site_link": "site public",
+        "deleting_toast": "Suppression en cours…",
+        "flash_deleted": "Tes données ont été supprimées définitivement. Merci."
+    },
+    "deletion_request": {
+        "kicker": "Loi 09-08 · Droit à la suppression",
+        "title": "Retrouver mon dossier",
+        "subtitle": "Entre l'email utilisé lors de ta candidature. Si un dossier existe, nous te renvoyons ton lien personnel pour le consulter ou le supprimer.",
+        "email": "Email utilisé lors de la candidature",
+        "email_placeholder": "tu@example.com",
+        "submit": "Recevoir mon lien de gestion",
+        "privacy_note": "Pour ta sécurité, nous ne confirmons jamais si une adresse est ou non dans notre base. Si un dossier existe, l'email arrive dans quelques minutes.",
+        "fallback_prefix": "Tu peux aussi écrire directement à",
+        "fallback_suffix": "avec l'objet « Suppression de mes données ».",
+        "policy_link": "Politique de confidentialité complète",
+        "flash_sent": "Si une candidature existe pour cette adresse, un email vient de partir avec le lien de gestion."
+    }
+}
