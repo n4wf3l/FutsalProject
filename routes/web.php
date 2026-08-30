@@ -170,6 +170,16 @@ Route::get('/legal', fn () => Inertia\Inertia::render('Legal/Mentions'))
 // —————————— SEO ——————————
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+// —————————— i18n ——————————
+// Persist the visitor's language choice as a 1 year cookie.
+Route::post('/locale', function (\Illuminate\Http\Request $request) {
+    $data = $request->validate([
+        'locale' => 'required|in:fr,en,ar',
+    ]);
+    return response()->json(['ok' => true])
+        ->cookie('locale', $data['locale'], 60 * 24 * 365);
+})->name('locale.set');
+
 // —————————— Admin CRUD ——————————
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     // Interviews
@@ -183,6 +193,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     // Candidatures joueurs (admin view)
     Route::get('/applications', [PlayerApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [PlayerApplicationController::class, 'show'])->name('applications.show');
+    Route::get('/applications/{application}/cv', [PlayerApplicationController::class, 'streamCv'])->name('applications.cv');
     Route::patch('/applications/{application}/status', [PlayerApplicationController::class, 'updateStatus'])->name('applications.updateStatus');
     Route::delete('/applications/{application}', [PlayerApplicationController::class, 'destroy'])->name('applications.destroy');
 });

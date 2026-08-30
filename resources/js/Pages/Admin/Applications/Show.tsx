@@ -259,7 +259,7 @@ export default function AdminApplicationShow({ application, statuses, categories
                         <SectionTitle title="CV / documents" />
                         {application.cv_path ? (
                             <a
-                                href={`/storage/${application.cv_path}`}
+                                href={`/admin/applications/${application.id}/cv`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="mt-4 flex items-center gap-3 rounded-xl border border-border bg-background p-4 transition-colors hover:border-champagne/40"

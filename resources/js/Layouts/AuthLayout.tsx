@@ -2,7 +2,9 @@ import { PropsWithChildren, ReactNode } from 'react';
 import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ShieldCheck, Sparkles, Trophy } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Logo } from '@/Components/site/Logo';
+import { LanguageSwitcher } from '@/Components/site/LanguageSwitcher';
 import { ThemeToggle } from '@/Components/site/ThemeToggle';
 
 interface Props {
@@ -11,13 +13,13 @@ interface Props {
     footer?: ReactNode;
 }
 
-const HIGHLIGHTS = [
-    { icon: Trophy, label: 'Fondé en 2011' },
-    { icon: Sparkles, label: '12 trophées remportés' },
-    { icon: ShieldCheck, label: 'Espace sécurisé' },
-];
-
 export default function AuthLayout({ title, subtitle, footer, children }: PropsWithChildren<Props>) {
+    const { t } = useTranslation('auth');
+    const HIGHLIGHTS = [
+        { icon: Trophy, label: t('layout.highlights.founded') },
+        { icon: Sparkles, label: t('layout.highlights.trophies') },
+        { icon: ShieldCheck, label: t('layout.highlights.secure') },
+    ];
     return (
         <div className="relative flex min-h-screen bg-background text-foreground">
             <div className="pointer-events-none fixed inset-0 -z-10">
@@ -34,7 +36,7 @@ export default function AuthLayout({ title, subtitle, footer, children }: PropsW
 
                 <Link href="/" className="relative inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
                     <ArrowLeft className="h-4 w-4" />
-                    Retour au site
+                    {t('layout.back_to_site')}
                 </Link>
 
                 <motion.div
@@ -60,14 +62,13 @@ export default function AuthLayout({ title, subtitle, footer, children }: PropsW
                         transition={{ delay: 0.2 }}
                     >
                         <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
-                            Espace privé
+                            {t('layout.private_area')}
                         </div>
                         <h2 className="mt-3 font-editorial text-3xl font-medium leading-tight">
-                            Bienvenue chez <span className="italic text-champagne">Dina Kenitra FC</span>
+                            {t('layout.welcome')} <span className="italic text-champagne">Dina Kenitra FC</span>
                         </h2>
                         <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-                            La plateforme officielle du club — accède aux billets, ton profil membre
-                            et les coulisses de l'équipe.
+                            {t('layout.welcome_body')}
                         </p>
                     </motion.div>
 
@@ -96,7 +97,8 @@ export default function AuthLayout({ title, subtitle, footer, children }: PropsW
                     <Link href="/" className="lg:hidden">
                         <Logo showText={false} />
                     </Link>
-                    <div className="ml-auto">
+                    <div className="ml-auto flex items-center gap-2">
+                        <LanguageSwitcher />
                         <ThemeToggle />
                     </div>
                 </div>

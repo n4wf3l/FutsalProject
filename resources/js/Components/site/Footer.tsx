@@ -1,6 +1,8 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Mail, MapPin, Phone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Logo } from './Logo';
+import type { ClubInfoShared, FlashMessage, SponsorShared } from '@/types/models';
 
 const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -20,54 +22,116 @@ const YoutubeIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
-const LINKS = {
-    Club: [
-        { label: 'Notre histoire', href: '/about' },
-        { label: 'Équipes', href: '/teams' },
-        { label: 'Staff & Coachs', href: '/coaches' },
-        { label: 'Sponsors', href: '/sponsors' },
-    ],
-    Compétition: [
-        { label: 'Calendrier', href: '/calendar' },
-        { label: 'Résultats', href: '/news' },
-        { label: 'Classement', href: '/teams' },
-    ],
-    Fans: [
-        { label: 'Fanshop', href: '/fanshop' },
-        { label: 'Galerie photos', href: '/galleries' },
-        { label: 'Vidéos', href: '/videos' },
-        { label: 'Contact', href: '/contact' },
-    ],
-};
-
 export function Footer() {
+    const { t } = useTranslation('nav');
+    const { t: tCommon } = useTranslation('common');
+    const { props } = usePage<{
+        club: ClubInfoShared;
+        flashMessage: FlashMessage | null;
+        sponsors: SponsorShared[];
+    }>();
+    const club = props.club;
+    const slogan = props.flashMessage?.homemessage ?? null;
+    const sponsors = (props.sponsors ?? []).filter((s) => s.logo);
+
+    const groups = [
+        {
+            title: t('footer.col_club'),
+            items: [
+                { label: t('footer.club_history'), href: '/about' },
+                { label: t('footer.club_teams'), href: '/teams' },
+                { label: t('footer.club_staff'), href: '/teams' },
+            ],
+        },
+        {
+            title: t('footer.col_competition'),
+            items: [
+                { label: t('footer.competition_calendar'), href: '/calendar' },
+                { label: t('footer.competition_results'), href: '/calendar' },
+                { label: t('footer.competition_standings'), href: '/calendar' },
+            ],
+        },
+        {
+            title: t('footer.col_fans'),
+            items: [
+                { label: t('footer.fans_fanshop'), href: '/fanshop' },
+                { label: t('footer.fans_gallery'), href: '/galleries' },
+                { label: t('footer.fans_videos'), href: '/videos' },
+                { label: t('footer.fans_contact'), href: '/contact' },
+            ],
+        },
+    ];
+
     return (
         <footer className="relative mt-32 border-t border-border bg-card/40">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-crimson to-transparent" />
+
+            {sponsors.length > 0 && (
+                <div className="border-b border-border/60">
+                    <div className="mx-auto max-w-7xl px-4 py-12">
+                        <div className="mb-8 flex flex-col items-center text-center">
+                            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-champagne">
+                                {t('footer.partners_kicker')}
+                            </span>
+                            <h3 className="mt-2 font-editorial text-2xl italic text-foreground/80">
+                                {t('footer.partners_title')}
+                            </h3>
+                        </div>
+                        <ul className="flex flex-wrap items-center justify-center gap-x-14 gap-y-8">
+                            {sponsors.map((s) => (
+                                <li key={s.id}>
+                                    <SponsorLogo sponsor={s} />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
 
             <div className="mx-auto max-w-7xl px-4 py-16">
                 <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
                     <div>
                         <Logo />
-                        <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">
-                            Club de futsal de Kénitra, fondé en 2011. Passion, engagement et
-                            excellence sur le parquet marocain.
+                        {slogan && (
+                            <p className="mt-5 max-w-sm font-editorial text-lg italic text-champagne">
+                                {slogan}
+                            </p>
+                        )}
+                        <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+                            {t('footer.tagline')}
                         </p>
 
+                        {(club?.federation_logo || club?.organization_logo) && (
+                            <div className="mt-6 flex flex-wrap items-center gap-5">
+                                {club.federation_logo && (
+                                    <FederationLogo
+                                        src={club.federation_logo}
+                                        alt="Fédération Royale Marocaine de Football"
+                                    />
+                                )}
+                                {club.organization_logo && (
+                                    <FederationLogo
+                                        src={club.organization_logo}
+                                        alt="Ligue"
+                                    />
+                                )}
+                            </div>
+                        )}
+
                         <div className="mt-6 flex items-center gap-2">
-                            <SocialLink href="#" icon={FacebookIcon} label="Facebook" />
-                            <SocialLink href="#" icon={InstagramIcon} label="Instagram" />
+                            <SocialLink href={club?.facebook ?? '#'} icon={FacebookIcon} label="Facebook" />
+                            <SocialLink href={club?.instagram ?? '#'} icon={InstagramIcon} label="Instagram" />
                             <SocialLink href="#" icon={YoutubeIcon} label="YouTube" />
                         </div>
                     </div>
 
-                    {Object.entries(LINKS).map(([title, items]) => (
-                        <div key={title}>
+                    {groups.map((group) => (
+                        <div key={group.title}>
                             <h4 className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.25em] text-champagne">
-                                {title}
+                                {group.title}
                             </h4>
                             <ul className="space-y-2.5">
-                                {items.map((item) => (
+                                {group.items.map((item) => (
                                     <li key={item.href}>
                                         <Link
                                             href={item.href}
@@ -85,28 +149,28 @@ export function Footer() {
                 <div className="mt-16 grid gap-4 border-t border-border pt-8 text-sm text-muted-foreground sm:grid-cols-3">
                     <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-crimson" />
-                        <span>Kénitra, Maroc</span>
+                        <span>{club?.city ?? 'Kénitra'}, {t('footer.country_morocco')}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Mail className="h-4 w-4 text-crimson" />
-                        <a href="mailto:contact@dinakenitrafc.ma" className="hover:text-foreground">
-                            contact@dinakenitrafc.ma
+                        <a href={`mailto:${club?.email ?? 'contact@dinakenitrafc.ma'}`} className="hover:text-foreground">
+                            {club?.email ?? 'contact@dinakenitrafc.ma'}
                         </a>
                     </div>
                     <div className="flex items-center gap-2 sm:justify-end">
                         <Phone className="h-4 w-4 text-crimson" />
-                        <span>+212 000 000 000</span>
+                        <span>{club?.phone ?? '+212 000 000 000'}</span>
                     </div>
                 </div>
 
                 <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row">
-                    <p>© {new Date().getFullYear()} Dina Kenitra FC — Tous droits réservés.</p>
+                    <p>{t('footer.rights', { year: new Date().getFullYear() })}</p>
                     <div className="flex flex-wrap items-center gap-3">
-                        <Link href="/legal" className="hover:text-foreground">Mentions légales</Link>
+                        <Link href="/legal" className="hover:text-foreground">{t('footer.legal')}</Link>
                         <span className="opacity-30">·</span>
-                        <Link href="/confidentialite" className="hover:text-foreground">Confidentialité</Link>
+                        <Link href="/confidentialite" className="hover:text-foreground">{t('footer.privacy')}</Link>
                         <span className="opacity-30">·</span>
-                        <span className="font-mono uppercase tracking-widest">EST. 2011</span>
+                        <span className="font-mono uppercase tracking-widest">{tCommon('brand.est')}</span>
                     </div>
                 </div>
             </div>
@@ -132,4 +196,40 @@ function SocialLink({
             <Icon className="h-4 w-4" />
         </a>
     );
+}
+
+function FederationLogo({ src, alt }: { src: string; alt: string }) {
+    return (
+        <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            className="h-12 w-auto opacity-70 grayscale transition-all hover:opacity-100 hover:grayscale-0"
+        />
+    );
+}
+
+function SponsorLogo({ sponsor }: { sponsor: SponsorShared }) {
+    const img = (
+        <img
+            src={sponsor.logo!}
+            alt={sponsor.name}
+            loading="lazy"
+            className="h-12 w-auto max-w-[160px] object-contain opacity-60 grayscale transition-all group-hover:opacity-100 group-hover:grayscale-0 sm:h-14"
+        />
+    );
+    if (sponsor.website) {
+        return (
+            <a
+                href={sponsor.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={sponsor.name}
+                className="group inline-flex items-center"
+            >
+                {img}
+            </a>
+        );
+    }
+    return <span className="group inline-flex items-center">{img}</span>;
 }

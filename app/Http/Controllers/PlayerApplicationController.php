@@ -65,7 +65,9 @@ class PlayerApplicationController extends Controller
         }
 
         if ($request->hasFile('cv')) {
-            $data['cv_path'] = $request->file('cv')->store('applications/cv', 'public');
+            // Stored on the private "local" disk (not exposed via public/storage).
+            // Access is granted only via the authenticated streamCv() route below.
+            $data['cv_path'] = $request->file('cv')->store('applications/cv', 'local');
         }
         unset($data['cv'], $data['consent'], $data['parental_consent']);
 
@@ -91,7 +93,11 @@ class PlayerApplicationController extends Controller
             );
         } catch (\Throwable $e) {
             // Do not block the submission if the mail transport fails.
-            \Log::warning('Application confirmation email failed: '.$e->getMessage());
+            // Log without leaking exception message that may contain email/SMTP context.
+            \Log::warning('Application confirmation email failed', [
+                'application_id' => $application->id,
+                'exception_class' => get_class($e),
+            ]);
         }
 
         return redirect()->route('rejoindre.create')
@@ -123,7 +129,7 @@ class PlayerApplicationController extends Controller
         $application = PlayerApplication::where('deletion_token', $token)->firstOrFail();
 
         if ($application->cv_path) {
-            Storage::disk('public')->delete($application->cv_path);
+            Storage::disk('local')->delete($application->cv_path);
         }
         $application->delete();
 
@@ -162,7 +168,10 @@ class PlayerApplicationController extends Controller
                     }
                 );
             } catch (\Throwable $e) {
-                \Log::warning('Deletion link email failed: '.$e->getMessage());
+                \Log::warning('Deletion link email failed', [
+                    'application_id' => $application->id,
+                    'exception_class' => get_class($e),
+                ]);
             }
         }
 
@@ -225,11 +234,25 @@ class PlayerApplicationController extends Controller
     public function destroy(PlayerApplication $application)
     {
         if ($application->cv_path) {
-            Storage::disk('public')->delete($application->cv_path);
+            Storage::disk('local')->delete($application->cv_path);
         }
         $application->delete();
 
         return redirect()->route('admin.applications.index')
             ->with('success', 'Candidature supprimée.');
+    }
+
+    /**
+     * Stream a candidate CV from the private disk. Auth is enforced at the route level.
+     */
+    public function streamCv(PlayerApplication $application)
+    {
+        abort_unless($application->cv_path, 404);
+        abort_unless(Storage::disk('local')->exists($application->cv_path), 404);
+
+        return Storage::disk('local')->download(
+            $application->cv_path,
+            'cv-'.$application->first_name.'-'.$application->last_name.'.'.pathinfo($application->cv_path, PATHINFO_EXTENSION),
+        );
     }
 }

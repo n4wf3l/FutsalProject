@@ -1,12 +1,15 @@
 import { FormEventHandler } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Loader2, Mail, Lock, User, UserPlus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AuthLayout from '@/Layouts/AuthLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
 import { Field } from '@/Components/ui/Field';
 
 export default function Register() {
+    const { t } = useTranslation('auth');
+
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -23,21 +26,21 @@ export default function Register() {
 
     return (
         <AuthLayout
-            title="Créer un compte"
-            subtitle="Rejoins la famille Dina Kenitra FC en quelques secondes."
+            title={t('register.title')}
+            subtitle={t('register.subtitle')}
             footer={
                 <p>
-                    Tu as déjà un compte ?{' '}
+                    {t('register.footer_prefix')}{' '}
                     <Link href={route('login')} className="font-semibold text-crimson hover:underline">
-                        Connecte-toi
+                        {t('register.footer_link')}
                     </Link>
                 </p>
             }
         >
-            <Head title="Inscription" />
+            <Head title={t('register.title')} />
 
             <form onSubmit={submit} className="space-y-5">
-                <Field label="Nom" required error={errors.name}>
+                <Field label={t('register.name')} required error={errors.name}>
                     <div className="relative">
                         <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
@@ -46,14 +49,14 @@ export default function Register() {
                             autoComplete="name"
                             autoFocus
                             required
-                            placeholder="Youssef Amrani"
+                            placeholder={t('register.name_placeholder')}
                             onChange={(e) => setData('name', e.target.value)}
                             className="pl-10"
                         />
                     </div>
                 </Field>
 
-                <Field label="Email" required error={errors.email}>
+                <Field label={t('register.email')} required error={errors.email}>
                     <div className="relative">
                         <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
@@ -62,14 +65,14 @@ export default function Register() {
                             value={data.email}
                             autoComplete="username"
                             required
-                            placeholder="tu@example.com"
+                            placeholder={t('register.email_placeholder')}
                             onChange={(e) => setData('email', e.target.value)}
                             className="pl-10"
                         />
                     </div>
                 </Field>
 
-                <Field label="Mot de passe" required error={errors.password} hint="8 caractères minimum">
+                <Field label={t('register.password')} required error={errors.password} hint={t('register.password_hint')}>
                     <div className="relative">
                         <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
@@ -78,14 +81,14 @@ export default function Register() {
                             value={data.password}
                             autoComplete="new-password"
                             required
-                            placeholder="••••••••"
+                            placeholder={t('register.password_placeholder')}
                             onChange={(e) => setData('password', e.target.value)}
                             className="pl-10"
                         />
                     </div>
                 </Field>
 
-                <Field label="Confirmer le mot de passe" required error={errors.password_confirmation}>
+                <Field label={t('register.password_confirm')} required error={errors.password_confirmation}>
                     <div className="relative">
                         <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
@@ -94,7 +97,7 @@ export default function Register() {
                             value={data.password_confirmation}
                             autoComplete="new-password"
                             required
-                            placeholder="••••••••"
+                            placeholder={t('register.password_placeholder')}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             className="pl-10"
                         />
@@ -103,13 +106,13 @@ export default function Register() {
 
                 <Button type="submit" size="lg" disabled={processing} className="w-full">
                     {processing ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
-                    Créer mon compte
+                    {t('register.submit')}
                 </Button>
 
                 <p className="text-center text-xs text-muted-foreground">
-                    En t'inscrivant, tu acceptes nos{' '}
+                    {t('register.terms_prefix')}{' '}
                     <Link href="/legal" className="underline hover:text-foreground">
-                        conditions d'utilisation
+                        {t('register.terms_link')}
                     </Link>
                     .
                 </p>

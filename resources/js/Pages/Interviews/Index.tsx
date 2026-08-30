@@ -1,4 +1,5 @@
 import { Link, router } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { ArrowRight, MessageSquareQuote, Mic } from 'lucide-react';
@@ -7,6 +8,7 @@ import { PageHeader } from '@/Components/site/PageHeader';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { Pagination } from '@/Components/site/Pagination';
 import { Ornament } from '@/Components/site/Ornament';
+import { SmartImage } from '@/Components/site/SmartImage';
 import { Badge } from '@/Components/ui/Badge';
 import { formatMatchDate, cn } from '@/lib/utils';
 import type { Interview, Paginated } from '@/types/models';
@@ -18,6 +20,7 @@ interface Props {
 }
 
 export default function InterviewsIndex({ interviews, roles, filter }: Props) {
+    const { t, i18n } = useTranslation(['pages', 'nav']);
     const setRole = (role: string) => {
         router.get(
             '/interviews',
@@ -32,16 +35,16 @@ export default function InterviewsIndex({ interviews, roles, filter }: Props) {
     return (
         <SiteLayout>
             <SEO
-                title="La Voix du Futsal"
-                description="Interviews des sélectionneurs, joueurs de la nationale, entraîneurs et journalistes qui font vivre le futsal marocain. Une série éditoriale présentée par Dina Kenitra FC."
+                title={t('pages:interviews.seo_title')}
+                description={t('pages:interviews.seo_description')}
             />
 
             <PageHeader
-                kicker="La Voix du Futsal · présentée par Dina Kenitra FC"
-                kickerRight={new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
-                title="Interviews"
-                subtitle="Sélectionneurs, joueurs de la nationale, entraîneurs, journalistes. Les voix qui font vivre le futsal au Maroc."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'La Voix du Futsal' }]}
+                kicker={t('pages:interviews.kicker')}
+                kickerRight={new Date().toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' })}
+                title={t('pages:interviews.title')}
+                subtitle={t('pages:interviews.subtitle')}
+                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:interviews.breadcrumb') }]}
                 variant="editorial"
             />
 
@@ -57,7 +60,7 @@ export default function InterviewsIndex({ interviews, roles, filter }: Props) {
                                 : 'border-border text-muted-foreground hover:border-champagne/50 hover:text-foreground'
                         )}
                     >
-                        Toutes
+                        {t('pages:interviews.filter_all')}
                     </button>
                     {roles.map((role) => (
                         <button
@@ -80,11 +83,11 @@ export default function InterviewsIndex({ interviews, roles, filter }: Props) {
                 {interviews.total === 0 ? (
                     <EmptyState
                         icon={Mic}
-                        title={filter.role ? `Aucune interview de type "${filter.role}"` : 'Aucune interview publiée'}
+                        title={filter.role ? t('pages:interviews.empty_role_title', { role: filter.role }) : t('pages:interviews.empty_title')}
                         description={
                             filter.role
-                                ? "Change le filtre pour voir d'autres profils."
-                                : "Les premières interviews arrivent bientôt."
+                                ? t('pages:interviews.empty_role_description')
+                                : t('pages:interviews.empty_description')
                         }
                     />
                 ) : (
@@ -103,7 +106,11 @@ export default function InterviewsIndex({ interviews, roles, filter }: Props) {
 
                         <div className="mt-12 flex items-center justify-between gap-4">
                             <div className="text-sm text-muted-foreground">
-                                {interviews.from ?? 0}–{interviews.to ?? 0} sur {interviews.total}
+                                {t('pages:interviews.pagination_summary', {
+                                    from: interviews.from ?? 0,
+                                    to: interviews.to ?? 0,
+                                    total: interviews.total,
+                                })}
                             </div>
                             <Pagination links={interviews.links} />
                         </div>
@@ -115,7 +122,11 @@ export default function InterviewsIndex({ interviews, roles, filter }: Props) {
             <section className="mx-auto max-w-3xl px-4 pb-16 text-center">
                 <Ornament className="mb-4" />
                 <p className="font-editorial text-lg italic leading-relaxed text-muted-foreground">
-                    Une série éditoriale <span className="font-semibold not-italic text-foreground">présentée par Dina Kenitra FC</span> pour mettre en valeur le futsal marocain.
+                    {t('pages:interviews.attribution')}{' '}
+                    <span className="font-semibold not-italic text-foreground">
+                        {t('pages:interviews.attribution_bold')}
+                    </span>{' '}
+                    {t('pages:interviews.attribution_end')}
                 </p>
             </section>
         </SiteLayout>
@@ -123,6 +134,7 @@ export default function InterviewsIndex({ interviews, roles, filter }: Props) {
 }
 
 function FeaturedInterview({ interview }: { interview: Interview }) {
+    const { t } = useTranslation('pages');
     const date = interview.published_at ? formatMatchDate(interview.published_at) : null;
 
     return (
@@ -135,10 +147,10 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
             <Link href={`/interviews/${interview.slug}`} className="grid gap-0 lg:grid-cols-[1.2fr_1fr]">
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted lg:aspect-auto">
                     {interview.hero_image ? (
-                        <img
+                        <SmartImage
                             src={`/storage/${interview.hero_image}`}
                             alt=""
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex h-full w-full items-center justify-center bg-muted">
@@ -148,7 +160,7 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
                     <div className="absolute left-6 top-6">
                         <Badge variant="champagne">
                             <MessageSquareQuote className="h-3 w-3" />
-                            Interview vedette
+                            {t('interviews.featured_badge')}
                         </Badge>
                     </div>
                 </div>
@@ -165,7 +177,7 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
                             {interview.title}
                         </h2>
                         <div className="mt-3 font-mono text-xs uppercase tracking-widest text-champagne">
-                            Avec {interview.interviewee_name}
+                            {t('interviews.with_person', { name: interview.interviewee_name })}
                         </div>
                     </div>
 
@@ -194,7 +206,7 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
                             </div>
                         )}
                         <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-champagne">
-                            Lire l'interview
+                            {t('interviews.read_interview')}
                             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </span>
                     </div>
@@ -218,11 +230,10 @@ function InterviewCard({ interview, index }: { interview: Interview; index: numb
             <Link href={`/interviews/${interview.slug}`} className="block">
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                     {interview.hero_image ? (
-                        <img
+                        <SmartImage
                             src={`/storage/${interview.hero_image}`}
                             alt=""
-                            loading="lazy"
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="group-hover:scale-105"
                         />
                     ) : (
                         <div className="flex h-full w-full items-center justify-center bg-muted">

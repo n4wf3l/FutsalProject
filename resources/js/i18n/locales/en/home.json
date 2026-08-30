@@ -1,0 +1,65 @@
+{
+    "hero": {
+        "title_line1": "Dina Kenitra",
+        "title_line2": "Futsal Club",
+        "subtitle": "We carry the colors of Kenitra on Morocco's futsal courts. Championship, youth development, ambition.",
+        "cta_calendar": "See the calendar",
+        "cta_history": "Our story"
+    },
+    "stats": {
+        "section_kicker": "The club by numbers",
+        "section_title": "Fifteen seasons on the parquet",
+        "since": "Years of history",
+        "since_value": "15",
+        "since_note": "Founded in 2011, uninterrupted.",
+        "players": "Active players",
+        "trophies": "Trophies",
+        "matches": "Matches played"
+    },
+    "countdown": {
+        "days": "d",
+        "hours": "h",
+        "minutes": "m",
+        "seconds": "s",
+        "kicker": "Kick-off in",
+        "live": "Kick-off imminent"
+    },
+    "featured": {
+        "badge": "Featured",
+        "read": "Read article"
+    },
+    "next_match": {
+        "badge": "Next match",
+        "vs": "VS",
+        "venue": "Venue",
+        "all_upcoming": "All upcoming matches",
+        "empty": "No match scheduled at the moment."
+    },
+    "results": {
+        "kicker": "The court",
+        "title": "Results and upcoming fixtures",
+        "action": "Full calendar",
+        "empty_title": "No match to display",
+        "empty_body": "No recent result nor scheduled fixture at the moment. The calendar will be updated as soon as the season resumes.",
+        "empty_action": "Open the calendar"
+    },
+    "article_badge": "Article",
+    "read_article": "Read article",
+    "news": {
+        "kicker": "From the locker room",
+        "title": "What's happening at the club",
+        "action": "All news"
+    },
+    "photos": {
+        "kicker": "In pictures",
+        "title": "Club moments",
+        "action": "Full gallery"
+    },
+    "cta": {
+        "kicker": "Join the club",
+        "title": "Want to play with us?",
+        "subtitle": "Trials open for the junior, women's and senior men's teams. Fill out the application form with your CV. Our staff will contact you for a tryout.",
+        "apply": "Apply to join",
+        "contact": "Contact us"
+    }
+}

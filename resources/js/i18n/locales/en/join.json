@@ -1,0 +1,142 @@
+{
+    "page": {
+        "kicker": "Trials open",
+        "title": "Join the club",
+        "subtitle": "Send your application for the junior, women's or senior men's teams. Our staff studies every file and contacts you for a tryout.",
+        "success_title": "Application sent!",
+        "success_body": "Your application has been sent. A confirmation email with the link to manage your data has just been sent."
+    },
+    "step1": {
+        "kicker": "Step 1",
+        "title": "Which team are you applying for?"
+    },
+    "category": {
+        "junior": "Junior team",
+        "junior_hint": "U15 · U17 · U21",
+        "feminine": "Women's team",
+        "feminine_hint": "Women's team",
+        "senior_masculine": "Senior men's team",
+        "senior_masculine_hint": "First team"
+    },
+    "step2": {
+        "kicker": "Step 2",
+        "title": "About you"
+    },
+    "step3": {
+        "kicker": "Step 3",
+        "title": "Your sports profile"
+    },
+    "step4": {
+        "kicker": "Step 4",
+        "title": "Your CV"
+    },
+    "step5": {
+        "kicker": "Step 5",
+        "title": "Consent"
+    },
+    "form": {
+        "first_name": "First name",
+        "first_name_placeholder": "Youssef",
+        "last_name": "Last name",
+        "last_name_placeholder": "Amrani",
+        "email": "Email",
+        "email_placeholder": "you@example.com",
+        "phone": "Phone",
+        "phone_placeholder": "+212 6 00 00 00 00",
+        "birthdate": "Date of birth",
+        "nationality": "Nationality",
+        "nationality_placeholder": "Moroccan",
+        "city": "City",
+        "city_placeholder": "Kenitra",
+        "position": "Preferred position",
+        "experience_years": "Years of experience",
+        "current_club": "Current or previous club",
+        "current_club_hint": "Optional. Helps our staff assess your profile.",
+        "current_club_placeholder": "Club name",
+        "message": "Message (optional)",
+        "message_hint": "Motivation, achievements, availability…",
+        "message_placeholder": "Tell us why you want to join Dina Kenitra FC…",
+        "submit": "Send my application"
+    },
+    "cv": {
+        "hint": "PDF, JPG or PNG · 5 MB max",
+        "upload_title": "Upload a CV",
+        "upload_hint": "Drop a file or click here",
+        "change": "Click to change",
+        "remove": "Remove CV"
+    },
+    "consent": {
+        "body": "By sending this application you entrust Dina Kenitra FC with personal data (identity, contact, CV). Under Morocco's Law 09-08 on personal data protection, they are collected to assess your application, kept for 6 months (unsuccessful applications) and accessible only to the club's sports staff. You have a right of access, rectification, opposition and deletion that you can exercise at any time via",
+        "body_or": "or by",
+        "body_delete_link": "requesting deletion",
+        "body_policy_prefix": ". Full policy:",
+        "checkbox_bold": "I accept",
+        "checkbox_body": "that Dina Kenitra FC processes my personal data for the purposes and conditions described above.",
+        "minor_title": "Minor applicant detected",
+        "minor_body": "Since you are under 18, the law requires the consent of a parent or legal guardian. By checking the box below you confirm that this consent has been obtained.",
+        "minor_checkbox_bold": "A parent or legal guardian has agreed",
+        "minor_checkbox_body": "to this application and to the processing of my personal data."
+    },
+    "next_steps": {
+        "kicker": "After sending",
+        "title": "What's next",
+        "steps": [
+            "Our staff reviews your application",
+            "We contact you by email within 7 days",
+            "Invitation to a tryout at the complex",
+            "Feedback and integration if validated"
+        ]
+    },
+    "privacy_note": {
+        "kicker": "Law 09-08 · CNDP",
+        "body": "Your data is processed under Moroccan law on personal data protection. Full details in our",
+        "link": "privacy policy"
+    },
+    "manage": {
+        "kicker": "Law 09-08 · Personal space",
+        "title": "My application",
+        "subtitle": "Review the data Dina Kenitra FC holds about you, or exercise your right to deletion at any time.",
+        "status_pending": "Pending",
+        "status_reviewed": "Reviewed",
+        "status_contacted": "Contacted",
+        "status_accepted": "Accepted",
+        "status_rejected": "Rejected",
+        "received_on": "Application received on",
+        "field_email": "Email",
+        "field_phone": "Phone",
+        "field_category": "Target team",
+        "field_cv": "CV",
+        "cv_uploaded": "Uploaded",
+        "cv_none": "No file",
+        "rights_title": "Your rights",
+        "rights_intro": "Under Morocco's Law 09-08 on personal data protection, you can at any time:",
+        "rights_correct_prefix": "Correct wrong information: write to",
+        "rights_correct_suffix": ".",
+        "rights_withdraw": "Withdraw your consent and permanently delete your application (button below).",
+        "rights_consult": "Consult this page at any time via your personal link.",
+        "danger_title": "Delete my application",
+        "danger_body": "Your application, your CV and all associated information will be permanently erased from our servers. This action is irreversible.",
+        "danger_button": "Delete permanently",
+        "confirm_title": "Confirm deletion",
+        "confirm_body": "Your data (name, contact, CV, message) will be permanently erased. Our staff will no longer be able to review your application. Confirm?",
+        "confirm_button": "Yes, delete everything",
+        "confirm_loading": "Deleting…",
+        "back_to_site_prefix": "Back to",
+        "back_to_site_link": "public site",
+        "deleting_toast": "Deleting…",
+        "flash_deleted": "Your data has been permanently deleted. Thank you."
+    },
+    "deletion_request": {
+        "kicker": "Law 09-08 · Right to deletion",
+        "title": "Find my file",
+        "subtitle": "Enter the email used when applying. If a file exists, we send you your personal link to view or delete it.",
+        "email": "Email used when applying",
+        "email_placeholder": "you@example.com",
+        "submit": "Receive my management link",
+        "privacy_note": "For your security, we never confirm whether an address is or is not in our database. If a file exists, the email arrives within a few minutes.",
+        "fallback_prefix": "You can also write directly to",
+        "fallback_suffix": "with the subject 'Delete my data'.",
+        "policy_link": "Full privacy policy",
+        "flash_sent": "If an application exists for this address, an email with the management link has just been sent."
+    }
+}

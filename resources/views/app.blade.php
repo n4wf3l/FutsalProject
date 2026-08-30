@@ -1,10 +1,15 @@
+@php
+    $locale = app()->getLocale();
+    $direction = in_array($locale, ['ar']) ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ $locale }}" dir="{{ $direction }}" data-locale="{{ $locale }}" class="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#0B0C10">
         <meta name="format-detection" content="telephone=no">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {{-- Default title (pages override via Inertia <Head>) --}}
         <title inertia>{{ config('app.name', 'Dina Kenitra FC') }}</title>

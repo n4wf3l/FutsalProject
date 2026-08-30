@@ -188,6 +188,13 @@ export interface Paginated<T> {
     links: Array<{ url: string | null; label: string; active: boolean }>;
 }
 
+export interface SponsorShared {
+    id: number;
+    name: string;
+    logo: string | null;
+    website: string | null;
+}
+
 export interface ClubInfoShared {
     name: string;
     prefix: string;
@@ -200,4 +207,6 @@ export interface ClubInfoShared {
     instagram: string | null;
     latitude: number | null;
     longitude: number | null;
+    federation_logo: string | null;
+    organization_logo: string | null;
 }

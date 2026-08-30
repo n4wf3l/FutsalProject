@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Mic, Play, Quote, Share2, User } from 'lucide-react';
@@ -6,6 +7,7 @@ import SiteLayout from '@/Layouts/SiteLayout';
 import { Badge } from '@/Components/ui/Badge';
 import { Button } from '@/Components/ui/Button';
 import { Monogram, Ornament } from '@/Components/site/Ornament';
+import { SmartImage } from '@/Components/site/SmartImage';
 import { formatMatchDate } from '@/lib/utils';
 import type { Interview } from '@/types/models';
 
@@ -24,6 +26,7 @@ function extractEmbed(url: string | null): string | null {
 }
 
 export default function InterviewShow({ interview, related }: Props) {
+    const { t } = useTranslation('pages');
     const date = interview.published_at ? formatMatchDate(interview.published_at) : null;
     const embed = extractEmbed(interview.video_url);
 
@@ -67,7 +70,7 @@ export default function InterviewShow({ interview, related }: Props) {
         <SiteLayout>
             <SEO
                 title={interview.title}
-                description={plainDescription || `Interview de ${interview.interviewee_name} — La Voix du Futsal.`}
+                description={plainDescription || t('interviews.seo_description_fallback', { name: interview.interviewee_name })}
                 image={interview.hero_image}
                 type="article"
                 publishedAt={interview.published_at ?? interview.created_at}
@@ -96,7 +99,7 @@ export default function InterviewShow({ interview, related }: Props) {
                         className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-champagne"
                     >
                         <ArrowLeft className="h-4 w-4" />
-                        Toutes les interviews
+                        {t('interviews.all_interviews')}
                     </Link>
 
                     <motion.header
@@ -108,7 +111,7 @@ export default function InterviewShow({ interview, related }: Props) {
                         <div className="flex flex-wrap items-center gap-3">
                             <Badge variant="champagne">
                                 <Mic className="h-3 w-3" />
-                                La Voix du Futsal
+                                {t('interviews.series_name')}
                             </Badge>
                             <Badge variant="muted">{interview.interviewee_role}</Badge>
                             {date && (
@@ -139,7 +142,7 @@ export default function InterviewShow({ interview, related }: Props) {
                             </div>
                             <div>
                                 <div className="font-mono text-[10px] uppercase tracking-widest text-champagne">
-                                    Notre invité
+                                    {t('interviews.our_guest')}
                                 </div>
                                 <div className="font-display text-lg font-bold">
                                     {interview.interviewee_name}
@@ -163,11 +166,13 @@ export default function InterviewShow({ interview, related }: Props) {
                     transition={{ duration: 0.6, delay: 0.1 }}
                     className="mx-auto mb-12 max-w-5xl px-4"
                 >
-                    <img
-                        src={`/storage/${interview.hero_image}`}
-                        alt={interview.title}
-                        className="aspect-[16/9] w-full rounded-3xl border border-border object-cover"
-                    />
+                    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-border">
+                        <SmartImage
+                            src={`/storage/${interview.hero_image}`}
+                            alt={interview.title}
+                            loading="eager"
+                        />
+                    </div>
                 </motion.figure>
             )}
 
@@ -219,7 +224,7 @@ export default function InterviewShow({ interview, related }: Props) {
                 <section className="mx-auto max-w-5xl px-4 pb-16">
                     <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-champagne">
                         <Play className="h-3 w-3" />
-                        Regarder l'interview
+                        {t('interviews.watch_interview')}
                     </div>
                     <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-card">
                         <iframe
@@ -239,7 +244,7 @@ export default function InterviewShow({ interview, related }: Props) {
                     <Button asChild variant="outline">
                         <Link href="/interviews">
                             <ArrowLeft className="h-4 w-4" />
-                            Toutes les interviews
+                            {t('interviews.all_interviews')}
                         </Link>
                     </Button>
                     <button
@@ -253,7 +258,7 @@ export default function InterviewShow({ interview, related }: Props) {
                         className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-champagne"
                     >
                         <Share2 className="h-4 w-4" />
-                        Partager
+                        {t('interviews.share')}
                     </button>
                 </div>
 
@@ -261,7 +266,9 @@ export default function InterviewShow({ interview, related }: Props) {
                     <Ornament />
                     <Monogram />
                     <p className="text-center text-sm italic text-muted-foreground">
-                        Propos recueillis pour <span className="font-semibold not-italic text-foreground">Dina Kenitra FC</span> · La Voix du Futsal
+                        {t('interviews.byline')}{' '}
+                        <span className="font-semibold not-italic text-foreground">Dina Kenitra FC</span>{' '}
+                        {t('interviews.byline_end')}
                     </p>
                 </div>
             </section>
@@ -271,9 +278,9 @@ export default function InterviewShow({ interview, related }: Props) {
                 <section className="mx-auto max-w-7xl px-4 pb-16">
                     <div className="mb-8">
                         <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
-                            Aussi à lire
+                            {t('interviews.related_kicker')}
                         </div>
-                        <h2 className="mt-3 font-display text-display-lg">Autres voix du futsal</h2>
+                        <h2 className="mt-3 font-display text-display-lg">{t('interviews.related_title')}</h2>
                     </div>
                     <div className="grid gap-6 md:grid-cols-3">
                         {related.map((r) => (
@@ -284,11 +291,10 @@ export default function InterviewShow({ interview, related }: Props) {
                             >
                                 <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                                     {r.hero_image ? (
-                                        <img
+                                        <SmartImage
                                             src={`/storage/${r.hero_image}`}
                                             alt=""
-                                            loading="lazy"
-                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                            className="group-hover:scale-105"
                                         />
                                     ) : (
                                         <div className="flex h-full w-full items-center justify-center">

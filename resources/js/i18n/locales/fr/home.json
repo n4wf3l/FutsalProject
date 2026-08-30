@@ -1,0 +1,65 @@
+{
+    "hero": {
+        "title_line1": "Dina Kenitra",
+        "title_line2": "Futsal Club",
+        "subtitle": "On porte les couleurs de Kénitra sur les parquets du Maroc. Championnat, formation, ambition.",
+        "cta_calendar": "Voir le calendrier",
+        "cta_history": "Notre histoire"
+    },
+    "stats": {
+        "section_kicker": "Le club en chiffres",
+        "section_title": "Quinze saisons de parquet",
+        "since": "Années d'histoire",
+        "since_value": "15",
+        "since_note": "Fondé en 2011, sans discontinuer.",
+        "players": "Joueurs actifs",
+        "trophies": "Trophées",
+        "matches": "Matchs joués"
+    },
+    "countdown": {
+        "days": "j",
+        "hours": "h",
+        "minutes": "m",
+        "seconds": "s",
+        "kicker": "Coup d'envoi dans",
+        "live": "Coup d'envoi imminent"
+    },
+    "featured": {
+        "badge": "À la une",
+        "read": "Lire l'article"
+    },
+    "next_match": {
+        "badge": "Prochain match",
+        "vs": "VS",
+        "venue": "Lieu",
+        "all_upcoming": "Tous les matchs à venir",
+        "empty": "Aucun match programmé pour le moment."
+    },
+    "results": {
+        "kicker": "Le parquet",
+        "title": "Résultats & prochains rendez-vous",
+        "action": "Le calendrier complet",
+        "empty_title": "Aucun match à afficher",
+        "empty_body": "Aucun résultat récent ni rencontre programmée pour l'instant. Le calendrier sera mis à jour dès la reprise.",
+        "empty_action": "Ouvrir le calendrier"
+    },
+    "article_badge": "Article",
+    "read_article": "Lire l'article",
+    "news": {
+        "kicker": "Nouvelles du vestiaire",
+        "title": "Ce qui se passe au club",
+        "action": "Toutes les nouvelles"
+    },
+    "photos": {
+        "kicker": "En images",
+        "title": "Instants du club",
+        "action": "Toute la galerie"
+    },
+    "cta": {
+        "kicker": "Rejoindre le club",
+        "title": "Envie de jouer avec nous ?",
+        "subtitle": "Détections ouvertes pour les équipes junior, féminine et senior masculine. Remplis le formulaire de candidature avec ton CV. Notre staff te recontacte pour un essai.",
+        "apply": "Postuler pour rejoindre",
+        "contact": "Nous contacter"
+    }
+}

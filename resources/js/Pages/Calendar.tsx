@@ -3,13 +3,13 @@ import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { CalendarDays, Trophy } from 'lucide-react';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { MatchCard } from '@/Components/site/MatchCard';
-import { StandingsTable } from '@/Components/site/StandingsTable';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { Badge } from '@/Components/ui/Badge';
-import { cn, formatMatchDate } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import type { Championship, Game, Team } from '@/types/models';
 
 interface Props {
@@ -20,18 +20,27 @@ interface Props {
     filters: { team: string; date: string };
 }
 
-const DATE_FILTERS = [
-    { key: 'all', label: 'Tous' },
-    { key: 'upcoming', label: 'À venir' },
-    { key: 'results', label: 'Résultats' },
-];
-
-const TEAM_FILTERS = [
-    { key: 'club', label: 'Dina Kenitra' },
-    { key: 'all', label: 'Toutes équipes' },
-];
+const DATE_FILTER_KEYS = ['all', 'upcoming', 'results'] as const;
+const TEAM_FILTER_KEYS = ['club', 'all'] as const;
 
 export default function Calendar({ championship, games, teams, clubPrefix, filters }: Props) {
+    const { t, i18n } = useTranslation(['pages', 'nav']);
+    const dateFilters = useMemo(
+        () =>
+            DATE_FILTER_KEYS.map((k) => ({
+                key: k,
+                label: t(`pages:calendar.filter_period_${k === 'results' ? 'results' : k}`),
+            })),
+        [t]
+    );
+    const teamFilters = useMemo(
+        () =>
+            TEAM_FILTER_KEYS.map((k) => ({
+                key: k,
+                label: t(`pages:calendar.filter_team_${k}`),
+            })),
+        [t]
+    );
     const groupedByMonth = useMemo(() => {
         const map = new Map<string, Game[]>();
         for (const g of games) {
@@ -57,8 +66,8 @@ export default function Calendar({ championship, games, teams, clubPrefix, filte
     return (
         <SiteLayout>
             <SEO
-                title="Calendrier & classement"
-                description="Calendrier des matchs Dina Kenitra FC saison 2025-2026. Prochains matchs, résultats du championnat marocain de futsal et classement en temps réel."
+                title={t('pages:calendar.seo_title')}
+                description={t('pages:calendar.seo_description')}
                 jsonLd={{
                     '@context': 'https://schema.org',
                     '@type': 'ItemList',
@@ -104,10 +113,10 @@ export default function Calendar({ championship, games, teams, clubPrefix, filte
             />
 
             <PageHeader
-                kicker="Le parquet · Saison 2025-2026"
-                title="Le calendrier"
-                subtitle="Les prochains coups d'envoi, les résultats, le classement. Tout ce qui compte cette saison."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Calendrier' }]}
+                kicker={t('pages:calendar.kicker')}
+                title={t('pages:calendar.title')}
+                subtitle={t('pages:calendar.subtitle')}
+                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:calendar.breadcrumb') }]}
             >
                 {championship && (
                     <Badge variant="champagne">
@@ -124,15 +133,15 @@ export default function Calendar({ championship, games, teams, clubPrefix, filte
                         {/* Filters */}
                         <div className="mb-8 flex flex-wrap items-center gap-3 border-b border-border pb-4">
                             <FilterGroup
-                                label="Équipes"
-                                options={TEAM_FILTERS}
+                                label={t('pages:calendar.filter_team_label')}
+                                options={teamFilters}
                                 value={filters.team}
                                 onChange={(v) => applyFilter('team', v)}
                             />
                             <div className="hidden h-6 w-px bg-border sm:block" />
                             <FilterGroup
-                                label="Période"
-                                options={DATE_FILTERS}
+                                label={t('pages:calendar.filter_period_label')}
+                                options={dateFilters}
                                 value={filters.date}
                                 onChange={(v) => applyFilter('date', v)}
                             />
@@ -141,8 +150,8 @@ export default function Calendar({ championship, games, teams, clubPrefix, filte
                         {games.length === 0 ? (
                             <EmptyState
                                 icon={CalendarDays}
-                                title="Aucun match ne correspond à ce filtre"
-                                description="Change de filtre pour explorer d'autres résultats."
+                                title={t('pages:calendar.empty_title')}
+                                description={t('pages:calendar.empty_description')}
                             />
                         ) : (
                             <div className="space-y-10">
@@ -153,21 +162,29 @@ export default function Calendar({ championship, games, teams, clubPrefix, filte
                                         games={monthGames}
                                         clubPrefix={clubPrefix}
                                         today={today}
+                                        locale={i18n.language}
+                                        countLabel={t('pages:calendar.match_count', { count: monthGames.length })}
                                     />
                                 ))}
                             </div>
                         )}
                     </div>
 
-                    {/* Standings */}
                     <aside className="lg:sticky lg:top-24 lg:self-start">
                         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
-                            Classement
+                            {t('pages:calendar.side_kicker')}
                         </div>
-                        <StandingsTable teams={teams} clubPrefix={clubPrefix} />
-                        <div className="mt-4 flex gap-4 rounded-lg border border-border bg-card p-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                            <span><span className="text-champagne">■</span> Podium</span>
-                            <span><span className="text-crimson">■</span> Notre club</span>
+                        <div className="rounded-2xl border border-champagne/20 bg-card p-6">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-champagne/30 bg-champagne/10 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-champagne">
+                                <Trophy className="h-3 w-3" />
+                                {t('pages:calendar.side_badge')}
+                            </div>
+                            <h3 className="mt-4 font-editorial text-2xl font-medium leading-snug">
+                                {t('pages:calendar.side_title')}
+                            </h3>
+                            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                                {t('pages:calendar.side_body')}
+                            </p>
                         </div>
                     </aside>
                 </div>
@@ -217,14 +234,18 @@ function MonthGroup({
     games,
     clubPrefix,
     today,
+    locale,
+    countLabel,
 }: {
     monthKey: string;
     games: Game[];
     clubPrefix: string;
     today: Date;
+    locale: string;
+    countLabel: string;
 }) {
     const [year, month] = monthKey.split('-');
-    const monthName = new Date(Number(year), Number(month) - 1, 1).toLocaleDateString('fr-FR', {
+    const monthName = new Date(Number(year), Number(month) - 1, 1).toLocaleDateString(locale, {
         month: 'long',
         year: 'numeric',
     });
@@ -242,7 +263,7 @@ function MonthGroup({
                 </span>
                 <span className="h-px flex-1 bg-border" />
                 <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                    {games.length} match{games.length > 1 ? 's' : ''}
+                    {countLabel}
                 </span>
             </div>
             <div className="grid gap-4 md:grid-cols-2">

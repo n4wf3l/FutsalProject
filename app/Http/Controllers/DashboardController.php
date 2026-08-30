@@ -25,6 +25,9 @@ use App\Models\Article;
 use App\Models\Game;
 use App\Models\Video;
 use App\Models\Photo;
+use App\Models\PlayerApplication;
+use App\Models\Interview;
+use Illuminate\Support\Facades\Schema;
 
 
 class DashboardController extends Controller
@@ -33,6 +36,12 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $today = now()->startOfDay();
+
+        // Defensive: /admin/applications & /admin/interviews depend on tables
+        // that may not exist yet in some environments (fresh clone, migration
+        // still pending).
+        $hasApplications = Schema::hasTable('player_applications');
+        $hasInterviews = Schema::hasTable('interviews');
 
         return Inertia::render('Admin/Dashboard', [
             'stats' => [
@@ -49,6 +58,26 @@ class DashboardController extends Controller
                 'upcomingGames' => Game::where('match_date', '>=', $today)->count(),
                 'pastGames' => Game::where('match_date', '<', $today)->count(),
             ],
+            'inbox' => [
+                'applicationsPending' => $hasApplications
+                    ? PlayerApplication::where('status', PlayerApplication::STATUS_PENDING)->count()
+                    : 0,
+                'interviewsDraft' => $hasInterviews
+                    ? Interview::whereNull('published_at')->count()
+                    : 0,
+            ],
+            'pendingApplications' => $hasApplications
+                ? PlayerApplication::where('status', PlayerApplication::STATUS_PENDING)
+                    ->latest()
+                    ->take(4)
+                    ->get(['id', 'first_name', 'last_name', 'email', 'category', 'created_at'])
+                : collect(),
+            'draftInterviews' => $hasInterviews
+                ? Interview::whereNull('published_at')
+                    ->latest()
+                    ->take(3)
+                    ->get(['id', 'title', 'interviewee_name', 'interviewee_role', 'updated_at'])
+                : collect(),
             'recentArticles' => Article::latest()->take(4)->get(),
             'upcomingGames' => Game::with(['homeTeam', 'awayTeam'])
                 ->where('match_date', '>=', $today)

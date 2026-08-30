@@ -1,10 +1,12 @@
 import { Link } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Share2 } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { ArticleCard } from '@/Components/site/ArticleCard';
 import { Monogram, Ornament } from '@/Components/site/Ornament';
+import { SmartImage } from '@/Components/site/SmartImage';
 import { Badge } from '@/Components/ui/Badge';
 import { Button } from '@/Components/ui/Button';
 import { formatMatchDate } from '@/lib/utils';
@@ -16,6 +18,7 @@ interface Props {
 }
 
 export default function ArticleShow({ article, recentArticles }: Props) {
+    const { t } = useTranslation('pages');
     const date = formatMatchDate(article.created_at);
     const plainDescription = (article.description ?? '')
         .replace(/<[^>]+>/g, '')
@@ -54,7 +57,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
         <SiteLayout>
             <SEO
                 title={article.title}
-                description={plainDescription || `Article Dina Kenitra FC : ${article.title}`}
+                description={plainDescription || t('article.seo_description_fallback', { title: article.title })}
                 image={article.image}
                 type="article"
                 publishedAt={article.created_at}
@@ -69,7 +72,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-crimson"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Retour aux actualités
+                    {t('article.back_to_news')}
                 </Link>
 
                 <motion.header
@@ -79,7 +82,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                     className="mt-8"
                 >
                     <div className="flex flex-wrap items-center gap-3">
-                        <Badge variant="default">Article</Badge>
+                        <Badge variant="default">{t('article.badge')}</Badge>
                         <div className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-muted-foreground">
                             <Calendar className="h-3 w-3" />
                             {date.day} {date.month} {date.year}
@@ -95,12 +98,12 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="my-10 overflow-hidden rounded-3xl border border-border"
+                        className="relative my-10 aspect-video overflow-hidden rounded-3xl border border-border"
                     >
-                        <img
+                        <SmartImage
                             src={`/storage/${article.image}`}
                             alt={article.title}
-                            className="aspect-video w-full object-cover"
+                            loading="eager"
                         />
                     </motion.figure>
                 )}
@@ -126,7 +129,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                     <Button asChild variant="outline" size="sm">
                         <Link href="/news">
                             <ArrowLeft className="h-4 w-4" />
-                            Toutes les actualités
+                            {t('article.all_news')}
                         </Link>
                     </Button>
                     <button
@@ -140,7 +143,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                         className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-crimson"
                     >
                         <Share2 className="h-4 w-4" />
-                        Partager
+                        {t('article.share')}
                     </button>
                 </div>
             </article>
@@ -150,9 +153,9 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                     <div className="mb-8 flex items-end justify-between">
                         <div>
                             <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
-                                Aussi à lire
+                                {t('article.related_kicker')}
                             </div>
-                            <h2 className="mt-3 font-display text-display-lg">Articles récents</h2>
+                            <h2 className="mt-3 font-display text-display-lg">{t('article.related_title')}</h2>
                         </div>
                     </div>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

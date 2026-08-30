@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { router } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { Newspaper, Search } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -17,6 +18,7 @@ interface NewsProps {
 }
 
 export default function News({ articles, search }: NewsProps) {
+    const { t, i18n } = useTranslation(['pages', 'nav']);
     const [query, setQuery] = useState(search ?? '');
 
     const submit = (e: FormEvent) => {
@@ -30,16 +32,16 @@ export default function News({ articles, search }: NewsProps) {
     return (
         <SiteLayout>
             <SEO
-                title="Nouvelles du club"
-                description="Toutes les actualités de Dina Kenitra FC : résultats, coulisses, communiqués et décisions. La chronique semaine après semaine."
+                title={t('pages:news.seo_title')}
+                description={t('pages:news.seo_description')}
             />
 
             <PageHeader
-                kicker="Nouvelles du club"
-                kickerRight={new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}
-                title="Ce qu'on raconte"
-                subtitle="Résultats, coulisses, décisions. La chronique semaine après semaine."
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: 'Nouvelles' }]}
+                kicker={t('pages:news.kicker')}
+                kickerRight={new Date().toLocaleDateString(i18n.language, { day: '2-digit', month: 'long', year: 'numeric' })}
+                title={t('pages:news.title')}
+                subtitle={t('pages:news.subtitle')}
+                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:news.breadcrumb') }]}
                 variant="editorial"
             >
                 <form onSubmit={submit} className="mt-2 flex w-full max-w-md gap-2">
@@ -48,12 +50,12 @@ export default function News({ articles, search }: NewsProps) {
                         <Input
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Rechercher un article…"
+                            placeholder={t('pages:news.search_placeholder')}
                             className="pl-10"
                         />
                     </div>
                     <Button type="submit" size="default">
-                        Rechercher
+                        {t('pages:news.search_button')}
                     </Button>
                 </form>
             </PageHeader>
@@ -62,11 +64,11 @@ export default function News({ articles, search }: NewsProps) {
                 {articles.total === 0 ? (
                     <EmptyState
                         icon={Newspaper}
-                        title="Aucun article pour le moment"
+                        title={t('pages:news.empty_title')}
                         description={
                             search
-                                ? `Aucun résultat pour "${search}". Essaie une autre recherche.`
-                                : "Les prochaines actualités du club apparaîtront ici."
+                                ? t('pages:news.empty_search_description', { query: search })
+                                : t('pages:news.empty_description')
                         }
                     />
                 ) : (
@@ -87,7 +89,11 @@ export default function News({ articles, search }: NewsProps) {
 
                         <div className="mt-12 flex items-center justify-between gap-4">
                             <div className="text-sm text-muted-foreground">
-                                {articles.from ?? 0}–{articles.to ?? 0} sur {articles.total}
+                                {t('pages:news.pagination_summary', {
+                                    from: articles.from ?? 0,
+                                    to: articles.to ?? 0,
+                                    total: articles.total,
+                                })}
                             </div>
                             <Pagination links={articles.links} />
                         </div>

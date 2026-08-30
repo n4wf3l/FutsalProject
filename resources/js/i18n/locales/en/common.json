@@ -1,0 +1,47 @@
+{
+    "brand": {
+        "club_name": "Dina Kenitra",
+        "club_sub": "Futsal Club",
+        "monogram": "DKFC",
+        "est": "EST. 2011",
+        "futsal_year": "Futsal · 2011"
+    },
+    "action": {
+        "submit": "Send",
+        "cancel": "Cancel",
+        "save": "Save",
+        "delete": "Delete",
+        "edit": "Edit",
+        "back": "Back",
+        "next": "Next",
+        "previous": "Previous",
+        "close": "Close",
+        "confirm": "Confirm",
+        "read_more": "Read more",
+        "read_article": "Read article",
+        "read_interview": "Read interview",
+        "share": "Share",
+        "view_all": "View all",
+        "loading": "Loading…",
+        "sending": "Sending…",
+        "saved": "Saved"
+    },
+    "form": {
+        "required": "Required",
+        "optional": "Optional",
+        "select_placeholder": "— Select —",
+        "search": "Search"
+    },
+    "date": {
+        "at": "at",
+        "on": "on"
+    },
+    "app": {
+        "staff_area": "Staff area",
+        "public_site": "View public site",
+        "member_area": "Member area",
+        "language": "Language",
+        "language_active": "active",
+        "esc_to_close": "to close"
+    }
+}
