@@ -128,7 +128,7 @@ export default function AdminLayout({ title, header, children }: PropsWithChildr
     return (
         <div className="relative min-h-screen bg-background text-foreground">
             <div className="pointer-events-none fixed inset-0 -z-10">
-                <div className="absolute inset-0 bg-grid-fade opacity-40" />
+                <div className="absolute inset-0 opacity-40 dark:bg-grid-fade" />
             </div>
 
             {/* Mobile top bar */}

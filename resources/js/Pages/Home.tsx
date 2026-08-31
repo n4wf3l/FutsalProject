@@ -59,7 +59,7 @@ export default function Home({
             {/* ————————————————— HERO ————————————————— */}
             <section className="relative isolate overflow-hidden border-b border-border">
                 <div className="absolute inset-0 -z-10">
-                    <div className="absolute inset-0 bg-grid-fade opacity-40" />
+                    <div className="absolute inset-0 opacity-40 dark:bg-grid-fade" />
                 </div>
 
                 <div className="mx-auto max-w-7xl px-4 py-20 lg:py-32">
