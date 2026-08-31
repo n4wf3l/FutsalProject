@@ -23,7 +23,7 @@ export default function AuthLayout({ title, subtitle, footer, children }: PropsW
     return (
         <div className="relative flex min-h-screen bg-background text-foreground">
             <div className="pointer-events-none fixed inset-0 -z-10">
-                <div className="absolute inset-0 bg-grid-fade opacity-70" />
+                <div className="absolute inset-0 opacity-70 dark:bg-grid-fade" />
             </div>
 
             {/* Left: brand column */}

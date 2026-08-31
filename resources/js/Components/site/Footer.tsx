@@ -40,15 +40,15 @@ export function Footer() {
             items: [
                 { label: t('footer.club_history'), href: '/about' },
                 { label: t('footer.club_teams'), href: '/teams' },
-                { label: t('footer.club_staff'), href: '/teams' },
+                { label: t('footer.club_staff'), href: '/coaches' },
             ],
         },
         {
             title: t('footer.col_competition'),
             items: [
                 { label: t('footer.competition_calendar'), href: '/calendar' },
-                { label: t('footer.competition_results'), href: '/calendar' },
-                { label: t('footer.competition_standings'), href: '/calendar' },
+                { label: t('footer.competition_results'), href: '/news' },
+                { label: t('footer.competition_standings'), href: '/teams' },
             ],
         },
         {
