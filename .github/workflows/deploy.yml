@@ -1,0 +1,98 @@
+name: Deploy to Genious (dinakenitrafc.ma)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, gd, zip
+          tools: composer:v2
+          coverage: none
+
+      - name: Install PHP dependencies (production)
+        run: |
+          composer install \
+            --no-dev \
+            --optimize-autoloader \
+            --no-interaction \
+            --no-progress \
+            --prefer-dist
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Prune dev-only files before upload
+        run: |
+          rm -rf node_modules
+          rm -rf tests
+          rm -f phpunit.xml phpunit.xml.dist
+          rm -f .editorconfig .gitattributes .gitignore
+          rm -f README.md
+          rm -f .env .env.example .env.local .env.testing
+
+      - name: Deploy via FTPS to Genious
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          protocol: ftps
+          server-dir: ./
+          local-dir: ./
+          state-name: .ftp-deploy-sync-state.json
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.github/**
+            **/tests/**
+            .env
+            .env.*
+            storage/app/**
+            storage/framework/cache/**
+            storage/framework/sessions/**
+            storage/framework/views/**
+            storage/logs/**
+            phpmyadmin/**
+            .ftp-deploy-sync-state.json
+
+      - name: Trigger post-deploy hook (artisan migrate + cache)
+        run: |
+          echo "Calling deploy hook..."
+          RESPONSE=$(curl -sS -w "\nHTTP_STATUS:%{http_code}" \
+            -X POST "${{ secrets.DEPLOY_HOOK_URL }}" \
+            -H "Authorization: Bearer ${{ secrets.DEPLOY_HOOK_SECRET }}")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep -oE 'HTTP_STATUS:[0-9]+' | cut -d: -f2)
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Deploy hook failed with HTTP $STATUS"
+            exit 1
+          fi
