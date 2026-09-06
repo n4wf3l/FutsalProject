@@ -1,6 +1,9 @@
 @php
     $locale = app()->getLocale();
     $direction = in_array($locale, ['ar']) ? 'rtl' : 'ltr';
+    $ogLocaleMap = ['fr' => 'fr_MA', 'en' => 'en_US', 'ar' => 'ar_MA'];
+    $ogLocale = $ogLocaleMap[$locale] ?? 'fr_MA';
+    $ogLocaleAlternates = array_values(array_diff($ogLocaleMap, [$ogLocale]));
 @endphp
 <!DOCTYPE html>
 <html lang="{{ $locale }}" dir="{{ $direction }}" data-locale="{{ $locale }}" class="dark">
@@ -23,7 +26,10 @@
         {{-- Open Graph defaults --}}
         <meta property="og:site_name" content="Dina Kenitra FC">
         <meta property="og:type" content="website">
-        <meta property="og:locale" content="fr_MA">
+        <meta property="og:locale" content="{{ $ogLocale }}">
+        @foreach ($ogLocaleAlternates as $altLocale)
+            <meta property="og:locale:alternate" content="{{ $altLocale }}">
+        @endforeach
         <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:title" content="Dina Kenitra Futsal Club">
         <meta property="og:description" content="Club de futsal de Kénitra depuis 2011. Championnat, formation, ambitions.">

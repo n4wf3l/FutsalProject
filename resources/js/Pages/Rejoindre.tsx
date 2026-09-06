@@ -2,6 +2,7 @@ import { FormEventHandler, useState } from 'react';
 import { useForm, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import { motion } from 'framer-motion';
 import {
     CheckCircle2,
@@ -89,17 +90,23 @@ export default function Rejoindre({ categories, positions }: Props) {
         setCvName(file?.name ?? null);
     };
 
+    const crumbs = [
+        { label: 'Accueil', href: '/' },
+        { label: t('page.title') },
+    ];
+
     return (
         <SiteLayout>
             <SEO
                 title={t('page.title')}
                 description={t('page.subtitle')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
                 title={t('page.title')}
                 subtitle={t('page.subtitle')}
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: t('page.title') }]}
+                breadcrumb={crumbs}
             />
 
             <section className="mx-auto max-w-6xl px-4 pb-16">

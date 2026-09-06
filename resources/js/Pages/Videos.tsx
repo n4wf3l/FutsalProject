@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Play, Video as VideoIcon, X } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -39,18 +40,24 @@ export default function Videos({ videos }: Props) {
           })()
         : null;
 
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('pages:videos.breadcrumb') },
+    ];
+
     return (
         <SiteLayout>
             <SEO
                 title={t('pages:videos.seo_title')}
                 description={t('pages:videos.seo_description')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
                 kicker={t('pages:videos.kicker')}
                 title={t('pages:videos.title')}
                 subtitle={t('pages:videos.subtitle')}
-                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:videos.breadcrumb') }]}
+                breadcrumb={crumbs}
             />
 
             <section className="mx-auto max-w-7xl px-4 pb-16">

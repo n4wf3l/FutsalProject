@@ -1,6 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import { motion } from 'framer-motion';
 import { Download, FileText, MapPin, Trophy, Users } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -19,18 +20,24 @@ export default function About({ regulations, sections }: Props) {
     const { props } = usePage<{ club: ClubInfoShared }>();
     const club = props.club;
 
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('pages:about.breadcrumb') },
+    ];
+
     return (
         <SiteLayout>
             <SEO
                 title={t('pages:about.seo_title')}
                 description={t('pages:about.seo_description')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
                 kicker={t('pages:about.kicker')}
                 title={t('pages:about.title')}
                 subtitle={t('pages:about.subtitle')}
-                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:about.breadcrumb') }]}
+                breadcrumb={crumbs}
                 variant="editorial"
             />
 

@@ -1,8 +1,9 @@
 import { FormEventHandler } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { CheckCircle2, LogOut, Mail, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AuthLayout from '@/Layouts/AuthLayout';
+import { SEO } from '@/Components/SEO';
 import { Button } from '@/Components/ui/Button';
 
 export default function VerifyEmail({ status }: { status?: string }) {
@@ -16,7 +17,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
 
     return (
         <AuthLayout title={t('verify.title')} subtitle={t('verify.subtitle')}>
-            <Head title={t('verify.title')} />
+            <SEO title={t('verify.title')} noindex />
 
             <div className="mb-6 flex items-center gap-3 rounded-2xl border border-champagne/30 bg-champagne/10 p-4 text-sm">
                 <div className="rounded-full border border-champagne/30 bg-background p-2">

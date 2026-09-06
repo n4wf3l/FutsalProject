@@ -1,6 +1,7 @@
 import { useForm, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Loader2, Mail, MapPin, Phone, Send } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -31,17 +32,23 @@ export default function Contact() {
         });
     };
 
+    const crumbs = [
+        { label: 'Accueil', href: '/' },
+        { label: t('page.kicker') },
+    ];
+
     return (
         <SiteLayout>
             <SEO
                 title={t('page.kicker')}
                 description={t('page.subtitle')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
                 title={t('page.title')}
                 subtitle={t('page.subtitle')}
-                breadcrumb={[{ label: 'Accueil', href: '/' }, { label: t('page.kicker') }]}
+                breadcrumb={crumbs}
             />
 
             <section className="mx-auto max-w-7xl px-4 pb-16">

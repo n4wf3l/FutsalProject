@@ -5,21 +5,27 @@ import { useTranslation } from 'react-i18next';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 
 export default function Privacy() {
     const { t } = useTranslation(['legal', 'nav']);
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('legal:privacy.breadcrumb') },
+    ];
     return (
         <SiteLayout>
             <SEO
                 title={t('legal:privacy.title')}
                 description={t('legal:privacy.subtitle')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
                 kicker={t('legal:privacy.kicker')}
                 title={t('legal:privacy.title')}
                 subtitle={t('legal:privacy.subtitle')}
-                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('legal:privacy.breadcrumb') }]}
+                breadcrumb={crumbs}
                 variant="editorial"
             />
 
