@@ -12,7 +12,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -51,16 +51,17 @@ jobs:
         run: |
           rm -rf node_modules
           rm -rf tests
+          rm -rf .github
           rm -f phpunit.xml phpunit.xml.dist
           rm -f .editorconfig .gitattributes .gitignore
-          rm -f README.md
+          rm -f README.md CLAUDE.md
           rm -f .env .env.example .env.local .env.testing
 
-      - name: Package vendor/ into a single zip
+      - name: Package vendor/ into a single POSIX zip
         run: |
-          # Zip vendor into a single artifact so we upload ONE file over FTP
-          # instead of ~15000 tiny files (Genious FTPS truncates some at
-          # random when doing many transfers in a session).
+          # POSIX zip (forward slashes) — Windows Compress-Archive uses
+          # backslashes which PHP ZipArchive on Linux mis-interprets.
+          # 'zip' on ubuntu-latest is POSIX by default.
           zip -qr vendor.zip vendor
           rm -rf vendor
           echo "vendor.zip size: $(ls -lh vendor.zip | awk '{print $5}')"
@@ -68,14 +69,37 @@ jobs:
       - name: Install lftp
         run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
 
-      - name: Deploy via lftp (mirror over FTPS)
+      - name: Upload vendor.zip via single-file FTPS curl
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
           FTP_USER: ${{ secrets.FTP_USER }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
         run: |
-          rm -rf .github
+          # Single-file upload via curl is dramatically more reliable than
+          # lftp mirror for a large file over Genious's flaky FTPS session.
+          # ~30 seconds for 30 MB vs 30+ minutes with mirror.
+          echo "Uploading vendor.zip..."
+          curl --ssl-reqd --insecure \
+            --connect-timeout 30 \
+            --max-time 900 \
+            --fail-with-body \
+            -T vendor.zip \
+            -u "${FTP_USER}:${FTP_PASSWORD}" \
+            "ftp://${FTP_HOST}:${FTP_PORT}/vendor.zip"
+          echo "vendor.zip uploaded."
+
+      - name: Deploy small files via lftp (everything except vendor.zip)
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+        run: |
+          # Remove vendor.zip from the local tree so lftp mirror only
+          # ships the small files (~1000 of them) and never touches the
+          # big archive (already uploaded via curl above).
+          rm -f vendor.zip
 
           cat > /tmp/deploy.lftp <<LFTPEOF
           set ssl:verify-certificate no
@@ -83,17 +107,17 @@ jobs:
           set ftp:ssl-protect-data true
           set ftp:ssl-allow yes
           set ftp:passive-mode on
-          set net:max-retries 8
+          set net:max-retries 5
           set net:reconnect-interval-base 3
           set net:reconnect-interval-max 30
           set net:timeout 60
-          set mirror:parallel-transfer-count 1
+          set mirror:parallel-transfer-count 2
           open -p ${FTP_PORT} -u ${FTP_USER},${FTP_PASSWORD} ${FTP_HOST}
           mirror \
             --reverse \
             --continue \
             --loop \
-            --parallel=1 \
+            --parallel=2 \
             --verbose=1 \
             --exclude-glob '.env' \
             --exclude-glob '.env.*' \
@@ -103,6 +127,9 @@ jobs:
             --exclude-glob 'node_modules/**' \
             --exclude-glob 'tests' \
             --exclude-glob 'tests/**' \
+            --exclude-glob 'vendor' \
+            --exclude-glob 'vendor/**' \
+            --exclude-glob 'vendor.zip' \
             --exclude-glob 'storage/app' \
             --exclude-glob 'storage/app/**' \
             --exclude-glob 'storage/framework/cache' \
@@ -128,7 +155,7 @@ jobs:
           echo "Calling vendor extractor..."
           EXTRACT_URL="${{ secrets.DEPLOY_HOOK_URL }}"
           EXTRACT_URL="${EXTRACT_URL%__deploy.php}__extract-vendor.php"
-          RESPONSE=$(curl -sS --max-time 120 -w "\nHTTP_STATUS:%{http_code}" \
+          RESPONSE=$(curl -sS --max-time 180 -w "\nHTTP_STATUS:%{http_code}" \
             -X POST "$EXTRACT_URL" \
             -H "Authorization: Bearer ${{ secrets.DEPLOY_HOOK_SECRET }}")
           echo "$RESPONSE"
@@ -141,12 +168,22 @@ jobs:
       - name: Trigger post-deploy hook (artisan migrate + cache)
         run: |
           echo "Calling deploy hook..."
-          RESPONSE=$(curl -sS --max-time 120 -w "\nHTTP_STATUS:%{http_code}" \
+          RESPONSE=$(curl -sS --max-time 180 -w "\nHTTP_STATUS:%{http_code}" \
             -X POST "${{ secrets.DEPLOY_HOOK_URL }}" \
             -H "Authorization: Bearer ${{ secrets.DEPLOY_HOOK_SECRET }}")
           echo "$RESPONSE"
           STATUS=$(echo "$RESPONSE" | grep -oE 'HTTP_STATUS:[0-9]+' | cut -d: -f2)
           if [ "$STATUS" != "200" ]; then
             echo "::error::Deploy hook failed with HTTP $STATUS"
+            exit 1
+          fi
+
+      - name: Smoke test homepage
+        run: |
+          echo "Smoke testing https://dinakenitrafc.ma ..."
+          STATUS=$(curl -sS -o /dev/null -w "%{http_code}" https://dinakenitrafc.ma)
+          echo "Homepage HTTP $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Homepage smoke test failed with HTTP $STATUS"
             exit 1
           fi
