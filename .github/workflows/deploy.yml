@@ -64,6 +64,8 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
           protocol: ftps
+          security: loose
+          timeout: 60000
           server-dir: ./
           local-dir: ./
           state-name: .ftp-deploy-sync-state.json
