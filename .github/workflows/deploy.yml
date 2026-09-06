@@ -56,35 +56,61 @@ jobs:
           rm -f README.md
           rm -f .env .env.example .env.local .env.testing
 
-      - name: Deploy via FTPS to Genious
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}
-          protocol: ftps
-          security: loose
-          timeout: 60000
-          server-dir: ./
-          local-dir: ./
-          state-name: .ftp-deploy-sync-state.json
-          log-level: standard
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.github/**
-            **/tests/**
-            .env
-            .env.*
-            storage/app/**
-            storage/framework/cache/**
-            storage/framework/sessions/**
-            storage/framework/views/**
-            storage/logs/**
-            phpmyadmin/**
-            .ftp-deploy-sync-state.json
+      - name: Install lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - name: Deploy via lftp (mirror over FTPS)
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+        run: |
+          # Remove workflow file itself from what would be uploaded.
+          rm -rf .github
+
+          lftp -c "
+            set ssl:verify-certificate no;
+            set ssl:reuse-session no;
+            set ftp:ssl-force true;
+            set ftp:ssl-protect-data true;
+            set ftp:ssl-allow yes;
+            set ftp:passive-mode on;
+            set net:max-retries 5;
+            set net:reconnect-interval-base 3;
+            set net:reconnect-interval-max 30;
+            set net:timeout 60;
+            set mirror:parallel-transfer-count 3;
+            set mirror:use-pget-n 3;
+            open -p \"\$FTP_PORT\" -u \"\$FTP_USER,\$FTP_PASSWORD\" \"\$FTP_HOST\";
+            mirror \
+              --reverse \
+              --continue \
+              --parallel=3 \
+              --verbose=1 \
+              --exclude-glob '.env' \
+              --exclude-glob '.env.*' \
+              --exclude-glob '.git' \
+              --exclude-glob '.git/**' \
+              --exclude-glob 'node_modules' \
+              --exclude-glob 'node_modules/**' \
+              --exclude-glob 'tests' \
+              --exclude-glob 'tests/**' \
+              --exclude-glob 'storage/app' \
+              --exclude-glob 'storage/app/**' \
+              --exclude-glob 'storage/framework/cache' \
+              --exclude-glob 'storage/framework/cache/**' \
+              --exclude-glob 'storage/framework/sessions' \
+              --exclude-glob 'storage/framework/sessions/**' \
+              --exclude-glob 'storage/framework/views' \
+              --exclude-glob 'storage/framework/views/**' \
+              --exclude-glob 'storage/logs' \
+              --exclude-glob 'storage/logs/**' \
+              --exclude-glob 'phpmyadmin' \
+              --exclude-glob 'phpmyadmin/**' \
+              ./ /;
+            bye;
+          "
 
       - name: Trigger post-deploy hook (artisan migrate + cache)
         run: |
