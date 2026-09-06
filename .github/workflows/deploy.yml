@@ -56,6 +56,15 @@ jobs:
           rm -f README.md
           rm -f .env .env.example .env.local .env.testing
 
+      - name: Package vendor/ into a single zip
+        run: |
+          # Zip vendor into a single artifact so we upload ONE file over FTP
+          # instead of ~15000 tiny files (Genious FTPS truncates some at
+          # random when doing many transfers in a session).
+          zip -qr vendor.zip vendor
+          rm -rf vendor
+          echo "vendor.zip size: $(ls -lh vendor.zip | awk '{print $5}')"
+
       - name: Install lftp
         run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
 
@@ -66,11 +75,8 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
         run: |
-          # Do not include the workflow directory in the mirror.
           rm -rf .github
 
-          # Write a config-less lftp session to a temp script so bash
-          # interpolates the env vars once, then hand off to lftp.
           cat > /tmp/deploy.lftp <<LFTPEOF
           set ssl:verify-certificate no
           set ftp:ssl-force true
@@ -115,10 +121,27 @@ jobs:
 
           lftp -f /tmp/deploy.lftp
 
+      - name: Extract vendor.zip on the server
+        run: |
+          # __extract-vendor.php unzips vendor.zip and rebuilds vendor/.
+          # Must run BEFORE __deploy.php because that one needs autoload.
+          echo "Calling vendor extractor..."
+          EXTRACT_URL="${{ secrets.DEPLOY_HOOK_URL }}"
+          EXTRACT_URL="${EXTRACT_URL%__deploy.php}__extract-vendor.php"
+          RESPONSE=$(curl -sS --max-time 120 -w "\nHTTP_STATUS:%{http_code}" \
+            -X POST "$EXTRACT_URL" \
+            -H "Authorization: Bearer ${{ secrets.DEPLOY_HOOK_SECRET }}")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep -oE 'HTTP_STATUS:[0-9]+' | cut -d: -f2)
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Vendor extraction failed with HTTP $STATUS"
+            exit 1
+          fi
+
       - name: Trigger post-deploy hook (artisan migrate + cache)
         run: |
           echo "Calling deploy hook..."
-          RESPONSE=$(curl -sS -w "\nHTTP_STATUS:%{http_code}" \
+          RESPONSE=$(curl -sS --max-time 120 -w "\nHTTP_STATUS:%{http_code}" \
             -X POST "${{ secrets.DEPLOY_HOOK_URL }}" \
             -H "Authorization: Bearer ${{ secrets.DEPLOY_HOOK_SECRET }}")
           echo "$RESPONSE"
