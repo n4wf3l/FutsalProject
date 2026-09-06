@@ -77,17 +77,17 @@ jobs:
           set ftp:ssl-protect-data true
           set ftp:ssl-allow yes
           set ftp:passive-mode on
-          set net:max-retries 5
+          set net:max-retries 8
           set net:reconnect-interval-base 3
           set net:reconnect-interval-max 30
           set net:timeout 60
-          set mirror:parallel-transfer-count 3
-          set mirror:use-pget-n 3
+          set mirror:parallel-transfer-count 1
           open -p ${FTP_PORT} -u ${FTP_USER},${FTP_PASSWORD} ${FTP_HOST}
           mirror \
             --reverse \
             --continue \
-            --parallel=3 \
+            --loop \
+            --parallel=1 \
             --verbose=1 \
             --exclude-glob '.env' \
             --exclude-glob '.env.*' \
