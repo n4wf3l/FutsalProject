@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import { motion } from 'framer-motion';
 import { ArrowRight, MessageSquareQuote, Mic } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -32,11 +33,17 @@ export default function InterviewsIndex({ interviews, roles, filter }: Props) {
     const featured = interviews.data[0];
     const rest = interviews.data.slice(1);
 
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('pages:interviews.breadcrumb') },
+    ];
+
     return (
         <SiteLayout>
             <SEO
                 title={t('pages:interviews.seo_title')}
                 description={t('pages:interviews.seo_description')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
@@ -44,7 +51,7 @@ export default function InterviewsIndex({ interviews, roles, filter }: Props) {
                 kickerRight={new Date().toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' })}
                 title={t('pages:interviews.title')}
                 subtitle={t('pages:interviews.subtitle')}
-                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:interviews.breadcrumb') }]}
+                breadcrumb={crumbs}
                 variant="editorial"
             />
 

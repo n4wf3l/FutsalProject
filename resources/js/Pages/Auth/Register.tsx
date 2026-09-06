@@ -1,8 +1,9 @@
 import { FormEventHandler } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { Loader2, Mail, Lock, User, UserPlus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AuthLayout from '@/Layouts/AuthLayout';
+import { SEO } from '@/Components/SEO';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
 import { Field } from '@/Components/ui/Field';
@@ -37,7 +38,7 @@ export default function Register() {
                 </p>
             }
         >
-            <Head title={t('register.title')} />
+            <SEO title={t('register.title')} noindex />
 
             <form onSubmit={submit} className="space-y-5">
                 <Field label={t('register.name')} required error={errors.name}>

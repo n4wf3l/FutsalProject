@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import type { ClubInfoShared } from '@/types/models';
 
 export default function Mentions() {
@@ -10,18 +11,24 @@ export default function Mentions() {
     const { props } = usePage<{ club: ClubInfoShared }>();
     const club = props.club;
 
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('legal:mentions.breadcrumb') },
+    ];
+
     return (
         <SiteLayout>
             <SEO
                 title={t('legal:mentions.title')}
                 description={t('legal:mentions.subtitle')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
                 kicker={t('legal:mentions.kicker')}
                 title={t('legal:mentions.title')}
                 subtitle={t('legal:mentions.subtitle')}
-                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('legal:mentions.breadcrumb') }]}
+                breadcrumb={crumbs}
                 variant="editorial"
             />
 

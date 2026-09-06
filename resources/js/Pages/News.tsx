@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react';
 import { router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import { Newspaper, Search } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
@@ -29,11 +30,17 @@ export default function News({ articles, search }: NewsProps) {
     const featured = articles.data[0];
     const rest = articles.data.slice(1);
 
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('pages:news.breadcrumb') },
+    ];
+
     return (
         <SiteLayout>
             <SEO
                 title={t('pages:news.seo_title')}
                 description={t('pages:news.seo_description')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
@@ -41,7 +48,7 @@ export default function News({ articles, search }: NewsProps) {
                 kickerRight={new Date().toLocaleDateString(i18n.language, { day: '2-digit', month: 'long', year: 'numeric' })}
                 title={t('pages:news.title')}
                 subtitle={t('pages:news.subtitle')}
-                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:news.breadcrumb') }]}
+                breadcrumb={crumbs}
                 variant="editorial"
             >
                 <form onSubmit={submit} className="mt-2 flex w-full max-w-md gap-2">

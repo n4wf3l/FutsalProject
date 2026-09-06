@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import { motion } from 'framer-motion';
 import { ArrowRight, Image, ImagePlus } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -18,18 +19,23 @@ interface Props {
 
 export default function Galleries({ galleries }: Props) {
     const { t } = useTranslation(['pages', 'nav']);
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('pages:galleries.breadcrumb') },
+    ];
     return (
         <SiteLayout>
             <SEO
                 title={t('pages:galleries.seo_title')}
                 description={t('pages:galleries.seo_description')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
                 kicker={t('pages:galleries.kicker')}
                 title={t('pages:galleries.title')}
                 subtitle={t('pages:galleries.subtitle')}
-                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:galleries.breadcrumb') }]}
+                breadcrumb={crumbs}
             />
 
             <section className="mx-auto max-w-7xl px-4 pb-16">

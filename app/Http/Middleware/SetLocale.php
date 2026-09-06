@@ -23,6 +23,13 @@ class SetLocale
             App::setLocale($header ?: self::DEFAULT);
         }
 
-        return $next($request);
+        $response = $next($request);
+
+        // Advertise the language of the served response to crawlers, caches,
+        // proxies and assistive tools. Same URL serves multiple languages via
+        // cookie, so this header is the primary signal for the current locale.
+        $response->headers->set('Content-Language', App::getLocale());
+
+        return $response;
     }
 }

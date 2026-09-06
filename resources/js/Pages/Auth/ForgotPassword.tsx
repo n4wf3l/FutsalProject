@@ -1,8 +1,9 @@
 import { FormEventHandler } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, CheckCircle2, Loader2, Mail, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AuthLayout from '@/Layouts/AuthLayout';
+import { SEO } from '@/Components/SEO';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
 import { Field } from '@/Components/ui/Field';
@@ -33,7 +34,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 </Link>
             }
         >
-            <Head title={t('forgot.title')} />
+            <SEO title={t('forgot.title')} noindex />
 
             {status && (
                 <div className="mb-6 flex items-center gap-2 rounded-lg border border-mint/30 bg-mint/10 px-4 py-3 text-sm text-mint">

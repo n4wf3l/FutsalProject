@@ -1,8 +1,9 @@
 import { FormEventHandler } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { Loader2, Lock, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AuthLayout from '@/Layouts/AuthLayout';
+import { SEO } from '@/Components/SEO';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
 import { Field } from '@/Components/ui/Field';
@@ -22,7 +23,7 @@ export default function ConfirmPassword() {
 
     return (
         <AuthLayout title={t('confirm.title')} subtitle={t('confirm.subtitle')}>
-            <Head title={t('confirm.title')} />
+            <SEO title={t('confirm.title')} noindex />
 
             <div className="mb-6 flex items-center gap-3 rounded-2xl border border-champagne/20 bg-card p-4 text-sm">
                 <div className="rounded-full border border-border bg-background p-2">

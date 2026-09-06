@@ -1,8 +1,9 @@
 import { FormEventHandler } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { KeyRound, Loader2, Lock, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AuthLayout from '@/Layouts/AuthLayout';
+import { SEO } from '@/Components/SEO';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
 import { Field } from '@/Components/ui/Field';
@@ -30,7 +31,7 @@ export default function ResetPassword({ token, email }: Props) {
 
     return (
         <AuthLayout title={t('reset.title')} subtitle={t('reset.subtitle')}>
-            <Head title={t('reset.title')} />
+            <SEO title={t('reset.title')} noindex />
 
             <form onSubmit={submit} className="space-y-5">
                 <Field label={t('reset.email')} required error={errors.email}>

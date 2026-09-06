@@ -1,6 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Ticket, Trophy, Users, ShieldCheck } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -22,18 +23,23 @@ interface Props {
 
 export default function Fanshop({ tribunes, nextGame, championship, clubPrefix }: Props) {
     const { t } = useTranslation(['pages', 'nav']);
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('pages:fanshop.breadcrumb') },
+    ];
     return (
         <SiteLayout>
             <SEO
                 title={t('pages:fanshop.seo_title')}
                 description={t('pages:fanshop.seo_description')}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
                 kicker={t('pages:fanshop.kicker')}
                 title={t('pages:fanshop.title')}
                 subtitle={t('pages:fanshop.subtitle')}
-                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:fanshop.breadcrumb') }]}
+                breadcrumb={crumbs}
             >
                 {championship && (
                     <Badge variant="champagne">

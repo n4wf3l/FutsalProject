@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd, mergeLd } from '@/lib/seo';
 import { motion } from 'framer-motion';
 import { CalendarDays, Trophy } from 'lucide-react';
 import { useMemo } from 'react';
@@ -63,60 +64,67 @@ export default function Calendar({ championship, games, teams, clubPrefix, filte
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('pages:calendar.breadcrumb') },
+    ];
+
+    const gamesLd = {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        itemListElement: games.slice(0, 20).map((g, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            item: {
+                '@type': 'SportsEvent',
+                name: `${g.homeTeam?.name ?? 'TBD'} vs ${g.awayTeam?.name ?? 'TBD'}`,
+                startDate: g.match_date,
+                sport: 'Futsal',
+                eventStatus: new Date(g.match_date) < today
+                    ? 'https://schema.org/EventCompleted'
+                    : 'https://schema.org/EventScheduled',
+                location: {
+                    '@type': 'Place',
+                    name: 'Complexe Sportif Municipal',
+                    address: {
+                        '@type': 'PostalAddress',
+                        addressLocality: 'Kénitra',
+                        addressCountry: 'MA',
+                    },
+                },
+                homeTeam: {
+                    '@type': 'SportsTeam',
+                    name: g.homeTeam?.name ?? 'TBD',
+                    sport: 'Futsal',
+                },
+                awayTeam: {
+                    '@type': 'SportsTeam',
+                    name: g.awayTeam?.name ?? 'TBD',
+                    sport: 'Futsal',
+                },
+                ...(g.home_score !== null && g.away_score !== null
+                    ? {
+                          homeTeamScore: g.home_score,
+                          awayTeamScore: g.away_score,
+                      }
+                    : {}),
+            },
+        })),
+    };
+
     return (
         <SiteLayout>
             <SEO
                 title={t('pages:calendar.seo_title')}
                 description={t('pages:calendar.seo_description')}
-                jsonLd={{
-                    '@context': 'https://schema.org',
-                    '@type': 'ItemList',
-                    itemListElement: games.slice(0, 20).map((g, i) => ({
-                        '@type': 'ListItem',
-                        position: i + 1,
-                        item: {
-                            '@type': 'SportsEvent',
-                            name: `${g.homeTeam?.name ?? 'TBD'} vs ${g.awayTeam?.name ?? 'TBD'}`,
-                            startDate: g.match_date,
-                            sport: 'Futsal',
-                            eventStatus: new Date(g.match_date) < today
-                                ? 'https://schema.org/EventCompleted'
-                                : 'https://schema.org/EventScheduled',
-                            location: {
-                                '@type': 'Place',
-                                name: 'Complexe Sportif Municipal',
-                                address: {
-                                    '@type': 'PostalAddress',
-                                    addressLocality: 'Kénitra',
-                                    addressCountry: 'MA',
-                                },
-                            },
-                            homeTeam: {
-                                '@type': 'SportsTeam',
-                                name: g.homeTeam?.name ?? 'TBD',
-                                sport: 'Futsal',
-                            },
-                            awayTeam: {
-                                '@type': 'SportsTeam',
-                                name: g.awayTeam?.name ?? 'TBD',
-                                sport: 'Futsal',
-                            },
-                            ...(g.home_score !== null && g.away_score !== null
-                                ? {
-                                      homeTeamScore: g.home_score,
-                                      awayTeamScore: g.away_score,
-                                  }
-                                : {}),
-                        },
-                    })),
-                }}
+                jsonLd={mergeLd(breadcrumbLd(crumbs), gamesLd)}
             />
 
             <PageHeader
                 kicker={t('pages:calendar.kicker')}
                 title={t('pages:calendar.title')}
                 subtitle={t('pages:calendar.subtitle')}
-                breadcrumb={[{ label: t('nav:items.home'), href: '/' }, { label: t('pages:calendar.breadcrumb') }]}
+                breadcrumb={crumbs}
             >
                 {championship && (
                     <Badge variant="champagne">

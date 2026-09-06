@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
+import { breadcrumbLd } from '@/lib/seo';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
@@ -33,23 +34,26 @@ export default function GalleryShow({ gallery, photos }: Props) {
         return () => window.removeEventListener('keydown', onKey);
     }, [openIndex, photos.length]);
 
+    const crumbs = [
+        { label: t('nav:items.home'), href: '/' },
+        { label: t('pages:gallery_show.breadcrumb_root'), href: '/galleries' },
+        { label: gallery.name },
+    ];
+
     return (
         <SiteLayout>
             <SEO
                 title={gallery.name}
                 description={gallery.description ?? t('pages:gallery_show.seo_description_fallback', { name: gallery.name })}
                 image={gallery.cover_image}
+                jsonLd={breadcrumbLd(crumbs)}
             />
 
             <PageHeader
                 kicker={t('pages:gallery_show.breadcrumb_root')}
                 title={gallery.name}
                 subtitle={gallery.description ?? undefined}
-                breadcrumb={[
-                    { label: t('nav:items.home'), href: '/' },
-                    { label: t('pages:gallery_show.breadcrumb_root'), href: '/galleries' },
-                    { label: gallery.name },
-                ]}
+                breadcrumb={crumbs}
             >
                 <Link
                     href="/galleries"
