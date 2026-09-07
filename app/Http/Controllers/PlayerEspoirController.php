@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PlayerFeminine;
+use App\Models\PlayerEspoir;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
-class PlayerFeminineController extends Controller
+class PlayerEspoirController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Admin/Feminines/Index', [
-            'players' => PlayerFeminine::orderBy('number', 'asc')->get(),
+        return Inertia::render('Admin/Espoirs/Index', [
+            'players' => PlayerEspoir::orderBy('number', 'asc')->get(),
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('Admin/Feminines/Form', [
+        return Inertia::render('Admin/Espoirs/Form', [
             'player' => null,
         ]);
     }
@@ -29,39 +29,39 @@ class PlayerFeminineController extends Controller
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('photos', 'public');
         }
-        PlayerFeminine::create($data);
-        return redirect()->route('feminines.index')->with('success', 'Joueuse ajoutée.');
+        PlayerEspoir::create($data);
+        return redirect()->route('espoirs.index')->with('success', 'Joueur ajouté.');
     }
 
-    public function edit(PlayerFeminine $feminine)
+    public function edit(PlayerEspoir $espoir)
     {
-        return Inertia::render('Admin/Feminines/Form', [
-            'player' => $feminine,
+        return Inertia::render('Admin/Espoirs/Form', [
+            'player' => $espoir,
         ]);
     }
 
-    public function update(Request $request, PlayerFeminine $feminine)
+    public function update(Request $request, PlayerEspoir $espoir)
     {
         $data = $this->validated($request);
         if ($request->hasFile('photo')) {
-            if ($feminine->photo) {
-                Storage::disk('public')->delete($feminine->photo);
+            if ($espoir->photo) {
+                Storage::disk('public')->delete($espoir->photo);
             }
             $data['photo'] = $request->file('photo')->store('photos', 'public');
         } else {
             unset($data['photo']);
         }
-        $feminine->update($data);
-        return redirect()->route('feminines.index')->with('success', 'Joueuse mise à jour.');
+        $espoir->update($data);
+        return redirect()->route('espoirs.index')->with('success', 'Joueur mis à jour.');
     }
 
-    public function destroy(PlayerFeminine $feminine)
+    public function destroy(PlayerEspoir $espoir)
     {
-        if ($feminine->photo) {
-            Storage::disk('public')->delete($feminine->photo);
+        if ($espoir->photo) {
+            Storage::disk('public')->delete($espoir->photo);
         }
-        $feminine->delete();
-        return redirect()->route('feminines.index')->with('success', 'Joueuse supprimée.');
+        $espoir->delete();
+        return redirect()->route('espoirs.index')->with('success', 'Joueur supprimé.');
     }
 
     private function validated(Request $request): array

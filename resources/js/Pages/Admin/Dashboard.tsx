@@ -43,7 +43,7 @@ interface DraftInterview {
 interface DashboardProps {
     stats: {
         players: number;
-        playersFeminines: number;
+        playersEspoirs: number;
         staff: number;
         coaches: number;
         games: number;
@@ -313,7 +313,7 @@ export default function Dashboard({
                         icon={Users}
                         label="Joueurs"
                         value={stats.players}
-                        detail={`+ ${stats.playersFeminines} féminines`}
+                        detail={`+ ${stats.playersEspoirs} espoirs`}
                         href="/players"
                         tone="crimson"
                     />

@@ -6,10 +6,10 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
 import { Field } from '@/Components/ui/Field';
-import type { PlayerFeminine } from '@/types/models';
+import type { PlayerEspoir } from '@/types/models';
 
 interface Props {
-    player: PlayerFeminine | null;
+    player: PlayerEspoir | null;
 }
 
 const POSITIONS = [
@@ -21,7 +21,7 @@ const POSITIONS = [
     'Attaquant',
 ];
 
-export default function PlayerFeminineForm({ player }: Props) {
+export default function PlayerEspoirForm({ player }: Props) {
     const isEdit = !!player;
     const [preview, setPreview] = useState<string | null>(
         player?.photo ? `/storage/${player.photo}` : null
@@ -41,7 +41,7 @@ export default function PlayerFeminineForm({ player }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/feminines/${player!.id}` : '/feminines';
+        const url = isEdit ? `/espoirs/${player!.id}` : '/espoirs';
         post(url, {
             forceFormData: true,
         });
@@ -64,15 +64,15 @@ export default function PlayerFeminineForm({ player }: Props) {
 
     return (
         <AdminLayout>
-            <Head title={isEdit ? 'Modifier une joueuse' : 'Nouveau joueuse'} />
+            <Head title={isEdit ? 'Modifier un joueur' : 'Nouveau joueur'} />
 
             <div className="mb-6">
                 <Link
-                    href="/feminines"
+                    href="/espoirs"
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-crimson"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Retour aux joueuses
+                    Retour aux joueurs
                 </Link>
                 <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
                     <div>
@@ -82,7 +82,7 @@ export default function PlayerFeminineForm({ player }: Props) {
                         <h1 className="mt-1 font-display text-3xl font-bold">
                             {isEdit
                                 ? `${player!.first_name} ${player!.last_name}`
-                                : 'Ajouter un joueuse'}
+                                : 'Ajouter un joueur'}
                         </h1>
                     </div>
                 </div>
@@ -97,7 +97,7 @@ export default function PlayerFeminineForm({ player }: Props) {
                 >
                     <div className="rounded-2xl border border-border bg-card p-6">
                         <div className="font-mono text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                            Photo de la joueuse
+                            Photo du joueur
                         </div>
                         <div className="mt-4 aspect-[3/4] overflow-hidden rounded-xl border border-border bg-muted">
                             {preview ? (
@@ -232,7 +232,7 @@ export default function PlayerFeminineForm({ player }: Props) {
 
                     <div className="flex items-center justify-end gap-3">
                         <Button asChild variant="outline" type="button">
-                            <Link href="/feminines">Annuler</Link>
+                            <Link href="/espoirs">Annuler</Link>
                         </Button>
                         <Button type="submit" size="lg" disabled={processing}>
                             {processing ? (
@@ -240,7 +240,7 @@ export default function PlayerFeminineForm({ player }: Props) {
                             ) : (
                                 <Save className="h-4 w-4" />
                             )}
-                            {isEdit ? 'Enregistrer' : 'Créer la joueuse'}
+                            {isEdit ? 'Enregistrer' : 'Créer le joueur'}
                         </Button>
                     </div>
                 </motion.div>

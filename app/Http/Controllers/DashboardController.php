@@ -20,7 +20,7 @@ use App\Models\Player;
 use App\Models\Staff;
 use App\Models\Coach;
 use App\Models\Tribune;
-use App\Models\PlayerFeminine;
+use App\Models\PlayerEspoir;
 use App\Models\Article;
 use App\Models\Game;
 use App\Models\Video;
@@ -46,7 +46,7 @@ class DashboardController extends Controller
         return Inertia::render('Admin/Dashboard', [
             'stats' => [
                 'players' => Player::count(),
-                'playersFeminines' => PlayerFeminine::count(),
+                'playersEspoirs' => PlayerEspoir::count(),
                 'staff' => Staff::count(),
                 'coaches' => Coach::count(),
                 'games' => Game::count(),

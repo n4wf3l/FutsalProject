@@ -9,15 +9,15 @@ import { Badge } from '@/Components/ui/Badge';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { ConfirmDialog } from '@/Components/site/ConfirmDialog';
 import { cn } from '@/lib/utils';
-import type { PlayerFeminine } from '@/types/models';
+import type { PlayerEspoir } from '@/types/models';
 
 interface Props {
-    players: PlayerFeminine[];
+    players: PlayerEspoir[];
 }
 
-export default function FemininesIndex({ players }: Props) {
+export default function EspoirsIndex({ players }: Props) {
     const [search, setSearch] = useState('');
-    const [toDelete, setToDelete] = useState<PlayerFeminine | null>(null);
+    const [toDelete, setToDelete] = useState<PlayerEspoir | null>(null);
 
     const filtered = players.filter((p) => {
         if (!search) return true;
@@ -31,22 +31,22 @@ export default function FemininesIndex({ players }: Props) {
     });
 
     return (
-        <AdminLayout title="Féminines">
-            <Head title="Féminines" />
+        <AdminLayout title="Espoirs">
+            <Head title="Espoirs" />
 
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <div className="font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                        Effectif féminin
+                        Effectif espoir
                     </div>
                     <h1 className="mt-1 font-display text-3xl font-bold">
-                        Féminines <span className="text-muted-foreground">· {players.length}</span>
+                        Espoirs <span className="text-muted-foreground">· {players.length}</span>
                     </h1>
                 </div>
                 <Button asChild size="lg">
-                    <Link href="/feminines/create">
+                    <Link href="/espoirs/create">
                         <Plus className="h-4 w-4" />
-                        Nouveau joueuse
+                        Nouveau joueur
                     </Link>
                 </Button>
             </div>
@@ -69,18 +69,18 @@ export default function FemininesIndex({ players }: Props) {
             {filtered.length === 0 ? (
                 <EmptyState
                     icon={Users}
-                    title={search ? 'Aucune joueuse trouvée' : 'Aucun joueuse enregistré'}
+                    title={search ? 'Aucun joueur trouvé' : 'Aucun joueur enregistré'}
                     description={
                         search
                             ? 'Essaie une autre recherche ou vide le filtre.'
-                            : 'Ajoute ton première joueuse pour démarrer.'
+                            : 'Ajoute ton premier joueur pour démarrer.'
                     }
                     action={
                         !search ? (
                             <Button asChild>
-                                <Link href="/feminines/create">
+                                <Link href="/espoirs/create">
                                     <Plus className="h-4 w-4" />
-                                    Ajouter un joueuse
+                                    Ajouter un joueur
                                 </Link>
                             </Button>
                         ) : undefined
@@ -92,7 +92,7 @@ export default function FemininesIndex({ players }: Props) {
                         <thead>
                             <tr className="border-b border-border bg-muted/50 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                                 <th className="w-16 px-4 py-3 text-center">#</th>
-                                <th className="px-4 py-3 text-left">Joueuse</th>
+                                <th className="px-4 py-3 text-left">Joueur</th>
                                 <th className="hidden px-4 py-3 text-left sm:table-cell">Poste</th>
                                 <th className="hidden px-4 py-3 text-left md:table-cell">Nationalité</th>
                                 <th className="w-24 px-4 py-3 text-right">Actions</th>
@@ -114,13 +114,13 @@ export default function FemininesIndex({ players }: Props) {
                         ? `Supprimer ${toDelete.first_name} ${toDelete.last_name} ?`
                         : ''
                 }
-                description="Cette action est irréversible. La joueuse et sa photo seront supprimées."
+                description="Cette action est irréversible. Le joueur et sa photo seront suppriméss."
                 confirmLabel="Supprimer"
                 variant="destructive"
                 onCancel={() => setToDelete(null)}
                 onConfirm={() => {
                     if (!toDelete) return;
-                    router.delete(`/feminines/${toDelete.id}`, {
+                    router.delete(`/espoirs/${toDelete.id}`, {
                         onSuccess: () => setToDelete(null),
                     });
                 }}
@@ -134,9 +134,9 @@ function PlayerRow({
     index,
     onDelete,
 }: {
-    player: PlayerFeminine;
+    player: PlayerEspoir;
     index: number;
-    onDelete: (p: PlayerFeminine) => void;
+    onDelete: (p: PlayerEspoir) => void;
 }) {
     return (
         <motion.tr
@@ -183,7 +183,7 @@ function PlayerRow({
             <td className="px-4 py-3">
                 <div className="flex justify-end gap-1">
                     <Link
-                        href={`/feminines/${player.id}/edit`}
+                        href={`/espoirs/${player.id}/edit`}
                         className={cn(
                             'inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-crimson'
                         )}
