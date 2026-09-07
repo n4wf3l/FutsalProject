@@ -4,78 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Models\AboutSection;
 use Illuminate\Http\Request;
-use App\Models\ClubInfo;
-use App\Models\BackgroundImage;
+use Inertia\Inertia;
 
 class AboutSectionController extends Controller
 {
     public function index()
     {
-        $sections = AboutSection::all();
-        $clubInfo = ClubInfo::first(); 
-        $clubName = 'FTA Clubinfo'; 
-    
-        $backgroundImage = BackgroundImage::where('assigned_page', 'about')->latest()->first();
-    
-        // Remplacer les entités HTML dans les titres
-        foreach ($sections as $section) {
-            $section->title = str_replace('&#039;', "'", $section->title);
-        }
-    
-        return view('about.index', compact('sections', 'clubInfo', 'clubName', 'backgroundImage'));
+        return Inertia::render('Admin/AboutSections/Index', [
+            'sections' => AboutSection::orderBy('id')->get(),
+        ]);
     }
 
-    
     public function create()
     {
-        return view('about.create');
+        return Inertia::render('Admin/AboutSections/Form', [
+            'section' => null,
+        ]);
     }
 
     public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'title' => 'required|max:255',
-        'content' => 'required',
-    ]);
-
-    $title = html_entity_decode($validatedData['title'], ENT_QUOTES, 'UTF-8');
-
-    AboutSection::create([
-        'title' => $title,
-        'content' => $validatedData['content'],
-    ]);
-
-    return redirect()->route('about.index')->with('success', 'Section created successfully.');
-}
+    {
+        $data = $this->validated($request);
+        AboutSection::create($data);
+        return redirect()->route('about.index')->with('success', 'Section ajoutée.');
+    }
 
     public function edit(AboutSection $aboutSection)
     {
-        // Decode HTML entities for content before editing
-        $aboutSection->content = html_entity_decode($aboutSection->content);
-        return view('about.edit', compact('aboutSection'));
+        return Inertia::render('Admin/AboutSections/Form', [
+            'section' => $aboutSection,
+        ]);
     }
 
     public function update(Request $request, AboutSection $aboutSection)
-{
-    $request->validate([
-        'title' => 'required|max:255',
-        'content' => 'required',
-    ]);
-
-    $title = html_entity_decode($request->input('title'), ENT_QUOTES, 'UTF-8');
-
-    $aboutSection->update([
-        'title' => $title,
-        'content' => $request->input('content'),
-    ]);
-
-    return redirect()->route('about.index')->with('success', 'Section updated successfully.');
-}
+    {
+        $data = $this->validated($request);
+        $aboutSection->update($data);
+        return redirect()->route('about.index')->with('success', 'Section mise à jour.');
+    }
 
     public function destroy(AboutSection $aboutSection)
     {
         $aboutSection->delete();
+        return redirect()->route('about.index')->with('success', 'Section supprimée.');
+    }
 
-        return redirect()->route('about.index')->with('success', 'Section deleted successfully.');
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
     }
 }

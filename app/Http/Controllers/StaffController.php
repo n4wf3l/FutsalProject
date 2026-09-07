@@ -2,92 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Staff;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class StaffController extends Controller
 {
     public function index()
     {
-        $staff = Staff::all();
-        return view('staff.index', compact('staff'));
+        return Inertia::render('Admin/Staff/Index', [
+            'staff' => Staff::orderBy('last_name')->get(),
+        ]);
     }
 
     public function create()
     {
-        return view('staff.create');
+        return Inertia::render('Admin/Staff/Form', ['staff' => null]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255',
-            'position' => 'required|max:255',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Valider l'image
-        ]);
-
-        // Préparer les données
-        $data = $request->except('photo');
-
-        // Gérer l'image si elle est présente
+        $data = $this->validated($request);
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('photos', 'public'); // Stocker l'image
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
         }
-
-        // Créer un nouveau membre du staff
         Staff::create($data);
-
-        return redirect()->route('teams')->with('success', 'Staff member created successfully.');
-    }
-
-    public function update(Request $request, Staff $staff)
-    {
-        $request->validate([
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255',
-            'position' => 'required|max:255',
-            // Retirez la ligne ci-dessous si vous voulez accepter tous les types de fichiers sans validation
-            // 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-    
-        // Préparer les données
-        $data = $request->except('photo');
-    
-        // Gérer l'image si elle est présente
-        if ($request->hasFile('photo')) {
-            // Supprimer l'ancienne image si elle existe
-            if ($staff->photo) {
-                Storage::disk('public')->delete($staff->photo);
-            }
-    
-            $data['photo'] = $request->file('photo')->store('photos', 'public'); // Stocker la nouvelle image
-        }
-    
-        // Mettre à jour les informations du staff
-        $staff->update($data);
-    
-        return redirect()->route('teams')->with('success', 'Staff member updated successfully.');
+        return redirect()->route('staff.index')->with('success', 'Membre ajouté.');
     }
 
     public function edit(Staff $staff)
     {
-        // Retourner la vue d'édition avec les données du membre du staff
-        return view('staff.edit', compact('staff'));
+        return Inertia::render('Admin/Staff/Form', ['staff' => $staff]);
+    }
+
+    public function update(Request $request, Staff $staff)
+    {
+        $data = $this->validated($request);
+        if ($request->hasFile('photo')) {
+            if ($staff->photo) {
+                Storage::disk('public')->delete($staff->photo);
+            }
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
+        }
+        $staff->update($data);
+        return redirect()->route('staff.index')->with('success', 'Membre mis à jour.');
     }
 
     public function destroy(Staff $staff)
     {
-        // Supprimer l'image associée si elle existe
         if ($staff->photo) {
             Storage::disk('public')->delete($staff->photo);
         }
-
-        // Supprimer le membre du staff
         $staff->delete();
+        return redirect()->route('staff.index')->with('success', 'Membre supprimé.');
+    }
 
-        // Rediriger vers la page souhaitée, par exemple vers la page 'teams'
-        return redirect()->route('teams')->with('success', 'Staff member deleted successfully.');
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+        ]);
     }
 }

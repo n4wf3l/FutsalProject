@@ -6,68 +6,90 @@ use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use App\Models\BackgroundImage;
 
 class VideoController extends Controller
 {
-    public function index()
+    // Public gallery of videos
+    public function publicIndex()
     {
         return Inertia::render('Videos', [
-            'videos' => Video::latest()->paginate(9),
+            'videos' => Video::latest()->paginate(12),
+        ]);
+    }
+
+    public function index()
+    {
+        return Inertia::render('Admin/Videos/Index', [
+            'videos' => Video::latest()->get(),
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Admin/Videos/Form', [
+            'video' => null,
         ]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'url' => 'required|url',
-            'image' => 'required|image|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
         ]);
 
-        $imagePath = $request->file('image')->store('videos', 'public');
+        $data['image'] = $request->file('image')->store('videos', 'public');
 
-        Video::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'url' => $request->url,
-            'image' => $imagePath,
+        Video::create($data);
+
+        return redirect()->route('videos.index')->with('success', 'Vidéo créée.');
+    }
+
+    public function show(Video $video)
+    {
+        return redirect()->route('videos.index');
+    }
+
+    public function edit(Video $video)
+    {
+        return Inertia::render('Admin/Videos/Form', [
+            'video' => $video,
         ]);
-
-        return redirect()->route('videos.index')->with('success', 'Video created successfully.');
     }
 
     public function update(Request $request, Video $video)
     {
-        $request->validate([
+        $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'url' => 'required|url',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
         ]);
 
         if ($request->hasFile('image')) {
-            Storage::delete('public/' . $video->image);
-            $imagePath = $request->file('image')->store('videos', 'public');
-            $video->image = $imagePath;
+            if ($video->image) {
+                Storage::disk('public')->delete($video->image);
+            }
+            $data['image'] = $request->file('image')->store('videos', 'public');
+        } else {
+            unset($data['image']);
         }
 
-        $video->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'url' => $request->url,
-            'image' => $video->image,
-        ]);
+        $video->update($data);
 
-        return redirect()->route('videos.index')->with('success', 'Video updated successfully.');
+        return redirect()->route('videos.index')->with('success', 'Vidéo mise à jour.');
     }
 
     public function destroy(Video $video)
     {
-        Storage::delete('public/' . $video->image);
+        if ($video->image) {
+            Storage::disk('public')->delete($video->image);
+        }
+
         $video->delete();
 
-        return redirect()->route('videos.index')->with('success', 'Video deleted successfully.');
+        return redirect()->route('videos.index')->with('success', 'Vidéo supprimée.');
     }
 }

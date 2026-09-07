@@ -9,7 +9,9 @@ use Inertia\Inertia;
 
 class GalleryController extends Controller
 {
-    public function index()
+    // ————————— PUBLIC —————————
+
+    public function publicIndex()
     {
         return Inertia::render('Galleries', [
             'galleries' => Gallery::withCount('photos')->latest()->paginate(12),
@@ -19,70 +21,76 @@ class GalleryController extends Controller
     public function show($id)
     {
         $gallery = Gallery::findOrFail($id);
-        $photos = $gallery->photos;
-
         return Inertia::render('GalleryShow', [
             'gallery' => $gallery,
-            'photos' => $photos,
+            'photos' => $gallery->photos,
         ]);
+    }
+
+    // ————————— ADMIN —————————
+
+    public function index()
+    {
+        return Inertia::render('Admin/Galleries/Index', [
+            'galleries' => Gallery::withCount('photos')->latest()->get(),
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Admin/Galleries/Form', ['gallery' => null]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:2048',
-        ]);
-
-        $coverImagePath = null;
+        $data = $this->validated($request);
         if ($request->hasFile('cover_image')) {
-            $coverImagePath = $request->file('cover_image')->store('gallery_covers', 'public');
+            $data['cover_image'] = $request->file('cover_image')->store('gallery_covers', 'public');
         }
+        Gallery::create($data);
+        return redirect()->route('galleries.index')->with('success', 'Galerie créée.');
+    }
 
-        Gallery::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'cover_image' => $coverImagePath,
-        ]);
-
-        return redirect()->route('galleries.index')->with('success', 'Gallery created successfully.');
+    public function edit(Gallery $gallery)
+    {
+        return Inertia::render('Admin/Galleries/Form', ['gallery' => $gallery]);
     }
 
     public function update(Request $request, Gallery $gallery)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:2048',
-        ]);
-
+        $data = $this->validated($request);
         if ($request->hasFile('cover_image')) {
-            // Supprimer l'ancienne image si elle existe
             if ($gallery->cover_image) {
                 Storage::disk('public')->delete($gallery->cover_image);
             }
-
-            $gallery->cover_image = $request->file('cover_image')->store('gallery_covers', 'public');
+            $data['cover_image'] = $request->file('cover_image')->store('gallery_covers', 'public');
+        } else {
+            unset($data['cover_image']);
         }
-
-        $gallery->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'cover_image' => $gallery->cover_image,
-        ]);
-
-        return redirect()->route('galleries.index')->with('success', 'Gallery updated successfully.');
+        $gallery->update($data);
+        return redirect()->route('galleries.index')->with('success', 'Galerie mise à jour.');
     }
 
     public function destroy(Gallery $gallery)
     {
-        // Supprimer l'image de couverture si elle existe
+        foreach ($gallery->photos as $photo) {
+            if ($photo->image) {
+                Storage::disk('public')->delete($photo->image);
+            }
+        }
         if ($gallery->cover_image) {
             Storage::disk('public')->delete($gallery->cover_image);
         }
-
         $gallery->delete();
-        return redirect()->route('galleries.index')->with('success', 'Gallery deleted successfully.');
+        return redirect()->route('galleries.index')->with('success', 'Galerie supprimée.');
+    }
+
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+        ]);
     }
 }

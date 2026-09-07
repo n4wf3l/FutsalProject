@@ -22,6 +22,10 @@ import {
     X,
     ExternalLink,
     ShieldPlus,
+    Shield,
+    Trophy,
+    Info,
+    Megaphone,
     type LucideIcon,
 } from 'lucide-react';
 import { Logo } from '@/Components/site/Logo';
@@ -71,22 +75,24 @@ const NAV: NavGroup[] = [
     {
         label: 'Compétition',
         items: [
+            { label: 'Équipes', href: '/manage-teams', icon: Shield },
             { label: 'Matchs', href: '/games', icon: Calendar },
-            { label: 'Calendrier', href: '/calendar', icon: Calendar },
+            { label: 'Championnats', href: '/championships', icon: Trophy },
         ],
     },
     {
         label: 'Contenu',
         items: [
-            { label: 'Articles', href: '/articles', icon: Newspaper },
+            { label: 'Articles', href: '/articles', icon: Newspaper, match: (u) => u === '/articles' || u.startsWith('/articles/') },
             {
                 label: 'Interviews',
                 href: '/admin/interviews',
                 icon: Mic,
                 badgeKey: 'interviewsDraft',
             },
-            { label: 'Galeries', href: '/galleries', icon: ImageIcon },
-            { label: 'Vidéos', href: '/videos', icon: Video },
+            { label: 'Communiqués', href: '/press_releases', icon: Megaphone },
+            { label: 'Galeries', href: '/admin/galleries', icon: ImageIcon },
+            { label: 'Vidéos', href: '/admin/videos', icon: Video },
         ],
     },
     {
@@ -94,7 +100,9 @@ const NAV: NavGroup[] = [
         items: [
             { label: 'Sponsors', href: '/sponsors', icon: Handshake },
             { label: 'Tribunes', href: '/tribunes', icon: Ticket },
-            { label: 'Règlements', href: '/about', icon: FileText },
+            { label: 'Règlements', href: '/regulations', icon: FileText },
+            { label: 'Sections À propos', href: '/about-sections', icon: Info },
+            { label: 'Réglages', href: '/admin/settings', icon: Settings2 },
         ],
     },
 ];

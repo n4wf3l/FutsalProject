@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\UserSetting;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PlayerController;
@@ -23,6 +22,7 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\PlayerU21Controller;
 use App\Http\Controllers\RegulationController;
+use App\Http\Controllers\ChampionshipController;
 use App\Http\Middleware\CheckRegistrationStatus;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\InterviewController;
@@ -30,126 +30,47 @@ use App\Http\Controllers\PlayerApplicationController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
-// Route d'accueil
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [PlayerController::class, 'dashboard'])->name('dashboard');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::put('/settings', [UserSettingController::class, 'update'])->name('user.settings.update');
-    Route::post('/dashboard/background-image', [DashboardController::class, 'storeBackgroundImage'])->name('dashboard.storeBackgroundImage');
-    Route::delete('/dashboard/delete-background-image/{id}', [DashboardController::class, 'deleteBackgroundImage'])->name('dashboard.deleteBackgroundImage');
-    Route::post('/dashboard/assign-background', [DashboardController::class, 'assignBackground'])->name('dashboard.assignBackground');
-    Route::post('/dashboard/update-registration-status', [DashboardController::class, 'updateRegistrationStatus'])->name('dashboard.updateRegistrationStatus');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/users/store', [DashboardController::class, 'storeUser'])->name('users.store');
-    Route::delete('/users/{id}', [DashboardController::class, 'destroyUser'])->name('users.destroy');
-    Route::delete('/club-info/{field}/delete', [ClubInfoController::class, 'destroyField'])->name('club-info.destroyField');
-});
-
-// Routes resource pour différents contrôleurs
-Route::resource('players', PlayerController::class);
-Route::resource('staff', StaffController::class);
-Route::resource('coaches', CoachController::class);
-Route::resource('sponsors', SponsorController::class);
-
-// Routes pour les articles
-Route::resource('articles', ArticleController::class)->except(['show']);
-
-// Route pour afficher un article par son slug
-Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
-
-// Routes pour About Section
-Route::resource('about', AboutSectionController::class)->parameters([
-    'about' => 'aboutSection'
-]);
-
-// Routes pour le Fanshop et les Tribunes
-Route::get('/fanshop', [TribuneController::class, 'index'])->name('fanshop.index');
-Route::resource('tribunes', TribuneController::class)->except(['index'])->middleware('auth');
-
-// Autres routes
-Route::get('/teams', [PlayerController::class, 'publicRoster'])->name('teams');
-Route::get('/clubinfo', function () {
-    return redirect()->route('news');
-})->name('clubinfo');
-
-
-Route::get('/news', [ArticleController::class, 'index'])->name('news');
-Route::redirect('/clubinfo', '/news');
-
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
-
-// Routes pour la gestion du club et les paiements
-Route::post('/dashboard/club-info', [ClubInfoController::class, 'store'])->name('club-info.store');
-Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
-Route::get('/payment-success', [PaymentController::class, 'success'])->name('payment.success');
-Route::get('/payment-cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
-Route::get('/reservation/{id}/pdf', [PaymentController::class, 'downloadPDF'])->name('reservation.pdf');
-Route::get('/download-pdf/{id}', [PaymentController::class, 'downloadPDF'])->name('download-pdf');
-
-// Routes pour la gestion des équipes (Vues)
-Route::get('/manage-teams/create', [TeamController::class, 'create'])->name('manage_teams.create');
-Route::get('/manage-teams/{team}/edit', [TeamController::class, 'edit'])->name('manage_teams.edit');
-Route::put('/manage-teams/{team}', [TeamController::class, 'update'])->name('manage_teams.update');
-Route::post('/manage-teams', [TeamController::class, 'store'])->name('manage_teams.store');
-Route::delete('/manage-teams/{team}', [TeamController::class, 'destroy'])->name('manage_teams.destroy');
-Route::get('/calendar', [GameController::class, 'showCalendar'])->name('calendar.show');
-Route::post('/championship/store', [GameController::class, 'storeChampionship'])->name('championship.store');
-
-// Route pour la gestion des scores des matchs
-Route::post('games/{game}/scores', [GameController::class, 'updateScores'])->name('games.updateScores');
-Route::post('/reset-scores', [GameController::class, 'resetScores'])->name('reset.scores');
-Route::post('/games/store-multiple', [GameController::class, 'storeMultiple'])->name('games.storeMultiple');
-
-// Gestion des matches (ressource complète pour le CRUD des matchs)
-Route::resource('games', GameController::class)->except(['show']);
+// ══════════════════════════════════════════════════════════════════════
+// PUBLIC
+// ══════════════════════════════════════════════════════════════════════
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::put('/flashmessage/update', [HomeController::class, 'updateFlashMessage'])->name('flashmessage.update');
-Route::post('/welcome-image/store', [HomeController::class, 'storeWelcomeImage'])->name('welcome-image.store');
 
-Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.show');
-Route::post('/contact', [ContactController::class, 'sendEmail'])->name('contact.send');
+Route::get('/teams', [PlayerController::class, 'publicRoster'])->name('teams');
+Route::get('/calendar', [GameController::class, 'showCalendar'])->name('calendar.show');
+Route::get('/news', [ArticleController::class, 'index'])->name('news');
+Route::get('/about', [RegulationController::class, 'publicIndex'])->name('about.index');
+Route::redirect('/clubinfo', '/news')->name('clubinfo');
 
-Route::resource('press_releases', PressReleaseController::class);
-Route::resource('galleries', GalleryController::class);
-Route::resource('galleries.photos', PhotoController::class)->except(['show']);
-Route::post('/galleries/{gallery}/photos/store-multiple', [PhotoController::class, 'storeMultiple'])->name('galleries.photos.storeMultiple');
-Route::resource('playersu21', PlayerU21Controller::class);
+// Fanshop / tribunes public view
+Route::get('/fanshop', [TribuneController::class, 'index'])->name('fanshop.index');
 
-Route::get('/about', [RegulationController::class, 'index'])->name('about.index');
+// Article show by slug — exclude reserved words ('create') so admin route takes priority.
+Route::get('/articles/{slug}', [ArticleController::class, 'show'])
+    ->where('slug', '(?!create$)[A-Za-z0-9\-_]+')
+    ->name('articles.show');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/regulations/create', [RegulationController::class, 'create'])->name('regulations.create');
-    Route::post('/regulations', [RegulationController::class, 'store'])->name('regulations.store');
-    Route::delete('/regulations/{regulation}', [RegulationController::class, 'destroy'])->name('regulations.destroy');
-});
+// Galleries public (list + show)
+Route::get('/galleries', [GalleryController::class, 'publicIndex'])->name('galleries.public');
+Route::get('/galleries/{gallery}', [GalleryController::class, 'show'])
+    ->whereNumber('gallery')->name('galleries.show');
 
-Route::middleware(['guest', CheckRegistrationStatus::class])->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-    Route::post('register', [RegisteredUserController::class, 'store']);
-});
+// Videos public
+Route::get('/videos', [VideoController::class, 'publicIndex'])->name('videos.public');
 
-Route::resource('videos', VideoController::class);
-
-// —————————— La Voix du Futsal (Interviews) ——————————
-// Public
+// Interviews public
 Route::get('/interviews', [InterviewController::class, 'publicIndex'])->name('interviews.index');
 Route::get('/interviews/{slug}', [InterviewController::class, 'publicShow'])->name('interviews.show');
 
-// —————————— Candidatures joueurs (public form) ——————————
+// Contact
+Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'sendEmail'])->name('contact.send');
+
+// Player applications (public join form)
 Route::get('/rejoindre', [PlayerApplicationController::class, 'create'])->name('rejoindre.create');
 Route::post('/rejoindre', [PlayerApplicationController::class, 'store'])->name('rejoindre.store');
 
-// —————————— Self-service RGPD / Loi 09-08 ——————————
+// Self-service RGPD / Loi 09-08
 Route::get('/candidature/supprimer', [PlayerApplicationController::class, 'requestDeletion'])
     ->name('candidature.deletion.request');
 Route::post('/candidature/supprimer', [PlayerApplicationController::class, 'sendDeletionLink'])
@@ -161,28 +82,119 @@ Route::delete('/candidature/{token}', [PlayerApplicationController::class, 'dest
     ->where('token', '[A-Za-z0-9]{48}')
     ->name('candidature.destroy');
 
-// —————————— Pages légales publiques ——————————
-Route::get('/confidentialite', fn () => Inertia\Inertia::render('Legal/Privacy'))
-    ->name('legal.privacy');
-Route::get('/legal', fn () => Inertia\Inertia::render('Legal/Mentions'))
-    ->name('legal');
+// Legal
+Route::get('/confidentialite', fn () => Inertia\Inertia::render('Legal/Privacy'))->name('legal.privacy');
+Route::get('/legal', fn () => Inertia\Inertia::render('Legal/Mentions'))->name('legal');
 
-// —————————— SEO ——————————
+// Payment (Stripe)
+Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+Route::get('/payment-success', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('/payment-cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+Route::get('/reservation/{id}/pdf', [PaymentController::class, 'downloadPDF'])->name('reservation.pdf');
+Route::get('/download-pdf/{id}', [PaymentController::class, 'downloadPDF'])->name('download-pdf');
+
+// SEO
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-// —————————— i18n ——————————
-// Persist the visitor's language choice as a 1 year cookie.
+// i18n cookie
 Route::post('/locale', function (\Illuminate\Http\Request $request) {
-    $data = $request->validate([
-        'locale' => 'required|in:fr,en,ar',
-    ]);
-    return response()->json(['ok' => true])
-        ->cookie('locale', $data['locale'], 60 * 24 * 365);
+    $data = $request->validate(['locale' => 'required|in:fr,en,ar']);
+    return response()->json(['ok' => true])->cookie('locale', $data['locale'], 60 * 24 * 365);
 })->name('locale.set');
 
-// —————————— Admin CRUD ——————————
+// ══════════════════════════════════════════════════════════════════════
+// AUTH-PROTECTED (admin + user)
+// ══════════════════════════════════════════════════════════════════════
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::put('/settings', [UserSettingController::class, 'update'])->name('user.settings.update');
+
+    // Dashboard actions
+    Route::post('/dashboard/background-image', [DashboardController::class, 'storeBackgroundImage'])->name('dashboard.storeBackgroundImage');
+    Route::delete('/dashboard/delete-background-image/{id}', [DashboardController::class, 'deleteBackgroundImage'])->name('dashboard.deleteBackgroundImage');
+    Route::post('/dashboard/assign-background', [DashboardController::class, 'assignBackground'])->name('dashboard.assignBackground');
+    Route::post('/dashboard/update-registration-status', [DashboardController::class, 'updateRegistrationStatus'])->name('dashboard.updateRegistrationStatus');
+    Route::post('/users/store', [DashboardController::class, 'storeUser'])->name('users.store');
+    Route::delete('/users/{id}', [DashboardController::class, 'destroyUser'])->name('users.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+
+    // Settings (Club info + flash message)
+    Route::get('/admin/settings', [ClubInfoController::class, 'index'])->name('admin.settings');
+    Route::post('/dashboard/club-info', [ClubInfoController::class, 'store'])->name('club-info.store');
+    Route::delete('/club-info/{field}/delete', [ClubInfoController::class, 'destroyField'])->name('club-info.destroyField');
+    Route::put('/flashmessage/update', [HomeController::class, 'updateFlashMessage'])->name('flashmessage.update');
+    Route::post('/welcome-image/store', [HomeController::class, 'storeWelcomeImage'])->name('welcome-image.store');
+
+    // Squad
+    Route::resource('players', PlayerController::class)->except(['show']);
+    Route::resource('playersu21', PlayerU21Controller::class)->except(['show']);
+    Route::resource('staff', StaffController::class)->except(['show']);
+    Route::resource('coaches', CoachController::class)->except(['show']);
+
+    // Sponsors + about-sections + regulations (full CRUD)
+    Route::resource('sponsors', SponsorController::class)->except(['show']);
+    Route::resource('about-sections', AboutSectionController::class)->parameters(['about-sections' => 'aboutSection'])->except(['show']);
+    Route::resource('regulations', RegulationController::class)->except(['show']);
+    Route::resource('championships', ChampionshipController::class)->except(['show']);
+
+    // Media (admin URLs prefixed with /admin/ to avoid colliding with public)
+    Route::get('/admin/videos', [VideoController::class, 'index'])->name('videos.index');
+    Route::get('/videos/create', [VideoController::class, 'create'])->name('videos.create');
+    Route::post('/videos', [VideoController::class, 'store'])->name('videos.store');
+    Route::get('/videos/{video}/edit', [VideoController::class, 'edit'])->whereNumber('video')->name('videos.edit');
+    Route::match(['put', 'patch'], '/videos/{video}', [VideoController::class, 'update'])->whereNumber('video')->name('videos.update');
+    Route::delete('/videos/{video}', [VideoController::class, 'destroy'])->whereNumber('video')->name('videos.destroy');
+
+    Route::get('/admin/galleries', [GalleryController::class, 'index'])->name('galleries.index');
+    Route::get('/galleries/create', [GalleryController::class, 'create'])->name('galleries.create');
+    Route::post('/galleries', [GalleryController::class, 'store'])->name('galleries.store');
+    Route::get('/galleries/{gallery}/edit', [GalleryController::class, 'edit'])->whereNumber('gallery')->name('galleries.edit');
+    Route::match(['put', 'patch'], '/galleries/{gallery}', [GalleryController::class, 'update'])->whereNumber('gallery')->name('galleries.update');
+    Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy'])->whereNumber('gallery')->name('galleries.destroy');
+
+    Route::resource('press_releases', PressReleaseController::class)->except(['show']);
+    Route::resource('galleries.photos', PhotoController::class)->except(['show']);
+    Route::post('/galleries/{gallery}/photos/store-multiple', [PhotoController::class, 'storeMultiple'])->name('galleries.photos.storeMultiple');
+
+    // Articles admin (uses /articles/... but with numeric constraint to coexist with public /articles/{slug})
+    Route::get('/articles', [ArticleController::class, 'adminIndex'])->name('articles.index');
+    Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
+    Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
+    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])
+        ->whereNumber('article')->name('articles.edit');
+    Route::match(['put', 'patch'], '/articles/{article}', [ArticleController::class, 'update'])
+        ->whereNumber('article')->name('articles.update');
+    Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
+        ->whereNumber('article')->name('articles.destroy');
+
+    // Tribunes admin (public index is at /fanshop above)
+    Route::get('/tribunes', [TribuneController::class, 'adminIndex'])->name('tribunes.index');
+    Route::resource('tribunes', TribuneController::class)->except(['index', 'show']);
+
+    // Teams admin (custom URL: /manage-teams)
+    Route::get('/manage-teams', [TeamController::class, 'index'])->name('manage_teams.index');
+    Route::get('/manage-teams/create', [TeamController::class, 'create'])->name('manage_teams.create');
+    Route::post('/manage-teams', [TeamController::class, 'store'])->name('manage_teams.store');
+    Route::get('/manage-teams/{team}/edit', [TeamController::class, 'edit'])->name('manage_teams.edit');
+    Route::match(['put', 'patch'], '/manage-teams/{team}', [TeamController::class, 'update'])->name('manage_teams.update');
+    Route::delete('/manage-teams/{team}', [TeamController::class, 'destroy'])->name('manage_teams.destroy');
+
+    // Games admin
+    Route::resource('games', GameController::class)->except(['show']);
+    Route::post('/games/{game}/scores', [GameController::class, 'updateScores'])->name('games.updateScores');
+    Route::post('/reset-scores', [GameController::class, 'resetScores'])->name('reset.scores');
+    Route::post('/games/store-multiple', [GameController::class, 'storeMultiple'])->name('games.storeMultiple');
+    Route::post('/championship/store', [GameController::class, 'storeChampionship'])->name('championship.store');
+});
+
+// Admin-prefixed section (interviews + applications kept for backward-compat)
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
-    // Interviews
     Route::get('/interviews', [InterviewController::class, 'index'])->name('interviews.index');
     Route::get('/interviews/create', [InterviewController::class, 'create'])->name('interviews.create');
     Route::post('/interviews', [InterviewController::class, 'store'])->name('interviews.store');
@@ -190,26 +202,30 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::patch('/interviews/{interview:id}', [InterviewController::class, 'update'])->name('interviews.update');
     Route::delete('/interviews/{interview:id}', [InterviewController::class, 'destroy'])->name('interviews.destroy');
 
-    // Candidatures joueurs (admin view)
     Route::get('/applications', [PlayerApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [PlayerApplicationController::class, 'show'])->name('applications.show');
     Route::get('/applications/{application}/cv', [PlayerApplicationController::class, 'streamCv'])->name('applications.cv');
     Route::patch('/applications/{application}/status', [PlayerApplicationController::class, 'updateStatus'])->name('applications.updateStatus');
     Route::delete('/applications/{application}', [PlayerApplicationController::class, 'destroy'])->name('applications.destroy');
+
+    // Galleries admin — points to same controller, differentiated by URL
+    Route::get('/galleries/{gallery}/photos', [PhotoController::class, 'index'])->name('galleries.photos');
 });
 
+// ══════════════════════════════════════════════════════════════════════
+// AUTH (guest)
+// ══════════════════════════════════════════════════════════════════════
 
+Route::middleware(['guest', CheckRegistrationStatus::class])->group(function () {
+    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::post('register', [RegisteredUserController::class, 'store']);
+});
+
+// Local dev proxy to prod for missing storage assets
 if (app()->environment('local')) {
     Route::get('/storage/{path}', function (string $path) {
         return redirect('https://dinakenitrafc.ma/storage/' . $path, 302);
     })->where('path', '.*');
 }
 
-// Routes API
-//Route::prefix('api')->group(function () {
-//    Route::apiResource('games', ApiGameController::class);
-//    Route::apiResource('teams', ApiTeamController::class);
-//});
-
-// Inclusion des routes d'authentification générées par Laravel
 require __DIR__.'/auth.php';

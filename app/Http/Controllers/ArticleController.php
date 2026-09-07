@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use App\Models\BackgroundImage;
 
 class ArticleController extends Controller
 {
+    // ————————— PUBLIC —————————
+
     public function index(Request $request)
     {
         $search = $request->string('search')->toString();
@@ -20,7 +20,7 @@ class ArticleController extends Controller
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
+                    ->orWhere('description', 'LIKE', "%{$search}%");
             });
         }
 
@@ -30,49 +30,75 @@ class ArticleController extends Controller
         ]);
     }
 
+    public function show($slug)
+    {
+        $article = Article::where('slug', $slug)->firstOrFail();
+
+        $recentArticles = Article::where('id', '!=', $article->id)
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return Inertia::render('ArticleShow', [
+            'article' => $article,
+            'recentArticles' => $recentArticles,
+        ]);
+    }
+
+    // ————————— ADMIN —————————
+
+    public function adminIndex()
+    {
+        return Inertia::render('Admin/Articles/Index', [
+            'articles' => Article::latest()->get(),
+        ]);
+    }
+
     public function create()
     {
-        return view('articles.create');
+        return Inertia::render('Admin/Articles/Form', [
+            'article' => null,
+        ]);
     }
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
         ]);
-    
-        $article = new Article();
-        $article->title = $validatedData['title'];
-        $article->description = $validatedData['description'];
-        $article->user_id = auth()->id();
-        $article->slug = Str::slug($article->title); // Génération du slug
-    
+
+        $data['slug'] = $this->uniqueSlug($data['title']);
+        $data['user_id'] = auth()->id();
+
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('articles', 'public');
-            $article->image = $path;
+            $data['image'] = $request->file('image')->store('articles', 'public');
         }
-    
-        $article->save();
-    
-        return redirect()->route('clubinfo')->with('success', 'Article created successfully.');
+
+        Article::create($data);
+
+        return redirect()->route('articles.index')->with('success', 'Article créé.');
     }
 
     public function edit(Article $article)
     {
-        return view('articles.edit', compact('article'));
+        return Inertia::render('Admin/Articles/Form', [
+            'article' => $article,
+        ]);
     }
 
     public function update(Request $request, Article $article)
     {
-        $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
         ]);
 
-        $data = $request->all();
+        if ($data['title'] !== $article->title) {
+            $data['slug'] = $this->uniqueSlug($data['title'], $article->id);
+        }
 
         if ($request->hasFile('image')) {
             if ($article->image) {
@@ -81,29 +107,9 @@ class ArticleController extends Controller
             $data['image'] = $request->file('image')->store('articles', 'public');
         }
 
-        // Met à jour le slug uniquement si le titre change
-        if ($data['title'] !== $article->title) {
-            $data['slug'] = Str::slug($data['title']);
-        }
-
         $article->update($data);
 
-        return redirect()->route('articles.index')->with('success', 'Article updated successfully.');
-    }
-
-    public function show($slug)
-    {
-        $article = Article::where('slug', $slug)->firstOrFail();
-
-        $recentArticles = Article::where('id', '!=', $article->id)
-                                  ->latest()
-                                  ->take(5)
-                                  ->get();
-
-        return Inertia::render('ArticleShow', [
-            'article' => $article,
-            'recentArticles' => $recentArticles,
-        ]);
+        return redirect()->route('articles.index')->with('success', 'Article mis à jour.');
     }
 
     public function destroy(Article $article)
@@ -114,6 +120,17 @@ class ArticleController extends Controller
 
         $article->delete();
 
-        return redirect()->route('articles.index')->with('success', 'Article deleted successfully.');
+        return redirect()->route('articles.index')->with('success', 'Article supprimé.');
+    }
+
+    private function uniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($title);
+        $slug = $base;
+        $i = 2;
+        while (Article::where('slug', $slug)->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+            $slug = $base . '-' . $i++;
+        }
+        return $slug;
     }
 }

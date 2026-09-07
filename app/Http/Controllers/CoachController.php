@@ -2,88 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Coach;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class CoachController extends Controller
 {
     public function index()
     {
-
-
+        return Inertia::render('Admin/Coaches/Index', [
+            'coaches' => Coach::orderBy('last_name')->get(),
+        ]);
     }
 
     public function create()
     {
-        return view('coach.create');
+        return Inertia::render('Admin/Coaches/Form', ['coach' => null]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255',
-            'birth_date' => 'required|date',
-            'coaching_since' => 'required|date',
-            'birth_city' => 'required|max:255',
-            'nationality' => 'required|max:255',
-            'description' => 'nullable',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-    
-        $data = $request->all();
-    
+        $data = $this->validated($request);
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('photos', 'public');
         }
-    
         Coach::create($data);
-    
-        return redirect()->route('teams')->with('success', 'Coach created successfully.');
+        return redirect()->route('coaches.index')->with('success', 'Coach ajouté.');
     }
-    
+
+    public function edit(Coach $coach)
+    {
+        return Inertia::render('Admin/Coaches/Form', ['coach' => $coach]);
+    }
+
     public function update(Request $request, Coach $coach)
     {
-        $request->validate([
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255',
-            'birth_date' => 'required|date',
-            'coaching_since' => 'required|date',
-            'birth_city' => 'required|max:255',
-            'nationality' => 'required|max:255',
-            'description' => 'nullable',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-    
-        $data = $request->all();
-    
+        $data = $this->validated($request);
         if ($request->hasFile('photo')) {
-            // Supprimer l'ancienne photo si une nouvelle est téléchargée
             if ($coach->photo) {
                 Storage::disk('public')->delete($coach->photo);
             }
             $data['photo'] = $request->file('photo')->store('photos', 'public');
         }
-    
         $coach->update($data);
-    
-        return redirect()->route('teams')->with('success', 'Coach updated successfully.');
-    }
-
-    public function edit($id)
-    {
-        // Récupérer le coach par son ID
-        $coach = Coach::findOrFail($id);
-
-        // Retourner la vue d'édition avec les données du coach
-        return view('coach.edit', compact('coach'));
+        return redirect()->route('coaches.index')->with('success', 'Coach mis à jour.');
     }
 
     public function destroy(Coach $coach)
     {
+        if ($coach->photo) {
+            Storage::disk('public')->delete($coach->photo);
+        }
         $coach->delete();
+        return redirect()->route('coaches.index')->with('success', 'Coach supprimé.');
+    }
 
-        return redirect()->route('coaches.index')->with('success', 'Coach deleted successfully.');
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'birth_date' => 'required|date',
+            'coaching_since' => 'required|date',
+            'birth_city' => 'required|string|max:255',
+            'nationality' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+        ]);
     }
 }

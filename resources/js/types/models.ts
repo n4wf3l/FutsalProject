@@ -44,6 +44,15 @@ export interface Video {
     created_at: string;
 }
 
+export interface PressRelease {
+    id: number;
+    title: string;
+    slug: string;
+    content: string;
+    image: string | null;
+    created_at: string;
+}
+
 export interface Photo {
     id: number;
     image: string;
@@ -71,6 +80,18 @@ export interface Player {
     nationality: string;
     height: number;
     contract_until: string;
+}
+
+export interface PlayerU21 {
+    id: number;
+    first_name: string;
+    last_name: string;
+    photo: string | null;
+    birthdate: string;
+    position: string;
+    number: number;
+    nationality: string;
+    height: number;
 }
 
 export interface Coach {
@@ -189,6 +210,13 @@ export interface Paginated<T> {
 }
 
 export interface SponsorShared {
+    id: number;
+    name: string;
+    logo: string | null;
+    website: string | null;
+}
+
+export interface Sponsor {
     id: number;
     name: string;
     logo: string | null;

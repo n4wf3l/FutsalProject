@@ -6,121 +6,100 @@ use App\Models\PressRelease;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Models\BackgroundImage;
-use App\Models\Article;
+use Inertia\Inertia;
 
 class PressReleaseController extends Controller
 {
     public function index()
     {
-        $pressReleases = PressRelease::orderBy('created_at', 'desc')->paginate(4);
-        $backgroundImage = BackgroundImage::where('assigned_page', 'press_releases')->latest()->first();
-        return view('press_releases.index', compact('pressReleases', 'backgroundImage'));
+        return Inertia::render('Admin/PressReleases/Index', [
+            'pressReleases' => PressRelease::latest()->get(),
+        ]);
     }
 
     public function create()
     {
-        return view('press_releases.create');
+        return Inertia::render('Admin/PressReleases/Form', [
+            'pressRelease' => null,
+        ]);
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
-        'image' => 'nullable|image|max:2048', // Validation de l'image
-    ]);
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+        ]);
 
-    $slug = $this->createUniqueSlug($request->title); // Générer un slug unique
+        $data['slug'] = $this->uniqueSlug($data['title']);
 
-    $imagePath = null;
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('press_releases', 'public');
+        }
 
-    // Gestion du téléchargement de l'image
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('press_releases', 'public');
+        PressRelease::create($data);
+
+        return redirect()->route('press_releases.index')->with('success', 'Communiqué créé.');
     }
 
-    PressRelease::create([
-        'title' => $request->title,
-        'content' => $request->content,
-        'image' => $imagePath, // Stocker le chemin de l'image
-        'slug' => $slug,
-    ]);
-
-    return redirect()->route('press_releases.index')->with('success', 'Press release created successfully.');
-}
+    public function show(PressRelease $pressRelease)
+    {
+        return redirect()->route('press_releases.index');
+    }
 
     public function edit(PressRelease $pressRelease)
     {
-        return view('press_releases.edit', compact('pressRelease'));
+        return Inertia::render('Admin/PressReleases/Form', [
+            'pressRelease' => $pressRelease,
+        ]);
     }
 
     public function update(Request $request, PressRelease $pressRelease)
     {
-        $request->validate([
+        $data = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'image' => 'nullable|image|max:2048', // Validation de l'image
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
         ]);
-    
-        // Générer un slug unique uniquement si le titre change
-        if ($request->title !== $pressRelease->title) {
-            $slug = $this->createUniqueSlug($request->title);
-        } else {
-            $slug = $pressRelease->slug;
+
+        if ($data['title'] !== $pressRelease->title) {
+            $data['slug'] = $this->uniqueSlug($data['title'], $pressRelease->id);
         }
-    
-        // Gestion du téléchargement de l'image
+
         if ($request->hasFile('image')) {
-            // Supprimer l'ancienne image si elle existe
             if ($pressRelease->image) {
                 Storage::disk('public')->delete($pressRelease->image);
             }
-            $imagePath = $request->file('image')->store('press_releases', 'public');
+            $data['image'] = $request->file('image')->store('press_releases', 'public');
         } else {
-            $imagePath = $pressRelease->image; // Garder l'ancienne image si pas de nouvelle image
+            unset($data['image']);
         }
-    
-        $pressRelease->update([
-            'title' => $request->title,
-            'content' => $request->content,
-            'image' => $imagePath, // Mettre à jour le chemin de l'image
-            'slug' => $slug,
-        ]);
-    
-        return redirect()->route('press_releases.index')->with('success', 'Press release updated successfully.');
-    }
 
-    public function show($slug)
-    {
-        $pressRelease = PressRelease::where('slug', $slug)->firstOrFail();
-    
-        // Récupérer les 10 articles les plus récents avec pagination
-        $recentArticles = \App\Models\Article::orderBy('created_at', 'desc')->paginate(10);
-    
-        return view('press_releases.show', compact('pressRelease', 'recentArticles'));
+        $pressRelease->update($data);
+
+        return redirect()->route('press_releases.index')->with('success', 'Communiqué mis à jour.');
     }
 
     public function destroy(PressRelease $pressRelease)
     {
-        // Supprimer l'image associée si elle existe
         if ($pressRelease->image) {
             Storage::disk('public')->delete($pressRelease->image);
         }
 
         $pressRelease->delete();
-        return redirect()->route('press_releases.index')->with('success', 'Press release deleted successfully.');
+
+        return redirect()->route('press_releases.index')->with('success', 'Communiqué supprimé.');
     }
 
-    private function createUniqueSlug($title)
+    private function uniqueSlug(string $title, ?int $ignoreId = null): string
     {
-        // Créer un slug de base
-        $slug = Str::slug($title);
-
-        // Vérifier si le slug existe déjà
-        $count = PressRelease::where('slug', 'LIKE', "{$slug}%")->count();
-
-        // S'il existe, ajouter un suffixe
-        return $count ? "{$slug}-{$count}" : $slug;
+        $base = Str::slug($title);
+        $slug = $base;
+        $i = 2;
+        while (PressRelease::where('slug', $slug)->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))->exists()) {
+            $slug = $base . '-' . $i++;
+        }
+        return $slug;
     }
 }

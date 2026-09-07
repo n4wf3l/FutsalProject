@@ -207,15 +207,18 @@ class GameController extends Controller
     // Méthode pour afficher la liste des matchs (Vue)
     public function index()
     {
-        $games = Game::with(['homeTeam', 'awayTeam'])->get();
-        return view('games.index', compact('games'));
+        return Inertia::render('Admin/Games/Index', [
+            'games' => Game::with(['homeTeam', 'awayTeam'])->orderBy('match_date', 'desc')->get(),
+        ]);
     }
 
     // Afficher le formulaire de création d'un match
     public function create()
     {
-        $teams = Team::all();
-        return view('games.create', compact('teams'));
+        return Inertia::render('Admin/Games/Form', [
+            'game' => null,
+            'teams' => Team::orderBy('name')->get(),
+        ]);
     }
 
     // Enregistrer un nouveau match
@@ -235,8 +238,10 @@ class GameController extends Controller
     // Afficher le formulaire d'édition d'un match
     public function edit(Game $game)
     {
-        $teams = Team::all();
-        return view('games.edit', compact('game', 'teams'));
+        return Inertia::render('Admin/Games/Form', [
+            'game' => $game->load(['homeTeam', 'awayTeam']),
+            'teams' => Team::orderBy('name')->get(),
+        ]);
     }
 
     // Mettre à jour un match existant
