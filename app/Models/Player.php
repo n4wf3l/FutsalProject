@@ -15,7 +15,7 @@ class Player extends Model
         'position', 'number', 'nationality', 'height', 'contract_until'
     ];
 
-    protected $hidden = ['birthdate'];
+    protected $hidden = ['birthdate', 'height'];
 
     protected $appends = ['age'];
 

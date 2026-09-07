@@ -43,7 +43,7 @@ class PlayerEspoirController extends Controller
     public function edit(PlayerEspoir $espoir)
     {
         return Inertia::render('Admin/Espoirs/Form', [
-            'player' => $espoir->makeVisible('birthdate'),
+            'player' => $espoir->makeVisible(['birthdate', 'height']),
         ]);
     }
 

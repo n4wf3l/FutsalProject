@@ -79,7 +79,7 @@ export interface Player {
     position: string;
     number: number;
     nationality: string;
-    height: number;
+    height?: number;
     contract_until: string;
 }
 
@@ -93,7 +93,7 @@ export interface PlayerEspoir {
     position: string;
     number: number;
     nationality: string;
-    height: number;
+    height?: number;
 }
 
 export interface Coach {

@@ -51,10 +51,9 @@ export function PlayerCard({ player, index = 0 }: Props) {
                     <span className="block text-foreground">{player.last_name}</span>
                 </h3>
 
-                <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-4 text-xs">
+                <div className="mt-4 grid grid-cols-2 gap-2 border-t border-border pt-4 text-xs">
                     <Stat label="Âge" value={player.age !== null ? String(player.age) : '?'} />
-                    <Stat label="Nat." value={player.nationality?.slice(0, 3).toUpperCase() ?? '—'} />
-                    <Stat label="Taille" value={`${player.height}`} suffix="cm" />
+                    <Stat label="Nat." value={player.nationality?.slice(0, 3).toUpperCase() ?? '?'} />
                 </div>
             </div>
         </motion.article>

@@ -23,7 +23,7 @@ class PlayerEspoir extends Model
         'height',
     ];
 
-    protected $hidden = ['birthdate'];
+    protected $hidden = ['birthdate', 'height'];
 
     protected $appends = ['age'];
 
