@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import { motion } from 'framer-motion';
-import { Pencil, Plus, Search, Trash2, User, Users } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Pencil, Plus, Search, Trash2, User, Users, X } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
@@ -18,6 +18,8 @@ interface Props {
 export default function EspoirsIndex({ players }: Props) {
     const [search, setSearch] = useState('');
     const [toDelete, setToDelete] = useState<PlayerEspoir | null>(null);
+    const [selected, setSelected] = useState<Set<number>>(new Set());
+    const [confirmBulk, setConfirmBulk] = useState(false);
 
     const filtered = players.filter((p) => {
         if (!search) return true;
@@ -29,6 +31,42 @@ export default function EspoirsIndex({ players }: Props) {
             String(p.number).includes(q)
         );
     });
+
+    const allVisibleSelected = filtered.length > 0 && filtered.every((p) => selected.has(p.id));
+    const someSelected = selected.size > 0;
+
+    const toggle = (id: number) => {
+        setSelected((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    };
+
+    const toggleAllVisible = () => {
+        setSelected((prev) => {
+            const next = new Set(prev);
+            if (allVisibleSelected) {
+                filtered.forEach((p) => next.delete(p.id));
+            } else {
+                filtered.forEach((p) => next.add(p.id));
+            }
+            return next;
+        });
+    };
+
+    const clearSelection = () => setSelected(new Set());
+
+    const bulkDelete = () => {
+        router.delete('/espoirs/bulk', {
+            data: { ids: Array.from(selected) },
+            onSuccess: () => {
+                setSelected(new Set());
+                setConfirmBulk(false);
+            },
+        });
+    };
 
     return (
         <AdminLayout title="Espoirs">
@@ -91,6 +129,15 @@ export default function EspoirsIndex({ players }: Props) {
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-border bg-muted/50 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                <th className="w-10 px-4 py-3">
+                                    <input
+                                        type="checkbox"
+                                        checked={allVisibleSelected}
+                                        onChange={toggleAllVisible}
+                                        className="h-4 w-4 cursor-pointer accent-crimson"
+                                        aria-label="Tout sélectionner"
+                                    />
+                                </th>
                                 <th className="w-16 px-4 py-3 text-center">#</th>
                                 <th className="px-4 py-3 text-left">Joueur</th>
                                 <th className="hidden px-4 py-3 text-left sm:table-cell">Poste</th>
@@ -100,12 +147,47 @@ export default function EspoirsIndex({ players }: Props) {
                         </thead>
                         <tbody>
                             {filtered.map((player, i) => (
-                                <PlayerRow key={player.id} player={player} index={i} onDelete={setToDelete} />
+                                <PlayerRow
+                                    key={player.id}
+                                    player={player}
+                                    index={i}
+                                    isSelected={selected.has(player.id)}
+                                    onToggle={() => toggle(player.id)}
+                                    onDelete={setToDelete}
+                                />
                             ))}
                         </tbody>
                     </table>
                 </div>
             )}
+
+            {/* Sticky bulk action bar */}
+            <AnimatePresence>
+                {someSelected && (
+                    <motion.div
+                        initial={{ y: 60, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 60, opacity: 0 }}
+                        transition={{ type: 'spring', damping: 26, stiffness: 260 }}
+                        className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-full border border-champagne/40 bg-card px-5 py-3 shadow-2xl shadow-black/40"
+                    >
+                        <span className="font-mono text-xs font-semibold uppercase tracking-widest text-champagne">
+                            {selected.size} sélectionné{selected.size > 1 ? 's' : ''}
+                        </span>
+                        <button
+                            onClick={clearSelection}
+                            className="inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                        >
+                            <X className="h-3.5 w-3.5" />
+                            Désélectionner
+                        </button>
+                        <Button variant="destructive" size="sm" onClick={() => setConfirmBulk(true)}>
+                            <Trash2 className="h-4 w-4" />
+                            Supprimer
+                        </Button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <ConfirmDialog
                 open={!!toDelete}
@@ -114,7 +196,7 @@ export default function EspoirsIndex({ players }: Props) {
                         ? `Supprimer ${toDelete.first_name} ${toDelete.last_name} ?`
                         : ''
                 }
-                description="Cette action est irréversible. Le joueur et sa photo seront suppriméss."
+                description="Cette action est irréversible. Le joueur et sa photo seront supprimés."
                 confirmLabel="Supprimer"
                 variant="destructive"
                 onCancel={() => setToDelete(null)}
@@ -125,6 +207,16 @@ export default function EspoirsIndex({ players }: Props) {
                     });
                 }}
             />
+
+            <ConfirmDialog
+                open={confirmBulk}
+                title={`Supprimer ${selected.size} joueur${selected.size > 1 ? 's' : ''} ?`}
+                description="Cette action est irréversible. Les joueurs et leurs photos seront supprimés définitivement."
+                confirmLabel="Supprimer"
+                variant="destructive"
+                onCancel={() => setConfirmBulk(false)}
+                onConfirm={bulkDelete}
+            />
         </AdminLayout>
     );
 }
@@ -132,10 +224,14 @@ export default function EspoirsIndex({ players }: Props) {
 function PlayerRow({
     player,
     index,
+    isSelected,
+    onToggle,
     onDelete,
 }: {
     player: PlayerEspoir;
     index: number;
+    isSelected: boolean;
+    onToggle: () => void;
     onDelete: (p: PlayerEspoir) => void;
 }) {
     return (
@@ -143,8 +239,20 @@ function PlayerRow({
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: (index % 20) * 0.02 }}
-            className="border-b border-border last:border-0 hover:bg-muted/30"
+            className={cn(
+                'border-b border-border last:border-0 hover:bg-muted/30',
+                isSelected && 'bg-champagne/5'
+            )}
         >
+            <td className="px-4 py-3">
+                <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={onToggle}
+                    className="h-4 w-4 cursor-pointer accent-crimson"
+                    aria-label={`Sélectionner ${player.first_name} ${player.last_name}`}
+                />
+            </td>
             <td className="px-4 py-3 text-center">
                 <div className="inline-flex h-8 min-w-8 items-center justify-center rounded-lg bg-crimson/10 px-2 font-mono text-sm font-bold text-crimson">
                     {player.number}

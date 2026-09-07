@@ -92,4 +92,22 @@ class VideoController extends Controller
 
         return redirect()->route('videos.index')->with('success', 'Vidéo supprimée.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:videos,id',
+        ]);
+
+        $videos = Video::whereIn('id', $data['ids'])->get();
+        foreach ($videos as $video) {
+            if ($video->image) {
+                Storage::disk('public')->delete($video->image);
+            }
+            $video->delete();
+        }
+
+        return redirect()->route('videos.index')->with('success', count($videos) . ' vidéo(s) supprimée(s).');
+    }
 }

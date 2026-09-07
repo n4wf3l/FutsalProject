@@ -49,6 +49,18 @@ class ChampionshipController extends Controller
         return redirect()->route('championships.index')->with('success', 'Championnat supprimé.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:championships,id',
+        ]);
+
+        $count = Championship::whereIn('id', $data['ids'])->delete();
+
+        return redirect()->route('championships.index')->with('success', $count . ' championnat(s) supprimé(s).');
+    }
+
     private function validated(Request $request): array
     {
         return $request->validate([

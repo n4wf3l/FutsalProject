@@ -58,6 +58,24 @@ class CoachController extends Controller
         return redirect()->route('coaches.index')->with('success', 'Coach supprimé.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:coaches,id',
+        ]);
+
+        $coaches = Coach::whereIn('id', $data['ids'])->get();
+        foreach ($coaches as $coach) {
+            if ($coach->photo) {
+                Storage::disk('public')->delete($coach->photo);
+            }
+            $coach->delete();
+        }
+
+        return redirect()->route('coaches.index')->with('success', count($coaches) . ' coach(s) supprimé(s).');
+    }
+
     private function validated(Request $request): array
     {
         return $request->validate([

@@ -265,7 +265,21 @@ class GameController extends Controller
         $this->resetTeamStats($game);
         $game->delete();
 
-        return redirect()->route('calendar.show')->with('success', 'Game and its scores deleted successfully.');
+        return redirect()->route('games.index')->with('success', 'Match supprimé.');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:games,id',
+        ]);
+        $games = Game::whereIn('id', $data['ids'])->get();
+        foreach ($games as $game) {
+            $this->resetTeamStats($game);
+            $game->delete();
+        }
+        return redirect()->route('games.index')->with('success', count($games) . ' match(s) supprimé(s).');
     }
 
     // Réinitialiser les scores de tous les matchs

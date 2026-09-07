@@ -58,6 +58,24 @@ class StaffController extends Controller
         return redirect()->route('staff.index')->with('success', 'Membre supprimé.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:staff,id',
+        ]);
+
+        $members = Staff::whereIn('id', $data['ids'])->get();
+        foreach ($members as $member) {
+            if ($member->photo) {
+                Storage::disk('public')->delete($member->photo);
+            }
+            $member->delete();
+        }
+
+        return redirect()->route('staff.index')->with('success', count($members) . ' membre(s) supprimé(s).');
+    }
+
     private function validated(Request $request): array
     {
         return $request->validate([

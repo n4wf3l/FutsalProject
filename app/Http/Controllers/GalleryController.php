@@ -85,6 +85,27 @@ class GalleryController extends Controller
         return redirect()->route('galleries.index')->with('success', 'Galerie supprimée.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:galleries,id',
+        ]);
+        $galleries = Gallery::whereIn('id', $data['ids'])->with('photos')->get();
+        foreach ($galleries as $gallery) {
+            foreach ($gallery->photos as $photo) {
+                if ($photo->image) {
+                    Storage::disk('public')->delete($photo->image);
+                }
+            }
+            if ($gallery->cover_image) {
+                Storage::disk('public')->delete($gallery->cover_image);
+            }
+            $gallery->delete();
+        }
+        return redirect()->route('galleries.index')->with('success', count($galleries) . ' galerie(s) supprimée(s).');
+    }
+
     private function validated(Request $request): array
     {
         return $request->validate([

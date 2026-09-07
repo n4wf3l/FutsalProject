@@ -87,4 +87,22 @@ class RegulationController extends Controller
 
         return redirect()->route('regulations.index')->with('success', 'Règlementation supprimée.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:regulations,id',
+        ]);
+
+        $regulations = Regulation::whereIn('id', $data['ids'])->get();
+        foreach ($regulations as $regulation) {
+            if ($regulation->pdf_path) {
+                Storage::disk('public')->delete($regulation->pdf_path);
+            }
+            $regulation->delete();
+        }
+
+        return redirect()->route('regulations.index')->with('success', count($regulations) . ' règlementation(s) supprimée(s).');
+    }
 }

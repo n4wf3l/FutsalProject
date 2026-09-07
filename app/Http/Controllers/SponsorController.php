@@ -64,6 +64,24 @@ class SponsorController extends Controller
         return redirect()->route('sponsors.index')->with('success', 'Sponsor supprimé.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:sponsors,id',
+        ]);
+
+        $sponsors = Sponsor::whereIn('id', $data['ids'])->get();
+        foreach ($sponsors as $sponsor) {
+            if ($sponsor->logo) {
+                Storage::disk('public')->delete($sponsor->logo);
+            }
+            $sponsor->delete();
+        }
+
+        return redirect()->route('sponsors.index')->with('success', count($sponsors) . ' sponsor(s) supprimé(s).');
+    }
+
     private function validated(Request $request): array
     {
         return $request->validate([

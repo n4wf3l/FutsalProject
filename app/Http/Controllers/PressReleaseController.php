@@ -92,6 +92,24 @@ class PressReleaseController extends Controller
         return redirect()->route('press_releases.index')->with('success', 'Communiqué supprimé.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:press_releases,id',
+        ]);
+
+        $pressReleases = PressRelease::whereIn('id', $data['ids'])->get();
+        foreach ($pressReleases as $pressRelease) {
+            if ($pressRelease->image) {
+                Storage::disk('public')->delete($pressRelease->image);
+            }
+            $pressRelease->delete();
+        }
+
+        return redirect()->route('press_releases.index')->with('success', count($pressReleases) . ' communiqué(s) supprimé(s).');
+    }
+
     private function uniqueSlug(string $title, ?int $ignoreId = null): string
     {
         $base = Str::slug($title);

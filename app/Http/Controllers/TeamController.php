@@ -79,4 +79,20 @@ class TeamController extends Controller
         $team->delete();
         return redirect()->route('manage_teams.index')->with('success', 'Équipe supprimée.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:teams,id',
+        ]);
+        $teams = Team::whereIn('id', $data['ids'])->get();
+        foreach ($teams as $team) {
+            if ($team->logo_path) {
+                Storage::disk('public')->delete($team->logo_path);
+            }
+            $team->delete();
+        }
+        return redirect()->route('manage_teams.index')->with('success', count($teams) . ' équipe(s) supprimée(s).');
+    }
 }

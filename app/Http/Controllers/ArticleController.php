@@ -123,6 +123,24 @@ class ArticleController extends Controller
         return redirect()->route('articles.index')->with('success', 'Article supprimé.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:articles,id',
+        ]);
+
+        $articles = Article::whereIn('id', $data['ids'])->get();
+        foreach ($articles as $article) {
+            if ($article->image) {
+                Storage::disk('public')->delete($article->image);
+            }
+            $article->delete();
+        }
+
+        return redirect()->route('articles.index')->with('success', count($articles) . ' article(s) supprimé(s).');
+    }
+
     private function uniqueSlug(string $title, ?int $ignoreId = null): string
     {
         $base = Str::slug($title);

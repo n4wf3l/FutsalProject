@@ -49,6 +49,18 @@ class AboutSectionController extends Controller
         return redirect()->route('about.index')->with('success', 'Section supprimée.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:about_sections,id',
+        ]);
+
+        $count = AboutSection::whereIn('id', $data['ids'])->delete();
+
+        return redirect()->route('about.index')->with('success', $count . ' section(s) supprimée(s).');
+    }
+
     private function validated(Request $request): array
     {
         return $request->validate([

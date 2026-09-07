@@ -104,6 +104,24 @@ class PlayerController extends Controller
         return redirect()->route('players.index')->with('success', 'Joueur supprimé.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:players,id',
+        ]);
+
+        $players = Player::whereIn('id', $data['ids'])->get();
+        foreach ($players as $player) {
+            if ($player->photo) {
+                Storage::disk('public')->delete($player->photo);
+            }
+            $player->delete();
+        }
+
+        return redirect()->route('players.index')->with('success', count($players) . ' joueur(s) supprimé(s).');
+    }
+
     public function dashboard()
     {
         return redirect()->route('dashboard');

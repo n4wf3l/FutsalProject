@@ -45,9 +45,15 @@ Route::redirect('/clubinfo', '/news')->name('clubinfo');
 // Fanshop / tribunes public view
 Route::get('/fanshop', [TribuneController::class, 'index'])->name('fanshop.index');
 
-// Article show by slug — exclude reserved words ('create') so admin route takes priority.
+// Articles bulk delete must be defined BEFORE the public /articles/{slug} route
+// below, otherwise the literal "/articles/bulk" would be captured as a slug.
+Route::delete('/articles/bulk', [ArticleController::class, 'bulkDestroy'])
+    ->middleware('auth')
+    ->name('articles.bulkDestroy');
+
+// Article show by slug, exclude reserved words ('create', 'bulk') so admin route takes priority.
 Route::get('/articles/{slug}', [ArticleController::class, 'show'])
-    ->where('slug', '(?!create$)[A-Za-z0-9\-_]+')
+    ->where('slug', '(?!create$|bulk$)[A-Za-z0-9\-_]+')
     ->name('articles.show');
 
 // Galleries public (list + show)
@@ -132,22 +138,31 @@ Route::middleware('auth')->group(function () {
     Route::post('/welcome-image/store', [HomeController::class, 'storeWelcomeImage'])->name('welcome-image.store');
 
     // Squad
+    Route::delete('/players/bulk', [PlayerController::class, 'bulkDestroy'])->name('players.bulkDestroy');
     Route::resource('players', PlayerController::class)->except(['show']);
+    Route::delete('/espoirs/bulk', [PlayerEspoirController::class, 'bulkDestroy'])->name('espoirs.bulkDestroy');
     Route::resource('espoirs', PlayerEspoirController::class)->except(['show'])
         ->parameters(['espoirs' => 'espoir']);
+    Route::delete('/staff/bulk', [StaffController::class, 'bulkDestroy'])->name('staff.bulkDestroy');
     Route::resource('staff', StaffController::class)->except(['show']);
+    Route::delete('/coaches/bulk', [CoachController::class, 'bulkDestroy'])->name('coaches.bulkDestroy');
     Route::resource('coaches', CoachController::class)->except(['show']);
 
     // Sponsors + about-sections + regulations (full CRUD)
+    Route::delete('/sponsors/bulk', [SponsorController::class, 'bulkDestroy'])->name('sponsors.bulkDestroy');
     Route::resource('sponsors', SponsorController::class)->except(['show']);
+    Route::delete('/about-sections/bulk', [AboutSectionController::class, 'bulkDestroy'])->name('about-sections.bulkDestroy');
     Route::resource('about-sections', AboutSectionController::class)->parameters(['about-sections' => 'aboutSection'])->except(['show']);
+    Route::delete('/regulations/bulk', [RegulationController::class, 'bulkDestroy'])->name('regulations.bulkDestroy');
     Route::resource('regulations', RegulationController::class)->except(['show']);
+    Route::delete('/championships/bulk', [ChampionshipController::class, 'bulkDestroy'])->name('championships.bulkDestroy');
     Route::resource('championships', ChampionshipController::class)->except(['show']);
 
     // Media (admin URLs prefixed with /admin/ to avoid colliding with public)
     Route::get('/admin/videos', [VideoController::class, 'index'])->name('videos.index');
     Route::get('/videos/create', [VideoController::class, 'create'])->name('videos.create');
     Route::post('/videos', [VideoController::class, 'store'])->name('videos.store');
+    Route::delete('/videos/bulk', [VideoController::class, 'bulkDestroy'])->name('videos.bulkDestroy');
     Route::get('/videos/{video}/edit', [VideoController::class, 'edit'])->whereNumber('video')->name('videos.edit');
     Route::match(['put', 'patch'], '/videos/{video}', [VideoController::class, 'update'])->whereNumber('video')->name('videos.update');
     Route::delete('/videos/{video}', [VideoController::class, 'destroy'])->whereNumber('video')->name('videos.destroy');
@@ -159,6 +174,7 @@ Route::middleware('auth')->group(function () {
     Route::match(['put', 'patch'], '/galleries/{gallery}', [GalleryController::class, 'update'])->whereNumber('gallery')->name('galleries.update');
     Route::delete('/galleries/{gallery}', [GalleryController::class, 'destroy'])->whereNumber('gallery')->name('galleries.destroy');
 
+    Route::delete('/press_releases/bulk', [PressReleaseController::class, 'bulkDestroy'])->name('press_releases.bulkDestroy');
     Route::resource('press_releases', PressReleaseController::class)->except(['show']);
     Route::resource('galleries.photos', PhotoController::class)->except(['show']);
     Route::post('/galleries/{gallery}/photos/store-multiple', [PhotoController::class, 'storeMultiple'])->name('galleries.photos.storeMultiple');
@@ -176,10 +192,12 @@ Route::middleware('auth')->group(function () {
 
     // Tribunes admin (public index is at /fanshop above)
     Route::get('/tribunes', [TribuneController::class, 'adminIndex'])->name('tribunes.index');
+    Route::delete('/tribunes/bulk', [TribuneController::class, 'bulkDestroy'])->name('tribunes.bulkDestroy');
     Route::resource('tribunes', TribuneController::class)->except(['index', 'show']);
 
     // Teams admin (custom URL: /manage-teams)
     Route::get('/manage-teams', [TeamController::class, 'index'])->name('manage_teams.index');
+    Route::delete('/manage-teams/bulk', [TeamController::class, 'bulkDestroy'])->name('manage_teams.bulkDestroy');
     Route::get('/manage-teams/create', [TeamController::class, 'create'])->name('manage_teams.create');
     Route::post('/manage-teams', [TeamController::class, 'store'])->name('manage_teams.store');
     Route::get('/manage-teams/{team}/edit', [TeamController::class, 'edit'])->name('manage_teams.edit');
@@ -187,6 +205,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/manage-teams/{team}', [TeamController::class, 'destroy'])->name('manage_teams.destroy');
 
     // Games admin
+    Route::delete('/games/bulk', [GameController::class, 'bulkDestroy'])->name('games.bulkDestroy');
+    Route::delete('/admin/galleries/bulk', [GalleryController::class, 'bulkDestroy'])->name('galleries.bulkDestroy');
     Route::resource('games', GameController::class)->except(['show']);
     Route::post('/games/{game}/scores', [GameController::class, 'updateScores'])->name('games.updateScores');
     Route::post('/reset-scores', [GameController::class, 'resetScores'])->name('reset.scores');

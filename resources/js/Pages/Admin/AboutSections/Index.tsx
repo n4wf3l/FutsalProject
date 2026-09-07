@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import { motion } from 'framer-motion';
-import { Info, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Info, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { ConfirmDialog } from '@/Components/site/ConfirmDialog';
+import { cn } from '@/lib/utils';
 import type { AboutSection } from '@/types/models';
 
 interface Props {
@@ -21,11 +22,49 @@ function excerpt(html: string, max = 100): string {
 export default function AboutSectionsIndex({ sections }: Props) {
     const [search, setSearch] = useState('');
     const [toDelete, setToDelete] = useState<AboutSection | null>(null);
+    const [selected, setSelected] = useState<Set<number>>(new Set());
+    const [confirmBulk, setConfirmBulk] = useState(false);
 
     const filtered = sections.filter((s) => {
         if (!search) return true;
         return s.title.toLowerCase().includes(search.toLowerCase());
     });
+
+    const allVisibleSelected = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
+    const someSelected = selected.size > 0;
+
+    const toggle = (id: number) => {
+        setSelected((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    };
+
+    const toggleAllVisible = () => {
+        setSelected((prev) => {
+            const next = new Set(prev);
+            if (allVisibleSelected) {
+                filtered.forEach((s) => next.delete(s.id));
+            } else {
+                filtered.forEach((s) => next.add(s.id));
+            }
+            return next;
+        });
+    };
+
+    const clearSelection = () => setSelected(new Set());
+
+    const bulkDelete = () => {
+        router.delete('/about-sections/bulk', {
+            data: { ids: Array.from(selected) },
+            onSuccess: () => {
+                setSelected(new Set());
+                setConfirmBulk(false);
+            },
+        });
+    };
 
     return (
         <AdminLayout title="Sections À propos">
@@ -88,50 +127,102 @@ export default function AboutSectionsIndex({ sections }: Props) {
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-border bg-muted/50 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                                <th className="w-10 px-4 py-3">
+                                    <input
+                                        type="checkbox"
+                                        checked={allVisibleSelected}
+                                        onChange={toggleAllVisible}
+                                        className="h-4 w-4 cursor-pointer accent-crimson"
+                                        aria-label="Tout sélectionner"
+                                    />
+                                </th>
                                 <th className="px-4 py-3 text-left">Titre</th>
                                 <th className="hidden px-4 py-3 text-left md:table-cell">Extrait</th>
                                 <th className="w-24 px-4 py-3 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered.map((section, i) => (
-                                <motion.tr
-                                    key={section.id}
-                                    initial={{ opacity: 0, y: 4 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: (i % 20) * 0.02 }}
-                                    className="border-b border-border last:border-0 hover:bg-muted/30"
-                                >
-                                    <td className="px-4 py-3">
-                                        <div className="font-semibold">{section.title}</div>
-                                    </td>
-                                    <td className="hidden px-4 py-3 text-sm text-muted-foreground md:table-cell">
-                                        {excerpt(section.content)}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <div className="flex justify-end gap-1">
-                                            <Link
-                                                href={`/about/${section.id}/edit`}
-                                                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-crimson"
-                                                aria-label="Éditer"
-                                            >
-                                                <Pencil className="h-4 w-4" />
-                                            </Link>
-                                            <button
-                                                onClick={() => setToDelete(section)}
-                                                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-plasma/10 hover:text-plasma"
-                                                aria-label="Supprimer"
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </motion.tr>
-                            ))}
+                            {filtered.map((section, i) => {
+                                const isSelected = selected.has(section.id);
+                                return (
+                                    <motion.tr
+                                        key={section.id}
+                                        initial={{ opacity: 0, y: 4 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: (i % 20) * 0.02 }}
+                                        className={cn(
+                                            'border-b border-border last:border-0 hover:bg-muted/30',
+                                            isSelected && 'bg-champagne/5'
+                                        )}
+                                    >
+                                        <td className="px-4 py-3">
+                                            <input
+                                                type="checkbox"
+                                                checked={isSelected}
+                                                onChange={() => toggle(section.id)}
+                                                className="h-4 w-4 cursor-pointer accent-crimson"
+                                                aria-label={`Sélectionner ${section.title}`}
+                                            />
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="font-semibold">{section.title}</div>
+                                        </td>
+                                        <td className="hidden px-4 py-3 text-sm text-muted-foreground md:table-cell">
+                                            {excerpt(section.content)}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="flex justify-end gap-1">
+                                                <Link
+                                                    href={`/about/${section.id}/edit`}
+                                                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-crimson"
+                                                    aria-label="Éditer"
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </Link>
+                                                <button
+                                                    onClick={() => setToDelete(section)}
+                                                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-plasma/10 hover:text-plasma"
+                                                    aria-label="Supprimer"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </motion.tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
             )}
+
+            {/* Sticky bulk action bar */}
+            <AnimatePresence>
+                {someSelected && (
+                    <motion.div
+                        initial={{ y: 60, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 60, opacity: 0 }}
+                        transition={{ type: 'spring', damping: 26, stiffness: 260 }}
+                        className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-full border border-champagne/40 bg-card px-5 py-3 shadow-2xl shadow-black/40"
+                    >
+                        <span className="font-mono text-xs font-semibold uppercase tracking-widest text-champagne">
+                            {selected.size} sélectionné{selected.size > 1 ? 's' : ''}
+                        </span>
+                        <button
+                            onClick={clearSelection}
+                            className="inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+                        >
+                            <X className="h-3.5 w-3.5" />
+                            Désélectionner
+                        </button>
+                        <Button variant="destructive" size="sm" onClick={() => setConfirmBulk(true)}>
+                            <Trash2 className="h-4 w-4" />
+                            Supprimer
+                        </Button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <ConfirmDialog
                 open={!!toDelete}
@@ -146,6 +237,16 @@ export default function AboutSectionsIndex({ sections }: Props) {
                         onSuccess: () => setToDelete(null),
                     });
                 }}
+            />
+
+            <ConfirmDialog
+                open={confirmBulk}
+                title={`Supprimer ${selected.size} section${selected.size > 1 ? 's' : ''} ?`}
+                description="Cette action est irréversible. Les sections sélectionnées seront supprimées définitivement."
+                confirmLabel="Supprimer"
+                variant="destructive"
+                onCancel={() => setConfirmBulk(false)}
+                onConfirm={bulkDelete}
             />
         </AdminLayout>
     );

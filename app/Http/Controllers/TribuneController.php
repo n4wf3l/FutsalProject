@@ -109,4 +109,22 @@ class TribuneController extends Controller
 
         return redirect('/tribunes')->with('success', 'Tribune supprimée.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:tribunes,id',
+        ]);
+
+        $tribunes = Tribune::whereIn('id', $data['ids'])->get();
+        foreach ($tribunes as $tribune) {
+            if ($tribune->photo) {
+                Storage::disk('public')->delete($tribune->photo);
+            }
+            $tribune->delete();
+        }
+
+        return redirect('/tribunes')->with('success', count($tribunes) . ' tribune(s) supprimée(s).');
+    }
 }

@@ -64,6 +64,24 @@ class PlayerEspoirController extends Controller
         return redirect()->route('espoirs.index')->with('success', 'Joueur supprimé.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer|exists:players_espoirs,id',
+        ]);
+
+        $players = PlayerEspoir::whereIn('id', $data['ids'])->get();
+        foreach ($players as $player) {
+            if ($player->photo) {
+                Storage::disk('public')->delete($player->photo);
+            }
+            $player->delete();
+        }
+
+        return redirect()->route('espoirs.index')->with('success', count($players) . ' joueur(s) supprimé(s).');
+    }
+
     private function validated(Request $request): array
     {
         return $request->validate([
