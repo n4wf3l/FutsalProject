@@ -20,7 +20,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PressReleaseController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PhotoController;
-use App\Http\Controllers\PlayerU21Controller;
+use App\Http\Controllers\PlayerFeminineController;
 use App\Http\Controllers\RegulationController;
 use App\Http\Controllers\ChampionshipController;
 use App\Http\Middleware\CheckRegistrationStatus;
@@ -133,7 +133,8 @@ Route::middleware('auth')->group(function () {
 
     // Squad
     Route::resource('players', PlayerController::class)->except(['show']);
-    Route::resource('playersu21', PlayerU21Controller::class)->except(['show']);
+    Route::resource('feminines', PlayerFeminineController::class)->except(['show'])
+        ->parameters(['feminines' => 'feminine']);
     Route::resource('staff', StaffController::class)->except(['show']);
     Route::resource('coaches', CoachController::class)->except(['show']);
 

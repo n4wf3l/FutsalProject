@@ -6,10 +6,10 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
 import { Field } from '@/Components/ui/Field';
-import type { PlayerU21 } from '@/types/models';
+import type { PlayerFeminine } from '@/types/models';
 
 interface Props {
-    player: PlayerU21 | null;
+    player: PlayerFeminine | null;
 }
 
 const POSITIONS = [
@@ -21,7 +21,7 @@ const POSITIONS = [
     'Attaquant',
 ];
 
-export default function PlayerU21Form({ player }: Props) {
+export default function PlayerFeminineForm({ player }: Props) {
     const isEdit = !!player;
     const [preview, setPreview] = useState<string | null>(
         player?.photo ? `/storage/${player.photo}` : null
@@ -41,7 +41,7 @@ export default function PlayerU21Form({ player }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/playersu21/${player!.id}` : '/playersu21';
+        const url = isEdit ? `/feminines/${player!.id}` : '/feminines';
         post(url, {
             forceFormData: true,
         });
@@ -64,15 +64,15 @@ export default function PlayerU21Form({ player }: Props) {
 
     return (
         <AdminLayout>
-            <Head title={isEdit ? 'Modifier joueur U21' : 'Nouveau joueur U21'} />
+            <Head title={isEdit ? 'Modifier une joueuse' : 'Nouveau joueuse'} />
 
             <div className="mb-6">
                 <Link
-                    href="/playersu21"
+                    href="/feminines"
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-crimson"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Retour aux joueurs U21
+                    Retour aux joueuses
                 </Link>
                 <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
                     <div>
@@ -82,7 +82,7 @@ export default function PlayerU21Form({ player }: Props) {
                         <h1 className="mt-1 font-display text-3xl font-bold">
                             {isEdit
                                 ? `${player!.first_name} ${player!.last_name}`
-                                : 'Ajouter un joueur U21'}
+                                : 'Ajouter un joueuse'}
                         </h1>
                     </div>
                 </div>
@@ -97,7 +97,7 @@ export default function PlayerU21Form({ player }: Props) {
                 >
                     <div className="rounded-2xl border border-border bg-card p-6">
                         <div className="font-mono text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                            Photo du joueur
+                            Photo de la joueuse
                         </div>
                         <div className="mt-4 aspect-[3/4] overflow-hidden rounded-xl border border-border bg-muted">
                             {preview ? (
@@ -232,7 +232,7 @@ export default function PlayerU21Form({ player }: Props) {
 
                     <div className="flex items-center justify-end gap-3">
                         <Button asChild variant="outline" type="button">
-                            <Link href="/playersu21">Annuler</Link>
+                            <Link href="/feminines">Annuler</Link>
                         </Button>
                         <Button type="submit" size="lg" disabled={processing}>
                             {processing ? (
@@ -240,7 +240,7 @@ export default function PlayerU21Form({ player }: Props) {
                             ) : (
                                 <Save className="h-4 w-4" />
                             )}
-                            {isEdit ? 'Enregistrer' : 'Créer le joueur'}
+                            {isEdit ? 'Enregistrer' : 'Créer la joueuse'}
                         </Button>
                     </div>
                 </motion.div>

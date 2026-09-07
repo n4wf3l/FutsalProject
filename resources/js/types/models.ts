@@ -82,7 +82,7 @@ export interface Player {
     contract_until: string;
 }
 
-export interface PlayerU21 {
+export interface PlayerFeminine {
     id: number;
     first_name: string;
     last_name: string;

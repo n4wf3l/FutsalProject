@@ -9,15 +9,15 @@ import { Badge } from '@/Components/ui/Badge';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { ConfirmDialog } from '@/Components/site/ConfirmDialog';
 import { cn } from '@/lib/utils';
-import type { PlayerU21 } from '@/types/models';
+import type { PlayerFeminine } from '@/types/models';
 
 interface Props {
-    players: PlayerU21[];
+    players: PlayerFeminine[];
 }
 
-export default function PlayersU21Index({ players }: Props) {
+export default function FemininesIndex({ players }: Props) {
     const [search, setSearch] = useState('');
-    const [toDelete, setToDelete] = useState<PlayerU21 | null>(null);
+    const [toDelete, setToDelete] = useState<PlayerFeminine | null>(null);
 
     const filtered = players.filter((p) => {
         if (!search) return true;
@@ -31,22 +31,22 @@ export default function PlayersU21Index({ players }: Props) {
     });
 
     return (
-        <AdminLayout title="Joueurs U21">
-            <Head title="Joueurs U21" />
+        <AdminLayout title="Féminines">
+            <Head title="Féminines" />
 
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <div className="font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                        Effectif U21
+                        Effectif féminin
                     </div>
                     <h1 className="mt-1 font-display text-3xl font-bold">
-                        Joueurs U21 <span className="text-muted-foreground">· {players.length}</span>
+                        Féminines <span className="text-muted-foreground">· {players.length}</span>
                     </h1>
                 </div>
                 <Button asChild size="lg">
-                    <Link href="/playersu21/create">
+                    <Link href="/feminines/create">
                         <Plus className="h-4 w-4" />
-                        Nouveau joueur U21
+                        Nouveau joueuse
                     </Link>
                 </Button>
             </div>
@@ -69,18 +69,18 @@ export default function PlayersU21Index({ players }: Props) {
             {filtered.length === 0 ? (
                 <EmptyState
                     icon={Users}
-                    title={search ? 'Aucun joueur trouvé' : 'Aucun joueur U21 enregistré'}
+                    title={search ? 'Aucune joueuse trouvée' : 'Aucun joueuse enregistré'}
                     description={
                         search
                             ? 'Essaie une autre recherche ou vide le filtre.'
-                            : 'Ajoute ton premier joueur U21 pour démarrer.'
+                            : 'Ajoute ton première joueuse pour démarrer.'
                     }
                     action={
                         !search ? (
                             <Button asChild>
-                                <Link href="/playersu21/create">
+                                <Link href="/feminines/create">
                                     <Plus className="h-4 w-4" />
-                                    Ajouter un joueur U21
+                                    Ajouter un joueuse
                                 </Link>
                             </Button>
                         ) : undefined
@@ -92,7 +92,7 @@ export default function PlayersU21Index({ players }: Props) {
                         <thead>
                             <tr className="border-b border-border bg-muted/50 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                                 <th className="w-16 px-4 py-3 text-center">#</th>
-                                <th className="px-4 py-3 text-left">Joueur</th>
+                                <th className="px-4 py-3 text-left">Joueuse</th>
                                 <th className="hidden px-4 py-3 text-left sm:table-cell">Poste</th>
                                 <th className="hidden px-4 py-3 text-left md:table-cell">Nationalité</th>
                                 <th className="w-24 px-4 py-3 text-right">Actions</th>
@@ -114,13 +114,13 @@ export default function PlayersU21Index({ players }: Props) {
                         ? `Supprimer ${toDelete.first_name} ${toDelete.last_name} ?`
                         : ''
                 }
-                description="Cette action est irréversible. Le joueur et sa photo seront supprimés."
+                description="Cette action est irréversible. La joueuse et sa photo seront supprimées."
                 confirmLabel="Supprimer"
                 variant="destructive"
                 onCancel={() => setToDelete(null)}
                 onConfirm={() => {
                     if (!toDelete) return;
-                    router.delete(`/playersu21/${toDelete.id}`, {
+                    router.delete(`/feminines/${toDelete.id}`, {
                         onSuccess: () => setToDelete(null),
                     });
                 }}
@@ -134,9 +134,9 @@ function PlayerRow({
     index,
     onDelete,
 }: {
-    player: PlayerU21;
+    player: PlayerFeminine;
     index: number;
-    onDelete: (p: PlayerU21) => void;
+    onDelete: (p: PlayerFeminine) => void;
 }) {
     return (
         <motion.tr
@@ -183,7 +183,7 @@ function PlayerRow({
             <td className="px-4 py-3">
                 <div className="flex justify-end gap-1">
                     <Link
-                        href={`/playersu21/${player.id}/edit`}
+                        href={`/feminines/${player.id}/edit`}
                         className={cn(
                             'inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-crimson'
                         )}
