@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -34,10 +34,22 @@ export function Navbar() {
     const { t } = useTranslation('nav');
     const { t: tCommon } = useTranslation('common');
     const [scrolled, setScrolled] = useState(false);
+    const [hidden, setHidden] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const lastScrollY = useRef(0);
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 12);
+        const onScroll = () => {
+            const y = window.scrollY;
+            setScrolled(y > 12);
+            const delta = y - lastScrollY.current;
+            if (y > 120 && delta > 4) {
+                setHidden(true);
+            } else if (delta < -4 || y < 120) {
+                setHidden(false);
+            }
+            lastScrollY.current = y;
+        };
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
@@ -106,7 +118,8 @@ export function Navbar() {
         <header
             className={cn(
                 'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-                scrolled ? 'py-2' : 'py-4'
+                scrolled ? 'py-2' : 'py-4',
+                hidden && !mobileOpen ? '-translate-y-full' : 'translate-y-0'
             )}
         >
             <div className="mx-auto max-w-7xl px-4">

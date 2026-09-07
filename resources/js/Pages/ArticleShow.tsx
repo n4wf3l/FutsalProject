@@ -17,6 +17,18 @@ interface Props {
     recentArticles: Article[];
 }
 
+function formatArticleBody(raw: string): string {
+    if (!raw) return '';
+    const hasBlockHtml = /<(p|div|section|article|h[1-6]|blockquote|ul|ol|figure|table)\b/i.test(raw);
+    if (hasBlockHtml) return raw;
+    return raw
+        .split(/\n\s*\n+/)
+        .map((chunk) => chunk.trim())
+        .filter((chunk) => chunk.length > 0)
+        .map((chunk) => `<p>${chunk.replace(/\n/g, '<br>')}</p>`)
+        .join('');
+}
+
 export default function ArticleShow({ article, recentArticles }: Props) {
     const { t } = useTranslation('pages');
     const date = formatMatchDate(article.created_at);
@@ -25,6 +37,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
         .replace(/\s+/g, ' ')
         .trim()
         .slice(0, 200);
+    const bodyHtml = formatArticleBody(article.description ?? '');
 
     const articleLd = {
         '@context': 'https://schema.org',
@@ -116,7 +129,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                 >
                     <div
                         className="text-lg leading-relaxed text-foreground/90 [&>p]:mb-5 [&>h2]:mt-10 [&>h2]:mb-4 [&>h2]:font-editorial [&>h2]:text-3xl [&>h2]:font-medium [&>h2]:leading-tight [&>h3]:mt-8 [&>h3]:mb-3 [&>h3]:font-editorial [&>h3]:text-2xl [&>h3]:font-medium [&>ul]:my-4 [&>ul]:list-disc [&>ul]:pl-6 [&>a]:text-crimson [&>a]:underline [&>blockquote]:my-10 [&>blockquote]:font-editorial [&>blockquote]:text-2xl [&>blockquote]:italic [&>blockquote]:text-champagne [&>blockquote]:leading-snug"
-                        dangerouslySetInnerHTML={{ __html: article.description ?? '' }}
+                        dangerouslySetInnerHTML={{ __html: bodyHtml }}
                     />
                 </motion.div>
 
