@@ -12,11 +12,13 @@
     },
     "category": {
         "junior": "Junior team",
-        "junior_hint": "U15 · U17 · U21",
+        "junior_hint": "U20",
         "feminine": "Women's team",
         "feminine_hint": "Women's team",
         "senior_masculine": "Senior men's team",
-        "senior_masculine_hint": "First team"
+        "senior_masculine_hint": "First team",
+        "closed_badge": "Closed",
+        "closed_hint": "Recruitment closed"
     },
     "step2": {
         "kicker": "Step 2",

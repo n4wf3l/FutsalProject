@@ -33,6 +33,10 @@ class PlayerApplication extends Model
         self::CATEGORY_SENIOR_MASCULINE => 'Équipe senior masculine',
     ];
 
+    public const CLOSED_CATEGORIES = [
+        self::CATEGORY_FEMININE,
+    ];
+
     protected $fillable = [
         'first_name',
         'last_name',

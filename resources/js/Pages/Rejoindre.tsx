@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import {
     CheckCircle2,
     FileText,
+    Lock,
     Loader2,
     Mail,
     MapPin,
@@ -28,6 +29,7 @@ import { cn } from '@/lib/utils';
 
 interface Props {
     categories: Record<string, string>;
+    closedCategories: string[];
     positions: string[];
 }
 
@@ -37,7 +39,8 @@ const CATEGORY_META: Record<string, { icon: React.ComponentType<{ className?: st
     senior_masculine: { icon: Trophy, hintKey: 'category.senior_masculine_hint' },
 };
 
-export default function Rejoindre({ categories, positions }: Props) {
+export default function Rejoindre({ categories, closedCategories, positions }: Props) {
+    const closedSet = new Set(closedCategories ?? []);
     const { t } = useTranslation('join');
     const { props } = usePage<{ flash: { success?: string } }>();
     const flash = props.flash;
@@ -141,36 +144,53 @@ export default function Rejoindre({ categories, positions }: Props) {
                                 {Object.keys(categories).map((key) => {
                                     const meta = CATEGORY_META[key];
                                     const Icon = meta?.icon ?? Users2;
-                                    const selected = data.category === key;
+                                    const closed = closedSet.has(key);
+                                    const selected = !closed && data.category === key;
                                     return (
                                         <button
                                             key={key}
                                             type="button"
-                                            onClick={() => setData('category', key)}
+                                            onClick={() => !closed && setData('category', key)}
+                                            disabled={closed}
+                                            aria-disabled={closed}
                                             className={cn(
-                                                'group flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-all',
-                                                selected
-                                                    ? 'border-crimson bg-crimson/5 shadow-glow-crimson'
-                                                    : 'border-border bg-background hover:border-crimson/40'
+                                                'group relative flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-all',
+                                                closed
+                                                    ? 'cursor-not-allowed border-border bg-muted/30 opacity-60'
+                                                    : selected
+                                                        ? 'border-crimson bg-crimson/5 shadow-glow-crimson'
+                                                        : 'border-border bg-background hover:border-crimson/40'
                                             )}
                                         >
+                                            {closed && (
+                                                <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-border bg-card px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
+                                                    <Lock className="h-2.5 w-2.5" />
+                                                    {t('category.closed_badge')}
+                                                </span>
+                                            )}
                                             <div
                                                 className={cn(
                                                     'inline-flex h-9 w-9 items-center justify-center rounded-lg border transition-colors',
-                                                    selected
-                                                        ? 'border-crimson bg-crimson text-crimson-foreground'
-                                                        : 'border-border bg-card text-champagne'
+                                                    closed
+                                                        ? 'border-border bg-card text-muted-foreground'
+                                                        : selected
+                                                            ? 'border-crimson bg-crimson text-crimson-foreground'
+                                                            : 'border-border bg-card text-champagne'
                                                 )}
                                             >
                                                 <Icon className="h-4 w-4" />
                                             </div>
                                             <div>
-                                                <div className={cn('font-display text-sm font-semibold', selected && 'text-crimson')}>
+                                                <div className={cn(
+                                                    'font-display text-sm font-semibold',
+                                                    closed && 'text-muted-foreground',
+                                                    selected && 'text-crimson'
+                                                )}>
                                                     {t(`category.${key}`)}
                                                 </div>
                                                 {meta?.hintKey && (
                                                     <div className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                                                        {t(meta.hintKey)}
+                                                        {closed ? t('category.closed_hint') : t(meta.hintKey)}
                                                     </div>
                                                 )}
                                             </div>

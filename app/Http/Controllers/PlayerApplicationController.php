@@ -29,12 +29,18 @@ class PlayerApplicationController extends Controller
     {
         return Inertia::render('Rejoindre', [
             'categories' => PlayerApplication::CATEGORIES,
+            'closedCategories' => PlayerApplication::CLOSED_CATEGORIES,
             'positions' => self::POSITIONS,
         ]);
     }
 
     public function store(Request $request)
     {
+        $openCategories = array_diff(
+            array_keys(PlayerApplication::CATEGORIES),
+            PlayerApplication::CLOSED_CATEGORIES
+        );
+
         $data = $request->validate([
             'first_name' => 'required|string|max:120',
             'last_name' => 'required|string|max:120',
@@ -43,7 +49,7 @@ class PlayerApplicationController extends Controller
             'birthdate' => 'required|date|before:today',
             'nationality' => 'nullable|string|max:80',
             'city' => 'nullable|string|max:120',
-            'category' => 'required|in:'.implode(',', array_keys(PlayerApplication::CATEGORIES)),
+            'category' => 'required|in:'.implode(',', $openCategories),
             'position_preference' => 'nullable|string|max:60',
             'current_club' => 'nullable|string|max:180',
             'experience_years' => 'nullable|integer|min:0|max:60',

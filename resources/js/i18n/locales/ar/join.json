@@ -12,11 +12,13 @@
     },
     "category": {
         "junior": "فريق الأشبال",
-        "junior_hint": "أقل من 15 · 17 · 21 سنة",
+        "junior_hint": "أقل من 20 سنة",
         "feminine": "الفريق النسوي",
         "feminine_hint": "الفريق النسوي",
         "senior_masculine": "فريق الذكور الكبار",
-        "senior_masculine_hint": "الفريق الأول"
+        "senior_masculine_hint": "الفريق الأول",
+        "closed_badge": "مغلق",
+        "closed_hint": "التسجيل مغلق"
     },
     "step2": {
         "kicker": "المرحلة 2",
