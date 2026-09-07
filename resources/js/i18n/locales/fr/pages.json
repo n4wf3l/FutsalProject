@@ -1,4 +1,13 @@
 {
+    "espoirs": {
+        "seo_title": "Espoirs",
+        "seo_description": "L'effectif espoirs de Dina Kenitra FC. La relève du club de futsal de Kénitra.",
+        "kicker": "L'effectif espoirs · La relève",
+        "title": "L'avenir du club",
+        "subtitle": "Les joueurs qui forgent aujourd'hui l'ADN de Dina Kenitra FC.",
+        "empty_title": "Aucun joueur dans l'effectif espoirs",
+        "empty_description": "Reviens bientôt pour découvrir la relève."
+    },
     "teams": {
         "seo_title": "L'effectif",
         "seo_description": "L'équipe Dina Kenitra FC saison 2026-2027 en Division 2. Joueurs, coach et staff du club de futsal de Kénitra.",

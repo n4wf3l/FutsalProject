@@ -37,6 +37,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/teams', [PlayerController::class, 'publicRoster'])->name('teams');
+Route::get('/espoirs', [PlayerEspoirController::class, 'publicIndex'])->name('espoirs.public');
 Route::get('/calendar', [GameController::class, 'showCalendar'])->name('calendar.show');
 Route::get('/news', [ArticleController::class, 'index'])->name('news');
 Route::get('/about', [RegulationController::class, 'publicIndex'])->name('about.index');
@@ -140,9 +141,18 @@ Route::middleware('auth')->group(function () {
     // Squad
     Route::delete('/players/bulk', [PlayerController::class, 'bulkDestroy'])->name('players.bulkDestroy');
     Route::resource('players', PlayerController::class)->except(['show']);
-    Route::delete('/espoirs/bulk', [PlayerEspoirController::class, 'bulkDestroy'])->name('espoirs.bulkDestroy');
-    Route::resource('espoirs', PlayerEspoirController::class)->except(['show'])
-        ->parameters(['espoirs' => 'espoir']);
+    Route::delete('/manage-espoirs/bulk', [PlayerEspoirController::class, 'bulkDestroy'])->name('espoirs.bulkDestroy');
+    Route::resource('manage-espoirs', PlayerEspoirController::class)
+        ->except(['show'])
+        ->parameters(['manage-espoirs' => 'espoir'])
+        ->names([
+            'index' => 'espoirs.index',
+            'create' => 'espoirs.create',
+            'store' => 'espoirs.store',
+            'edit' => 'espoirs.edit',
+            'update' => 'espoirs.update',
+            'destroy' => 'espoirs.destroy',
+        ]);
     Route::delete('/staff/bulk', [StaffController::class, 'bulkDestroy'])->name('staff.bulkDestroy');
     Route::resource('staff', StaffController::class)->except(['show']);
     Route::delete('/coaches/bulk', [CoachController::class, 'bulkDestroy'])->name('coaches.bulkDestroy');

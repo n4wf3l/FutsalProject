@@ -9,6 +9,7 @@ import {
     Menu,
     Mic,
     Newspaper,
+    ShieldPlus,
     Ticket,
     Trophy,
     UserCog,
@@ -65,9 +66,10 @@ export function Navbar() {
             {
                 kind: 'menu',
                 label: t('items.team_group'),
-                hrefMatches: ['/teams', '/coaches', '/staff', '/about'],
+                hrefMatches: ['/teams', '/espoirs', '/coaches', '/staff', '/about'],
                 items: [
                     { label: t('items.team_roster'), href: '/teams', icon: Users, description: t('items.team_roster_desc') },
+                    { label: t('items.team_espoirs'), href: '/espoirs', icon: ShieldPlus, description: t('items.team_espoirs_desc') },
                     { label: t('items.team_history'), href: '/about', icon: Trophy, description: t('items.team_history_desc') },
                 ],
             },
@@ -99,6 +101,7 @@ export function Navbar() {
         () => [
             { label: t('items.home'), href: '/', icon: Trophy },
             { label: t('items.team_roster'), href: '/teams', icon: Users },
+            { label: t('items.team_espoirs'), href: '/espoirs', icon: ShieldPlus },
             { label: t('items.competition_calendar'), href: '/calendar', icon: Calendar },
             { label: t('items.media_news'), href: '/news', icon: Newspaper },
             { label: t('items.media_interviews'), href: '/interviews', icon: Mic },

@@ -59,7 +59,7 @@ export default function EspoirsIndex({ players }: Props) {
     const clearSelection = () => setSelected(new Set());
 
     const bulkDelete = () => {
-        router.delete('/espoirs/bulk', {
+        router.delete('/manage-espoirs/bulk', {
             data: { ids: Array.from(selected) },
             onSuccess: () => {
                 setSelected(new Set());
@@ -82,7 +82,7 @@ export default function EspoirsIndex({ players }: Props) {
                     </h1>
                 </div>
                 <Button asChild size="lg">
-                    <Link href="/espoirs/create">
+                    <Link href="/manage-espoirs/create">
                         <Plus className="h-4 w-4" />
                         Nouveau joueur
                     </Link>
@@ -116,7 +116,7 @@ export default function EspoirsIndex({ players }: Props) {
                     action={
                         !search ? (
                             <Button asChild>
-                                <Link href="/espoirs/create">
+                                <Link href="/manage-espoirs/create">
                                     <Plus className="h-4 w-4" />
                                     Ajouter un joueur
                                 </Link>
@@ -202,7 +202,7 @@ export default function EspoirsIndex({ players }: Props) {
                 onCancel={() => setToDelete(null)}
                 onConfirm={() => {
                     if (!toDelete) return;
-                    router.delete(`/espoirs/${toDelete.id}`, {
+                    router.delete(`/manage-espoirs/${toDelete.id}`, {
                         onSuccess: () => setToDelete(null),
                     });
                 }}
@@ -291,7 +291,7 @@ function PlayerRow({
             <td className="px-4 py-3">
                 <div className="flex justify-end gap-1">
                     <Link
-                        href={`/espoirs/${player.id}/edit`}
+                        href={`/manage-espoirs/${player.id}/edit`}
                         className={cn(
                             'inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-crimson'
                         )}

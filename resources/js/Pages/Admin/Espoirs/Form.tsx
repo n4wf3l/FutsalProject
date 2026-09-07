@@ -41,7 +41,7 @@ export default function PlayerEspoirForm({ player }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/espoirs/${player!.id}` : '/espoirs';
+        const url = isEdit ? `/manage-espoirs/${player!.id}` : '/manage-espoirs';
         post(url, {
             forceFormData: true,
         });
@@ -68,7 +68,7 @@ export default function PlayerEspoirForm({ player }: Props) {
 
             <div className="mb-6">
                 <Link
-                    href="/espoirs"
+                    href="/manage-espoirs"
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-crimson"
                 >
                     <ArrowLeft className="h-4 w-4" />
@@ -232,7 +232,7 @@ export default function PlayerEspoirForm({ player }: Props) {
 
                     <div className="flex items-center justify-end gap-3">
                         <Button asChild variant="outline" type="button">
-                            <Link href="/espoirs">Annuler</Link>
+                            <Link href="/manage-espoirs">Annuler</Link>
                         </Button>
                         <Button type="submit" size="lg" disabled={processing}>
                             {processing ? (

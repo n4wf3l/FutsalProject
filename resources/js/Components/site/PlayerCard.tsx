@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import { User } from 'lucide-react';
-import type { Player } from '@/types/models';
+import type { Player, PlayerEspoir } from '@/types/models';
 import { cn } from '@/lib/utils';
 import { SmartImage } from './SmartImage';
 
 interface Props {
-    player: Player;
+    player: Player | PlayerEspoir;
     index?: number;
 }
 

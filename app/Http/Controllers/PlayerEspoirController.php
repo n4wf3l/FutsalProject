@@ -9,6 +9,13 @@ use Inertia\Inertia;
 
 class PlayerEspoirController extends Controller
 {
+    public function publicIndex()
+    {
+        return Inertia::render('Espoirs', [
+            'players' => PlayerEspoir::orderBy('number', 'asc')->get(),
+        ]);
+    }
+
     public function index()
     {
         return Inertia::render('Admin/Espoirs/Index', [

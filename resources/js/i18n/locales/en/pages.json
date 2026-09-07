@@ -1,4 +1,13 @@
 {
+    "espoirs": {
+        "seo_title": "Youth squad",
+        "seo_description": "Dina Kenitra FC youth squad. The next generation of the Kenitra futsal club.",
+        "kicker": "Youth squad · Next generation",
+        "title": "The future of the club",
+        "subtitle": "The players shaping tomorrow's Dina Kenitra FC.",
+        "empty_title": "No player in the youth squad",
+        "empty_description": "Come back soon to meet the next generation."
+    },
     "teams": {
         "seo_title": "Squad",
         "seo_description": "Dina Kenitra FC squad for the 2026-2027 season in Division 2. Players, coach and staff of the Kenitra futsal club.",
