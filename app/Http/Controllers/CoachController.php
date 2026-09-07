@@ -33,7 +33,7 @@ class CoachController extends Controller
 
     public function edit(Coach $coach)
     {
-        return Inertia::render('Admin/Coaches/Form', ['coach' => $coach]);
+        return Inertia::render('Admin/Coaches/Form', ['coach' => $coach->makeVisible('birth_date')]);
     }
 
     public function update(Request $request, Coach $coach)

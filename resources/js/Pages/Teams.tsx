@@ -152,13 +152,10 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
                                             value={new Date(coach.coaching_since).getFullYear().toString()}
                                         />
                                     )}
-                                    {coach.birth_date && (
+                                    {coach.age !== null && (
                                         <CoachStat
                                             label={t('teams.coach_stat_age')}
-                                            value={String(
-                                                new Date().getFullYear() -
-                                                    new Date(coach.birth_date).getFullYear()
-                                            )}
+                                            value={String(coach.age)}
                                         />
                                     )}
                                 </div>

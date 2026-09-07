@@ -63,7 +63,7 @@ class PlayerController extends Controller
     public function edit(Player $player)
     {
         return Inertia::render('Admin/Players/Form', [
-            'player' => $player,
+            'player' => $player->makeVisible('birthdate'),
         ]);
     }
 

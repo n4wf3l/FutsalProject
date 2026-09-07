@@ -74,7 +74,8 @@ export interface Player {
     first_name: string;
     last_name: string;
     photo: string | null;
-    birthdate: string;
+    birthdate?: string;
+    age: number | null;
     position: string;
     number: number;
     nationality: string;
@@ -87,7 +88,8 @@ export interface PlayerEspoir {
     first_name: string;
     last_name: string;
     photo: string | null;
-    birthdate: string;
+    birthdate?: string;
+    age: number | null;
     position: string;
     number: number;
     nationality: string;
@@ -98,7 +100,8 @@ export interface Coach {
     id: number;
     first_name: string;
     last_name: string;
-    birth_date: string | null;
+    birth_date?: string | null;
+    age: number | null;
     coaching_since: string | null;
     birth_city: string | null;
     nationality: string | null;
