@@ -5,6 +5,7 @@ import { ArrowLeft, Camera, Eye, EyeOff, Loader2, Mic, Save, Trash2, User } from
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input, Textarea } from '@/Components/ui/Input';
+import { RichTextEditor } from '@/Components/ui/RichTextEditor';
 import { Field } from '@/Components/ui/Field';
 import type { Interview } from '@/types/models';
 
@@ -142,16 +143,14 @@ export default function InterviewForm({ interview, roles }: Props) {
                             <Field
                                 label="Contenu de l'interview"
                                 required
-                                hint="HTML supporté (<p>, <h2>, <strong>, <blockquote>…)"
+                                hint="Utilise la barre d'outils pour mettre en forme."
                                 error={errors.content}
                             >
-                                <Textarea
+                                <RichTextEditor
                                     value={data.content}
-                                    onChange={(e) => setData('content', e.target.value)}
-                                    rows={16}
-                                    required
-                                    placeholder="<p><strong>Q :</strong> Question…</p><p><strong>R :</strong> Réponse…</p>"
-                                    className="font-mono text-sm"
+                                    onChange={(html) => setData('content', html)}
+                                    placeholder="Q : Question… R : Réponse…"
+                                    minHeight={360}
                                 />
                             </Field>
                         </div>

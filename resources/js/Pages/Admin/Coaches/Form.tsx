@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Camera, Loader2, Save, Trash2, UserCog } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
-import { Input, Textarea } from '@/Components/ui/Input';
+import { Input } from '@/Components/ui/Input';
+import { RichTextEditor } from '@/Components/ui/RichTextEditor';
 import { Field } from '@/Components/ui/Field';
 import type { Coach } from '@/types/models';
 
@@ -68,8 +69,8 @@ export default function CoachForm({ coach }: Props) {
                     </div>
                     <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
                         <div className="font-mono text-xs font-semibold uppercase tracking-[0.3em] text-champagne">Biographie</div>
-                        <Field label="Description" error={errors.description} hint="HTML autorisé." className="mt-4">
-                            <Textarea value={data.description} onChange={(e) => setData('description', e.target.value)} rows={10} className="font-mono text-sm" />
+                        <Field label="Description" error={errors.description} hint="Utilise la barre d'outils pour mettre en forme." className="mt-4">
+                            <RichTextEditor value={data.description} onChange={(html) => setData('description', html)} placeholder="Parcours, palmarès, vision…" minHeight={260} />
                         </Field>
                     </div>
                     <div className="flex items-center justify-end gap-3">

@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Loader2, Save } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
-import { Input, Textarea } from '@/Components/ui/Input';
+import { Input } from '@/Components/ui/Input';
+import { RichTextEditor } from '@/Components/ui/RichTextEditor';
 import { Field } from '@/Components/ui/Field';
 import type { AboutSection } from '@/types/models';
 
@@ -71,15 +72,13 @@ export default function AboutSectionForm({ section }: Props) {
                             label="Contenu"
                             required
                             error={errors.content}
-                            hint="HTML autorisé pour la mise en forme (paragraphes, liens, listes)."
+                            hint="Utilise la barre d'outils pour mettre en forme."
                         >
-                            <Textarea
+                            <RichTextEditor
                                 value={data.content}
-                                onChange={(e) => setData('content', e.target.value)}
-                                required
-                                rows={20}
-                                placeholder="<p>Contenu de la section...</p>"
-                                className="font-mono text-sm"
+                                onChange={(html) => setData('content', html)}
+                                placeholder="Rédige le contenu de la section…"
+                                minHeight={400}
                             />
                         </Field>
                     </div>

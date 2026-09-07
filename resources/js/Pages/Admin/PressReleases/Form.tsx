@@ -5,6 +5,7 @@ import { ArrowLeft, Camera, FileText, Loader2, Save, Trash2 } from 'lucide-react
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input, Textarea } from '@/Components/ui/Input';
+import { RichTextEditor } from '@/Components/ui/RichTextEditor';
 import { Field } from '@/Components/ui/Field';
 import type { PressRelease } from '@/types/models';
 
@@ -145,15 +146,13 @@ export default function PressReleaseForm({ pressRelease }: Props) {
                                 label="Contenu"
                                 required
                                 error={errors.content}
-                                hint="HTML autorisé pour la mise en forme (paragraphes, liens, images embed)."
+                                hint="Utilise la barre d'outils pour mettre en forme."
                             >
-                                <Textarea
+                                <RichTextEditor
                                     value={data.content}
-                                    onChange={(e) => setData('content', e.target.value)}
-                                    required
-                                    rows={18}
-                                    placeholder="<p>Contenu du communiqué...</p>"
-                                    className="font-mono text-sm"
+                                    onChange={(html) => setData('content', html)}
+                                    placeholder="Rédige le communiqué…"
+                                    minHeight={360}
                                 />
                             </Field>
                         </div>

@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Camera, Loader2, Newspaper, Save, Trash2 } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
-import { Input, Textarea } from '@/Components/ui/Input';
+import { Input } from '@/Components/ui/Input';
 import { Field } from '@/Components/ui/Field';
+import { RichTextEditor } from '@/Components/ui/RichTextEditor';
 import type { Article } from '@/types/models';
 
 interface Props {
@@ -145,15 +146,13 @@ export default function ArticleForm({ article }: Props) {
                                 label="Contenu"
                                 required
                                 error={errors.description}
-                                hint="HTML autorisé pour la mise en forme (paragraphes, liens, images embed)."
+                                hint="Utilise la barre d'outils pour mettre en forme."
                             >
-                                <Textarea
+                                <RichTextEditor
                                     value={data.description}
-                                    onChange={(e) => setData('description', e.target.value)}
-                                    required
-                                    rows={18}
-                                    placeholder="<p>Contenu de l'article...</p>"
-                                    className="font-mono text-sm"
+                                    onChange={(html) => setData('description', html)}
+                                    placeholder="Rédige ton article…"
+                                    minHeight={360}
                                 />
                             </Field>
                         </div>
