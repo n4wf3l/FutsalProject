@@ -4,6 +4,14 @@
     $ogLocaleMap = ['fr' => 'fr_MA', 'en' => 'en_US', 'ar' => 'ar_MA'];
     $ogLocale = $ogLocaleMap[$locale] ?? 'fr_MA';
     $ogLocaleAlternates = array_values(array_diff($ogLocaleMap, [$ogLocale]));
+
+    $meta = $seoMeta ?? [];
+    $metaTitle = $meta['title'] ?? 'Dina Kenitra Futsal Club';
+    $metaDescription = $meta['description'] ?? 'Club de futsal de Kénitra depuis 2011. Championnat, formation, ambitions.';
+    $metaImage = $meta['image'] ?? url('/logo-dinakenitra.png');
+    $metaType = $meta['type'] ?? 'website';
+    $metaUrl = $meta['url'] ?? url()->current();
+    $isCustomImage = isset($meta['image']) && $meta['image'];
 @endphp
 <!DOCTYPE html>
 <html lang="{{ $locale }}" dir="{{ $direction }}" data-locale="{{ $locale }}" class="dark">
@@ -15,34 +23,36 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {{-- Default title (pages override via Inertia <Head>) --}}
-        <title inertia>{{ config('app.name', 'Dina Kenitra FC') }}</title>
+        <title inertia>{{ $metaTitle }}</title>
 
-        {{-- Default SEO fallbacks. Individual pages override these via the <SEO> component. --}}
-        <meta name="description" content="Dina Kenitra Futsal Club. Club de futsal de la ville de Kénitra depuis 2011. Calendrier, résultats, effectif et actualités.">
+        {{-- SEO tags. Server-rendered so social crawlers see per-page meta without needing SSR. --}}
+        <meta name="description" content="{{ $metaDescription }}">
         <meta name="author" content="Dina Kenitra FC">
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
-        <link rel="canonical" href="{{ url()->current() }}">
+        <link rel="canonical" href="{{ $metaUrl }}">
 
-        {{-- Open Graph defaults --}}
+        {{-- Open Graph --}}
         <meta property="og:site_name" content="Dina Kenitra FC">
-        <meta property="og:type" content="website">
+        <meta property="og:type" content="{{ $metaType }}">
         <meta property="og:locale" content="{{ $ogLocale }}">
         @foreach ($ogLocaleAlternates as $altLocale)
             <meta property="og:locale:alternate" content="{{ $altLocale }}">
         @endforeach
-        <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:title" content="Dina Kenitra Futsal Club">
-        <meta property="og:description" content="Club de futsal de Kénitra depuis 2011. Championnat, formation, ambitions.">
-        <meta property="og:image" content="{{ url('/logo-dinakenitra.png') }}">
-        <meta property="og:image:width" content="512">
-        <meta property="og:image:height" content="512">
-        <meta property="og:image:alt" content="Crest Dina Kenitra Futsal Club">
+        <meta property="og:url" content="{{ $metaUrl }}">
+        <meta property="og:title" content="{{ $metaTitle }}">
+        <meta property="og:description" content="{{ $metaDescription }}">
+        <meta property="og:image" content="{{ $metaImage }}">
+        @unless ($isCustomImage)
+            <meta property="og:image:width" content="512">
+            <meta property="og:image:height" content="512">
+        @endunless
+        <meta property="og:image:alt" content="{{ $metaTitle }}">
 
-        {{-- Twitter Card defaults --}}
+        {{-- Twitter Card --}}
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Dina Kenitra Futsal Club">
-        <meta name="twitter:description" content="Club de futsal de Kénitra depuis 2011.">
-        <meta name="twitter:image" content="{{ url('/logo-dinakenitra.png') }}">
+        <meta name="twitter:title" content="{{ $metaTitle }}">
+        <meta name="twitter:description" content="{{ $metaDescription }}">
+        <meta name="twitter:image" content="{{ $metaImage }}">
 
         {{-- Favicons --}}
         <link rel="icon" type="image/png" href="/logo-dinakenitra.png">

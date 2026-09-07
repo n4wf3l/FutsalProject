@@ -6,6 +6,7 @@ use App\Models\Interview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -48,6 +49,18 @@ class InterviewController extends Controller
             ->latest('published_at')
             ->take(3)
             ->get();
+
+        $description = $interview->excerpt
+            ?: Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($interview->content ?? ''))), 200);
+        $image = $interview->hero_image ?: $interview->interviewee_photo;
+
+        View::share('seoMeta', [
+            'title' => $interview->title . ' — Interview Dina Kenitra FC',
+            'description' => $description !== '' ? $description : 'Interview Dina Kenitra Futsal Club.',
+            'image' => $image ? asset('storage/' . $image) : null,
+            'type' => 'article',
+            'url' => url()->current(),
+        ]);
 
         return Inertia::render('Interviews/Show', [
             'interview' => $interview,

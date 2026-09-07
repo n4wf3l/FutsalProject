@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Gallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class GalleryController extends Controller
@@ -21,6 +23,19 @@ class GalleryController extends Controller
     public function show($id)
     {
         $gallery = Gallery::findOrFail($id);
+
+        $description = $gallery->description
+            ? Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($gallery->description))), 200)
+            : 'Galerie photos Dina Kenitra Futsal Club.';
+
+        View::share('seoMeta', [
+            'title' => $gallery->name . ' — Galerie Dina Kenitra FC',
+            'description' => $description,
+            'image' => $gallery->cover_image ? asset('storage/' . $gallery->cover_image) : null,
+            'type' => 'article',
+            'url' => url()->current(),
+        ]);
+
         return Inertia::render('GalleryShow', [
             'gallery' => $gallery,
             'photos' => $gallery->photos,

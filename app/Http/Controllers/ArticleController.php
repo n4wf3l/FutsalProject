@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -38,6 +39,19 @@ class ArticleController extends Controller
             ->latest()
             ->take(5)
             ->get();
+
+        $plainDescription = Str::limit(
+            trim(preg_replace('/\s+/', ' ', strip_tags($article->description ?? ''))),
+            200
+        );
+
+        View::share('seoMeta', [
+            'title' => $article->title . ' — Dina Kenitra FC',
+            'description' => $plainDescription !== '' ? $plainDescription : 'Actualité Dina Kenitra Futsal Club.',
+            'image' => $article->image ? asset('storage/' . $article->image) : null,
+            'type' => 'article',
+            'url' => url()->current(),
+        ]);
 
         return Inertia::render('ArticleShow', [
             'article' => $article,
