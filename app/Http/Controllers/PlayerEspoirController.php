@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PlayerEspoir;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -11,6 +12,11 @@ class PlayerEspoirController extends Controller
 {
     public function publicIndex()
     {
+        SeoMeta::share(
+            'Espoirs — Dina Kenitra FC',
+            'L\'effectif espoirs de Dina Kenitra Futsal Club. La relève qui forge aujourd\'hui l\'ADN du club.'
+        );
+
         return Inertia::render('Espoirs', [
             'players' => PlayerEspoir::orderBy('number', 'asc')->get(),
         ]);

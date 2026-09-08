@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\ClubInfo;
@@ -62,6 +63,11 @@ class HomeController extends Controller
     $videos = Video::latest()->take(2)->get();
     $welcomeImage = WelcomeImage::latest()->first();
     $latestPhotos = Photo::latest()->take(8)->get();
+
+    SeoMeta::share(
+        'Dina Kenitra Futsal Club — Club de futsal de Kénitra depuis 2011',
+        'Club de futsal de Kénitra fondé en 2011. Retrouve le calendrier, les résultats, l\'effectif et les actualités du ' . $clubName . '.'
+    );
 
     return Inertia::render('Home', [
         'clubName' => $clubName,

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -25,6 +25,11 @@ class ArticleController extends Controller
             });
         }
 
+        SeoMeta::share(
+            'Actualités du club — Dina Kenitra FC',
+            'Toutes les actualités de Dina Kenitra Futsal Club : résultats, coulisses, communiqués et décisions du club.'
+        );
+
         return Inertia::render('News', [
             'articles' => $query->paginate(9)->withQueryString(),
             'search' => $search,
@@ -40,18 +45,14 @@ class ArticleController extends Controller
             ->take(5)
             ->get();
 
-        $plainDescription = Str::limit(
-            trim(preg_replace('/\s+/', ' ', strip_tags($article->description ?? ''))),
-            200
-        );
+        $plainDescription = SeoMeta::fromHtml($article->description ?? '');
 
-        View::share('seoMeta', [
-            'title' => $article->title . ' — Dina Kenitra FC',
-            'description' => $plainDescription !== '' ? $plainDescription : 'Actualité Dina Kenitra Futsal Club.',
-            'image' => $article->image ? asset('storage/' . $article->image) : null,
-            'type' => 'article',
-            'url' => url()->current(),
-        ]);
+        SeoMeta::share(
+            $article->title . ' — Dina Kenitra FC',
+            $plainDescription !== '' ? $plainDescription : 'Actualité Dina Kenitra Futsal Club.',
+            $article->image ? asset('storage/' . $article->image) : null,
+            'article'
+        );
 
         return Inertia::render('ArticleShow', [
             'article' => $article,

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gallery;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class GalleryController extends Controller
@@ -15,6 +14,11 @@ class GalleryController extends Controller
 
     public function publicIndex()
     {
+        SeoMeta::share(
+            'Galerie photos — Dina Kenitra FC',
+            'Les meilleurs instants du club en images : matchs, coulisses, entraînements et événements de Dina Kenitra Futsal Club.'
+        );
+
         return Inertia::render('Galleries', [
             'galleries' => Gallery::withCount('photos')->latest()->paginate(12),
         ]);
@@ -25,16 +29,15 @@ class GalleryController extends Controller
         $gallery = Gallery::findOrFail($id);
 
         $description = $gallery->description
-            ? Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($gallery->description))), 200)
+            ? SeoMeta::fromHtml($gallery->description)
             : 'Galerie photos Dina Kenitra Futsal Club.';
 
-        View::share('seoMeta', [
-            'title' => $gallery->name . ' — Galerie Dina Kenitra FC',
-            'description' => $description,
-            'image' => $gallery->cover_image ? asset('storage/' . $gallery->cover_image) : null,
-            'type' => 'article',
-            'url' => url()->current(),
-        ]);
+        SeoMeta::share(
+            $gallery->name . ' — Galerie Dina Kenitra FC',
+            $description,
+            $gallery->cover_image ? asset('storage/' . $gallery->cover_image) : null,
+            'article'
+        );
 
         return Inertia::render('GalleryShow', [
             'gallery' => $gallery,

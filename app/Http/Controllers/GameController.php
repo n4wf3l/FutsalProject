@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Team;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Championship;
@@ -46,6 +47,11 @@ class GameController extends Controller
                      ->orderBy('goal_difference', 'desc')
                      ->orderBy('goals_for', 'desc')
                      ->get();
+
+        SeoMeta::share(
+            'Calendrier et classement — Dina Kenitra FC',
+            'Calendrier des matchs, résultats et classement du championnat pour Dina Kenitra Futsal Club. Les prochains coups d\'envoi et les scores.'
+        );
 
         return Inertia::render('Calendar', [
             'championship' => $championship,

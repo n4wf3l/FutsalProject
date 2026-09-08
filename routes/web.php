@@ -90,8 +90,20 @@ Route::delete('/candidature/{token}', [PlayerApplicationController::class, 'dest
     ->name('candidature.destroy');
 
 // Legal
-Route::get('/confidentialite', fn () => Inertia\Inertia::render('Legal/Privacy'))->name('legal.privacy');
-Route::get('/legal', fn () => Inertia\Inertia::render('Legal/Mentions'))->name('legal');
+Route::get('/confidentialite', function () {
+    \App\Support\SeoMeta::share(
+        'Politique de confidentialité — Dina Kenitra FC',
+        'Politique de confidentialité et gestion des données personnelles conformément à la Loi 09-08 du Maroc.'
+    );
+    return Inertia\Inertia::render('Legal/Privacy');
+})->name('legal.privacy');
+Route::get('/legal', function () {
+    \App\Support\SeoMeta::share(
+        'Mentions légales — Dina Kenitra FC',
+        'Mentions légales du site officiel de Dina Kenitra Futsal Club : éditeur, hébergement, propriété intellectuelle.'
+    );
+    return Inertia\Inertia::render('Legal/Mentions');
+})->name('legal');
 
 // Payment (Stripe)
 Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');

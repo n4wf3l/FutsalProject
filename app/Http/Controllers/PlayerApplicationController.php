@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PlayerApplication;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -27,6 +28,11 @@ class PlayerApplicationController extends Controller
     // ————————————————— Public —————————————————
     public function create()
     {
+        SeoMeta::share(
+            'Rejoindre le club — Dina Kenitra FC',
+            'Tu veux porter le maillot de Dina Kenitra Futsal Club ? Dépose ta candidature en ligne pour intégrer l\'équipe senior ou junior.'
+        );
+
         return Inertia::render('Rejoindre', [
             'categories' => PlayerApplication::CATEGORIES,
             'closedCategories' => PlayerApplication::CLOSED_CATEGORIES,

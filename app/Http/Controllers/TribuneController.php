@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Tribune;
@@ -26,6 +27,11 @@ class TribuneController extends Controller
             })
             ->orderBy('match_date', 'asc')
             ->first();
+
+        SeoMeta::share(
+            'Fanshop — Billetterie Dina Kenitra FC',
+            'Réserve ta place en tribune pour les matchs de Dina Kenitra Futsal Club à la salle Al Wahda. Places, tarifs et disponibilités.'
+        );
 
         return Inertia::render('Fanshop', [
             'tribunes' => Tribune::all(),

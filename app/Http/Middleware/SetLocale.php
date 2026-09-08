@@ -14,9 +14,13 @@ class SetLocale
 
     public function handle(Request $request, Closure $next): Response
     {
+        $query = $request->query('lang');
         $cookie = $request->cookie('locale');
 
-        if ($cookie && in_array($cookie, self::SUPPORTED, true)) {
+        if ($query && in_array($query, self::SUPPORTED, true)) {
+            App::setLocale($query);
+            cookie()->queue('locale', $query, 60 * 24 * 365);
+        } elseif ($cookie && in_array($cookie, self::SUPPORTED, true)) {
             App::setLocale($cookie);
         } else {
             $header = $request->getPreferredLanguage(self::SUPPORTED);
@@ -26,8 +30,7 @@ class SetLocale
         $response = $next($request);
 
         // Advertise the language of the served response to crawlers, caches,
-        // proxies and assistive tools. Same URL serves multiple languages via
-        // cookie, so this header is the primary signal for the current locale.
+        // proxies and assistive tools.
         $response->headers->set('Content-Language', App::getLocale());
 
         return $response;

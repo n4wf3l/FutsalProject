@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -12,6 +13,11 @@ class ContactController extends Controller
 
     public function showForm()
     {
+        SeoMeta::share(
+            'Contact — Dina Kenitra FC',
+            'Contacte Dina Kenitra Futsal Club : partenariats, presse, questions générales. Coordonnées et formulaire de contact.'
+        );
+
         return Inertia::render('Contact');
     }
 

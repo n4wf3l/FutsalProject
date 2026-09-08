@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Regulation;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -12,6 +13,11 @@ class RegulationController extends Controller
     // Public "Le club" page (regulations + about sections)
     public function publicIndex()
     {
+        SeoMeta::share(
+            'Le club — Dina Kenitra FC',
+            'L\'histoire de Dina Kenitra Futsal Club depuis 2011. Fondation, philosophie, palmarès, salle Al Wahda et documents officiels.'
+        );
+
         return Inertia::render('About', [
             'regulations' => Regulation::orderBy('id', 'desc')->get(),
             'sections' => \App\Models\AboutSection::orderBy('id')->get(),

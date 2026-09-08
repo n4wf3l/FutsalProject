@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Interview;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -33,6 +33,11 @@ class InterviewController extends Controller
             $query->where('interviewee_role', $role);
         }
 
+        SeoMeta::share(
+            'La Voix du Futsal — Dina Kenitra FC',
+            'Les interviews qui font parler le futsal marocain. Sélectionneurs, joueurs, coachs et présidents, on leur donne la parole.'
+        );
+
         return Inertia::render('Interviews/Index', [
             'interviews' => $query->paginate(9)->withQueryString(),
             'roles' => self::ROLES,
@@ -50,17 +55,15 @@ class InterviewController extends Controller
             ->take(3)
             ->get();
 
-        $description = $interview->excerpt
-            ?: Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($interview->content ?? ''))), 200);
+        $description = $interview->excerpt ?: SeoMeta::fromHtml($interview->content ?? '');
         $image = $interview->hero_image ?: $interview->interviewee_photo;
 
-        View::share('seoMeta', [
-            'title' => $interview->title . ' — Interview Dina Kenitra FC',
-            'description' => $description !== '' ? $description : 'Interview Dina Kenitra Futsal Club.',
-            'image' => $image ? asset('storage/' . $image) : null,
-            'type' => 'article',
-            'url' => url()->current(),
-        ]);
+        SeoMeta::share(
+            $interview->title . ' — Interview Dina Kenitra FC',
+            $description !== '' ? $description : 'Interview Dina Kenitra Futsal Club.',
+            $image ? asset('storage/' . $image) : null,
+            'article'
+        );
 
         return Inertia::render('Interviews/Show', [
             'interview' => $interview,

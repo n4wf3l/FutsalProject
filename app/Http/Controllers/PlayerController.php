@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Player;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +16,11 @@ class PlayerController extends Controller
 {
     public function publicRoster()
     {
+        SeoMeta::share(
+            'L\'effectif — Dina Kenitra FC',
+            'L\'effectif senior de Dina Kenitra Futsal Club. Joueurs, coach et staff qui portent le maillot cette saison.'
+        );
+
         return Inertia::render('Teams', [
             'players' => Player::orderBy('number', 'asc')->get(),
             'staff' => Staff::all(),

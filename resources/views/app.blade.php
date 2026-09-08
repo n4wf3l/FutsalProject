@@ -5,13 +5,28 @@
     $ogLocale = $ogLocaleMap[$locale] ?? 'fr_MA';
     $ogLocaleAlternates = array_values(array_diff($ogLocaleMap, [$ogLocale]));
 
+    // Default social share image: prefer /og-cover.jpg (1200x630) if the club
+    // has uploaded one, otherwise fall back to the crest at 512x512.
+    $hasOgCover = file_exists(public_path('og-cover.jpg'));
+    $defaultOgImage = $hasOgCover ? url('/og-cover.jpg') : url('/logo-dinakenitra.png');
+
     $meta = $seoMeta ?? [];
     $metaTitle = $meta['title'] ?? 'Dina Kenitra Futsal Club';
     $metaDescription = $meta['description'] ?? 'Club de futsal de Kénitra depuis 2011. Championnat, formation, ambitions.';
-    $metaImage = $meta['image'] ?? url('/logo-dinakenitra.png');
+    $metaImage = $meta['image'] ?? $defaultOgImage;
     $metaType = $meta['type'] ?? 'website';
     $metaUrl = $meta['url'] ?? url()->current();
-    $isCustomImage = isset($meta['image']) && $meta['image'];
+    $isCustomImage = (isset($meta['image']) && $meta['image']) || $hasOgCover;
+
+    // hreflang: URLs with ?lang=xx so search engines get distinct entries per
+    // locale even though the actual translation switch happens in the SPA.
+    $baseQuery = request()->except('lang');
+    $hreflangUrls = [];
+    foreach (array_keys($ogLocaleMap) as $loc) {
+        $params = array_merge($baseQuery, ['lang' => $loc]);
+        $hreflangUrls[$loc] = url()->current() . '?' . http_build_query($params);
+    }
+    $xDefaultUrl = url()->current() . (empty($baseQuery) ? '' : '?' . http_build_query($baseQuery));
 @endphp
 <!DOCTYPE html>
 <html lang="{{ $locale }}" dir="{{ $direction }}" data-locale="{{ $locale }}" class="dark">
@@ -31,6 +46,14 @@
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
         <link rel="canonical" href="{{ $metaUrl }}">
 
+        {{-- hreflang: signal language variants to search engines. Single-URL app
+             served in three locales via cookie; ?lang=xx forces a specific
+             locale and sticks it in the cookie for subsequent navigation. --}}
+        @foreach ($hreflangUrls as $hl => $hurl)
+            <link rel="alternate" hreflang="{{ $hl }}" href="{{ $hurl }}">
+        @endforeach
+        <link rel="alternate" hreflang="x-default" href="{{ $xDefaultUrl }}">
+
         {{-- Open Graph --}}
         <meta property="og:site_name" content="Dina Kenitra FC">
         <meta property="og:type" content="{{ $metaType }}">
@@ -42,10 +65,13 @@
         <meta property="og:title" content="{{ $metaTitle }}">
         <meta property="og:description" content="{{ $metaDescription }}">
         <meta property="og:image" content="{{ $metaImage }}">
-        @unless ($isCustomImage)
+        @if ($isCustomImage)
+            <meta property="og:image:width" content="1200">
+            <meta property="og:image:height" content="630">
+        @else
             <meta property="og:image:width" content="512">
             <meta property="og:image:height" content="512">
-        @endunless
+        @endif
         <meta property="og:image:alt" content="{{ $metaTitle }}">
 
         {{-- Twitter Card --}}

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -12,6 +13,11 @@ class VideoController extends Controller
     // Public gallery of videos
     public function publicIndex()
     {
+        SeoMeta::share(
+            'Vidéos — Dina Kenitra FC',
+            'Résumés de match, moments forts et coulisses du club de futsal Dina Kenitra en vidéo.'
+        );
+
         return Inertia::render('Videos', [
             'videos' => Video::latest()->paginate(12),
         ]);
