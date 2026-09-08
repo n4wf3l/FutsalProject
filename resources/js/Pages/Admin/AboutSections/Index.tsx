@@ -80,7 +80,7 @@ export default function AboutSectionsIndex({ sections }: Props) {
                     </h1>
                 </div>
                 <Button asChild size="lg">
-                    <Link href="/about/create">
+                    <Link href="/about-sections/create">
                         <Plus className="h-4 w-4" />
                         Nouvelle section
                     </Link>
@@ -114,7 +114,7 @@ export default function AboutSectionsIndex({ sections }: Props) {
                     action={
                         !search ? (
                             <Button asChild>
-                                <Link href="/about/create">
+                                <Link href="/about-sections/create">
                                     <Plus className="h-4 w-4" />
                                     Nouvelle section
                                 </Link>
@@ -173,7 +173,7 @@ export default function AboutSectionsIndex({ sections }: Props) {
                                         <td className="px-4 py-3">
                                             <div className="flex justify-end gap-1">
                                                 <Link
-                                                    href={`/about/${section.id}/edit`}
+                                                    href={`/about-sections/${section.id}/edit`}
                                                     className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-crimson"
                                                     aria-label="Éditer"
                                                 >
@@ -233,7 +233,7 @@ export default function AboutSectionsIndex({ sections }: Props) {
                 onCancel={() => setToDelete(null)}
                 onConfirm={() => {
                     if (!toDelete) return;
-                    router.delete(`/about/${toDelete.id}`, {
+                    router.delete(`/about-sections/${toDelete.id}`, {
                         onSuccess: () => setToDelete(null),
                     });
                 }}

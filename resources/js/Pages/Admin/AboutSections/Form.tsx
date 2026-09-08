@@ -24,7 +24,7 @@ export default function AboutSectionForm({ section }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/about/${section!.id}` : '/about';
+        const url = isEdit ? `/about-sections/${section!.id}` : '/about-sections';
         post(url);
     };
 
