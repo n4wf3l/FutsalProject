@@ -23,9 +23,9 @@ interface TeamsProps {
 const POSITION_MATCHERS = [
     { key: 'all', match: () => true },
     { key: 'gk', match: (p: Player) => /gardien|goal|gk/i.test(p.position) },
-    { key: 'def', match: (p: Player) => /d[éeè]f/i.test(p.position) },
-    { key: 'mid', match: (p: Player) => /milieu|mid/i.test(p.position) },
-    { key: 'fwd', match: (p: Player) => /attaqu|forward|piv|fwd|ail/i.test(p.position) },
+    { key: 'fixo', match: (p: Player) => /fixe|fixo|d[éeè]f|defen/i.test(p.position) },
+    { key: 'ala', match: (p: Player) => /ala|ail|winger/i.test(p.position) },
+    { key: 'pivot', match: (p: Player) => /piv|attaqu|forward|target|striker/i.test(p.position) },
 ];
 
 export default function Teams({ players, staff, coach, championship }: TeamsProps) {

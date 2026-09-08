@@ -17,9 +17,9 @@
         "positions": {
             "all": "All",
             "gk": "Goalkeepers",
-            "def": "Defenders",
-            "mid": "Midfielders",
-            "fwd": "Forwards"
+            "fixo": "Fixos",
+            "ala": "Alas",
+            "pivot": "Pivots"
         },
         "empty_title": "No player in this category",
         "empty_description": "Change the filter to see other positions.",

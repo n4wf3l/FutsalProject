@@ -17,9 +17,9 @@
         "positions": {
             "all": "Tous",
             "gk": "Gardiens",
-            "def": "Défenseurs",
-            "mid": "Milieux",
-            "fwd": "Attaquants"
+            "fixo": "Fixes",
+            "ala": "Ailiers",
+            "pivot": "Pivots"
         },
         "empty_title": "Aucun joueur dans cette catégorie",
         "empty_description": "Change le filtre pour voir d'autres postes.",

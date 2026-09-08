@@ -17,11 +17,9 @@ class PlayerApplicationController extends Controller
 {
     public const POSITIONS = [
         'Gardien',
-        'Défenseur',
-        'Milieu',
+        'Fixe',
         'Ailier',
         'Pivot',
-        'Attaquant',
         'Polyvalent',
     ];
 
