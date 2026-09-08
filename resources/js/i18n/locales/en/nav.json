@@ -15,6 +15,8 @@
         "media_group": "Media",
         "media_news": "News",
         "media_news_desc": "Club news",
+        "media_press": "Press releases",
+        "media_press_desc": "Official club announcements",
         "media_interviews": "The Futsal Voice",
         "media_interviews_desc": "Interviews of Moroccan futsal",
         "media_gallery": "Gallery",

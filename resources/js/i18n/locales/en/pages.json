@@ -57,6 +57,27 @@
         "side_title": "The club begins its season in D2.",
         "side_body": "Championship standings will appear here once the first matches have been played. In the meantime, find the upcoming fixtures right next to it."
     },
+    "press_releases": {
+        "seo_title": "Press releases",
+        "seo_description": "Official press releases from Dina Kenitra Futsal Club: decisions, announcements and statements from the club.",
+        "kicker": "Press releases",
+        "breadcrumb": "Press releases",
+        "title": "The club's voice",
+        "subtitle": "Decisions, announcements, statements. The official voice of Dina Kenitra FC.",
+        "search_placeholder": "Search a press release…",
+        "search_button": "Search",
+        "empty_title": "No press release published",
+        "empty_description": "Upcoming official press releases will appear here.",
+        "empty_search_description": "No results for \"{{query}}\". Try another search.",
+        "pagination_summary": "{{from}}–{{to}} of {{total}}",
+        "badge": "Press release",
+        "read": "Read the release",
+        "back_to_list": "Back to press releases",
+        "all": "All press releases",
+        "share": "Share",
+        "related_kicker": "Also worth reading",
+        "related_title": "Other press releases"
+    },
     "news": {
         "seo_title": "Club news",
         "seo_description": "All news from Dina Kenitra FC: results, behind-the-scenes, announcements and decisions. The chronicle week after week.",

@@ -40,6 +40,8 @@ Route::get('/teams', [PlayerController::class, 'publicRoster'])->name('teams');
 Route::get('/espoirs', [PlayerEspoirController::class, 'publicIndex'])->name('espoirs.public');
 Route::get('/calendar', [GameController::class, 'showCalendar'])->name('calendar.show');
 Route::get('/news', [ArticleController::class, 'index'])->name('news');
+Route::get('/communiques', [PressReleaseController::class, 'publicIndex'])->name('press_releases.public');
+Route::get('/communiques/{slug}', [PressReleaseController::class, 'publicShow'])->name('press_releases.publicShow');
 Route::get('/about', [RegulationController::class, 'publicIndex'])->name('about.index');
 Route::redirect('/clubinfo', '/news')->name('clubinfo');
 

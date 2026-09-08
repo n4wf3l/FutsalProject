@@ -84,9 +84,10 @@ export function Navbar() {
             {
                 kind: 'menu',
                 label: t('items.media_group'),
-                hrefMatches: ['/news', '/interviews', '/galleries', '/videos', '/articles'],
+                hrefMatches: ['/news', '/communiques', '/interviews', '/galleries', '/videos', '/articles'],
                 items: [
                     { label: t('items.media_news'), href: '/news', icon: Newspaper, description: t('items.media_news_desc') },
+                    { label: t('items.media_press'), href: '/communiques', icon: FileText, description: t('items.media_press_desc') },
                     { label: t('items.media_interviews'), href: '/interviews', icon: Mic, description: t('items.media_interviews_desc') },
                     { label: t('items.media_gallery'), href: '/galleries', icon: ImageIcon, description: t('items.media_gallery_desc') },
                     { label: t('items.media_videos'), href: '/videos', icon: Video, description: t('items.media_videos_desc') },
@@ -104,6 +105,7 @@ export function Navbar() {
             { label: t('items.team_espoirs'), href: '/espoirs', icon: ShieldPlus },
             { label: t('items.competition_calendar'), href: '/calendar', icon: Calendar },
             { label: t('items.media_news'), href: '/news', icon: Newspaper },
+            { label: t('items.media_press'), href: '/communiques', icon: FileText },
             { label: t('items.media_interviews'), href: '/interviews', icon: Mic },
             { label: t('items.media_gallery'), href: '/galleries', icon: ImageIcon },
             { label: t('items.media_videos'), href: '/videos', icon: Video },

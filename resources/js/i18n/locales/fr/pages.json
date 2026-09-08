@@ -57,6 +57,27 @@
         "side_title": "Le club entame sa saison en D2.",
         "side_body": "Le classement du championnat s'affichera ici dès que les premiers matchs auront été joués. En attendant, retrouve les rencontres à venir juste à côté."
     },
+    "press_releases": {
+        "seo_title": "Communiqués officiels",
+        "seo_description": "Les communiqués officiels de Dina Kenitra Futsal Club : décisions, annonces et prises de position du club.",
+        "kicker": "Communiqués officiels",
+        "breadcrumb": "Communiqués",
+        "title": "La parole du club",
+        "subtitle": "Décisions, annonces, prises de position. La voix officielle de Dina Kenitra FC.",
+        "search_placeholder": "Rechercher un communiqué…",
+        "search_button": "Rechercher",
+        "empty_title": "Aucun communiqué publié",
+        "empty_description": "Les prochains communiqués officiels apparaîtront ici.",
+        "empty_search_description": "Aucun résultat pour « {{query}} ». Essaie une autre recherche.",
+        "pagination_summary": "{{from}}–{{to}} sur {{total}}",
+        "badge": "Communiqué",
+        "read": "Lire le communiqué",
+        "back_to_list": "Retour aux communiqués",
+        "all": "Tous les communiqués",
+        "share": "Partager",
+        "related_kicker": "Aussi à lire",
+        "related_title": "Autres communiqués"
+    },
     "news": {
         "seo_title": "Nouvelles du club",
         "seo_description": "Toutes les actualités de Dina Kenitra FC : résultats, coulisses, communiqués et décisions. La chronique semaine après semaine.",

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Gallery;
 use App\Models\Interview;
+use App\Models\PressRelease;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Schema;
 
@@ -20,6 +21,7 @@ class SitemapController extends Controller
             ['loc' => url('/espoirs'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $now],
             ['loc' => url('/calendar'), 'changefreq' => 'weekly', 'priority' => '0.9', 'lastmod' => $now],
             ['loc' => url('/news'), 'changefreq' => 'weekly', 'priority' => '0.8', 'lastmod' => $now],
+            ['loc' => url('/communiques'), 'changefreq' => 'weekly', 'priority' => '0.7', 'lastmod' => $now],
             ['loc' => url('/interviews'), 'changefreq' => 'weekly', 'priority' => '0.9', 'lastmod' => $now],
             ['loc' => url('/galleries'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $now],
             ['loc' => url('/videos'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $now],
@@ -50,6 +52,24 @@ class SitemapController extends Controller
                 }
                 $entries[] = $entry;
                 $articleEntries[] = $entry;
+            });
+        }
+
+        if (Schema::hasTable('press_releases')) {
+            PressRelease::latest()->get(['slug', 'title', 'created_at', 'updated_at'])->each(function ($pr) use (&$entries, $newsWindow) {
+                $entry = [
+                    'loc' => url('/communiques/'.$pr->slug),
+                    'changefreq' => 'monthly',
+                    'priority' => '0.6',
+                    'lastmod' => $pr->updated_at?->toAtomString() ?? now()->toAtomString(),
+                ];
+                if ($pr->created_at && $pr->created_at->greaterThan($newsWindow)) {
+                    $entry['news'] = [
+                        'title' => $pr->title,
+                        'publication_date' => $pr->created_at->toAtomString(),
+                    ];
+                }
+                $entries[] = $entry;
             });
         }
 

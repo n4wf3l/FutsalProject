@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PressRelease;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -10,6 +11,55 @@ use Inertia\Inertia;
 
 class PressReleaseController extends Controller
 {
+    // ————————— PUBLIC —————————
+
+    public function publicIndex(Request $request)
+    {
+        $search = $request->string('search')->toString();
+
+        $query = PressRelease::latest();
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('content', 'LIKE', "%{$search}%");
+            });
+        }
+
+        SeoMeta::share(
+            'Communiqués officiels — Dina Kenitra FC',
+            'Les communiqués officiels de Dina Kenitra Futsal Club : décisions, annonces et prises de position du club.'
+        );
+
+        return Inertia::render('PressReleases/Index', [
+            'pressReleases' => $query->paginate(9)->withQueryString(),
+            'search' => $search,
+        ]);
+    }
+
+    public function publicShow($slug)
+    {
+        $pressRelease = PressRelease::where('slug', $slug)->firstOrFail();
+
+        $recent = PressRelease::where('id', '!=', $pressRelease->id)
+            ->latest()
+            ->take(5)
+            ->get();
+
+        SeoMeta::share(
+            $pressRelease->title . ' — Communiqué Dina Kenitra FC',
+            SeoMeta::fromHtml($pressRelease->content ?? '') ?: 'Communiqué officiel Dina Kenitra Futsal Club.',
+            $pressRelease->image ? asset('storage/' . $pressRelease->image) : null,
+            'article'
+        );
+
+        return Inertia::render('PressReleases/Show', [
+            'pressRelease' => $pressRelease,
+            'recent' => $recent,
+        ]);
+    }
+
+    // ————————— ADMIN —————————
+
     public function index()
     {
         return Inertia::render('Admin/PressReleases/Index', [

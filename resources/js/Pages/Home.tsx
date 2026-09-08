@@ -100,6 +100,12 @@ export default function Home({
                                         <ArrowRight className="h-4 w-4" />
                                     </Link>
                                 </Button>
+                                <Button asChild size="lg" variant="champagne">
+                                    <Link href="/rejoindre">
+                                        {t('hero.cta_join')}
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Link>
+                                </Button>
                                 <Button asChild size="lg" variant="outline">
                                     <Link href="/about">{t('hero.cta_history')}</Link>
                                 </Button>
