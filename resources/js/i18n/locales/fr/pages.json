@@ -115,6 +115,8 @@
         "identity_city": "Ville",
         "identity_since": "Depuis",
         "chapter": "Chapitre {{number}}",
+        "chapter_kicker": "Chapitre",
+        "chapters_kicker": "Sommaire",
         "regulations_kicker": "Documents officiels",
         "regulations_title": "Règlements",
         "regulations_empty_title": "Aucun document disponible",

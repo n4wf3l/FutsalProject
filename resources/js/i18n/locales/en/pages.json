@@ -115,6 +115,8 @@
         "identity_city": "City",
         "identity_since": "Since",
         "chapter": "Chapter {{number}}",
+        "chapter_kicker": "Chapter",
+        "chapters_kicker": "Table of contents",
         "regulations_kicker": "Official documents",
         "regulations_title": "Regulations",
         "regulations_empty_title": "No document available",

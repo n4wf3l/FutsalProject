@@ -115,6 +115,8 @@
         "identity_city": "المدينة",
         "identity_since": "منذ",
         "chapter": "الفصل {{number}}",
+        "chapter_kicker": "الفصل",
+        "chapters_kicker": "الفهرس",
         "regulations_kicker": "الوثائق الرسمية",
         "regulations_title": "الأنظمة",
         "regulations_empty_title": "لا توجد وثيقة متاحة",

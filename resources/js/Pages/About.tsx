@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
@@ -15,6 +16,28 @@ interface Props {
     sections: AboutSection[];
 }
 
+function sanitizeContent(html: string): string {
+    if (!html) return '';
+    let out = html;
+    out = out.replace(/[\p{Extended_Pictographic}‍️]/gu, '');
+    out = out.replace(/[✔✓●○►▪◆■□]/g, '');
+    out = out.replace(/<p[^>]*>(?:\s|&nbsp;|&#160;| |<br\s*\/?>)*<\/p>/gi, '');
+    out = out.replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
+    out = out.replace(/<p([^>]*)>\s+/gi, '<p$1>');
+    out = out.replace(/\s+<\/p>/gi, '</p>');
+    out = out.replace(/(<li[^>]*>)\s*[-•·]\s*/gi, '$1');
+    return out.trim();
+}
+
+function slugify(input: string): string {
+    return input
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
 export default function About({ regulations, sections }: Props) {
     const { t } = useTranslation(['pages', 'nav']);
     const { props } = usePage<{ club: ClubInfoShared }>();
@@ -24,6 +47,18 @@ export default function About({ regulations, sections }: Props) {
         { label: t('nav:items.home'), href: '/' },
         { label: t('pages:about.breadcrumb') },
     ];
+
+    const chapters = useMemo(
+        () =>
+            sections.map((section, i) => ({
+                ...section,
+                index: i + 1,
+                number: String(i + 1).padStart(2, '0'),
+                slug: `chapitre-${i + 1}-${slugify(section.title)}`,
+                html: sanitizeContent(section.content),
+            })),
+        [sections]
+    );
 
     return (
         <SiteLayout>
@@ -42,16 +77,13 @@ export default function About({ regulations, sections }: Props) {
             />
 
             {/* Identity block */}
-            <section className="mx-auto max-w-7xl px-4 pb-8">
-                <div className="relative overflow-hidden rounded-3xl border border-champagne/20 bg-card p-8 lg:p-12">
-                    <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-crimson/20 blur-3xl" aria-hidden />
-                    <div className="absolute inset-0 bg-noise opacity-[0.04]" aria-hidden />
-
-                    <div className="relative grid gap-8 lg:grid-cols-[auto_1fr] lg:items-center">
+            <section className="mx-auto max-w-7xl px-4 pb-10">
+                <div className="rounded-2xl border border-border bg-card">
+                    <div className="grid gap-8 p-8 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-12 lg:p-12">
                         <img
                             src="/logo-dinakenitra.png"
                             alt="Dina Kenitra FC"
-                            className="h-40 w-40 drop-shadow-[0_8px_24px_rgba(168,26,31,0.4)]"
+                            className="h-32 w-32 lg:h-40 lg:w-40"
                         />
                         <div>
                             <Badge variant="champagne" className="mb-4">
@@ -59,52 +91,88 @@ export default function About({ regulations, sections }: Props) {
                                 {t('pages:about.identity_badge')}
                             </Badge>
                             <h2 className="text-foreground">
-                                <span className="block font-display text-display-lg">Dina Kenitra</span>
-                                <span className="block font-editorial text-4xl italic text-champagne sm:text-5xl">
+                                <span className="block font-display text-display-lg leading-none">Dina Kenitra</span>
+                                <span className="mt-1 block font-editorial text-4xl italic text-champagne sm:text-5xl">
                                     Futsal Club
                                 </span>
                             </h2>
-                            <p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">
+                            <p className="mt-5 max-w-2xl leading-relaxed text-muted-foreground">
                                 {t('pages:about.identity_body', { city: club?.city ?? 'Kénitra' })}
                             </p>
-
-                            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                                {club?.president && (
-                                    <InfoStrip icon={Users} label={t('pages:about.identity_president')} value={club.president} />
-                                )}
-                                <InfoStrip
-                                    icon={MapPin}
-                                    label={t('pages:about.identity_city')}
-                                    value={club?.city ?? 'Kénitra, Maroc'}
-                                />
-                                <InfoStrip icon={Trophy} label={t('pages:about.identity_since')} value="2011" />
-                            </div>
                         </div>
+                    </div>
+                    <div className="grid divide-y divide-border border-t border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+                        {club?.president && (
+                            <InfoStrip icon={Users} label={t('pages:about.identity_president')} value={club.president} />
+                        )}
+                        <InfoStrip
+                            icon={MapPin}
+                            label={t('pages:about.identity_city')}
+                            value={club?.city ?? 'Kénitra, Maroc'}
+                        />
+                        <InfoStrip icon={Trophy} label={t('pages:about.identity_since')} value="2011" />
                     </div>
                 </div>
             </section>
 
-            {/* About sections */}
-            {sections.length > 0 && (
-                <section className="mx-auto max-w-4xl px-4 py-16">
-                    <div className="space-y-14">
-                        {sections.map((section, i) => (
+            {/* Chapter navigation */}
+            {chapters.length > 1 && (
+                <section className="mx-auto max-w-4xl px-4 pb-4">
+                    <div className="rounded-2xl border border-border bg-card p-5">
+                        <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.28em] text-champagne">
+                            {t('pages:about.chapters_kicker')}
+                        </div>
+                        <ol className="flex flex-col gap-1">
+                            {chapters.map((c) => (
+                                <li key={c.id}>
+                                    <a
+                                        href={`#${c.slug}`}
+                                        className="group flex items-baseline gap-4 py-1.5 text-sm transition-colors hover:text-crimson"
+                                    >
+                                        <span className="w-8 shrink-0 font-mono text-[11px] text-muted-foreground group-hover:text-crimson">
+                                            {c.number}
+                                        </span>
+                                        <span className="font-display font-medium text-foreground group-hover:text-crimson">
+                                            {c.title}
+                                        </span>
+                                    </a>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+                </section>
+            )}
+
+            {/* Chapters */}
+            {chapters.length > 0 && (
+                <section className="mx-auto max-w-4xl px-4 py-10">
+                    <div className="divide-y divide-border">
+                        {chapters.map((chapter, i) => (
                             <motion.article
-                                key={section.id}
-                                initial={{ opacity: 0, y: 20 }}
+                                id={chapter.slug}
+                                key={chapter.id}
+                                initial={{ opacity: 0, y: 16 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: '-40px' }}
-                                transition={{ duration: 0.5, delay: (i % 4) * 0.06 }}
+                                transition={{ duration: 0.4, delay: (i % 4) * 0.05 }}
+                                className="scroll-mt-24 py-12 first:pt-0 last:pb-0"
                             >
-                                <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">
-                                    {t('pages:about.chapter', { number: String(i + 1).padStart(2, '0') })}
-                                </div>
-                                <h3 className="mt-3 font-display text-display-lg text-foreground">
-                                    {section.title}
-                                </h3>
+                                <header className="mb-6 flex items-baseline gap-4">
+                                    <span className="font-editorial text-5xl italic text-champagne/70 sm:text-6xl">
+                                        {chapter.number}
+                                    </span>
+                                    <div>
+                                        <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-champagne">
+                                            {t('pages:about.chapter_kicker')}
+                                        </div>
+                                        <h3 className="mt-1 font-display text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
+                                            {chapter.title}
+                                        </h3>
+                                    </div>
+                                </header>
                                 <div
-                                    className="prose-content mt-6 text-lg leading-relaxed text-foreground/80 [&>p]:mb-4"
-                                    dangerouslySetInnerHTML={{ __html: section.content }}
+                                    className="prose-content text-base leading-relaxed text-foreground/85 sm:text-lg [&_p]:mb-3 [&_p:last-child]:mb-0 [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-foreground [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:font-display [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-foreground [&_ul]:my-3 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_a]:text-crimson [&_a]:underline [&_a]:underline-offset-2 [&_blockquote]:my-6 [&_blockquote]:border-l-2 [&_blockquote]:border-champagne/60 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-champagne [&_strong]:text-foreground"
+                                    dangerouslySetInnerHTML={{ __html: chapter.html }}
                                 />
                             </motion.article>
                         ))}
@@ -169,12 +237,12 @@ function InfoStrip({
     value: string;
 }) {
     return (
-        <div className="rounded-xl border border-border bg-background/40 p-3">
+        <div className="p-5">
             <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                 <Icon className="h-3 w-3 text-champagne" />
                 {label}
             </div>
-            <div className="mt-1 font-display text-sm font-semibold">{value}</div>
+            <div className="mt-1 font-display text-base font-semibold">{value}</div>
         </div>
     );
 }
