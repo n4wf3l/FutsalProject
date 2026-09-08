@@ -5,6 +5,19 @@
     $ogLocale = $ogLocaleMap[$locale] ?? 'fr_MA';
     $ogLocaleAlternates = array_values(array_diff($ogLocaleMap, [$ogLocale]));
 
+    // Club social profiles for JSON-LD sameAs and Twitter Card.
+    // ClubInfo is cached implicitly by the query cache; one row per install.
+    $clubRow = \App\Models\ClubInfo::first();
+    $sameAs = array_values(array_filter([
+        $clubRow?->facebook,
+        $clubRow?->instagram,
+        'https://www.youtube.com/@DINAFUTSAL',
+        env('SOCIAL_TWITTER_URL'),
+        env('SOCIAL_TIKTOK_URL'),
+        env('SOCIAL_LINKEDIN_URL'),
+    ]));
+    $twitterHandle = env('SOCIAL_TWITTER_HANDLE');
+
     // Default social share image: prefer /og-cover.jpg (1200x630) if the club
     // has uploaded one, otherwise fall back to the crest at 512x512.
     $hasOgCover = file_exists(public_path('og-cover.jpg'));
@@ -79,6 +92,10 @@
         <meta name="twitter:title" content="{{ $metaTitle }}">
         <meta name="twitter:description" content="{{ $metaDescription }}">
         <meta name="twitter:image" content="{{ $metaImage }}">
+        @if ($twitterHandle)
+            <meta name="twitter:site" content="{{ $twitterHandle }}">
+            <meta name="twitter:creator" content="{{ $twitterHandle }}">
+        @endif
 
         {{-- Favicons --}}
         <link rel="icon" type="image/png" href="/logo-dinakenitra.png">
@@ -114,6 +131,9 @@
                         "addressCountry": "MA"
                     },
                     "email": "contact@dinakenitrafc.ma"
+                    @if (! empty($sameAs))
+                        , "sameAs": {!! json_encode($sameAs, JSON_UNESCAPED_SLASHES) !!}
+                    @endif
                 },
                 {
                     "@type": "SportsTeam",
@@ -158,6 +178,13 @@
         @inertiaHead
     </head>
     <body class="antialiased">
+        {{-- SEO fallback for non-JS crawlers (WhatsApp, Facebook debugger, older
+             indexers). React hydrates inside #app below and users see the full
+             UI. This block stays in the DOM but is visually hidden. --}}
+        <div class="sr-only">
+            <h1>{{ $metaTitle }}</h1>
+            <p>{{ $metaDescription }}</p>
+        </div>
         @inertia
     </body>
 </html>

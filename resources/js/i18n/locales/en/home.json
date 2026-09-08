@@ -53,7 +53,8 @@
     "photos": {
         "kicker": "In pictures",
         "title": "Club moments",
-        "action": "Full gallery"
+        "action": "Full gallery",
+        "item_alt": "Club photo number {{index}}"
     },
     "cta": {
         "kicker": "Join the club",

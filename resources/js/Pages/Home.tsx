@@ -324,7 +324,7 @@ export default function Home({
                             >
                                 <SmartImage
                                     src={`/storage/${photo.image}`}
-                                    alt=""
+                                    alt={t('photos.item_alt', { index: i + 1 })}
                                     className="group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-obsidian/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
@@ -528,7 +528,7 @@ function FeaturedArticleCard({ article }: { article: Article }) {
                     {article.image ? (
                         <SmartImage
                             src={`/storage/${article.image}`}
-                            alt=""
+                            alt={article.title}
                             className="transition-transform duration-700 group-hover:scale-[1.03]"
                         />
                     ) : (
@@ -588,7 +588,7 @@ function NewsCard({ article, index }: { article: Article; index: number }) {
                     {article.image ? (
                         <SmartImage
                             src={`/storage/${article.image}`}
-                            alt=""
+                            alt={article.title}
                             className="group-hover:scale-105"
                         />
                     ) : (

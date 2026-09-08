@@ -156,7 +156,7 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
                     {interview.hero_image ? (
                         <SmartImage
                             src={`/storage/${interview.hero_image}`}
-                            alt=""
+                            alt={interview.title}
                             className="group-hover:scale-105"
                         />
                     ) : (
@@ -239,7 +239,7 @@ function InterviewCard({ interview, index }: { interview: Interview; index: numb
                     {interview.hero_image ? (
                         <SmartImage
                             src={`/storage/${interview.hero_image}`}
-                            alt=""
+                            alt={interview.title}
                             className="group-hover:scale-105"
                         />
                     ) : (
@@ -265,7 +265,7 @@ function InterviewCard({ interview, index }: { interview: Interview; index: numb
                         {interview.interviewee_photo && (
                             <img
                                 src={`/storage/${interview.interviewee_photo}`}
-                                alt=""
+                                alt={interview.interviewee_name}
                                 className="h-6 w-6 rounded-full border border-border object-cover"
                             />
                         )}

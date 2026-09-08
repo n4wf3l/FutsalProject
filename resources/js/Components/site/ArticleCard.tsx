@@ -29,7 +29,7 @@ export function ArticleCard({ article, index = 0, variant = 'default', className
                     {article.image ? (
                         <SmartImage
                             src={`/storage/${article.image}`}
-                            alt=""
+                            alt={article.title}
                             className="group-hover:scale-105"
                         />
                     ) : (
@@ -74,7 +74,7 @@ export function ArticleCard({ article, index = 0, variant = 'default', className
                     {article.image ? (
                         <SmartImage
                             src={`/storage/${article.image}`}
-                            alt=""
+                            alt={article.title}
                             className="group-hover:scale-105"
                         />
                     ) : (

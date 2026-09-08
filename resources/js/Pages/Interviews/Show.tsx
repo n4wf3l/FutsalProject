@@ -87,6 +87,7 @@ export default function InterviewShow({ interview, related }: Props) {
                         <img
                             src={`/storage/${interview.hero_image}`}
                             alt=""
+                            aria-hidden="true"
                             className="h-full w-full object-cover opacity-30 blur-2xl"
                         />
                         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
@@ -293,7 +294,7 @@ export default function InterviewShow({ interview, related }: Props) {
                                     {r.hero_image ? (
                                         <SmartImage
                                             src={`/storage/${r.hero_image}`}
-                                            alt=""
+                                            alt={r.title}
                                             className="group-hover:scale-105"
                                         />
                                     ) : (
