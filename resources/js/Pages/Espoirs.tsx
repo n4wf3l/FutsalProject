@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { Users } from 'lucide-react';
@@ -13,6 +14,16 @@ interface Props {
 
 export default function Espoirs({ players }: Props) {
     const { t, i18n } = useTranslation('pages');
+
+    const orderedPlayers = useMemo(() => {
+        const isKeeper = (p: PlayerEspoir) => /gardien|goal|gk/i.test(p.position);
+        return [...players].sort((a, b) => {
+            const ak = isKeeper(a) ? 0 : 1;
+            const bk = isKeeper(b) ? 0 : 1;
+            if (ak !== bk) return ak - bk;
+            return a.number - b.number;
+        });
+    }, [players]);
 
     return (
         <SiteLayout>
@@ -30,9 +41,9 @@ export default function Espoirs({ players }: Props) {
             />
 
             <section className="mx-auto max-w-7xl px-4 py-12">
-                {players.length > 0 ? (
+                {orderedPlayers.length > 0 ? (
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                        {players.map((p, i) => (
+                        {orderedPlayers.map((p, i) => (
                             <PlayerCard key={p.id} player={p} index={i} />
                         ))}
                     </div>

@@ -11,6 +11,7 @@ interface Props {
 
 export function PlayerCard({ player, index = 0 }: Props) {
     const src = player.photo ? `/storage/${player.photo}` : null;
+    const isKeeper = /gardien|goal|gk/i.test(player.position ?? '');
 
     return (
         <motion.article
@@ -18,10 +19,18 @@ export function PlayerCard({ player, index = 0 }: Props) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.5, delay: (index % 8) * 0.04 }}
-            className="group relative overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-crimson/40"
+            className={cn(
+                'group relative overflow-hidden rounded-2xl border bg-card transition-all',
+                isKeeper
+                    ? 'border-champagne/50 bg-champagne/[0.03] hover:border-champagne'
+                    : 'border-border hover:border-crimson/40'
+            )}
         >
             {/* Number */}
-            <div className="absolute right-4 top-3 z-10 font-editorial text-7xl italic leading-none text-champagne/25 transition-all duration-500 group-hover:-translate-y-1 group-hover:text-champagne">
+            <div className={cn(
+                'absolute right-4 top-3 z-10 font-editorial text-7xl italic leading-none transition-all duration-500 group-hover:-translate-y-1',
+                isKeeper ? 'text-champagne/60 group-hover:text-champagne' : 'text-champagne/25 group-hover:text-champagne'
+            )}>
                 {player.number}
             </div>
 
@@ -43,7 +52,10 @@ export function PlayerCard({ player, index = 0 }: Props) {
 
             {/* Info */}
             <div className="relative -mt-16 px-5 pb-5">
-                <div className="font-mono text-[10px] uppercase tracking-widest text-crimson">
+                <div className={cn(
+                    'font-mono text-[10px] uppercase tracking-widest',
+                    isKeeper ? 'text-champagne' : 'text-crimson'
+                )}>
                     {player.position}
                 </div>
                 <h3 className="mt-1 font-display text-lg font-semibold leading-tight">

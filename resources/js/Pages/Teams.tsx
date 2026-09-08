@@ -32,10 +32,20 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
     const { t, i18n } = useTranslation('pages');
     const [filter, setFilter] = useState('all');
 
+    const orderedPlayers = useMemo(() => {
+        const isKeeper = (p: Player) => /gardien|goal|gk/i.test(p.position);
+        return [...players].sort((a, b) => {
+            const ak = isKeeper(a) ? 0 : 1;
+            const bk = isKeeper(b) ? 0 : 1;
+            if (ak !== bk) return ak - bk;
+            return a.number - b.number;
+        });
+    }, [players]);
+
     const filteredPlayers = useMemo(() => {
         const group = POSITION_MATCHERS.find((g) => g.key === filter) ?? POSITION_MATCHERS[0];
-        return players.filter(group.match);
-    }, [players, filter]);
+        return orderedPlayers.filter(group.match);
+    }, [orderedPlayers, filter]);
 
     return (
         <SiteLayout>
