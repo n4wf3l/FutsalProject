@@ -77,6 +77,21 @@ Se poser trois questions :
 2. Est-ce que le focus visuel est sur le contenu (nom du club, actu, joueur, match) ou sur des effets décoratifs ?
 3. Un supporter lambda perçoit-il tout de suite le sérieux et l'ambition du club, ou l'impression d'un site de startup ?
 
+## Pièges CSS déjà rencontrés (à ne pas reproduire)
+
+### `position: fixed` sous un ancêtre transformé
+
+La navbar (`resources/js/Components/site/Navbar.tsx`) utilise `translate-y-0` / `-translate-y-full` pour l'effet hide-on-scroll. En CSS, dès qu'un ancêtre a `transform`, `filter`, `perspective`, `contain: paint` ou `will-change: transform`, un descendant `position: fixed` n'est plus positionné par rapport au viewport mais par rapport au parent transformé.
+
+Concrètement : tout overlay `fixed inset-0` (menu mobile, LanguageSwitcher, futur ThemeSwitcher, futures modales) qui est enfant de `<Navbar>` sera anchored à la navbar (~h-24) au lieu du viewport. Résultat : l'overlay ne couvre qu'une fine bande en haut de l'écran et le reste du contenu passe dessus.
+
+Ce bug est arrivé deux fois de suite sur ce repo (menu hamburger, puis LanguageSwitcher). À chaque nouvel overlay fullscreen ou modale, appliquer une des deux solutions :
+
+1. **Sortir l'overlay du sous-arbre transformé** en le rendant sibling du `<header>`, dans un Fragment (`<>...</>`). C'est ce qui a été fait pour le mobile menu de la navbar.
+2. **Utiliser `createPortal`** pour render dans `document.body`. C'est ce qui a été fait pour la LanguageSwitcher. Solution préférée quand le composant est réutilisable dans plusieurs contextes.
+
+Ne pas se contenter d'augmenter le z-index (`z-[70]`, `z-[200]`, etc.) : le problème n'est pas le z-order, c'est la géométrie de positionnement. Un `z-[9999]` reste cadré sur le parent transformé.
+
 ## Règles de sécurité (impératif)
 
 ### Liens de gestion candidature ne doivent jamais être indexés

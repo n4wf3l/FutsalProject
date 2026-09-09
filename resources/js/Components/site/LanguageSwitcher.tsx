@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { router } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Globe, X } from 'lucide-react';
@@ -61,11 +62,23 @@ export function LanguageSwitcher({ className, variant = 'compact' }: Props) {
                 </span>
             </button>
 
-            <AnimatePresence>
-                {open && (
-                    <LanguageOverlay current={current} onSelect={change} onClose={() => setOpen(false)} />
+            {/* Render the overlay into document.body via a portal so it is
+                NOT clipped/anchored by the navbar's transform. Any ancestor
+                with transform (like the scroll-hide translate-y on <header>)
+                would otherwise trap position:fixed inside its box. */}
+            {typeof document !== 'undefined' &&
+                createPortal(
+                    <AnimatePresence>
+                        {open && (
+                            <LanguageOverlay
+                                current={current}
+                                onSelect={change}
+                                onClose={() => setOpen(false)}
+                            />
+                        )}
+                    </AnimatePresence>,
+                    document.body
                 )}
-            </AnimatePresence>
         </>
     );
 }
@@ -91,82 +104,91 @@ function LanguageOverlay({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-obsidian/85 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/92 p-6 text-white backdrop-blur-2xl"
         >
+            {/* Close button, tapping the backdrop also closes */}
             <button
                 type="button"
                 onClick={onClose}
                 aria-label={t('action.close')}
-                className="group absolute right-6 top-6 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/60 bg-card/40 text-muted-foreground transition-all hover:border-crimson/60 hover:text-crimson"
+                className="absolute right-4 top-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/70 backdrop-blur transition-all hover:border-white/40 hover:text-white sm:right-6 sm:top-6"
             >
-                <X className="h-4 w-4 transition-transform group-hover:rotate-90" />
+                <X className="h-5 w-5" />
             </button>
 
             <motion.div
-                initial={{ opacity: 0, y: 12, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 12, scale: 0.98 }}
-                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 12 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-sm rounded-2xl border border-border/60 bg-card p-2 shadow-2xl shadow-black/40"
+                className="w-full max-w-2xl"
             >
-                <div className="flex items-center gap-2.5 px-4 py-3">
-                    <Globe className="h-3.5 w-3.5 text-champagne" />
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.25em] text-champagne">
+                <div className="mb-8 flex items-center justify-center gap-3 sm:mb-10">
+                    <Globe className="h-4 w-4 text-champagne" />
+                    <span className="font-mono text-xs font-semibold uppercase tracking-[0.4em] text-champagne">
                         {t('app.language')}
                     </span>
                 </div>
 
-                <ul className="space-y-1">
-                    {SUPPORTED_LOCALES.map((loc) => {
+                <ul className="flex flex-col divide-y divide-white/10">
+                    {SUPPORTED_LOCALES.map((loc, i) => {
                         const meta = LOCALE_META[loc];
                         const isActive = loc === current;
                         const isArabic = loc === 'ar';
                         return (
                             <li key={loc}>
-                                <button
+                                <motion.button
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
                                     type="button"
                                     onClick={() => onSelect(loc)}
                                     className={cn(
-                                        'group flex w-full items-center gap-4 rounded-xl px-4 py-3 text-left transition-colors',
-                                        isActive
-                                            ? 'bg-champagne/10 text-champagne'
-                                            : 'text-foreground hover:bg-muted'
+                                        'group flex w-full items-center gap-5 py-6 text-left transition-all active:scale-[0.98] sm:gap-6 sm:py-7',
+                                        isActive ? 'text-champagne' : 'text-white/85 hover:text-white'
                                     )}
                                 >
                                     <span
                                         className={cn(
-                                            'inline-flex h-8 w-10 shrink-0 items-center justify-center rounded-md border font-mono text-[11px] font-semibold tracking-widest transition-colors',
+                                            'inline-flex h-12 w-14 shrink-0 items-center justify-center rounded-lg border font-mono text-xs font-bold tracking-widest transition-colors sm:h-14 sm:w-16 sm:text-sm',
                                             isActive
-                                                ? 'border-champagne/40 bg-champagne/10 text-champagne'
-                                                : 'border-border bg-background text-muted-foreground group-hover:border-champagne/40 group-hover:text-foreground'
+                                                ? 'border-champagne/50 bg-champagne/10 text-champagne'
+                                                : 'border-white/15 bg-white/[0.02] text-white/60 group-hover:border-white/40 group-hover:text-white'
                                         )}
                                     >
                                         {meta.native}
                                     </span>
-                                    <span className="flex flex-1 items-baseline justify-between gap-3">
-                                        <span className="font-display text-base font-semibold">
+                                    <span className="flex flex-1 items-baseline justify-between gap-4">
+                                        <span
+                                            className={cn(
+                                                'font-editorial italic leading-none',
+                                                isArabic
+                                                    ? 'text-4xl sm:text-5xl'
+                                                    : 'text-4xl sm:text-5xl'
+                                            )}
+                                        >
                                             {meta.label}
                                         </span>
                                         <span
                                             className={cn(
-                                                'font-editorial italic text-muted-foreground',
-                                                isArabic ? 'text-lg' : 'text-base'
+                                                'hidden font-editorial italic text-white/50 sm:inline sm:text-2xl',
+                                                isArabic && 'sm:text-3xl'
                                             )}
                                             dir={isArabic ? 'rtl' : 'ltr'}
                                         >
                                             {meta.greeting}
                                         </span>
                                     </span>
-                                    {isActive && <Check className="h-4 w-4 shrink-0" />}
-                                </button>
+                                    {isActive && <Check className="h-6 w-6 shrink-0 text-champagne" />}
+                                </motion.button>
                             </li>
                         );
                     })}
                 </ul>
 
-                <div className="hidden items-center justify-end gap-1.5 px-4 pb-2 pt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground sm:flex">
-                    <kbd className="rounded border border-border/60 bg-background px-1.5 py-0.5 text-[10px] text-foreground">
+                <div className="mt-10 hidden items-center justify-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.3em] text-white/40 sm:flex">
+                    <kbd className="rounded border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[10px] text-white/70">
                         Esc
                     </kbd>
                     {t('app.esc_to_close')}

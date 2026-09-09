@@ -136,6 +136,7 @@ export function Navbar() {
         matches.some((m) => (m === '/' ? url === '/' : url.startsWith(m)));
 
     return (
+        <>
         <header
             className={cn(
                 'fixed inset-x-0 top-0 z-50 transition-all duration-300',
@@ -219,71 +220,90 @@ export function Navbar() {
                 </div>
             </div>
 
-            <AnimatePresence>
-                {mobileOpen && (
+        </header>
+
+        {/* Mobile menu lives outside the header so it always sits above every
+            page section regardless of stacking contexts. Its own top bar
+            replaces the navbar so the close button stays reachable. */}
+        <AnimatePresence>
+            {mobileOpen && (
+                <motion.div
+                    id="mobile-menu-sheet"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={tCommon('app.menu_open')}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="fixed inset-0 z-[70] flex flex-col bg-background lg:hidden"
+                >
                     <motion.div
-                        id="mobile-menu-sheet"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label={tCommon('app.menu_open')}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-40 flex flex-col bg-background lg:hidden"
+                        initial={{ x: '100%' }}
+                        animate={{ x: 0 }}
+                        exit={{ x: '100%' }}
+                        transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                        className="flex h-full w-full flex-col"
                     >
-                        <motion.nav
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="flex h-full w-full flex-col overflow-y-auto pt-24 pb-10"
-                        >
-                            <div className="flex flex-1 flex-col gap-1 px-4">
-                                {MOBILE_NAV.map((item) => {
-                                    const active =
-                                        item.href === '/' ? url === '/' : url.startsWith(item.href);
-                                    return (
-                                        <Link
-                                            key={item.href}
-                                            href={item.href}
+                        <div className="flex h-16 shrink-0 items-center justify-between border-b border-border px-6">
+                            <Link href="/" onClick={() => setMobileOpen(false)}>
+                                <Logo />
+                            </Link>
+                            <button
+                                type="button"
+                                onClick={() => setMobileOpen(false)}
+                                aria-label={tCommon('action.close')}
+                                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card text-foreground"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-6">
+                            {MOBILE_NAV.map((item) => {
+                                const active =
+                                    item.href === '/' ? url === '/' : url.startsWith(item.href);
+                                return (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className={cn(
+                                            'flex min-h-[56px] items-center gap-4 rounded-xl px-4 py-4 text-base font-medium transition-colors active:scale-[0.98]',
+                                            active
+                                                ? 'bg-crimson/10 text-crimson'
+                                                : 'text-foreground active:bg-muted'
+                                        )}
+                                    >
+                                        <span
                                             className={cn(
-                                                'flex min-h-[56px] items-center gap-4 rounded-xl px-4 py-4 text-base font-medium transition-colors active:scale-[0.98]',
+                                                'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border',
                                                 active
-                                                    ? 'bg-crimson/10 text-crimson'
-                                                    : 'text-foreground active:bg-muted'
+                                                    ? 'border-crimson/30 bg-crimson/10 text-crimson'
+                                                    : 'border-border bg-card text-champagne'
                                             )}
                                         >
-                                            <span
-                                                className={cn(
-                                                    'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border',
-                                                    active
-                                                        ? 'border-crimson/30 bg-crimson/10 text-crimson'
-                                                        : 'border-border bg-card text-champagne'
-                                                )}
-                                            >
-                                                <item.icon className="h-4 w-4" />
-                                            </span>
-                                            <span className="flex-1">{item.label}</span>
-                                            <ChevronRight className="h-5 w-5 opacity-40" />
-                                        </Link>
-                                    );
-                                })}
-                            </div>
+                                            <item.icon className="h-4 w-4" />
+                                        </span>
+                                        <span className="flex-1">{item.label}</span>
+                                        <ChevronRight className="h-5 w-5 opacity-40" />
+                                    </Link>
+                                );
+                            })}
+                        </nav>
 
-                            <div className="mt-6 border-t border-border px-4 pt-6">
-                                <Link
-                                    href="/login"
-                                    className="flex min-h-[56px] items-center justify-between rounded-xl bg-crimson px-5 py-4 text-base font-semibold text-crimson-foreground shadow-sm active:scale-[0.98]"
-                                >
-                                    {tCommon('app.staff_area')}
-                                    <ChevronRight className="h-5 w-5" />
-                                </Link>
-                            </div>
-                        </motion.nav>
+                        <div className="shrink-0 border-t border-border px-4 py-4">
+                            <Link
+                                href="/login"
+                                className="flex min-h-[56px] items-center justify-between rounded-xl bg-crimson px-5 py-4 text-base font-semibold text-crimson-foreground shadow-sm active:scale-[0.98]"
+                            >
+                                {tCommon('app.staff_area')}
+                                <ChevronRight className="h-5 w-5" />
+                            </Link>
+                        </div>
                     </motion.div>
-                )}
-            </AnimatePresence>
-        </header>
+                </motion.div>
+            )}
+        </AnimatePresence>
+        </>
     );
 }
