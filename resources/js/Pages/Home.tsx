@@ -21,6 +21,7 @@ interface HomeProps {
     clubPrefix: string;
     lastGame: Game | null;
     nextGames: Game[];
+    hasCalendar: boolean;
     articles: Article[];
     videos: Video[];
     latestPhotos: Photo[];
@@ -39,6 +40,7 @@ export default function Home({
     clubPrefix,
     lastGame,
     nextGames,
+    hasCalendar,
     articles,
     latestPhotos,
     weatherData,
@@ -94,12 +96,14 @@ export default function Home({
                                 transition={{ duration: 0.6, delay: 0.4 }}
                                 className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center [&_a]:justify-center sm:[&_a]:justify-start"
                             >
-                                <Button asChild size="lg" className="w-full sm:w-auto">
-                                    <Link href="/calendar">
-                                        {t('hero.cta_calendar')}
-                                        <ArrowRight className="h-4 w-4" />
-                                    </Link>
-                                </Button>
+                                {hasCalendar && (
+                                    <Button asChild size="lg" className="w-full sm:w-auto">
+                                        <Link href="/calendar">
+                                            {t('hero.cta_calendar')}
+                                            <ArrowRight className="h-4 w-4" />
+                                        </Link>
+                                    </Button>
+                                )}
                                 <Button asChild size="lg" variant="champagne" className="w-full sm:w-auto">
                                     <Link href="/rejoindre">
                                         {t('hero.cta_join')}
@@ -247,50 +251,44 @@ export default function Home({
             </section>
 
             {/* ————————————————— LAST GAME + UPCOMING ————————————————— */}
-            <section className="mx-auto max-w-7xl px-4 py-16">
-                <SectionHeader
-                    kicker={t('results.kicker')}
-                    title={t('results.title')}
-                    action={{ label: t('results.action'), href: '/calendar' }}
-                />
-
-                {lastGame || upcomingRest.length > 0 ? (
-                    <div className="mt-10 grid gap-5 lg:grid-cols-2">
-                        {lastGame && (
-                            <MatchCard
-                                game={lastGame}
-                                variant="result"
-                                clubPrefix={clubPrefix}
-                                venue={`${clubLocation}, ${city}`}
-                            />
-                        )}
-                        {upcomingRest.slice(0, lastGame ? 1 : 2).map((g) => (
-                            <MatchCard
-                                key={g.id}
-                                game={g}
-                                variant="upcoming"
-                                clubPrefix={clubPrefix}
-                                venue={`${clubLocation}, ${city}`}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                    <EmptyState
-                        className="mt-10"
-                        icon={CalendarOff}
-                        title={t('results.empty_title')}
-                        description={t('results.empty_body')}
-                        action={
-                            <Button asChild variant="outline" size="sm">
-                                <Link href="/calendar">
-                                    {t('results.empty_action')}
-                                    <ChevronRight className="h-4 w-4" />
-                                </Link>
-                            </Button>
-                        }
+            {hasCalendar && (
+                <section className="mx-auto max-w-7xl px-4 py-16">
+                    <SectionHeader
+                        kicker={t('results.kicker')}
+                        title={t('results.title')}
+                        action={{ label: t('results.action'), href: '/calendar' }}
                     />
-                )}
-            </section>
+
+                    {lastGame || upcomingRest.length > 0 ? (
+                        <div className="mt-10 grid gap-5 lg:grid-cols-2">
+                            {lastGame && (
+                                <MatchCard
+                                    game={lastGame}
+                                    variant="result"
+                                    clubPrefix={clubPrefix}
+                                    venue={`${clubLocation}, ${city}`}
+                                />
+                            )}
+                            {upcomingRest.slice(0, lastGame ? 1 : 2).map((g) => (
+                                <MatchCard
+                                    key={g.id}
+                                    game={g}
+                                    variant="upcoming"
+                                    clubPrefix={clubPrefix}
+                                    venue={`${clubLocation}, ${city}`}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <EmptyState
+                            className="mt-10"
+                            icon={CalendarOff}
+                            title={t('results.empty_title')}
+                            description={t('results.empty_body')}
+                        />
+                    )}
+                </section>
+            )}
 
             {/* ————————————————— NEWS ————————————————— */}
             {articles?.length > 0 && (

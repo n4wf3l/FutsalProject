@@ -63,6 +63,7 @@ class HomeController extends Controller
     $videos = Video::latest()->take(2)->get();
     $welcomeImage = WelcomeImage::latest()->first();
     $latestPhotos = Photo::latest()->take(8)->get();
+    $hasCalendar = Game::exists();
 
     SeoMeta::share(
         'Dina Kenitra Futsal Club — Club de futsal de Kénitra depuis 2011',
@@ -78,6 +79,7 @@ class HomeController extends Controller
         'flashMessage' => $flashMessage,
         'lastGame' => $lastGame,
         'nextGames' => $nextGames,
+        'hasCalendar' => $hasCalendar,
         'articles' => $articles,
         'videos' => $videos,
         'welcomeImage' => $welcomeImage,
