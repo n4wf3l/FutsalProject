@@ -51,6 +51,7 @@
         "member_area": "فضاء الأعضاء",
         "language": "اللغة",
         "language_active": "نشطة",
-        "esc_to_close": "للإغلاق"
+        "esc_to_close": "للإغلاق",
+        "menu_open": "فتح القائمة"
     }
 }

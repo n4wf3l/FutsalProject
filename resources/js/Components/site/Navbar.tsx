@@ -60,6 +60,22 @@ export function Navbar() {
         setMobileOpen(false);
     }, [url]);
 
+    // Lock body scroll while the mobile menu is open so touch scrolling stays
+    // trapped inside the sheet, and close on Escape for keyboard users.
+    useEffect(() => {
+        if (!mobileOpen) return;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setMobileOpen(false);
+        };
+        document.addEventListener('keydown', onKey);
+        return () => {
+            document.body.style.overflow = previousOverflow;
+            document.removeEventListener('keydown', onKey);
+        };
+    }, [mobileOpen]);
+
     const NAV: NavGroup[] = useMemo(
         () => [
             { kind: 'link', label: t('items.home'), href: '/', hrefMatches: ['/'] },
@@ -131,7 +147,7 @@ export function Navbar() {
                 <div
                     className={cn(
                         'flex h-16 items-center justify-between rounded-2xl px-4 transition-all duration-300',
-                        scrolled ? 'glass-strong shadow-lg shadow-black/20' : 'bg-transparent'
+                        scrolled || mobileOpen ? 'glass-strong shadow-lg shadow-black/20' : 'bg-transparent'
                     )}
                 >
                     <Link href="/" className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson">
@@ -192,10 +208,12 @@ export function Navbar() {
                         <button
                             type="button"
                             onClick={() => setMobileOpen((o) => !o)}
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card/60 text-foreground lg:hidden"
-                            aria-label={t('items.home')}
+                            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/60 text-foreground lg:hidden"
+                            aria-label={mobileOpen ? tCommon('action.close') : tCommon('app.menu_open')}
+                            aria-expanded={mobileOpen}
+                            aria-controls="mobile-menu-sheet"
                         >
-                            {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+                            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                         </button>
                     </div>
                 </div>
@@ -204,38 +222,65 @@ export function Navbar() {
             <AnimatePresence>
                 {mobileOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
+                        id="mobile-menu-sheet"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={tCommon('app.menu_open')}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute inset-x-4 top-full mt-2 max-h-[80vh] overflow-y-auto rounded-2xl border border-border bg-card p-2 shadow-xl shadow-black/30 lg:hidden"
+                        className="fixed inset-0 z-40 flex flex-col bg-background lg:hidden"
                     >
-                        {MOBILE_NAV.map((item) => {
-                            const active = item.href === '/' ? url === '/' : url.startsWith(item.href);
-                            return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={cn(
-                                        'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors',
-                                        active
-                                            ? 'bg-crimson/10 text-crimson'
-                                            : 'text-foreground hover:bg-muted'
-                                    )}
-                                >
-                                    <item.icon className="h-4 w-4 text-champagne" />
-                                    <span className="flex-1">{item.label}</span>
-                                    <ChevronRight className="h-4 w-4 opacity-40" />
-                                </Link>
-                            );
-                        })}
-                        <Link
-                            href="/login"
-                            className="mt-2 flex items-center justify-between rounded-lg border border-crimson bg-crimson px-4 py-3 text-sm font-semibold text-crimson-foreground"
+                        <motion.nav
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                            className="flex h-full w-full flex-col overflow-y-auto pt-24 pb-10"
                         >
-                            {tCommon('app.staff_area')}
-                            <ChevronRight className="h-4 w-4" />
-                        </Link>
+                            <div className="flex flex-1 flex-col gap-1 px-4">
+                                {MOBILE_NAV.map((item) => {
+                                    const active =
+                                        item.href === '/' ? url === '/' : url.startsWith(item.href);
+                                    return (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            className={cn(
+                                                'flex min-h-[56px] items-center gap-4 rounded-xl px-4 py-4 text-base font-medium transition-colors active:scale-[0.98]',
+                                                active
+                                                    ? 'bg-crimson/10 text-crimson'
+                                                    : 'text-foreground active:bg-muted'
+                                            )}
+                                        >
+                                            <span
+                                                className={cn(
+                                                    'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border',
+                                                    active
+                                                        ? 'border-crimson/30 bg-crimson/10 text-crimson'
+                                                        : 'border-border bg-card text-champagne'
+                                                )}
+                                            >
+                                                <item.icon className="h-4 w-4" />
+                                            </span>
+                                            <span className="flex-1">{item.label}</span>
+                                            <ChevronRight className="h-5 w-5 opacity-40" />
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+
+                            <div className="mt-6 border-t border-border px-4 pt-6">
+                                <Link
+                                    href="/login"
+                                    className="flex min-h-[56px] items-center justify-between rounded-xl bg-crimson px-5 py-4 text-base font-semibold text-crimson-foreground shadow-sm active:scale-[0.98]"
+                                >
+                                    {tCommon('app.staff_area')}
+                                    <ChevronRight className="h-5 w-5" />
+                                </Link>
+                            </div>
+                        </motion.nav>
                     </motion.div>
                 )}
             </AnimatePresence>

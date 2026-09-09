@@ -165,7 +165,7 @@ function LanguageOverlay({
                     })}
                 </ul>
 
-                <div className="flex items-center justify-end gap-1.5 px-4 pb-2 pt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                <div className="hidden items-center justify-end gap-1.5 px-4 pb-2 pt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground sm:flex">
                     <kbd className="rounded border border-border/60 bg-background px-1.5 py-0.5 text-[10px] text-foreground">
                         Esc
                     </kbd>

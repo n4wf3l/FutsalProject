@@ -51,6 +51,7 @@
         "member_area": "Member area",
         "language": "Language",
         "language_active": "active",
-        "esc_to_close": "to close"
+        "esc_to_close": "to close",
+        "menu_open": "Open menu"
     }
 }

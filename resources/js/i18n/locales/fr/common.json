@@ -51,6 +51,7 @@
         "member_area": "Espace membre",
         "language": "Langue",
         "language_active": "actif",
-        "esc_to_close": "pour fermer"
+        "esc_to_close": "pour fermer",
+        "menu_open": "Ouvrir le menu"
     }
 }
