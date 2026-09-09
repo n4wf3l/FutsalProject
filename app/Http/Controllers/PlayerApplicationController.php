@@ -20,7 +20,6 @@ class PlayerApplicationController extends Controller
         'Fixe',
         'Ailier',
         'Pivot',
-        'Polyvalent',
     ];
 
     // ————————————————— Public —————————————————

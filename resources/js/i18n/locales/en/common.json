@@ -6,6 +6,15 @@
         "est": "EST. 2011",
         "futsal_year": "Futsal · 2011"
     },
+    "positions": {
+        "Gardien": "Goalkeeper",
+        "Fixe": "Fixo",
+        "Ailier": "Wing",
+        "Pivot": "Pivot"
+    },
+    "player": {
+        "nationality_short": "Nat."
+    },
     "action": {
         "submit": "Send",
         "cancel": "Cancel",

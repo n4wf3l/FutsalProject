@@ -6,6 +6,15 @@
         "est": "تأسس 2011",
         "futsal_year": "كرة قدم داخل القاعة · 2011"
     },
+    "positions": {
+        "Gardien": "حارس المرمى",
+        "Fixe": "فيكسو",
+        "Ailier": "جناح",
+        "Pivot": "محور"
+    },
+    "player": {
+        "nationality_short": "جنسية"
+    },
     "action": {
         "submit": "إرسال",
         "cancel": "إلغاء",

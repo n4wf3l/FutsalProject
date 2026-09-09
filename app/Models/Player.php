@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,15 +14,7 @@ class Player extends Model
         'position', 'number', 'nationality', 'height', 'contract_until'
     ];
 
+    // Birthdate, height and derived age are never exposed publicly.
+    // Admin edit endpoints re-expose birthdate and height via makeVisible.
     protected $hidden = ['birthdate', 'height'];
-
-    protected $appends = ['age'];
-
-    public function getAgeAttribute(): ?int
-    {
-        if (! $this->birthdate) {
-            return null;
-        }
-        return Carbon::parse($this->birthdate)->age;
-    }
 }

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { Player, PlayerEspoir } from '@/types/models';
 import { cn } from '@/lib/utils';
 import { SmartImage } from './SmartImage';
@@ -10,8 +11,10 @@ interface Props {
 }
 
 export function PlayerCard({ player, index = 0 }: Props) {
+    const { t } = useTranslation('common');
     const src = player.photo ? `/storage/${player.photo}` : null;
     const isKeeper = /gardien|goal|gk/i.test(player.position ?? '');
+    const positionLabel = t(`positions.${player.position}`, { defaultValue: player.position });
 
     return (
         <motion.article
@@ -56,16 +59,15 @@ export function PlayerCard({ player, index = 0 }: Props) {
                     'font-mono text-[10px] uppercase tracking-widest',
                     isKeeper ? 'text-champagne' : 'text-crimson'
                 )}>
-                    {player.position}
+                    {positionLabel}
                 </div>
                 <h3 className="mt-1 font-display text-lg font-semibold leading-tight">
                     <span className="block text-muted-foreground">{player.first_name}</span>
                     <span className="block text-foreground">{player.last_name}</span>
                 </h3>
 
-                <div className="mt-4 grid grid-cols-2 gap-2 border-t border-border pt-4 text-xs">
-                    <Stat label="Âge" value={player.age !== null ? String(player.age) : '?'} />
-                    <Stat label="Nat." value={player.nationality?.slice(0, 3).toUpperCase() ?? '?'} />
+                <div className="mt-4 border-t border-border pt-4 text-xs">
+                    <Stat label={t('player.nationality_short')} value={player.nationality?.slice(0, 3).toUpperCase() ?? '?'} />
                 </div>
             </div>
         </motion.article>
