@@ -77,7 +77,7 @@ export function Footer() {
                                 {t('footer.partners_title')}
                             </h3>
                         </div>
-                        <ul className="flex flex-wrap items-center justify-center gap-x-14 gap-y-8">
+                        <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-6 sm:gap-x-10 lg:gap-x-14 lg:gap-y-8">
                             {sponsors.map((s) => (
                                 <li key={s.id}>
                                     <SponsorLogo sponsor={s} />

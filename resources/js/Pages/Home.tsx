@@ -62,8 +62,8 @@ export default function Home({
                     <div className="absolute inset-0 opacity-40 dark:bg-grid-fade" />
                 </div>
 
-                <div className="mx-auto max-w-7xl px-4 py-20 lg:py-32">
-                    <div className="grid gap-16 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+                <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:py-32">
+                    <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
                         <div>
                             <motion.h1
                                 initial={{ opacity: 0, y: 24 }}
@@ -71,10 +71,10 @@ export default function Home({
                                 transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                                 className="text-foreground"
                             >
-                                <span className="block font-display text-display-2xl leading-[0.9]">
+                                <span className="block font-display text-4xl leading-[0.95] sm:text-5xl md:text-6xl lg:text-display-2xl lg:leading-[0.9]">
                                     {t('hero.title_line1')}
                                 </span>
-                                <span className="mt-1 block font-editorial text-4xl italic text-champagne sm:text-5xl lg:text-6xl">
+                                <span className="mt-1 block font-editorial text-3xl italic text-champagne sm:text-4xl md:text-5xl lg:text-6xl">
                                     {t('hero.title_line2')}
                                 </span>
                             </motion.h1>
@@ -83,7 +83,7 @@ export default function Home({
                                 initial={{ opacity: 0, y: 16 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.25 }}
-                                className="mt-8 max-w-lg text-lg leading-relaxed text-muted-foreground"
+                                className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground sm:mt-8 sm:text-lg"
                             >
                                 {t('hero.subtitle')}
                             </motion.p>
@@ -92,21 +92,21 @@ export default function Home({
                                 initial={{ opacity: 0, y: 16 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: 0.4 }}
-                                className="mt-10 flex flex-wrap items-center gap-3"
+                                className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center [&_a]:justify-center sm:[&_a]:justify-start"
                             >
-                                <Button asChild size="lg">
+                                <Button asChild size="lg" className="w-full sm:w-auto">
                                     <Link href="/calendar">
                                         {t('hero.cta_calendar')}
                                         <ArrowRight className="h-4 w-4" />
                                     </Link>
                                 </Button>
-                                <Button asChild size="lg" variant="champagne">
+                                <Button asChild size="lg" variant="champagne" className="w-full sm:w-auto">
                                     <Link href="/rejoindre">
                                         {t('hero.cta_join')}
                                         <ArrowRight className="h-4 w-4" />
                                     </Link>
                                 </Button>
-                                <Button asChild size="lg" variant="outline">
+                                <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
                                     <Link href="/about">{t('hero.cta_history')}</Link>
                                 </Button>
                             </motion.div>
@@ -341,35 +341,32 @@ export default function Home({
             )}
 
             {/* ————————————————— CTA STRIP ————————————————— */}
-            <section className="mx-auto max-w-7xl px-4 pb-16 pt-8">
+            <section className="mx-auto max-w-7xl px-4 pb-12 pt-4 sm:pb-16 sm:pt-8">
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="relative overflow-hidden rounded-3xl border border-crimson/30 bg-card p-12"
+                    className="relative overflow-hidden rounded-2xl border border-crimson/30 bg-card p-6 sm:rounded-3xl sm:p-10 lg:p-12"
                 >
-                    <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-crimson/30 blur-3xl" aria-hidden />
-                    <div className="absolute inset-0 bg-noise opacity-[0.06]" aria-hidden />
-
-                    <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+                    <div className="relative grid gap-6 sm:gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
                         <div>
                             <Badge variant="champagne">{t('cta.kicker')}</Badge>
-                            <h3 className="mt-4 font-display text-display-lg">
+                            <h3 className="mt-4 font-display text-2xl sm:text-3xl lg:text-display-lg">
                                 {t('cta.title')}
                             </h3>
-                            <p className="mt-3 max-w-xl text-muted-foreground">
+                            <p className="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
                                 {t('cta.subtitle')}
                             </p>
                         </div>
-                        <div className="flex flex-wrap gap-3">
-                            <Button asChild size="lg" variant="champagne">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap [&_a]:justify-center">
+                            <Button asChild size="lg" variant="champagne" className="w-full sm:w-auto">
                                 <Link href="/rejoindre">
                                     {t('cta.apply')}
                                     <ArrowRight className="h-4 w-4" />
                                 </Link>
                             </Button>
-                            <Button asChild size="lg" variant="outline">
+                            <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
                                 <Link href="/contact">{t('cta.contact')}</Link>
                             </Button>
                         </div>
@@ -444,8 +441,8 @@ function StatCard({
             <div
                 className={
                     emphasized
-                        ? 'mt-4 font-editorial text-6xl italic leading-none text-champagne sm:text-7xl'
-                        : 'mt-3 font-display text-3xl font-bold tabular-nums'
+                        ? 'mt-4 font-editorial text-5xl italic leading-none text-champagne sm:text-6xl lg:text-7xl'
+                        : 'mt-3 font-display text-2xl font-bold tabular-nums sm:text-3xl'
                 }
             >
                 {value}

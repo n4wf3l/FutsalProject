@@ -31,7 +31,7 @@ export function PageHeader({
     return (
         <section
             className={cn(
-                'relative mx-auto max-w-7xl px-4 pb-8 pt-8',
+                'relative mx-auto max-w-7xl px-4 pb-6 pt-6 sm:pb-8 sm:pt-8',
                 align === 'center' && 'text-center',
                 className
             )}
@@ -80,8 +80,8 @@ export function PageHeader({
                     className={cn(
                         'text-foreground',
                         variant === 'editorial'
-                            ? 'font-editorial text-4xl font-medium leading-[1.02] tracking-tight sm:text-5xl lg:text-[5.5rem]'
-                            : 'font-display text-display-xl'
+                            ? 'font-editorial text-3xl font-medium leading-[1.05] tracking-tight sm:text-4xl md:text-5xl lg:text-[5.5rem]'
+                            : 'font-display text-3xl sm:text-4xl lg:text-display-xl'
                     )}
                 >
                     {title}
@@ -93,7 +93,7 @@ export function PageHeader({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
                         className={cn(
-                            'max-w-2xl text-lg text-muted-foreground',
+                            'max-w-2xl text-base text-muted-foreground sm:text-lg',
                             align === 'center' && 'mx-auto'
                         )}
                     >

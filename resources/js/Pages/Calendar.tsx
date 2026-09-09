@@ -134,8 +134,8 @@ export default function Calendar({ championship, games, teams, clubPrefix, filte
                 )}
             </PageHeader>
 
-            <section className="mx-auto max-w-7xl px-4 pb-16">
-                <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
+            <section className="mx-auto max-w-7xl px-4 pb-12 sm:pb-16">
+                <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr] lg:gap-8">
                     {/* Matches */}
                     <div>
                         {/* Filters */}

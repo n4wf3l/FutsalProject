@@ -180,7 +180,7 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
                                 <> · <span className="text-muted-foreground">{interview.interviewee_affiliation}</span></>
                             )}
                         </div>
-                        <h2 className="mt-3 font-editorial text-3xl font-medium leading-tight tracking-tight text-foreground lg:text-4xl">
+                        <h2 className="mt-3 font-editorial text-2xl font-medium leading-tight tracking-tight text-foreground sm:text-3xl lg:text-4xl">
                             {interview.title}
                         </h2>
                         <div className="mt-3 font-mono text-xs uppercase tracking-widest text-champagne">
@@ -192,7 +192,7 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
                         <blockquote className="relative">
                             <span
                                 aria-hidden
-                                className="absolute -left-1 -top-6 font-editorial text-6xl leading-none text-champagne/30"
+                                className="absolute -left-1 -top-4 font-editorial text-4xl leading-none text-champagne/30 sm:-top-6 sm:text-6xl"
                             >
                                 “
                             </span>

@@ -79,11 +79,11 @@ export default function About({ regulations, sections }: Props) {
             {/* Identity block */}
             <section className="mx-auto max-w-7xl px-4 pb-10">
                 <div className="rounded-2xl border border-border bg-card">
-                    <div className="grid gap-8 p-8 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-12 lg:p-12">
+                    <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-12 lg:p-12">
                         <img
                             src="/logo-dinakenitra.png"
                             alt="Dina Kenitra FC"
-                            className="h-32 w-32 lg:h-40 lg:w-40"
+                            className="h-24 w-24 sm:h-32 sm:w-32 lg:h-40 lg:w-40"
                         />
                         <div>
                             <Badge variant="champagne" className="mb-4">
@@ -91,12 +91,12 @@ export default function About({ regulations, sections }: Props) {
                                 {t('pages:about.identity_badge')}
                             </Badge>
                             <h2 className="text-foreground">
-                                <span className="block font-display text-display-lg leading-none">Dina Kenitra</span>
-                                <span className="mt-1 block font-editorial text-4xl italic text-champagne sm:text-5xl">
+                                <span className="block font-display text-3xl leading-none sm:text-4xl lg:text-display-lg">Dina Kenitra</span>
+                                <span className="mt-1 block font-editorial text-2xl italic text-champagne sm:text-4xl lg:text-5xl">
                                     Futsal Club
                                 </span>
                             </h2>
-                            <p className="mt-5 max-w-2xl leading-relaxed text-muted-foreground">
+                            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
                                 {t('pages:about.identity_body', { city: club?.city ?? 'Kénitra' })}
                             </p>
                         </div>
@@ -158,14 +158,14 @@ export default function About({ regulations, sections }: Props) {
                                 className="scroll-mt-24 py-12 first:pt-0 last:pb-0"
                             >
                                 <header className="mb-6 flex items-baseline gap-4">
-                                    <span className="font-editorial text-5xl italic text-champagne/70 sm:text-6xl">
+                                    <span className="font-editorial text-3xl italic text-champagne/70 sm:text-5xl lg:text-6xl">
                                         {chapter.number}
                                     </span>
                                     <div>
                                         <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-champagne">
                                             {t('pages:about.chapter_kicker')}
                                         </div>
-                                        <h3 className="mt-1 font-display text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
+                                        <h3 className="mt-1 font-display text-xl font-semibold leading-tight text-foreground sm:text-3xl lg:text-4xl">
                                             {chapter.title}
                                         </h3>
                                     </div>

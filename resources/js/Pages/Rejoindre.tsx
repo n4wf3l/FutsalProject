@@ -131,7 +131,7 @@ export default function Rejoindre({ categories, closedCategories, positions }: P
                     </motion.div>
                 )}
 
-                <form onSubmit={submit} className="grid gap-6 lg:grid-cols-[1fr_320px]">
+                <form onSubmit={submit} className="grid gap-4 sm:gap-6 lg:grid-cols-[1fr_320px]">
                     <div className="space-y-6">
                         {/* Category selector */}
                         <motion.div

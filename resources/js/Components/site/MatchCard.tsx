@@ -83,13 +83,13 @@ export function MatchCard({ game, variant = 'result', clubPrefix, venue }: Props
 
                 <div className="flex flex-col items-center gap-1">
                     {isPlayed ? (
-                        <div className="font-mono text-4xl font-bold tracking-tighter tabular-nums text-foreground">
+                        <div className="font-mono text-2xl font-bold tracking-tighter tabular-nums text-foreground sm:text-3xl md:text-4xl">
                             <span className={homeWin ? 'text-champagne' : ''}>{game.home_score}</span>
-                            <span className="mx-2 text-muted-foreground">:</span>
+                            <span className="mx-1.5 text-muted-foreground sm:mx-2">:</span>
                             <span className={awayWin ? 'text-champagne' : ''}>{game.away_score}</span>
                         </div>
                     ) : (
-                        <div className="font-mono text-2xl font-bold tabular-nums text-foreground">
+                        <div className="font-mono text-lg font-bold tabular-nums text-foreground sm:text-2xl">
                             {date.time}
                         </div>
                     )}

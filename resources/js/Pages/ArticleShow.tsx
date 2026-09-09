@@ -101,7 +101,7 @@ export default function ArticleShow({ article, recentArticles }: Props) {
                             {date.day} {date.month} {date.year}
                         </div>
                     </div>
-                    <h1 className="mt-4 font-editorial text-4xl font-medium leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                    <h1 className="mt-4 font-editorial text-3xl font-medium leading-[1.05] tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
                         {article.title}
                     </h1>
                 </motion.header>

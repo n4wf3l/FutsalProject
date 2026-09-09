@@ -124,7 +124,7 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
                 <section className="mx-auto max-w-7xl px-4 py-16">
                     <SectionHeader kicker={t('teams.coach_kicker')} title={t('teams.coach_title')} />
                     <div className="mt-10 overflow-hidden rounded-3xl border border-champagne/20 bg-card">
-                        <div className="grid gap-8 lg:grid-cols-[1fr_1.4fr]">
+                        <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr] lg:gap-8">
                             <div className="relative aspect-[3/4] overflow-hidden lg:aspect-auto">
                                 {coach.photo ? (
                                     <SmartImage
