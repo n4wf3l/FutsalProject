@@ -67,7 +67,14 @@ jobs:
           echo "vendor.zip size: $(ls -lh vendor.zip | awk '{print $5}')"
 
       - name: Install lftp
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+        # apt-get update fails intermittently on GitHub runners because the
+        # bundled Google Chrome deb repo occasionally serves a mismatched
+        # Packages.gz. lftp is available from the cached indexes anyway, so
+        # let the update fail non-fatally and only require the install itself
+        # to succeed.
+        run: |
+          sudo apt-get update -qq || true
+          sudo apt-get install -y -qq lftp
 
       - name: Upload vendor.zip via single-file FTPS curl
         env:
