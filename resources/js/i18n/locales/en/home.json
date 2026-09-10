@@ -27,7 +27,9 @@
     },
     "featured": {
         "badge": "Featured",
-        "read": "Read article"
+        "badge_press": "Featured press release",
+        "read": "Read article",
+        "read_press": "Read press release"
     },
     "next_match": {
         "badge": "Next match",

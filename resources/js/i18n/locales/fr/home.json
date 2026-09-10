@@ -27,7 +27,9 @@
     },
     "featured": {
         "badge": "À la une",
-        "read": "Lire l'article"
+        "badge_press": "Communiqué à la une",
+        "read": "Lire l'article",
+        "read_press": "Lire le communiqué"
     },
     "next_match": {
         "badge": "Prochain match",

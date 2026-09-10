@@ -10,6 +10,7 @@ use App\Models\Game;
 use App\Models\Team;
 use App\Models\FlashMessage;
 use App\Models\Article;
+use App\Models\PressRelease;
 use App\Models\WelcomeImage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -65,6 +66,22 @@ class HomeController extends Controller
     $latestPhotos = Photo::latest()->take(8)->get();
     $hasCalendar = Game::exists();
 
+    // "À la une" side of the hero: pick the most recent between the latest
+    // article and the latest press release, so a fresh communiqué gets top
+    // billing over an older news item.
+    $latestArticle = $articles->first();
+    $latestPressRelease = PressRelease::latest()->first();
+    $featured = null;
+    if ($latestArticle && $latestPressRelease) {
+        $featured = $latestArticle->created_at->gte($latestPressRelease->created_at)
+            ? ['type' => 'article', 'item' => $latestArticle]
+            : ['type' => 'press_release', 'item' => $latestPressRelease];
+    } elseif ($latestArticle) {
+        $featured = ['type' => 'article', 'item' => $latestArticle];
+    } elseif ($latestPressRelease) {
+        $featured = ['type' => 'press_release', 'item' => $latestPressRelease];
+    }
+
     SeoMeta::share(
         'Dina Kenitra Futsal Club — Club de futsal de Kénitra depuis 2011',
         'Club de futsal de Kénitra fondé en 2011. Retrouve le calendrier, les résultats, l\'effectif et les actualités du ' . $clubName . '.'
@@ -81,6 +98,7 @@ class HomeController extends Controller
         'nextGames' => $nextGames,
         'hasCalendar' => $hasCalendar,
         'articles' => $articles,
+        'featured' => $featured,
         'videos' => $videos,
         'welcomeImage' => $welcomeImage,
         'latestPhotos' => $latestPhotos,

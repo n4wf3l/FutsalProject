@@ -11,8 +11,12 @@ import { EmptyState } from '@/Components/site/EmptyState';
 import { MatchCard } from '@/Components/site/MatchCard';
 import { SmartImage } from '@/Components/site/SmartImage';
 import { TeamBadge } from '@/Components/site/TeamBadge';
-import { formatMatchDate } from '@/lib/utils';
-import type { Article, FlashMessage, Game, Photo, Video, WelcomeImage } from '@/types/models';
+import { formatMatchDate, cn } from '@/lib/utils';
+import type { Article, FlashMessage, Game, Photo, PressRelease, Video, WelcomeImage } from '@/types/models';
+
+type FeaturedItem =
+    | { type: 'article'; item: Article }
+    | { type: 'press_release'; item: PressRelease };
 
 interface HomeProps {
     clubName: string;
@@ -23,6 +27,7 @@ interface HomeProps {
     nextGames: Game[];
     hasCalendar: boolean;
     articles: Article[];
+    featured: FeaturedItem | null;
     videos: Video[];
     latestPhotos: Photo[];
     flashMessage: FlashMessage | null;
@@ -42,6 +47,7 @@ export default function Home({
     nextGames,
     hasCalendar,
     articles,
+    featured,
     latestPhotos,
     weatherData,
 }: HomeProps) {
@@ -198,8 +204,8 @@ export default function Home({
                                     </div>
                                 </div>
                             </motion.div>
-                        ) : articles?.[0] ? (
-                            <FeaturedArticleCard article={articles[0]} />
+                        ) : featured ? (
+                            <FeaturedCard featured={featured} />
                         ) : (
                             <ClubCrest />
                         )}
@@ -509,9 +515,19 @@ function Countdown({ targetDate }: { targetDate: string }) {
     );
 }
 
-function FeaturedArticleCard({ article }: { article: Article }) {
+function FeaturedCard({ featured }: { featured: FeaturedItem }) {
     const { t } = useTranslation('home');
-    const date = formatMatchDate(article.created_at);
+    const isArticle = featured.type === 'article';
+    const item = featured.item;
+    const date = formatMatchDate(item.created_at);
+    const href = isArticle
+        ? `/articles/${(item as Article).slug}`
+        : `/communiques/${(item as PressRelease).slug}`;
+    const badge = isArticle ? t('featured.badge') : t('featured.badge_press');
+    const cta = isArticle ? t('featured.read') : t('featured.read_press');
+    const accentText = isArticle ? 'text-crimson group-hover:text-crimson' : 'text-champagne group-hover:text-champagne';
+    const accentBorder = isArticle ? 'border-crimson' : 'border-champagne';
+
     return (
         <motion.article
             initial={{ opacity: 0, y: 24 }}
@@ -521,15 +537,15 @@ function FeaturedArticleCard({ article }: { article: Article }) {
         >
             <div className="mb-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-champagne">
                 <span className="h-px w-8 bg-champagne" />
-                {t('featured.badge')}
+                {badge}
             </div>
 
-            <Link href={`/articles/${article.slug}`} className="group block">
+            <Link href={href} className="group block">
                 <div className="relative aspect-[16/10] overflow-hidden border border-border bg-muted">
-                    {article.image ? (
+                    {item.image ? (
                         <SmartImage
-                            src={`/storage/${article.image}`}
-                            alt={article.title}
+                            src={`/storage/${item.image}`}
+                            alt={item.title}
                             className="transition-transform duration-700 group-hover:scale-[1.03]"
                         />
                     ) : (
@@ -543,11 +559,18 @@ function FeaturedArticleCard({ article }: { article: Article }) {
                     <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                         {date.day} {date.month} {date.year}
                     </div>
-                    <h3 className="mt-2 font-display text-2xl font-semibold leading-tight text-foreground transition-colors group-hover:text-crimson lg:text-3xl">
-                        {article.title}
+                    <h3 className={cn(
+                        'mt-2 font-display text-2xl font-semibold leading-tight text-foreground transition-colors lg:text-3xl',
+                        isArticle ? 'group-hover:text-crimson' : 'group-hover:text-champagne'
+                    )}>
+                        {item.title}
                     </h3>
-                    <div className="mt-5 inline-flex items-center gap-1.5 border-b border-crimson pb-1 text-sm font-semibold text-crimson">
-                        {t('featured.read')}
+                    <div className={cn(
+                        'mt-5 inline-flex items-center gap-1.5 border-b pb-1 text-sm font-semibold',
+                        accentText,
+                        accentBorder
+                    )}>
+                        {cta}
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </div>
                 </div>
