@@ -104,7 +104,7 @@ function LanguageOverlay({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/92 p-6 text-white backdrop-blur-2xl"
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/[0.92] p-6 text-white backdrop-blur-2xl"
         >
             {/* Close button, tapping the backdrop also closes */}
             <button
