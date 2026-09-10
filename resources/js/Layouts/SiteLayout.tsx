@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { Navbar } from '@/Components/site/Navbar';
 import { Footer } from '@/Components/site/Footer';
+import { LocaleSwitchToast } from '@/Components/site/LocaleSwitchToast';
 
 export default function SiteLayout({ children }: PropsWithChildren) {
     return (
@@ -12,6 +13,7 @@ export default function SiteLayout({ children }: PropsWithChildren) {
             </main>
 
             <Footer />
+            <LocaleSwitchToast />
         </div>
     );
 }

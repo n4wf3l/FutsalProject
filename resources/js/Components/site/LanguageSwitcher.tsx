@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Globe, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LOCALE_META, SUPPORTED_LOCALES, switchLocale, type Locale } from '@/i18n';
+import { markLocaleSwitchToast } from './LocaleSwitchToast';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -38,6 +39,7 @@ export function LanguageSwitcher({ className, variant = 'compact' }: Props) {
             return;
         }
         await switchLocale(locale);
+        markLocaleSwitchToast();
         setOpen(false);
         router.reload();
     };

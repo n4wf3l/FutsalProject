@@ -12,6 +12,10 @@
         "Ailier": "Wing",
         "Pivot": "Pivot"
     },
+    "locale_switch": {
+        "title": "Language changed",
+        "body": "The interface is now in English. Published articles and press releases remain in their original language."
+    },
     "player": {
         "nationality_short": "Nat."
     },

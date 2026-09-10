@@ -12,6 +12,10 @@
         "Ailier": "Ailier",
         "Pivot": "Pivot"
     },
+    "locale_switch": {
+        "title": "Langue changée",
+        "body": "L'interface est maintenant en français. Les articles et communiqués publiés restent dans leur langue d'origine."
+    },
     "player": {
         "nationality_short": "Nat."
     },
