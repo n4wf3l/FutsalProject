@@ -11,12 +11,19 @@ import type { PressRelease } from '@/types/models';
 
 interface Props {
     pressRelease: PressRelease | null;
+    defaultImage?: string | null;
 }
 
-export default function PressReleaseForm({ pressRelease }: Props) {
+export default function PressReleaseForm({ pressRelease, defaultImage }: Props) {
     const isEdit = !!pressRelease;
-    const [preview, setPreview] = useState<string | null>(
-        pressRelease?.image ? `/storage/${pressRelease.image}` : null
+    const initialPreview = pressRelease?.image
+        ? `/storage/${pressRelease.image}`
+        : (!isEdit && defaultImage ? `/storage/${defaultImage}` : null);
+    const [preview, setPreview] = useState<string | null>(initialPreview);
+    // Track whether the current preview is the auto-filled previous cover.
+    // Cleared as soon as the user uploads a new file or removes the image.
+    const [reuseDefaultImage, setReuseDefaultImage] = useState<boolean>(
+        !isEdit && !!defaultImage
     );
 
     const { data, setData, post, processing, errors, progress } = useForm({
@@ -24,6 +31,7 @@ export default function PressReleaseForm({ pressRelease }: Props) {
         title: pressRelease?.title ?? '',
         content: pressRelease?.content ?? '',
         image: null as File | null,
+        reuse_default_image: !isEdit && !!defaultImage ? '1' : '0',
     });
 
     const submit: FormEventHandler = (e) => {
@@ -36,6 +44,8 @@ export default function PressReleaseForm({ pressRelease }: Props) {
         const file = e.target.files?.[0] ?? null;
         setData('image', file);
         if (file) {
+            setReuseDefaultImage(false);
+            setData('reuse_default_image', '0');
             const reader = new FileReader();
             reader.onload = () => setPreview(reader.result as string);
             reader.readAsDataURL(file);
@@ -44,6 +54,8 @@ export default function PressReleaseForm({ pressRelease }: Props) {
 
     const removeImage = () => {
         setData('image', null);
+        setReuseDefaultImage(false);
+        setData('reuse_default_image', '0');
         setPreview(null);
     };
 
@@ -89,6 +101,11 @@ export default function PressReleaseForm({ pressRelease }: Props) {
                                 </div>
                             )}
                         </div>
+                        {reuseDefaultImage && (
+                            <p className="mt-2 text-[10px] text-muted-foreground">
+                                Reprise du précédent communiqué. Téléverse une nouvelle image ou retire-la si tu veux changer.
+                            </p>
+                        )}
                         <div className="mt-4 space-y-2">
                             <label className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:border-crimson/50 hover:text-crimson">
                                 <Camera className="h-4 w-4" />

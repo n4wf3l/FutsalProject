@@ -69,8 +69,15 @@ class PressReleaseController extends Controller
 
     public function create()
     {
+        // Pre-fill the image with the previous release's cover so the admin
+        // does not have to re-upload the club crest every time.
+        $lastImage = PressRelease::whereNotNull('image')
+            ->latest()
+            ->value('image');
+
         return Inertia::render('Admin/PressReleases/Form', [
             'pressRelease' => null,
+            'defaultImage' => $lastImage,
         ]);
     }
 
@@ -80,12 +87,26 @@ class PressReleaseController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:4096',
+            'reuse_default_image' => 'nullable|boolean',
         ]);
+
+        $reuseDefault = (bool) ($data['reuse_default_image'] ?? false);
+        unset($data['reuse_default_image']);
 
         $data['slug'] = $this->uniqueSlug($data['title']);
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('press_releases', 'public');
+        } elseif ($reuseDefault) {
+            $sourcePath = PressRelease::whereNotNull('image')
+                ->latest()
+                ->value('image');
+            if ($sourcePath && Storage::disk('public')->exists($sourcePath)) {
+                $extension = pathinfo($sourcePath, PATHINFO_EXTENSION) ?: 'jpg';
+                $copyPath = 'press_releases/' . Str::random(40) . '.' . $extension;
+                Storage::disk('public')->copy($sourcePath, $copyPath);
+                $data['image'] = $copyPath;
+            }
         }
 
         PressRelease::create($data);
