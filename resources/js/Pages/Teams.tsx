@@ -32,20 +32,26 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
     const { t, i18n } = useTranslation('pages');
     const [filter, setFilter] = useState('all');
 
-    const orderedPlayers = useMemo(() => {
-        const isKeeper = (p: Player) => /gardien|goal|gk/i.test(p.position);
-        return [...players].sort((a, b) => {
-            const ak = isKeeper(a) ? 0 : 1;
-            const bk = isKeeper(b) ? 0 : 1;
-            if (ak !== bk) return ak - bk;
-            return a.number - b.number;
-        });
+    // Sections in tactical order (back to front). Players inside each section
+    // are sorted by shirt number ascending.
+    const sections = useMemo(() => {
+        const sorted = [...players].sort((a, b) => a.number - b.number);
+        const groupKeys = ['gk', 'fixo', 'ala', 'pivot'] as const;
+        return groupKeys
+            .map((key) => {
+                const matcher = POSITION_MATCHERS.find((m) => m.key === key)!;
+                const items = sorted.filter(matcher.match);
+                return { key, items };
+            })
+            .filter((s) => s.items.length > 0);
     }, [players]);
 
-    const filteredPlayers = useMemo(() => {
-        const group = POSITION_MATCHERS.find((g) => g.key === filter) ?? POSITION_MATCHERS[0];
-        return orderedPlayers.filter(group.match);
-    }, [orderedPlayers, filter]);
+    const visibleSections = useMemo(() => {
+        if (filter === 'all') return sections;
+        return sections.filter((s) => s.key === filter);
+    }, [sections, filter]);
+
+    const visibleCount = visibleSections.reduce((sum, s) => sum + s.items.length, 0);
 
     return (
         <SiteLayout>
@@ -102,20 +108,34 @@ export default function Teams({ players, staff, coach, championship }: TeamsProp
                 </div>
             </section>
 
-            {/* Players */}
-            <section className="mx-auto max-w-7xl px-4 py-12">
-                {filteredPlayers.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                        {filteredPlayers.map((p, i) => (
-                            <PlayerCard key={p.id} player={p} index={i} />
-                        ))}
-                    </div>
-                ) : (
+            {/* Players grouped by position */}
+            <section className="mx-auto max-w-7xl px-4 pb-12 pt-8 sm:pt-12">
+                {visibleCount === 0 ? (
                     <EmptyState
                         icon={Users}
                         title={t('teams.empty_title')}
                         description={t('teams.empty_description')}
                     />
+                ) : (
+                    <div className="space-y-10 sm:space-y-14">
+                        {visibleSections.map((section) => (
+                            <div key={section.key}>
+                                <div className="mb-5 flex items-baseline justify-between border-b border-border pb-3 sm:mb-6">
+                                    <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.3em] text-champagne sm:text-sm">
+                                        {t(`teams.positions.${section.key}`)}
+                                    </h2>
+                                    <span className="font-mono text-[11px] text-muted-foreground">
+                                        {section.items.length}
+                                    </span>
+                                </div>
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                                    {section.items.map((p, i) => (
+                                        <PlayerCard key={p.id} player={p} index={i} />
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </section>
 
