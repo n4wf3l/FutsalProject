@@ -72,20 +72,21 @@ export default function Home({
                 </div>
 
                 {/* Decorative Morocco outline: signature hero element.
-                    Centered in the right half, big enough to be recognized,
-                    stroke thick and contrasty on both themes. */}
+                    Sits behind the Dina Kenitra title on the left half so
+                    the map is the visual anchor of the hero and the featured
+                    article on the right stays clean on its own. */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.94 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                     aria-hidden
-                    className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-1/2 items-center justify-center text-[#B8860B] sm:flex dark:text-champagne"
+                    className="pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-1/2 items-center justify-center text-[#B8860B] sm:flex dark:text-champagne"
                 >
                     <MoroccoMap
-                        className="h-[420px] w-auto opacity-[0.45] sm:h-[520px] lg:h-[640px]"
+                        className="h-[420px] w-auto opacity-[0.35] sm:h-[520px] lg:h-[640px]"
                         pinColor="#DC2626"
                         strokeColor="currentColor"
-                        fillOpacity={0.12}
+                        fillOpacity={0.10}
                         strokeWidth={1.2}
                     />
                 </motion.div>
