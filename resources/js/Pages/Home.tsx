@@ -83,7 +83,7 @@ export default function Home({
                     className="pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-1/2 items-center justify-center text-[#B8860B] sm:flex dark:text-champagne"
                 >
                     <MoroccoMap
-                        className="h-[420px] w-auto opacity-[0.35] sm:h-[520px] lg:h-[640px]"
+                        className="h-[380px] w-auto opacity-[0.35] sm:h-[440px] lg:h-[540px]"
                         pinColor="#DC2626"
                         strokeColor="currentColor"
                         fillOpacity={0.10}
