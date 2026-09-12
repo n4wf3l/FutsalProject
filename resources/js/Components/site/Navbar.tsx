@@ -35,7 +35,8 @@ type NavGroup =
     | { kind: 'menu'; label: string; items: MegaItem[]; hrefMatches: string[] };
 
 export function Navbar() {
-    const { url } = usePage();
+    const { url, props } = usePage<{ features?: { fanshopOpen?: boolean } }>();
+    const fanshopOpen = props.features?.fanshopOpen ?? false;
     const { t } = useTranslation('nav');
     const { t: tCommon } = useTranslation('common');
     const [scrolled, setScrolled] = useState(false);
@@ -114,11 +115,13 @@ export function Navbar() {
                     { label: t('items.media_videos'), href: '/videos', icon: Video, description: t('items.media_videos_desc') },
                 ],
             },
-            { kind: 'link', label: t('items.fanshop'), href: '/fanshop', hrefMatches: ['/fanshop'] },
+            ...(fanshopOpen
+                ? ([{ kind: 'link', label: t('items.fanshop'), href: '/fanshop', hrefMatches: ['/fanshop'] }] as NavGroup[])
+                : []),
             { kind: 'link', label: t('items.partners'), href: '/partenaires', hrefMatches: ['/partenaires'] },
             { kind: 'link', label: t('items.contact'), href: '/contact', hrefMatches: ['/contact'] },
         ],
-        [t]
+        [t, fanshopOpen]
     );
 
     // Mobile menu is grouped by section so the flat 12-item list becomes a
@@ -155,10 +158,14 @@ export function Navbar() {
                     { label: t('items.media_videos'), href: '/videos', icon: Video },
                 ],
             },
-            {
-                label: t('items.fanshop'),
-                items: [{ label: t('items.fanshop'), href: '/fanshop', icon: Ticket }],
-            },
+            ...(fanshopOpen
+                ? ([
+                      {
+                          label: t('items.fanshop'),
+                          items: [{ label: t('items.fanshop'), href: '/fanshop', icon: Ticket }],
+                      },
+                  ] as MobileSection[])
+                : []),
             {
                 label: t('items.team_history'),
                 items: [
@@ -168,7 +175,7 @@ export function Navbar() {
                 ],
             },
         ],
-        [t]
+        [t, fanshopOpen]
     );
 
     const isActive = (matches: string[]) =>

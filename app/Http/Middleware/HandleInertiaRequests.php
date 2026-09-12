@@ -7,6 +7,7 @@ use App\Models\FlashMessage;
 use App\Models\Interview;
 use App\Models\PlayerApplication;
 use App\Models\Sponsor;
+use App\Models\Tribune;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Inertia\Middleware;
@@ -40,6 +41,12 @@ class HandleInertiaRequests extends Middleware
                 'env' => app()->environment(),
                 'locale' => $locale,
                 'direction' => in_array($locale, ['ar'], true) ? 'rtl' : 'ltr',
+            ],
+            // Feature flags used to conditionally show nav items etc.
+            'features' => fn () => [
+                'fanshopOpen' => Schema::hasTable('tribunes')
+                    ? Tribune::where('available_seats', '>', 0)->exists()
+                    : false,
             ],
             // Counters displayed as badges in the admin sidebar.
             // Only computed for authenticated users, defensive against
