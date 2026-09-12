@@ -116,6 +116,7 @@ export function Navbar() {
             },
             { kind: 'link', label: t('items.fanshop'), href: '/fanshop', hrefMatches: ['/fanshop'] },
             { kind: 'link', label: t('items.partners'), href: '/partenaires', hrefMatches: ['/partenaires'] },
+            { kind: 'link', label: t('items.contact'), href: '/contact', hrefMatches: ['/contact'] },
         ],
         [t]
     );
