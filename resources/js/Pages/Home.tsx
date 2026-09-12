@@ -123,24 +123,41 @@ export default function Home({
                                 transition={{ duration: 0.6, delay: 0.4 }}
                                 className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center [&_a]:justify-center sm:[&_a]:justify-start"
                             >
+                                <Button asChild size="lg" className="w-full sm:w-auto">
+                                    <Link href="/teams">
+                                        {t('hero.cta_squad')}
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Link>
+                                </Button>
                                 {hasCalendar && (
-                                    <Button asChild size="lg" className="w-full sm:w-auto">
+                                    <Button asChild size="lg" variant="champagne" className="w-full sm:w-auto">
                                         <Link href="/calendar">
                                             {t('hero.cta_calendar')}
                                             <ArrowRight className="h-4 w-4" />
                                         </Link>
                                     </Button>
                                 )}
-                                <Button asChild size="lg" variant="champagne" className="w-full sm:w-auto">
-                                    <Link href="/rejoindre">
-                                        {t('hero.cta_join')}
-                                        <ArrowRight className="h-4 w-4" />
-                                    </Link>
-                                </Button>
                                 <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
                                     <Link href="/about">{t('hero.cta_history')}</Link>
                                 </Button>
                             </motion.div>
+
+                            {/* Secondary link for player applications so the hero
+                                does not read as a recruitment landing page. */}
+                            <motion.p
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.6, delay: 0.6 }}
+                                className="mt-6 text-sm text-muted-foreground"
+                            >
+                                {t('hero.cta_join_prefix')}{' '}
+                                <Link
+                                    href="/rejoindre"
+                                    className="font-semibold text-champagne underline decoration-champagne/40 underline-offset-4 transition-colors hover:text-crimson hover:decoration-crimson/60"
+                                >
+                                    {t('hero.cta_join_link')}
+                                </Link>
+                            </motion.p>
                         </div>
 
                         {/* HERO SIDE : fallback chain, next match then featured article then club crest */}

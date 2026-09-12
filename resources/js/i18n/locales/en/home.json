@@ -4,8 +4,11 @@
         "title_line2": "Futsal Club",
         "subtitle": "We carry the colors of Kenitra on Morocco's futsal courts. Championship, youth development, ambition.",
         "cta_calendar": "See the calendar",
+        "cta_squad": "See the squad",
         "cta_join": "Apply as a player",
-        "cta_history": "Our story"
+        "cta_history": "Our story",
+        "cta_join_prefix": "Want to join the club?",
+        "cta_join_link": "Apply here"
     },
     "stats": {
         "section_kicker": "The club by numbers",

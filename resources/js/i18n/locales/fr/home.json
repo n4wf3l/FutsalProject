@@ -4,8 +4,11 @@
         "title_line2": "Futsal Club",
         "subtitle": "On porte les couleurs de Kénitra sur les parquets du Maroc. Championnat, formation, ambition.",
         "cta_calendar": "Voir le calendrier",
+        "cta_squad": "Voir l'effectif",
         "cta_join": "Postuler comme joueur",
-        "cta_history": "Notre histoire"
+        "cta_history": "Notre histoire",
+        "cta_join_prefix": "Envie de rejoindre le club ?",
+        "cta_join_link": "Postule ici"
     },
     "stats": {
         "section_kicker": "Le club en chiffres",
