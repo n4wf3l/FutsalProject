@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     BookOpen,
     Calendar,
+    CalendarClock,
     ChevronRight,
     FileText,
     Home,
@@ -94,9 +95,10 @@ export function Navbar() {
             {
                 kind: 'menu',
                 label: t('items.competition_group'),
-                hrefMatches: ['/calendar', '/games'],
+                hrefMatches: ['/calendar', '/games', '/historique'],
                 items: [
                     { label: t('items.competition_calendar'), href: '/calendar', icon: Calendar, description: t('items.competition_calendar_desc') },
+                    { label: t('items.competition_history'), href: '/historique', icon: CalendarClock, description: t('items.competition_history_desc') },
                 ],
             },
             {
@@ -137,6 +139,7 @@ export function Navbar() {
                 label: t('items.competition_group'),
                 items: [
                     { label: t('items.competition_calendar'), href: '/calendar', icon: Calendar },
+                    { label: t('items.competition_history'), href: '/historique', icon: CalendarClock },
                 ],
             },
             {

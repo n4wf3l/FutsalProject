@@ -12,6 +12,8 @@
         "competition_group": "Competition",
         "competition_calendar": "Calendar",
         "competition_calendar_desc": "Upcoming matches and results",
+        "competition_history": "History",
+        "competition_history_desc": "The club's journey since 2010",
         "media_group": "Media",
         "media_news": "News",
         "media_news_desc": "Club news",

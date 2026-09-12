@@ -20,6 +20,7 @@ class SitemapController extends Controller
             ['loc' => url('/teams'), 'changefreq' => 'monthly', 'priority' => '0.8', 'lastmod' => $now],
             ['loc' => url('/espoirs'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $now],
             ['loc' => url('/calendar'), 'changefreq' => 'weekly', 'priority' => '0.9', 'lastmod' => $now],
+            ['loc' => url('/historique'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $now],
             ['loc' => url('/news'), 'changefreq' => 'weekly', 'priority' => '0.8', 'lastmod' => $now],
             ['loc' => url('/communiques'), 'changefreq' => 'weekly', 'priority' => '0.7', 'lastmod' => $now],
             ['loc' => url('/interviews'), 'changefreq' => 'weekly', 'priority' => '0.9', 'lastmod' => $now],

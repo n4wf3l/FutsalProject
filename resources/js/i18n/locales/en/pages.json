@@ -1,4 +1,24 @@
 {
+    "historique": {
+        "seo_title": "Club history",
+        "seo_description": "The season-by-season journey of Dina Kenitra Futsal Club since 2010: divisions, standings, cup runs and coaches.",
+        "kicker": "The club's journey",
+        "breadcrumb": "History",
+        "title": "Season by season",
+        "subtitle": "The chronological story of the club, from the Gharb regional league to the Moroccan top flight.",
+        "stat_years": "Years",
+        "stat_titles": "Titles",
+        "stat_best_d1": "Best D1 finish",
+        "palmares_kicker": "Honours",
+        "col_season": "Season",
+        "col_division": "Division",
+        "col_position": "Position",
+        "col_cup": "Throne Cup",
+        "col_coach": "Coach",
+        "col_notes": "Highlights",
+        "empty_title": "No season recorded yet",
+        "empty_description": "Seasons will appear here as they are added."
+    },
     "espoirs": {
         "seo_title": "Youth squad",
         "seo_description": "Dina Kenitra FC youth squad. The next generation of the Kenitra futsal club.",

@@ -130,6 +130,19 @@ export interface Championship {
     season: string;
 }
 
+export interface Season {
+    id: number;
+    season_label: string;
+    season_start_year: number;
+    division: string;
+    position: number | null;
+    position_label: string | null;
+    cup_result: string | null;
+    coach: string | null;
+    badge: string | null;
+    notes: string | null;
+}
+
 export interface Regulation {
     id: number;
     title: string;

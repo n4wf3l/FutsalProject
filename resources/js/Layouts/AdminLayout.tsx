@@ -6,6 +6,7 @@ import {
     Users,
     UserCog,
     Calendar,
+    CalendarClock,
     Newspaper,
     Image as ImageIcon,
     Video,
@@ -78,6 +79,7 @@ const NAV: NavGroup[] = [
             { label: 'Équipes', href: '/manage-teams', icon: Shield },
             { label: 'Matchs', href: '/games', icon: Calendar },
             { label: 'Championnats', href: '/championships', icon: Trophy },
+            { label: 'Historique', href: '/seasons', icon: CalendarClock },
         ],
     },
     {

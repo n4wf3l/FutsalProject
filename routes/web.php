@@ -15,6 +15,7 @@ use App\Http\Controllers\TribuneController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PressReleaseController;
@@ -27,6 +28,7 @@ use App\Http\Middleware\CheckRegistrationStatus;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\PlayerApplicationController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 
@@ -39,6 +41,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/teams', [PlayerController::class, 'publicRoster'])->name('teams');
 Route::get('/espoirs', [PlayerEspoirController::class, 'publicIndex'])->name('espoirs.public');
 Route::get('/calendar', [GameController::class, 'showCalendar'])->name('calendar.show');
+Route::get('/historique', [SeasonController::class, 'publicIndex'])->name('seasons.public');
 Route::get('/news', [ArticleController::class, 'index'])->name('news');
 Route::get('/communiques', [PressReleaseController::class, 'publicIndex'])->name('press_releases.public');
 Route::get('/communiques/{slug}', [PressReleaseController::class, 'publicShow'])->name('press_releases.publicShow');
@@ -114,6 +117,9 @@ Route::get('/payment-cancel', [PaymentController::class, 'cancel'])->name('payme
 Route::get('/reservation/{id}/pdf', [PaymentController::class, 'downloadPDF'])->name('reservation.pdf');
 Route::get('/download-pdf/{id}', [PaymentController::class, 'downloadPDF'])->name('download-pdf');
 
+// Site-wide search
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+
 // SEO
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
@@ -181,6 +187,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('regulations', RegulationController::class)->except(['show']);
     Route::delete('/championships/bulk', [ChampionshipController::class, 'bulkDestroy'])->name('championships.bulkDestroy');
     Route::resource('championships', ChampionshipController::class)->except(['show']);
+    Route::delete('/seasons/bulk', [SeasonController::class, 'bulkDestroy'])->name('seasons.bulkDestroy');
+    Route::resource('seasons', SeasonController::class)->except(['show']);
 
     // Media (admin URLs prefixed with /admin/ to avoid colliding with public)
     Route::get('/admin/videos', [VideoController::class, 'index'])->name('videos.index');
