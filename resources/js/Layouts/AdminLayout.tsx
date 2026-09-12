@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { Logo } from '@/Components/site/Logo';
 import { ThemeToggle } from '@/Components/site/ThemeToggle';
+import { Toaster } from '@/Components/site/Toaster';
 import { cn } from '@/lib/utils';
 
 interface NavItem {
@@ -216,6 +217,7 @@ export default function AdminLayout({ title, header, children }: PropsWithChildr
                     <main className="mx-auto max-w-7xl px-6 py-8 lg:px-8">{children}</main>
                 </div>
             </div>
+            <Toaster />
         </div>
     );
 }
