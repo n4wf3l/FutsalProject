@@ -119,17 +119,21 @@ class HomeController extends Controller
 
     public function updateFlashMessage(Request $request)
     {
-        $request->validate([
-            'flash_message' => 'required|string|max:255',
-            'homemessage' => 'nullable|string|max:255', // Valider homemessage
+        // Field names must match the admin form (Admin/Settings/Index.tsx),
+        // which sends "message" and "homemessage" via useForm. The old code
+        // expected "flash_message" and rejected every submission with a silent
+        // validation error, so the slogan was never actually saved.
+        $data = $request->validate([
+            'message' => 'nullable|string|max:1000',
+            'homemessage' => 'nullable|string|max:255',
         ]);
-    
+
         $flashMessage = FlashMessage::latest()->first() ?? new FlashMessage();
-        $flashMessage->message = $request->input('flash_message');
-        $flashMessage->homemessage = $request->input('homemessage'); // Enregistrer homemessage
+        $flashMessage->message = $data['message'] ?? '';
+        $flashMessage->homemessage = $data['homemessage'] ?? null;
         $flashMessage->save();
-    
-        return redirect()->back()->with('success', 'Flash message updated successfully!');
+
+        return redirect()->back()->with('success', 'Messages mis à jour.');
     }
 
     public function storeWelcomeImage(Request $request)
