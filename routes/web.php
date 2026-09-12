@@ -51,6 +51,9 @@ Route::redirect('/clubinfo', '/news')->name('clubinfo');
 // Fanshop / tribunes public view
 Route::get('/fanshop', [TribuneController::class, 'index'])->name('fanshop.index');
 
+// Partners and sponsors public view
+Route::get('/partenaires', [SponsorController::class, 'publicIndex'])->name('sponsors.public');
+
 // Articles bulk delete must be defined BEFORE the public /articles/{slug} route
 // below, otherwise the literal "/articles/bulk" would be captured as a slug.
 Route::delete('/articles/bulk', [ArticleController::class, 'bulkDestroy'])

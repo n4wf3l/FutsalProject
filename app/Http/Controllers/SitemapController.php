@@ -27,6 +27,7 @@ class SitemapController extends Controller
             ['loc' => url('/galleries'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $now],
             ['loc' => url('/videos'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $now],
             ['loc' => url('/fanshop'), 'changefreq' => 'weekly', 'priority' => '0.7', 'lastmod' => $now],
+            ['loc' => url('/partenaires'), 'changefreq' => 'monthly', 'priority' => '0.5', 'lastmod' => $now],
             ['loc' => url('/about'), 'changefreq' => 'yearly', 'priority' => '0.5', 'lastmod' => $now],
             ['loc' => url('/contact'), 'changefreq' => 'yearly', 'priority' => '0.4', 'lastmod' => $now],
             ['loc' => url('/rejoindre'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $now],

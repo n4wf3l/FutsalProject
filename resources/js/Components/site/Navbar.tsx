@@ -7,6 +7,7 @@ import {
     CalendarClock,
     ChevronRight,
     FileText,
+    Handshake,
     Home,
     Image as ImageIcon,
     Menu,
@@ -114,6 +115,7 @@ export function Navbar() {
                 ],
             },
             { kind: 'link', label: t('items.fanshop'), href: '/fanshop', hrefMatches: ['/fanshop'] },
+            { kind: 'link', label: t('items.partners'), href: '/partenaires', hrefMatches: ['/partenaires'] },
         ],
         [t]
     );
@@ -160,6 +162,7 @@ export function Navbar() {
                 label: t('items.team_history'),
                 items: [
                     { label: t('items.team_history'), href: '/about', icon: BookOpen },
+                    { label: t('items.partners'), href: '/partenaires', icon: Handshake },
                     { label: t('items.contact'), href: '/contact', icon: UserCog },
                 ],
             },

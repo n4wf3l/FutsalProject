@@ -3,12 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sponsor;
+use App\Support\SeoMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class SponsorController extends Controller
 {
+    public function publicIndex()
+    {
+        SeoMeta::share(
+            'Partenaires et sponsors — Dina Kenitra FC',
+            'Découvre les partenaires et sponsors de Dina Kenitra Futsal Club. Le club accueille aussi les équipes internationales pour des matchs amicaux, stages et collaborations à Kénitra.'
+        );
+
+        return Inertia::render('Partenaires', [
+            'sponsors' => Sponsor::orderBy('name')
+                ->get(['id', 'name', 'logo', 'website'])
+                ->map(fn ($s) => [
+                    'id' => $s->id,
+                    'name' => $s->name,
+                    'logo' => $s->logo ? asset('storage/' . $s->logo) : null,
+                    'website' => $s->website,
+                ]),
+        ]);
+    }
+
     public function index()
     {
         return Inertia::render('Admin/Sponsors/Index', [
