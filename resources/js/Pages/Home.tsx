@@ -80,7 +80,7 @@ export default function Home({
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                     aria-hidden
-                    className="pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-1/2 items-center justify-center text-[#B8860B] sm:flex dark:text-champagne"
+                    className="pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-1/2 items-center justify-center text-[#D4A85E] sm:flex dark:text-champagne"
                 >
                     <MoroccoMap
                         className="h-[420px] w-auto opacity-90 sm:h-[500px] lg:h-[620px]"
