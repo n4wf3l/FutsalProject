@@ -40,8 +40,8 @@ export function MoroccoMap({
     pinColor = '#DC2626',
     strokeColor = 'currentColor',
     fillColor,
-    fillOpacity = 0.08,
-    strokeWidth = 0.4,
+    fillOpacity = 0.14,
+    strokeWidth = 0.6,
     label,
 }: Props) {
     const fill = fillColor ?? strokeColor;
@@ -54,44 +54,66 @@ export function MoroccoMap({
             role="img"
             aria-label="Kénitra sur la carte du Maroc"
         >
-            <path
+            {/* Fill fades in after the outline is fully drawn */}
+            <motion.path
                 d={MOROCCO_PATH}
                 fill={fill}
-                fillOpacity={fillOpacity}
+                stroke="none"
+                initial={{ fillOpacity: 0 }}
+                animate={{ fillOpacity }}
+                transition={{ duration: 0.6, delay: 2.4, ease: 'easeOut' }}
+            />
+
+            {/* Outline drawn like a pencil stroke on mount */}
+            <motion.path
+                d={MOROCCO_PATH}
+                fill="none"
                 stroke={strokeColor}
-                strokeOpacity={0.7}
+                strokeOpacity={0.95}
                 strokeWidth={strokeWidth}
                 strokeLinejoin="round"
                 strokeLinecap="round"
                 vectorEffect="non-scaling-stroke"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 2.6, ease: [0.65, 0, 0.35, 1] }}
             />
 
-            {/* Pulsing halo */}
-            <motion.circle
-                cx={KENITRA_X}
-                cy={KENITRA_Y}
-                r={2.6}
-                fill={pinColor}
-                initial={{ opacity: 0.4, scale: 0.5 }}
-                animate={{ opacity: [0.4, 0, 0.4], scale: [0.5, 1.8, 0.5] }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-            />
-
-            {/* Pin core */}
-            <circle cx={KENITRA_X} cy={KENITRA_Y} r={1.4} fill={pinColor} />
-            <circle cx={KENITRA_X} cy={KENITRA_Y} r={0.55} fill="#fff" fillOpacity={0.9} />
+            {/* Pin appears once the outline is drawn */}
+            <motion.g
+                initial={{ opacity: 0, scale: 0.4 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 2.7, ease: [0.22, 1, 0.36, 1] }}
+                style={{ transformOrigin: `${KENITRA_X}px ${KENITRA_Y}px` }}
+            >
+                {/* Pulsing halo */}
+                <motion.circle
+                    cx={KENITRA_X}
+                    cy={KENITRA_Y}
+                    r={2.6}
+                    fill={pinColor}
+                    initial={{ opacity: 0.4, scale: 0.5 }}
+                    animate={{ opacity: [0.4, 0, 0.4], scale: [0.5, 1.8, 0.5] }}
+                    transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut', delay: 2.9 }}
+                />
+                <circle cx={KENITRA_X} cy={KENITRA_Y} r={1.4} fill={pinColor} />
+                <circle cx={KENITRA_X} cy={KENITRA_Y} r={0.55} fill="#fff" fillOpacity={0.9} />
+            </motion.g>
 
             {label && (
-                <text
+                <motion.text
                     x={KENITRA_X + 2.5}
                     y={KENITRA_Y + 0.6}
                     fontSize={2.4}
                     fontFamily="system-ui, sans-serif"
                     fontWeight={600}
                     fill={pinColor}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 3.0 }}
                 >
                     {label}
-                </text>
+                </motion.text>
             )}
         </svg>
     );
