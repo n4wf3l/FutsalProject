@@ -187,16 +187,24 @@ export default function Contact() {
                             href={`tel:${(club?.phone ?? '').replace(/\s+/g, '')}`}
                         />
 
-                        {club?.latitude && club?.longitude && (
-                            <div className="overflow-hidden rounded-2xl border border-border">
-                                <iframe
-                                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${club.longitude - 0.01},${club.latitude - 0.01},${club.longitude + 0.01},${club.latitude + 0.01}&marker=${club.latitude},${club.longitude}`}
-                                    className="aspect-square w-full"
-                                    loading="lazy"
-                                    title={t('info.map_alt')}
-                                />
-                            </div>
-                        )}
+                        {club?.latitude && club?.longitude && (() => {
+                            // Eloquent returns decimal columns as strings; coerce so
+                            // + doesn't concatenate and produce an invalid bbox.
+                            const lat = Number(club.latitude);
+                            const lng = Number(club.longitude);
+                            if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+                            const bbox = `${lng - 0.01},${lat - 0.01},${lng + 0.01},${lat + 0.01}`;
+                            return (
+                                <div className="overflow-hidden rounded-2xl border border-border">
+                                    <iframe
+                                        src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&marker=${lat},${lng}&layer=mapnik`}
+                                        className="aspect-square w-full"
+                                        loading="lazy"
+                                        title={t('info.map_alt')}
+                                    />
+                                </div>
+                            );
+                        })()}
                     </motion.aside>
                 </div>
             </section>
