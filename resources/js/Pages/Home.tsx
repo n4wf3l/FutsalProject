@@ -71,26 +71,24 @@ export default function Home({
                     <div className="absolute inset-0 opacity-40 dark:bg-grid-fade" />
                 </div>
 
-                {/* Decorative Morocco outline in champagne, pin on Kenitra.
-                    Anchored inside the max-w container so the shape never
-                    gets clipped by the section right edge. */}
-                <div className="pointer-events-none absolute inset-0 z-0 mx-auto max-w-7xl px-4">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.94 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                        aria-hidden
-                        className="absolute right-4 top-16 hidden text-champagne sm:block lg:right-8 lg:top-24"
-                    >
-                        <MoroccoMap
-                            className="h-72 w-auto opacity-90 sm:h-80 lg:h-[440px]"
-                            pinColor="#DC2626"
-                            strokeColor="currentColor"
-                            fillOpacity={0.08}
-                            strokeWidth={0.6}
-                        />
-                    </motion.div>
-                </div>
+                {/* Decorative Morocco outline: signature hero element.
+                    Centered in the right half, big enough to be recognized,
+                    stroke thick and contrasty on both themes. */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.94 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-1/2 items-center justify-center text-[#B8860B] sm:flex dark:text-champagne"
+                >
+                    <MoroccoMap
+                        className="h-[420px] w-auto opacity-[0.45] sm:h-[520px] lg:h-[640px]"
+                        pinColor="#DC2626"
+                        strokeColor="currentColor"
+                        fillOpacity={0.12}
+                        strokeWidth={1.2}
+                    />
+                </motion.div>
 
                 <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:py-32">
                     <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
