@@ -3,143 +3,89 @@ import { cn } from '@/lib/utils';
 
 interface Props {
     className?: string;
-    /** Optional: override pin color (default champagne accent). */
+    /** Pin color for city marker. */
     pinColor?: string;
-    /** Optional: override stroke color for the country outline. */
+    /** Country outline stroke color. */
     strokeColor?: string;
-    /** Optional: pin coordinates (lng, lat). Default = Kenitra. */
-    pinLngLat?: [number, number];
-    /** Optional: pin size in viewBox units. Default 1.6. */
-    pinSize?: number;
-    /** Optional label under the pin (city name). */
+    /** Country subtle fill color (usually same as stroke, low opacity). */
+    fillColor?: string;
+    /** Fill opacity 0..1. Default 0.08. */
+    fillOpacity?: number;
+    /** Stroke width in viewBox units. Default 0.4. */
+    strokeWidth?: number;
+    /** Optional label under the pin. */
     label?: string;
 }
 
 /**
- * Decorative outline of Morocco with a pulsing pin at a given city.
- * viewBox is aligned to lng/lat so the pin position stays accurate.
+ * Decorative Morocco outline (incl. Western Sahara) with a pulsing pin on
+ * Kenitra. Path is Natural Earth 50m projected via equirectangular so lng/lat
+ * to SVG coordinates is linear:
+ *   x = (lng + 17.05) * 6.005
+ *   y = (35.9  - lat) * 6.610
+ * viewBox is 0 0 96.39 100.
  *
- * Bounds used to compute viewBox:
- *   lng: -17.1 (west) → -1.0 (east)
- *   lat:  20.7 (south) → 35.9 (north)
+ * Kenitra (-6.5802, 34.261) → approximately (62.87, 10.83).
  */
 
-const BOUNDS = {
-    minLng: -17.1,
-    maxLng: -1.0,
-    minLat: 20.7,
-    maxLat: 35.9,
-};
+const MOROCCO_PATH =
+    'M89.40,5.70L89.58,6.21L89.93,6.62L91.21,7.55L91.97,8.12L91.99,8.33L91.73,8.79L91.64,9.12L91.84,9.46L92.30,9.88L92.34,10.09L92.23,10.33L91.99,10.77L92.49,12.10L92.58,13.38L92.45,14.29L92.45,14.81L92.52,15.25L92.95,16.30L92.67,18.01L92.99,18.94L93.45,19.69L93.69,21.05L94.06,21.68L94.65,22.24L94.98,22.43L95.63,22.90L96.11,23.28L96.39,23.86L95.80,24.34L95.32,24.77L95.19,25.22L95.41,25.95L95.41,26.35L95.11,26.48L93.89,26.44L92.93,26.41L91.84,26.37L90.30,26.30L89.34,26.25L88.01,26.19L87.57,26.23L86.36,26.43L85.51,26.57L85.38,26.62L85.09,26.80L84.92,27.34L84.74,27.96L84.57,28.24L82.02,29.12L81.02,29.25L80.46,29.16L80.04,29.23L79.69,29.42L79.56,29.71L79.54,30.08L79.63,30.45L79.87,30.96L79.91,31.49L79.76,31.85L79.72,32.22L79.65,32.62L79.78,32.83L80.02,32.87L80.26,33.05L80.61,33.21L80.91,33.52L80.89,33.98L80.65,34.23L80.43,34.36L79.48,34.48L78.71,34.58L77.73,35.30L76.69,36.06L75.43,36.56L74.88,36.71L73.93,37.07L72.77,37.66L72.21,38.62L71.51,39.73L70.81,40.48L69.88,41.17L69.01,41.45L67.90,41.78L66.52,42.03L65.54,42.13L65.24,42.18L64.39,42.20L63.96,42.14L63.65,42.12L63.52,42.19L63.48,42.37L63.45,42.76L63.39,43.22L63.13,43.60L62.93,43.78L62.69,43.85L61.97,43.74L61.37,43.62L59.93,43.46L59.65,43.49L59.54,43.54L59.08,43.80L58.38,44.35L57.90,44.84L57.56,45.06L56.73,45.18L56.36,45.36L54.79,46.57L54.46,46.85L52.85,47.91L52.40,48.25L52.03,48.59L51.07,49.37L50.46,49.70L50.35,49.90L50.31,50.38L50.31,51.42L50.31,52.43L50.31,53.89L50.31,55.35L50.31,57.02L49.50,57.02L49.50,57.04L49.52,57.32L49.70,57.90L49.76,58.38L49.68,58.67L49.59,59.06L49.63,59.43L49.76,59.82L49.89,60.23L49.89,60.50L49.65,60.72L49.07,60.83L48.39,60.92L47.89,60.92L47.15,60.86L46.67,60.88L46.26,60.88L45.91,60.94L45.45,61.20L44.95,61.62L44.32,62.17L43.95,62.51L43.45,62.59L42.95,62.59L42.47,62.31L42.17,62.17L41.95,62.18L41.62,62.37L41.21,62.51L40.84,62.51L40.21,62.23L39.47,61.82L39.03,61.62L38.40,61.55L37.77,61.41L37.33,61.47L36.77,61.47L36.03,61.75L35.40,61.95L34.72,62.17L33.94,62.36L34.13,62.97L34.39,63.30L34.39,63.72L34.26,64.08L33.89,64.42L33.46,64.86L33.22,65.21L32.96,65.67L32.78,65.96L32.46,66.40L32.17,66.97L32.09,67.32L31.96,67.72L31.74,67.85L30.98,67.96L30.50,68.09L30.08,68.23L29.91,68.47L29.89,68.51L29.78,68.99L29.78,69.33L29.65,69.61L29.47,70.29L29.23,70.93L29.04,71.75L28.86,72.43L28.63,73.55L28.39,74.58L28.08,75.54L27.84,76.15L27.65,76.50L27.23,76.92L26.86,77.18L26.45,77.54L25.97,77.88L25.29,78.30L24.75,78.64L24.53,78.80L24.27,78.99L23.84,79.47L23.49,80.15L23.25,80.71L22.81,81.60L22.51,82.09L22.33,82.35L21.86,82.63L21.31,82.84L20.70,83.12L20.22,83.39L19.55,83.67L19.13,83.94L18.83,84.35L18.59,84.84L18.29,85.53L18.05,86.29L17.92,86.77L17.57,88.43L17.44,89.39L17.31,90.01L17.13,90.78L17.02,91.94L17.02,92.91L16.89,93.46L16.83,93.87L16.52,94.35L16.28,94.70L15.87,95.18L15.50,95.45L15.39,95.73L15.02,96.08L14.65,96.63L14.35,96.97L14.41,97.25L14.48,97.73L14.30,98.22L14.11,98.77L13.63,99.45L13.08,99.80L12.30,99.87L11.21,99.87L10.36,99.80L9.34,99.80L8.42,99.66L7.58,99.52L6.55,99.45L5.83,99.45L4.92,99.59L2.57,99.59L1.65,99.66L0.33,99.94L0.00,100.00L0.46,96.70L1.28,94.92L1.94,94.13L2.96,93.71L3.90,91.91L4.24,90.26L4.85,89.50L5.05,88.90L4.81,88.44L5.40,87.54L6.10,86.18L6.42,85.31L7.25,83.96L7.36,83.66L7.27,83.31L6.94,83.61L6.60,84.10L6.18,84.49L6.36,84.02L6.68,83.30L7.42,82.56L8.58,81.73L10.97,78.93L11.89,78.44L12.69,77.27L13.00,76.21L13.08,73.82L13.37,72.55L13.89,71.56L14.52,69.77L15.00,68.95L15.32,67.32L15.67,66.69L16.28,66.40L17.15,65.58L18.46,65.08L20.01,64.01L20.72,63.38L21.22,62.43L21.75,60.54L22.66,58.55L23.14,57.06L23.16,57.04L23.97,56.25L24.53,55.25L25.47,54.81L27.43,54.59L30.35,53.77L32.96,52.52L33.70,52.02L34.50,51.03L35.81,49.74L38.29,48.18L39.42,47.32L41.14,45.14L42.30,43.35L43.25,42.19L43.91,41.16L44.36,40.12L44.63,38.44L44.45,37.78L43.73,36.72L43.23,36.43L43.10,35.93L43.36,35.03L43.36,33.50L43.51,31.06L44.32,29.09L46.30,26.49L46.67,25.44L46.89,23.74L46.91,23.14L49.39,20.75L50.85,18.90L51.35,18.46L52.64,17.62L57.10,15.78L59.62,14.48L61.10,13.52L61.97,12.40L64.41,7.96L66.81,1.72L67.00,0.99L68.07,0.79L68.83,0.71L69.44,0.48L70.18,0.00L70.90,0.19L70.55,0.51L70.55,1.28L71.05,2.18L71.94,3.19L73.58,4.47L74.84,4.99L76.65,5.30L78.74,4.74L79.91,4.73L80.50,4.49L81.11,4.85L82.31,4.95L83.44,4.76L84.31,4.22L84.85,3.61L84.94,3.91L84.96,4.25L85.14,4.44L85.46,5.23L85.66,5.53L86.31,5.48L86.88,5.64L88.16,5.56L89.40,5.70Z';
 
-const W = 100;
-const H = 100;
-
-function project(lng: number, lat: number): [number, number] {
-    const x = ((lng - BOUNDS.minLng) / (BOUNDS.maxLng - BOUNDS.minLng)) * W;
-    const y = ((BOUNDS.maxLat - lat) / (BOUNDS.maxLat - BOUNDS.minLat)) * H;
-    return [x, y];
-}
-
-// Simplified Morocco outline (incl. Western Sahara), clockwise from Cap Spartel.
-// Enough points to be recognisable, few enough to stay light.
-const OUTLINE: Array<[number, number]> = [
-    [-5.90, 35.80], // Cap Spartel
-    [-5.35, 35.90], // Tangier
-    [-4.90, 35.85], // Sebta
-    [-4.35, 35.35], // Al Hoceima
-    [-3.60, 35.40], // Cote nord
-    [-2.93, 35.30], // Nador
-    [-2.24, 35.09], // Saidia
-    [-1.90, 34.80], // Oujda north
-    [-1.70, 34.15], //
-    [-1.55, 33.20], //
-    [-1.20, 32.10], // Figuig
-    [-2.20, 32.10],
-    [-3.30, 31.70],
-    [-4.00, 30.70],
-    [-5.50, 29.60],
-    [-7.40, 29.40],
-    [-8.70, 27.50],
-    [-8.70, 27.00],
-    [-12.00, 26.00],
-    [-13.00, 21.30], // SE corner
-    [-13.00, 20.90],
-    [-17.05, 20.77], // Cap Blanc
-    [-16.90, 21.10],
-    [-16.00, 22.00],
-    [-15.00, 22.90],
-    [-14.50, 23.50],
-    [-13.90, 24.50], // Dakhla area
-    [-13.60, 26.00],
-    [-13.20, 27.20], // Laâyoune
-    [-12.40, 28.00],
-    [-11.60, 28.30], // Tarfaya
-    [-10.40, 29.60], // Guelmim
-    [-9.90, 30.40], // Agadir
-    [-9.80, 31.50], // Essaouira
-    [-9.30, 32.30], // Safi
-    [-8.50, 33.20], // El Jadida
-    [-7.60, 33.60], // Casablanca
-    [-6.60, 34.00], // Rabat
-    [-6.30, 34.70], // Kenitra coast
-    [-5.90, 35.80], // back to Cap Spartel
-];
-
-function outlinePath(): string {
-    return OUTLINE.map(([lng, lat], i) => {
-        const [x, y] = project(lng, lat);
-        return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`;
-    }).join(' ') + ' Z';
-}
+// Kenitra pre-computed from the same equirectangular projection.
+const KENITRA_X = 62.87;
+const KENITRA_Y = 10.83;
 
 export function MoroccoMap({
     className,
-    pinColor = 'currentColor',
+    pinColor = '#DC2626',
     strokeColor = 'currentColor',
-    pinLngLat = [-6.5802, 34.261],
-    pinSize = 1.6,
+    fillColor,
+    fillOpacity = 0.08,
+    strokeWidth = 0.4,
     label,
 }: Props) {
-    const [pinX, pinY] = project(pinLngLat[0], pinLngLat[1]);
+    const fill = fillColor ?? strokeColor;
 
     return (
         <svg
-            viewBox={`0 0 ${W} ${H}`}
+            viewBox="0 0 96.39 100"
             className={cn('block', className)}
+            xmlns="http://www.w3.org/2000/svg"
             role="img"
             aria-label="Kénitra sur la carte du Maroc"
         >
-            {/* Country outline */}
             <path
-                d={outlinePath()}
-                fill="none"
+                d={MOROCCO_PATH}
+                fill={fill}
+                fillOpacity={fillOpacity}
                 stroke={strokeColor}
-                strokeWidth={0.5}
+                strokeOpacity={0.7}
+                strokeWidth={strokeWidth}
                 strokeLinejoin="round"
                 strokeLinecap="round"
                 vectorEffect="non-scaling-stroke"
             />
 
-            {/* Pulsing halo behind the pin */}
+            {/* Pulsing halo */}
             <motion.circle
-                cx={pinX}
-                cy={pinY}
-                r={pinSize * 2.4}
+                cx={KENITRA_X}
+                cy={KENITRA_Y}
+                r={2.6}
                 fill={pinColor}
-                initial={{ opacity: 0.35, scale: 0.6 }}
-                animate={{ opacity: [0.35, 0, 0.35], scale: [0.6, 1.4, 0.6] }}
+                initial={{ opacity: 0.4, scale: 0.5 }}
+                animate={{ opacity: [0.4, 0, 0.4], scale: [0.5, 1.8, 0.5] }}
                 transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
             />
 
             {/* Pin core */}
-            <circle cx={pinX} cy={pinY} r={pinSize} fill={pinColor} />
-            <circle cx={pinX} cy={pinY} r={pinSize * 0.4} fill="#fff" opacity={0.85} />
+            <circle cx={KENITRA_X} cy={KENITRA_Y} r={1.4} fill={pinColor} />
+            <circle cx={KENITRA_X} cy={KENITRA_Y} r={0.55} fill="#fff" fillOpacity={0.9} />
 
             {label && (
                 <text
-                    x={pinX + pinSize * 1.8}
-                    y={pinY + 0.6}
-                    fontSize={2.6}
+                    x={KENITRA_X + 2.5}
+                    y={KENITRA_Y + 0.6}
+                    fontSize={2.4}
                     fontFamily="system-ui, sans-serif"
                     fontWeight={600}
                     fill={pinColor}

@@ -71,24 +71,26 @@ export default function Home({
                     <div className="absolute inset-0 opacity-40 dark:bg-grid-fade" />
                 </div>
 
-                {/* Decorative Morocco outline in champagne, with a live pin
-                    on Kenitra. Sits behind the hero content, discreet on
-                    mobile, larger on the right on desktop. */}
+                {/* Decorative Morocco outline in champagne, pin on Kenitra.
+                    Anchored top-right so the shape fills the negative space
+                    around the hero copy without covering it. */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.92 }}
+                    initial={{ opacity: 0, scale: 0.94 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                     aria-hidden
-                    className="pointer-events-none absolute inset-y-0 right-0 -z-10 flex w-full items-center justify-end pr-4 sm:pr-8 lg:pr-16"
+                    className="pointer-events-none absolute right-2 top-24 z-0 hidden text-champagne sm:block sm:right-6 lg:right-12 lg:top-16"
                 >
                     <MoroccoMap
-                        className="h-[70vw] max-h-[520px] w-auto text-champagne/25 opacity-70 dark:opacity-50 sm:h-[420px] lg:h-[560px]"
+                        className="h-72 w-auto opacity-90 sm:h-80 lg:h-[420px]"
                         pinColor="#DC2626"
                         strokeColor="currentColor"
+                        fillOpacity={0.06}
+                        strokeWidth={0.5}
                     />
                 </motion.div>
 
-                <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:py-32">
+                <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:py-32">
                     <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
                         <div>
                             <motion.h1
