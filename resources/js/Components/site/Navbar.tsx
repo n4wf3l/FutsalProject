@@ -179,17 +179,14 @@ export function Navbar() {
         <header
             className={cn(
                 'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-                scrolled ? 'py-2' : 'py-4',
+                scrolled || mobileOpen
+                    ? 'glass-strong border-b border-border/60 shadow-sm shadow-black/10'
+                    : 'bg-transparent',
                 hidden && !mobileOpen ? '-translate-y-full' : 'translate-y-0'
             )}
         >
-            <div className="mx-auto max-w-7xl px-4">
-                <div
-                    className={cn(
-                        'flex h-16 items-center justify-between rounded-2xl px-4 transition-all duration-300',
-                        scrolled || mobileOpen ? 'glass-strong shadow-lg shadow-black/20' : 'bg-transparent'
-                    )}
-                >
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
                     <Link href="/" className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson">
                         <Logo />
                     </Link>
