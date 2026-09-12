@@ -57,5 +57,27 @@
         "language_active": "actif",
         "esc_to_close": "pour fermer",
         "menu_open": "Ouvrir le menu"
+    },
+    "search": {
+        "open": "Ouvrir la recherche",
+        "close": "Fermer la recherche",
+        "kicker": "Recherche",
+        "placeholder": "Mets ici ce que tu recherches…",
+        "hint": "Articles, communiqués, interviews, joueurs, coachs, galeries.",
+        "enter_to_search": "Entrée pour lancer",
+        "breadcrumb": "Recherche",
+        "seo_title": "Recherche",
+        "seo_title_with_query": "Recherche : {{query}}",
+        "seo_description": "Cherche articles, communiqués, interviews, joueurs et coachs dans tout le site Dina Kenitra FC.",
+        "title_default": "Que cherches-tu ?",
+        "title_with_query": "Résultats pour « {{query}} »",
+        "subtitle_default": "Tape un mot-clé pour parcourir articles, joueurs, interviews et plus.",
+        "subtitle_with_results": "{{count}} résultat(s) trouvé(s)",
+        "subtitle_no_results": "Aucun résultat n'a pu être trouvé.",
+        "empty_title_no_query": "Prêt à explorer",
+        "empty_title_query": "Aucun résultat pour « {{query}} »",
+        "empty_body_no_query": "Tape un mot dans la barre au-dessus. Deux caractères minimum.",
+        "empty_body_query": "Essaie un autre mot, moins spécifique ou sans accent.",
+        "open": "Ouvrir"
     }
 }

@@ -2,6 +2,7 @@ import { PropsWithChildren } from 'react';
 import { Navbar } from '@/Components/site/Navbar';
 import { Footer } from '@/Components/site/Footer';
 import { LocaleSwitchToast } from '@/Components/site/LocaleSwitchToast';
+import { SearchButton } from '@/Components/site/SearchButton';
 
 export default function SiteLayout({ children }: PropsWithChildren) {
     return (
@@ -14,6 +15,7 @@ export default function SiteLayout({ children }: PropsWithChildren) {
 
             <Footer />
             <LocaleSwitchToast />
+            <SearchButton />
         </div>
     );
 }

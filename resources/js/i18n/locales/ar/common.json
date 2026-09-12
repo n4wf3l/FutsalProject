@@ -57,5 +57,27 @@
         "language_active": "نشطة",
         "esc_to_close": "للإغلاق",
         "menu_open": "فتح القائمة"
+    },
+    "search": {
+        "open": "فتح البحث",
+        "close": "إغلاق البحث",
+        "kicker": "بحث",
+        "placeholder": "اكتب ما تبحث عنه…",
+        "hint": "مقالات، بيانات، مقابلات، لاعبون، مدربون، معارض.",
+        "enter_to_search": "اضغط Enter للبحث",
+        "breadcrumb": "بحث",
+        "seo_title": "بحث",
+        "seo_title_with_query": "بحث : {{query}}",
+        "seo_description": "ابحث في المقالات والبيانات الصحفية والمقابلات واللاعبين والمدربين على موقع دينا القنيطرة.",
+        "title_default": "عمّاذا تبحث ؟",
+        "title_with_query": "نتائج البحث عن « {{query}} »",
+        "subtitle_default": "اكتب كلمة مفتاحية لتصفح المقالات واللاعبين والمقابلات وغير ذلك.",
+        "subtitle_with_results": "تم العثور على {{count}} نتيجة",
+        "subtitle_no_results": "لم يتم العثور على أي نتيجة.",
+        "empty_title_no_query": "جاهز للاستكشاف",
+        "empty_title_query": "لا توجد نتائج لـ « {{query}} »",
+        "empty_body_no_query": "اكتب كلمة في الشريط أعلاه. حرفان على الأقل.",
+        "empty_body_query": "جرّب كلمة أخرى، أقل تحديداً أو بدون تشكيل.",
+        "open": "فتح"
     }
 }
