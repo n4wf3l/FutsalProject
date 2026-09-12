@@ -1,15 +1,20 @@
-import { useMemo } from 'react';
-import { usePage } from '@inertiajs/react';
+import { useMemo, useState, type FormEvent } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { usePage, useForm, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { breadcrumbLd } from '@/lib/seo';
-import { motion } from 'framer-motion';
-import { Download, FileText, MapPin, Trophy, Users } from 'lucide-react';
+import { Download, FileText, Loader2, MapPin, Pencil, Save, Trophy, Users, X } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { Badge } from '@/Components/ui/Badge';
+import { Button } from '@/Components/ui/Button';
+import { Input } from '@/Components/ui/Input';
+import { Field } from '@/Components/ui/Field';
+import { RichTextEditor } from '@/Components/ui/RichTextEditor';
 import type { AboutSection, ClubInfoShared, Regulation } from '@/types/models';
+import type { User } from '@/types';
 
 interface Props {
     regulations: Regulation[];
@@ -40,8 +45,10 @@ function slugify(input: string): string {
 
 export default function About({ regulations, sections }: Props) {
     const { t } = useTranslation(['pages', 'nav']);
-    const { props } = usePage<{ club: ClubInfoShared }>();
+    const { props } = usePage<{ club: ClubInfoShared; auth: { user: User | null } }>();
     const club = props.club;
+    const isAdmin = !!props.auth?.user;
+    const [editing, setEditing] = useState<AboutSection | null>(null);
 
     const crumbs = [
         { label: t('nav:items.home'), href: '/' },
@@ -161,7 +168,7 @@ export default function About({ regulations, sections }: Props) {
                                     <span className="font-editorial text-3xl italic text-champagne/70 sm:text-5xl lg:text-6xl">
                                         {chapter.number}
                                     </span>
-                                    <div>
+                                    <div className="flex-1">
                                         <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-champagne">
                                             {t('pages:about.chapter_kicker')}
                                         </div>
@@ -169,6 +176,22 @@ export default function About({ regulations, sections }: Props) {
                                             {chapter.title}
                                         </h3>
                                     </div>
+                                    {isAdmin && (
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setEditing({
+                                                    id: chapter.id,
+                                                    title: chapter.title,
+                                                    content: chapter.content,
+                                                })
+                                            }
+                                            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-champagne/40 bg-card text-champagne transition-colors hover:border-champagne hover:bg-champagne/10"
+                                            aria-label={`Éditer la section ${chapter.title}`}
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </button>
+                                    )}
                                 </header>
                                 <div
                                     className="prose-content text-base leading-relaxed text-foreground/85 sm:text-lg [&_p]:mb-3 [&_p:last-child]:mb-0 [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-foreground [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:font-display [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-foreground [&_ul]:my-3 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1 [&_a]:text-crimson [&_a]:underline [&_a]:underline-offset-2 [&_blockquote]:my-6 [&_blockquote]:border-l-2 [&_blockquote]:border-champagne/60 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-champagne [&_strong]:text-foreground"
@@ -223,7 +246,126 @@ export default function About({ regulations, sections }: Props) {
                     </ul>
                 )}
             </section>
+
+            {/* Admin inline editor */}
+            <AboutSectionEditor
+                section={editing}
+                onClose={() => setEditing(null)}
+                onSaved={() => {
+                    setEditing(null);
+                    router.reload({ only: ['sections'] });
+                }}
+            />
         </SiteLayout>
+    );
+}
+
+function AboutSectionEditor({
+    section,
+    onClose,
+    onSaved,
+}: {
+    section: AboutSection | null;
+    onClose: () => void;
+    onSaved: () => void;
+}) {
+    const { data, setData, patch, processing, errors, reset } = useForm({
+        title: section?.title ?? '',
+        content: section?.content ?? '',
+    });
+
+    // Sync form when the target section changes.
+    useMemo(() => {
+        if (section) {
+            reset();
+            setData('title', section.title);
+            setData('content', section.content);
+        }
+    }, [section]);
+
+    const submit = (e: FormEvent) => {
+        e.preventDefault();
+        if (!section) return;
+        patch(`/about-sections/${section.id}`, { onSuccess: onSaved });
+    };
+
+    return (
+        <AnimatePresence>
+            {section && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={onClose}
+                    className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-obsidian/80 p-4 backdrop-blur-sm sm:items-center"
+                >
+                    <motion.form
+                        onSubmit={submit}
+                        onClick={(e) => e.stopPropagation()}
+                        initial={{ scale: 0.96, opacity: 0, y: 12 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.96, opacity: 0, y: 12 }}
+                        transition={{ duration: 0.2 }}
+                        className="relative my-6 w-full max-w-3xl overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
+                    >
+                        <div className="flex items-center justify-between border-b border-border px-6 py-4">
+                            <div>
+                                <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-champagne">
+                                    Édition rapide
+                                </div>
+                                <h3 className="mt-1 font-display text-lg font-semibold">
+                                    Section « {section.title} »
+                                </h3>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                aria-label="Fermer"
+                                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+
+                        <div className="space-y-5 p-6">
+                            <Field label="Titre" required error={errors.title}>
+                                <Input
+                                    value={data.title}
+                                    onChange={(e) => setData('title', e.target.value)}
+                                    required
+                                />
+                            </Field>
+                            <Field
+                                label="Contenu"
+                                required
+                                error={errors.content}
+                                hint="Utilise la barre d'outils pour mettre en forme."
+                            >
+                                <RichTextEditor
+                                    value={data.content}
+                                    onChange={(html) => setData('content', html)}
+                                    minHeight={280}
+                                />
+                            </Field>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-3 border-t border-border bg-background/40 px-6 py-4">
+                            <Button type="button" variant="outline" onClick={onClose}>
+                                Annuler
+                            </Button>
+                            <Button type="submit" disabled={processing}>
+                                {processing ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Save className="h-4 w-4" />
+                                )}
+                                Enregistrer
+                            </Button>
+                        </div>
+                    </motion.form>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }
 
