@@ -72,23 +72,25 @@ export default function Home({
                 </div>
 
                 {/* Decorative Morocco outline in champagne, pin on Kenitra.
-                    Anchored top-right so the shape fills the negative space
-                    around the hero copy without covering it. */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.94 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                    aria-hidden
-                    className="pointer-events-none absolute right-2 top-24 z-0 hidden text-champagne sm:block sm:right-6 lg:right-12 lg:top-16"
-                >
-                    <MoroccoMap
-                        className="h-72 w-auto opacity-90 sm:h-80 lg:h-[420px]"
-                        pinColor="#DC2626"
-                        strokeColor="currentColor"
-                        fillOpacity={0.06}
-                        strokeWidth={0.5}
-                    />
-                </motion.div>
+                    Anchored inside the max-w container so the shape never
+                    gets clipped by the section right edge. */}
+                <div className="pointer-events-none absolute inset-0 z-0 mx-auto max-w-7xl px-4">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.94 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                        aria-hidden
+                        className="absolute right-4 top-16 hidden text-champagne sm:block lg:right-8 lg:top-24"
+                    >
+                        <MoroccoMap
+                            className="h-72 w-auto opacity-90 sm:h-80 lg:h-[440px]"
+                            pinColor="#DC2626"
+                            strokeColor="currentColor"
+                            fillOpacity={0.08}
+                            strokeWidth={0.6}
+                        />
+                    </motion.div>
+                </div>
 
                 <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:py-32">
                     <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
