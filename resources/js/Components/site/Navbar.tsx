@@ -225,8 +225,10 @@ export function Navbar() {
                     </nav>
 
                     <div className="flex items-center gap-2">
-                        <LanguageSwitcher />
-                        <ThemeToggle />
+                        {/* Language and theme are moved into the hamburger sheet
+                            on phones (< sm) to keep the navbar breathable. */}
+                        <LanguageSwitcher className="hidden sm:inline-flex" />
+                        <ThemeToggle className="hidden sm:inline-flex" />
                         <Button
                             asChild
                             variant="outline"
@@ -281,14 +283,18 @@ export function Navbar() {
                             <Link href="/" onClick={() => setMobileOpen(false)}>
                                 <Logo />
                             </Link>
-                            <button
-                                type="button"
-                                onClick={() => setMobileOpen(false)}
-                                aria-label={tCommon('action.close')}
-                                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card text-foreground"
-                            >
-                                <X className="h-5 w-5" />
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <LanguageSwitcher />
+                                <ThemeToggle />
+                                <button
+                                    type="button"
+                                    onClick={() => setMobileOpen(false)}
+                                    aria-label={tCommon('action.close')}
+                                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card text-foreground"
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            </div>
                         </div>
 
                         <nav className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-6">
