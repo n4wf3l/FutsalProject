@@ -155,35 +155,20 @@ export function MoroccoMap({
                         <circle cx={cx} cy={cy} r={3} fill="#fff" fillOpacity={0.9} />
 
                         {isPrimary && city.nickname && typed && (
-                            <g>
-                                {/* City label */}
-                                <text
-                                    x={cx + 20}
-                                    y={cy - 6}
-                                    fontSize={22}
-                                    fontFamily="'Fraunces', 'Georgia', serif"
-                                    fontStyle="italic"
-                                    fontWeight={500}
-                                    fill={pinColor}
-                                >
-                                    {city.name}
-                                </text>
-                                {/* Typewriter nickname */}
-                                <text
-                                    x={cx + 20}
-                                    y={cy + 18}
-                                    fontSize={16}
-                                    fontFamily="'Fraunces', 'Georgia', serif"
-                                    fontStyle="italic"
-                                    fill={pinColor}
-                                    fillOpacity={0.85}
-                                >
-                                    {typed}
-                                    {typed.length < (city.nickname?.length ?? 0) && (
-                                        <tspan className="animate-pulse" fontWeight={400}>|</tspan>
-                                    )}
-                                </text>
-                            </g>
+                            <text
+                                x={cx + 20}
+                                y={cy + 6}
+                                fontSize={20}
+                                fontFamily="'Fraunces', 'Georgia', serif"
+                                fontStyle="italic"
+                                fontWeight={500}
+                                fill="#8B6F3A"
+                            >
+                                {typed}
+                                {typed.length < (city.nickname?.length ?? 0) && (
+                                    <tspan className="animate-pulse" fontWeight={400}>|</tspan>
+                                )}
+                            </text>
                         )}
                     </motion.g>
                 );
