@@ -10,6 +10,7 @@ import { Badge } from '@/Components/ui/Badge';
 import { EmptyState } from '@/Components/site/EmptyState';
 import { MatchCard } from '@/Components/site/MatchCard';
 import { SmartImage } from '@/Components/site/SmartImage';
+import { MoroccoMap } from '@/Components/site/MoroccoMap';
 import { TeamBadge } from '@/Components/site/TeamBadge';
 import { formatMatchDate, cn } from '@/lib/utils';
 import type { Article, FlashMessage, Game, Photo, PressRelease, Video, WelcomeImage } from '@/types/models';
@@ -69,6 +70,23 @@ export default function Home({
                 <div className="absolute inset-0 -z-10">
                     <div className="absolute inset-0 opacity-40 dark:bg-grid-fade" />
                 </div>
+
+                {/* Decorative Morocco outline in champagne, with a live pin
+                    on Kenitra. Sits behind the hero content, discreet on
+                    mobile, larger on the right on desktop. */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.92 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 right-0 -z-10 flex w-full items-center justify-end pr-4 sm:pr-8 lg:pr-16"
+                >
+                    <MoroccoMap
+                        className="h-[70vw] max-h-[520px] w-auto text-champagne/25 opacity-70 dark:opacity-50 sm:h-[420px] lg:h-[560px]"
+                        pinColor="#DC2626"
+                        strokeColor="currentColor"
+                    />
+                </motion.div>
 
                 <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:py-32">
                     <div className="grid gap-10 sm:gap-12 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
