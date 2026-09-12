@@ -66,14 +66,14 @@ export default function PlayersIndex({ players }: Props) {
     };
 
     return (
-        <AdminLayout title="Joueurs">
-            <Head title="Joueurs" />
+        <AdminLayout title="Seniors">
+            <Head title="Seniors" />
 
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <div className="font-mono text-xs uppercase tracking-[0.3em] text-champagne">Effectif</div>
                     <h1 className="mt-1 font-display text-3xl font-bold">
-                        Joueurs <span className="text-muted-foreground">· {players.length}</span>
+                        Seniors <span className="text-muted-foreground">· {players.length}</span>
                     </h1>
                 </div>
                 <Button asChild size="lg">

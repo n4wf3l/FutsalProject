@@ -311,7 +311,7 @@ export default function Dashboard({
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <StatCard
                         icon={Users}
-                        label="Joueurs"
+                        label="Seniors"
                         value={stats.players}
                         detail={`+ ${stats.playersEspoirs} espoirs`}
                         href="/players"

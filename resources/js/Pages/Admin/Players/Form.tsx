@@ -73,7 +73,7 @@ export default function PlayerForm({ player }: Props) {
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-crimson"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Retour aux joueurs
+                    Retour aux seniors
                 </Link>
                 <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
                     <div>

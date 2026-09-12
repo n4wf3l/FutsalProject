@@ -68,7 +68,7 @@ const NAV: NavGroup[] = [
     {
         label: 'Effectif',
         items: [
-            { label: 'Joueurs', href: '/players', icon: Users },
+            { label: 'Seniors', href: '/players', icon: Users },
             { label: 'Espoirs', href: '/manage-espoirs', icon: ShieldPlus },
             { label: 'Coachs', href: '/coaches', icon: UserCog },
             { label: 'Staff', href: '/staff', icon: UserCog },
