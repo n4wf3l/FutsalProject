@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
+    BookOpen,
     Calendar,
     ChevronRight,
     FileText,
+    Home,
     Image as ImageIcon,
     Menu,
     Mic,
@@ -114,20 +116,50 @@ export function Navbar() {
         [t]
     );
 
-    const MOBILE_NAV: Array<{ label: string; href: string; icon: LucideIcon }> = useMemo(
+    // Mobile menu is grouped by section so the flat 12-item list becomes a
+    // readable hierarchy: L'équipe / Compétition / Média / Fans / Le club.
+    type MobileItem = { label: string; href: string; icon: LucideIcon };
+    type MobileSection = { label: string | null; items: MobileItem[] };
+    const MOBILE_SECTIONS: MobileSection[] = useMemo(
         () => [
-            { label: t('items.home'), href: '/', icon: Trophy },
-            { label: t('items.team_roster'), href: '/teams', icon: Users },
-            { label: t('items.team_espoirs'), href: '/espoirs', icon: ShieldPlus },
-            { label: t('items.competition_calendar'), href: '/calendar', icon: Calendar },
-            { label: t('items.media_news'), href: '/news', icon: Newspaper },
-            { label: t('items.media_press'), href: '/communiques', icon: FileText },
-            { label: t('items.media_interviews'), href: '/interviews', icon: Mic },
-            { label: t('items.media_gallery'), href: '/galleries', icon: ImageIcon },
-            { label: t('items.media_videos'), href: '/videos', icon: Video },
-            { label: t('items.fanshop'), href: '/fanshop', icon: Ticket },
-            { label: t('items.team_history'), href: '/about', icon: FileText },
-            { label: t('items.contact'), href: '/contact', icon: UserCog },
+            {
+                label: null,
+                items: [{ label: t('items.home'), href: '/', icon: Home }],
+            },
+            {
+                label: t('items.team_group'),
+                items: [
+                    { label: t('items.team_roster'), href: '/teams', icon: Users },
+                    { label: t('items.team_espoirs'), href: '/espoirs', icon: ShieldPlus },
+                ],
+            },
+            {
+                label: t('items.competition_group'),
+                items: [
+                    { label: t('items.competition_calendar'), href: '/calendar', icon: Calendar },
+                ],
+            },
+            {
+                label: t('items.media_group'),
+                items: [
+                    { label: t('items.media_news'), href: '/news', icon: Newspaper },
+                    { label: t('items.media_press'), href: '/communiques', icon: FileText },
+                    { label: t('items.media_interviews'), href: '/interviews', icon: Mic },
+                    { label: t('items.media_gallery'), href: '/galleries', icon: ImageIcon },
+                    { label: t('items.media_videos'), href: '/videos', icon: Video },
+                ],
+            },
+            {
+                label: t('items.fanshop'),
+                items: [{ label: t('items.fanshop'), href: '/fanshop', icon: Ticket }],
+            },
+            {
+                label: t('items.team_history'),
+                items: [
+                    { label: t('items.team_history'), href: '/about', icon: BookOpen },
+                    { label: t('items.contact'), href: '/contact', icon: UserCog },
+                ],
+            },
         ],
         [t]
     );
@@ -259,36 +291,47 @@ export function Navbar() {
                             </button>
                         </div>
 
-                        <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-6">
-                            {MOBILE_NAV.map((item) => {
-                                const active =
-                                    item.href === '/' ? url === '/' : url.startsWith(item.href);
-                                return (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        className={cn(
-                                            'flex min-h-[56px] items-center gap-4 rounded-xl px-4 py-4 text-base font-medium transition-colors active:scale-[0.98]',
-                                            active
-                                                ? 'bg-crimson/10 text-crimson'
-                                                : 'text-foreground active:bg-muted'
-                                        )}
-                                    >
-                                        <span
-                                            className={cn(
-                                                'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border',
-                                                active
-                                                    ? 'border-crimson/30 bg-crimson/10 text-crimson'
-                                                    : 'border-border bg-card text-champagne'
-                                            )}
-                                        >
-                                            <item.icon className="h-4 w-4" />
-                                        </span>
-                                        <span className="flex-1">{item.label}</span>
-                                        <ChevronRight className="h-5 w-5 opacity-40" />
-                                    </Link>
-                                );
-                            })}
+                        <nav className="flex flex-1 flex-col gap-6 overflow-y-auto px-4 py-6">
+                            {MOBILE_SECTIONS.map((section, si) => (
+                                <div key={si} className="flex flex-col gap-1">
+                                    {section.label && (
+                                        <div className="mb-1 px-4 font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-champagne">
+                                            {section.label}
+                                        </div>
+                                    )}
+                                    {section.items.map((item) => {
+                                        const active =
+                                            item.href === '/'
+                                                ? url === '/'
+                                                : url.startsWith(item.href);
+                                        return (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                className={cn(
+                                                    'flex min-h-[56px] items-center gap-4 rounded-xl px-4 py-4 text-base font-medium transition-colors active:scale-[0.98]',
+                                                    active
+                                                        ? 'bg-crimson/10 text-crimson'
+                                                        : 'text-foreground active:bg-muted'
+                                                )}
+                                            >
+                                                <span
+                                                    className={cn(
+                                                        'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border',
+                                                        active
+                                                            ? 'border-crimson/30 bg-crimson/10 text-crimson'
+                                                            : 'border-border bg-card text-champagne'
+                                                    )}
+                                                >
+                                                    <item.icon className="h-4 w-4" />
+                                                </span>
+                                                <span className="flex-1">{item.label}</span>
+                                                <ChevronRight className="h-5 w-5 opacity-40" />
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            ))}
                         </nav>
 
                         <div className="shrink-0 border-t border-border px-4 py-4">
