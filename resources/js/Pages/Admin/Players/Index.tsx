@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Pencil, Plus, Search, Trash2, User, Users, X } from 'lucide-react';
+import { Cake, Pencil, Plus, Search, Trash2, User, Users, X } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
@@ -11,11 +11,21 @@ import { ConfirmDialog } from '@/Components/site/ConfirmDialog';
 import { cn } from '@/lib/utils';
 import type { Player } from '@/types/models';
 
-interface Props {
-    players: Player[];
+interface UpcomingBirthday {
+    id: number;
+    first_name: string;
+    last_name: string;
+    photo: string | null;
+    birthday_label: string;
+    days_until: number;
 }
 
-export default function PlayersIndex({ players }: Props) {
+interface Props {
+    players: Player[];
+    upcomingBirthdays?: UpcomingBirthday[];
+}
+
+export default function PlayersIndex({ players, upcomingBirthdays }: Props) {
     const [search, setSearch] = useState('');
     const [toDelete, setToDelete] = useState<Player | null>(null);
     const [selected, setSelected] = useState<Set<number>>(new Set());
@@ -80,6 +90,20 @@ export default function PlayersIndex({ players }: Props) {
                     <Link href="/players/create"><Plus className="h-4 w-4" />Nouveau joueur</Link>
                 </Button>
             </div>
+
+            {upcomingBirthdays && upcomingBirthdays.length > 0 && (
+                <div className="mb-6 rounded-2xl border border-champagne/20 bg-champagne/5 p-4">
+                    <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-champagne">
+                        <Cake className="h-3.5 w-3.5" />
+                        Prochains anniversaires
+                    </div>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                        {upcomingBirthdays.map((p) => (
+                            <BirthdayItem key={p.id} player={p} />
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div className="mb-6 flex items-center gap-3">
                 <div className="relative flex-1 max-w-sm">
@@ -159,6 +183,39 @@ export default function PlayersIndex({ players }: Props) {
                 onConfirm={bulkDelete}
             />
         </AdminLayout>
+    );
+}
+
+function BirthdayItem({ player }: { player: UpcomingBirthday }) {
+    const when =
+        player.days_until === 0
+            ? "Aujourd'hui"
+            : player.days_until === 1
+                ? 'Demain'
+                : `Dans ${player.days_until} jours`;
+
+    return (
+        <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-3">
+            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-champagne/40 bg-muted">
+                {player.photo ? (
+                    <img src={`/storage/${player.photo}`} alt="" loading="lazy" className="h-full w-full object-cover" />
+                ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                        <User className="h-5 w-5 text-muted-foreground/40" />
+                    </div>
+                )}
+            </div>
+            <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-semibold">
+                    {player.first_name} {player.last_name}
+                </div>
+                <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="font-semibold text-champagne">{when}</span>
+                    <span className="opacity-40">·</span>
+                    <span>{player.birthday_label}</span>
+                </div>
+            </div>
+        </div>
     );
 }
 

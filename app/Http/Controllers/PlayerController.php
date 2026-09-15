@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Player;
 use App\Support\SeoMeta;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -33,7 +34,44 @@ class PlayerController extends Controller
     {
         return Inertia::render('Admin/Players/Index', [
             'players' => Player::orderBy('number', 'asc')->get(),
+            'upcomingBirthdays' => $this->upcomingBirthdays(),
         ]);
+    }
+
+    /**
+     * The next 3 players whose birthday is coming up (today included).
+     * We compute the next-birthday date server-side so the year of birth
+     * never leaves the model boundary; the frontend only sees name, photo,
+     * a formatted day/month label and the number of days remaining.
+     */
+    private function upcomingBirthdays(int $take = 3): array
+    {
+        $today = Carbon::now('Africa/Casablanca')->startOfDay();
+        $year = $today->year;
+
+        return Player::whereNotNull('birthdate')
+            ->get(['id', 'first_name', 'last_name', 'photo', 'birthdate'])
+            ->map(function ($p) use ($today, $year) {
+                $bd = Carbon::parse($p->birthdate);
+                // Carbon overflows Feb 29 to Mar 1 on non-leap years, which
+                // is the accepted convention for civil birthdays.
+                $next = Carbon::create($year, $bd->month, $bd->day, 0, 0, 0, 'Africa/Casablanca');
+                if ($next->lt($today)) {
+                    $next = $next->addYear();
+                }
+                return [
+                    'id' => $p->id,
+                    'first_name' => $p->first_name,
+                    'last_name' => $p->last_name,
+                    'photo' => $p->photo,
+                    'birthday_label' => $next->locale('fr')->isoFormat('D MMMM'),
+                    'days_until' => (int) $today->diffInDays($next, false),
+                ];
+            })
+            ->sortBy('days_until')
+            ->values()
+            ->take($take)
+            ->all();
     }
 
     public function create()
