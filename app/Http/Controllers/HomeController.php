@@ -10,9 +10,13 @@ use App\Models\Game;
 use App\Models\Team;
 use App\Models\FlashMessage;
 use App\Models\Article;
+use App\Models\Player;
+use App\Models\PlayerEspoir;
 use App\Models\PressRelease;
 use App\Models\WelcomeImage;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Photo;
@@ -82,8 +86,10 @@ class HomeController extends Controller
         $featured = ['type' => 'press_release', 'item' => $latestPressRelease];
     }
 
+    $birthdayPlayers = $this->birthdayPlayersToday();
+
     SeoMeta::share(
-        'Dina Kenitra Futsal Club — Club de futsal de Kénitra depuis 2011',
+        'Dina Kenitra Futsal Club, club de futsal de Kénitra depuis 2011',
         'Club de futsal de Kénitra fondé en 2011. Retrouve le calendrier, les résultats, l\'effectif et les actualités du ' . $clubName . '.'
     );
 
@@ -103,8 +109,51 @@ class HomeController extends Controller
         'welcomeImage' => $welcomeImage,
         'latestPhotos' => $latestPhotos,
         'weatherData' => $weatherData,
+        'birthdayPlayers' => $birthdayPlayers,
     ]);
 }
+
+    /**
+     * Players and espoirs whose birthday is today, in the club's local
+     * timezone (Casablanca). We deliberately never expose the birth year,
+     * only first name, last name and photo, so the age stays private.
+     */
+    private function birthdayPlayersToday(): array
+    {
+        $today = Carbon::now('Africa/Casablanca');
+        $month = $today->month;
+        $day = $today->day;
+
+        $seniors = Schema::hasTable('players')
+            ? Player::whereMonth('birthdate', $month)
+                ->whereDay('birthdate', $day)
+                ->get(['id', 'first_name', 'last_name', 'photo'])
+                ->map(fn ($p) => [
+                    'id' => $p->id,
+                    'first_name' => $p->first_name,
+                    'last_name' => $p->last_name,
+                    'photo' => $p->photo,
+                    'kind' => 'senior',
+                ])
+                ->all()
+            : [];
+
+        $espoirs = Schema::hasTable('players_espoirs')
+            ? PlayerEspoir::whereMonth('birthdate', $month)
+                ->whereDay('birthdate', $day)
+                ->get(['id', 'first_name', 'last_name', 'photo'])
+                ->map(fn ($p) => [
+                    'id' => $p->id,
+                    'first_name' => $p->first_name,
+                    'last_name' => $p->last_name,
+                    'photo' => $p->photo,
+                    'kind' => 'espoir',
+                ])
+                ->all()
+            : [];
+
+        return array_merge($seniors, $espoirs);
+    }
     
     private function getWeatherData($city, $apiKey)
     {

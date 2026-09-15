@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from '@inertiajs/react';
 import { SEO } from '@/Components/SEO';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, CalendarOff, ChevronRight, Newspaper, Timer, Trophy, Users } from 'lucide-react';
+import { ArrowRight, Cake, Calendar, CalendarOff, ChevronRight, Newspaper, Timer, Trophy, User, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { Button } from '@/Components/ui/Button';
@@ -19,6 +19,14 @@ type FeaturedItem =
     | { type: 'article'; item: Article }
     | { type: 'press_release'; item: PressRelease };
 
+interface BirthdayPlayer {
+    id: number;
+    first_name: string;
+    last_name: string;
+    photo: string | null;
+    kind: 'senior' | 'espoir';
+}
+
 interface HomeProps {
     clubName: string;
     city: string;
@@ -33,6 +41,7 @@ interface HomeProps {
     latestPhotos: Photo[];
     flashMessage: FlashMessage | null;
     welcomeImage: WelcomeImage | null;
+    birthdayPlayers?: BirthdayPlayer[];
     weatherData?: {
         main?: { temp?: number };
         weather?: { main?: string; description?: string }[];
@@ -50,6 +59,7 @@ export default function Home({
     articles,
     featured,
     latestPhotos,
+    birthdayPlayers,
     weatherData,
 }: HomeProps) {
     const { t } = useTranslation('home');
@@ -57,6 +67,8 @@ export default function Home({
     const upcomingRest = nextGames?.slice(1, 4) ?? [];
     const temp = weatherData?.main?.temp ? Math.round(weatherData.main.temp) : null;
     const weatherLabel = weatherData?.weather?.[0]?.main ?? null;
+    const birthdays = birthdayPlayers ?? [];
+    const hasBirthday = birthdays.length > 0;
 
     return (
         <SiteLayout>
@@ -160,8 +172,12 @@ export default function Home({
                             </motion.p>
                         </div>
 
-                        {/* HERO SIDE : fallback chain, next match then featured article then club crest */}
-                        {nextMatch ? (
+                        {/* HERO SIDE : birthday takes top priority when a player
+                            is celebrating today, otherwise the usual fallback
+                            chain (next match, featured article, club crest). */}
+                        {hasBirthday ? (
+                            <BirthdayCard players={birthdays} />
+                        ) : nextMatch ? (
                             <motion.div
                                 initial={{ opacity: 0, y: 24 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -614,6 +630,81 @@ function FeaturedCard({ featured }: { featured: FeaturedItem }) {
                 </div>
             </Link>
         </motion.article>
+    );
+}
+
+function BirthdayCard({ players }: { players: BirthdayPlayer[] }) {
+    const { t } = useTranslation('home');
+    const messageKey =
+        players.length >= 3 ? 'birthday.message_many' : players.length === 2 ? 'birthday.message_plural' : 'birthday.message';
+    const primary = players[0];
+    const others = players.slice(1);
+
+    return (
+        <motion.aside
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="relative"
+        >
+            <div className="mb-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-champagne">
+                <span className="h-px w-8 bg-champagne" />
+                <Cake className="h-3.5 w-3.5" />
+                {t('birthday.kicker')}
+            </div>
+
+            <div className="relative overflow-hidden rounded-2xl border border-champagne/30 bg-card">
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
+                    {primary.photo ? (
+                        <SmartImage
+                            src={`/storage/${primary.photo}`}
+                            alt={`${primary.first_name} ${primary.last_name}`}
+                        />
+                    ) : (
+                        <div className="flex h-full w-full items-center justify-center">
+                            <User className="h-20 w-20 text-muted-foreground/30" />
+                        </div>
+                    )}
+                    <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-obsidian via-obsidian/60 to-transparent" />
+
+                    <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7">
+                        <div className="font-mono text-[10px] uppercase tracking-widest text-champagne/80">
+                            {primary.kind === 'senior' ? 'Sénior' : 'Espoir'}
+                        </div>
+                        <div className="mt-1 font-display text-2xl font-bold leading-tight text-white sm:text-3xl">
+                            {primary.first_name} {primary.last_name}
+                        </div>
+                        <p className="mt-3 font-editorial text-lg italic text-champagne sm:text-xl">
+                            {t(messageKey)}
+                        </p>
+                    </div>
+                </div>
+
+                {others.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-3 border-t border-border/60 bg-background/40 px-5 py-4">
+                        {others.map((p) => (
+                            <div key={`${p.kind}-${p.id}`} className="flex items-center gap-2.5">
+                                <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border border-champagne/40 bg-muted">
+                                    {p.photo ? (
+                                        <SmartImage
+                                            src={`/storage/${p.photo}`}
+                                            alt={`${p.first_name} ${p.last_name}`}
+                                        />
+                                    ) : (
+                                        <div className="flex h-full w-full items-center justify-center">
+                                            <User className="h-4 w-4 text-muted-foreground/50" />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="text-sm font-semibold text-foreground">
+                                    {p.first_name} {p.last_name}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </motion.aside>
     );
 }
 

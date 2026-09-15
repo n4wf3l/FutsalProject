@@ -34,6 +34,12 @@
         "read": "Lire l'article",
         "read_press": "Lire le communiqué"
     },
+    "birthday": {
+        "kicker": "Anniversaire",
+        "message": "Joyeux anniversaire !",
+        "message_plural": "Joyeux anniversaire à tous les deux !",
+        "message_many": "Joyeux anniversaire à tous !"
+    },
     "next_match": {
         "badge": "Prochain match",
         "vs": "VS",

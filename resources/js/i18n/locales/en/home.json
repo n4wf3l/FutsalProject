@@ -34,6 +34,12 @@
         "read": "Read article",
         "read_press": "Read press release"
     },
+    "birthday": {
+        "kicker": "Birthday",
+        "message": "Happy birthday!",
+        "message_plural": "Happy birthday to both of you!",
+        "message_many": "Happy birthday to you all!"
+    },
     "next_match": {
         "badge": "Next match",
         "vs": "VS",
