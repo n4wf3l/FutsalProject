@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Newspaper, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
+import { Check, Copy, Newspaper, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
@@ -223,6 +223,29 @@ function ArticleRow({
     onToggle: () => void;
     onDelete: (a: Article) => void;
 }) {
+    const [copied, setCopied] = useState(false);
+
+    const copyLink = async () => {
+        const url = `${window.location.origin}/articles/${article.slug}`;
+        try {
+            await navigator.clipboard.writeText(url);
+        } catch {
+            // Fallback for older browsers or non-HTTPS contexts where the
+            // Clipboard API is unavailable.
+            const el = document.createElement('textarea');
+            el.value = url;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        }
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1500);
+    };
+
     return (
         <motion.tr
             initial={{ opacity: 0, y: 4 }}
@@ -274,6 +297,20 @@ function ArticleRow({
                     >
                         <Pencil className="h-4 w-4" />
                     </Link>
+                    <button
+                        type="button"
+                        onClick={copyLink}
+                        className={cn(
+                            'inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
+                            copied
+                                ? 'bg-mint/10 text-mint'
+                                : 'text-muted-foreground hover:bg-muted hover:text-champagne'
+                        )}
+                        aria-label={copied ? 'Lien copié' : "Copier le lien de l'article"}
+                        title={copied ? 'Lien copié' : "Copier le lien de l'article"}
+                    >
+                        {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    </button>
                     <button
                         onClick={() => onDelete(article)}
                         className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-plasma/10 hover:text-plasma"
