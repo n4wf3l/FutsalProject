@@ -88,7 +88,7 @@ const NAV: NavGroup[] = [
         items: [
             { label: 'Articles', href: '/articles', icon: Newspaper, match: (u) => u === '/articles' || u.startsWith('/articles/') },
             {
-                label: 'Interviews',
+                label: 'La Voix du Futsal',
                 href: '/admin/interviews',
                 icon: Mic,
                 badgeKey: 'interviewsDraft',

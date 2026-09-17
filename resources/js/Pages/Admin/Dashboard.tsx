@@ -254,10 +254,10 @@ export default function Dashboard({
                                 </div>
                                 <div>
                                     <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                                        Interviews en brouillon
+                                        La Voix du Futsal
                                     </div>
                                     <div className="mt-0.5 font-display text-xl font-bold">
-                                        {inbox.interviewsDraft} à publier
+                                        {inbox.interviewsDraft} interview{inbox.interviewsDraft > 1 ? 's' : ''} en brouillon
                                     </div>
                                 </div>
                             </div>
