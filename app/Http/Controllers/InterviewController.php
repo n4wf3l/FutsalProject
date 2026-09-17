@@ -141,6 +141,8 @@ class InterviewController extends Controller
             'interviewee_name' => 'required|string|max:255',
             'interviewee_role' => 'required|string|max:120',
             'interviewee_affiliation' => 'nullable|string|max:255',
+            'partner_media' => 'nullable|string|max:120',
+            'partner_writer' => 'nullable|string|max:120',
             'hero_image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:4096',
             'interviewee_photo' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
             'video_url' => 'nullable|url|max:500',

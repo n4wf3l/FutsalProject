@@ -30,6 +30,15 @@ export default function InterviewShow({ interview, related }: Props) {
     const date = interview.published_at ? formatMatchDate(interview.published_at) : null;
     const embed = extractEmbed(interview.video_url);
 
+    // Byline logic. Empty media = no signature block at all. If the media
+    // matches the club (case-insensitive contains "dina kenitra") we show
+    // the sober "Par {club}". Otherwise it is an editorial partnership and
+    // we show the partner media name plus the writer if provided.
+    const media = (interview.partner_media ?? '').trim();
+    const writer = (interview.partner_writer ?? '').trim();
+    const hasByline = media !== '';
+    const isClubByline = hasByline && media.toLowerCase().includes('dina kenitra');
+
     const plainDescription = (interview.excerpt ?? interview.content ?? '')
         .replace(/<[^>]+>/g, '')
         .replace(/\s+/g, ' ')
@@ -263,15 +272,31 @@ export default function InterviewShow({ interview, related }: Props) {
                     </button>
                 </div>
 
-                <div className="mt-10 flex flex-col items-center gap-4">
-                    <Ornament />
-                    <Monogram />
-                    <p className="text-center text-sm italic text-muted-foreground">
-                        {t('interviews.byline')}{' '}
-                        <span className="font-semibold not-italic text-foreground">Dina Kenitra FC</span>{' '}
-                        {t('interviews.byline_end')}
-                    </p>
-                </div>
+                {hasByline && (
+                    <div className="mt-10 flex flex-col items-center gap-4">
+                        <Ornament />
+                        <Monogram />
+                        {isClubByline ? (
+                            <p className="text-center text-sm italic text-muted-foreground">
+                                {t('interviews.byline_club_prefix')}{' '}
+                                <span className="font-semibold not-italic text-foreground">{media}</span>{' '}
+                                {t('interviews.byline_club_suffix')}
+                            </p>
+                        ) : (
+                            <p className="text-center text-sm italic text-muted-foreground">
+                                {t('interviews.byline_partner_prefix')}{' '}
+                                <span className="font-semibold not-italic text-foreground">{media}</span>
+                                {writer !== '' && (
+                                    <>
+                                        {' '}<span className="text-champagne">·</span>{' '}
+                                        {t('interviews.byline_partner_writer')}{' '}
+                                        <span className="not-italic text-foreground">{writer}</span>
+                                    </>
+                                )}
+                            </p>
+                        )}
+                    </div>
+                )}
             </section>
 
             {/* Related */}

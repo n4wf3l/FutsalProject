@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { SEO } from '@/Components/SEO';
 import { breadcrumbLd } from '@/lib/seo';
 import { motion } from 'framer-motion';
-import { ArrowRight, MessageSquareQuote, Mic } from 'lucide-react';
+import { ArrowRight, Handshake, MessageSquareQuote, Mic } from 'lucide-react';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { PageHeader } from '@/Components/site/PageHeader';
 import { EmptyState } from '@/Components/site/EmptyState';
@@ -123,6 +123,22 @@ export default function InterviewsIndex({ interviews, roles, filter }: Props) {
                         </div>
                     </>
                 )}
+            </section>
+
+            {/* Editorial partnership explainer */}
+            <section className="mx-auto max-w-3xl px-4 pb-12">
+                <div className="rounded-2xl border border-champagne/20 bg-champagne/5 p-6 sm:p-8">
+                    <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-champagne">
+                        <Handshake className="h-3.5 w-3.5" />
+                        {t('pages:interviews.partnership_kicker')}
+                    </div>
+                    <h2 className="mt-3 font-editorial text-2xl italic leading-tight text-foreground sm:text-3xl">
+                        {t('pages:interviews.partnership_title')}
+                    </h2>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                        {t('pages:interviews.partnership_body')}
+                    </p>
+                </div>
             </section>
 
             {/* Attribution strip */}

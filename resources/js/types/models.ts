@@ -186,6 +186,8 @@ export interface Interview {
     interviewee_name: string;
     interviewee_role: string;
     interviewee_affiliation: string | null;
+    partner_media: string | null;
+    partner_writer: string | null;
     hero_image: string | null;
     interviewee_photo: string | null;
     video_url: string | null;

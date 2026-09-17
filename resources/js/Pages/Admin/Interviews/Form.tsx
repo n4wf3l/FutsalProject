@@ -30,6 +30,8 @@ export default function InterviewForm({ interview, roles }: Props) {
         interviewee_name: interview?.interviewee_name ?? '',
         interviewee_role: interview?.interviewee_role ?? '',
         interviewee_affiliation: interview?.interviewee_affiliation ?? '',
+        partner_media: interview?.partner_media ?? '',
+        partner_writer: interview?.partner_writer ?? '',
         hero_image: null as File | null,
         interviewee_photo: null as File | null,
         video_url: interview?.video_url ?? '',
@@ -212,6 +214,38 @@ export default function InterviewForm({ interview, roles }: Props) {
                                     value={data.video_url ?? ''}
                                     onChange={(e) => setData('video_url', e.target.value)}
                                     placeholder="https://www.youtube.com/watch?v=…"
+                                />
+                            </Field>
+                        </div>
+                    </div>
+
+                    {/* Editorial signature */}
+                    <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+                        <SectionTitle title="Signature éditoriale" />
+                        <p className="mt-3 text-sm text-muted-foreground">
+                            Si l'interview est publiée par le club, indique « Dina Kenitra FC » comme rédaction. Si elle est réalisée en partenariat éditorial avec un autre média (ex : DM Sport), mets le nom de la rédaction partenaire. Laisser vide masque toute mention de signature.
+                        </p>
+                        <div className="mt-4 grid gap-5 sm:grid-cols-2">
+                            <Field
+                                label="Rédaction / média"
+                                hint="Vide = aucune signature affichée"
+                                error={errors.partner_media}
+                            >
+                                <Input
+                                    value={data.partner_media ?? ''}
+                                    onChange={(e) => setData('partner_media', e.target.value)}
+                                    placeholder="Dina Kenitra FC ou DM Sport"
+                                />
+                            </Field>
+                            <Field
+                                label="Rédacteur (optionnel)"
+                                hint="Nom de la personne qui a rédigé"
+                                error={errors.partner_writer}
+                            >
+                                <Input
+                                    value={data.partner_writer ?? ''}
+                                    onChange={(e) => setData('partner_writer', e.target.value)}
+                                    placeholder="Ex : Ahmed El Bekali"
                                 />
                             </Field>
                         </div>

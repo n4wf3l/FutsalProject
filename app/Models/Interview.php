@@ -16,6 +16,8 @@ class Interview extends Model
         'interviewee_name',
         'interviewee_role',
         'interviewee_affiliation',
+        'partner_media',
+        'partner_writer',
         'hero_image',
         'interviewee_photo',
         'video_url',
