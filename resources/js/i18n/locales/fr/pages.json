@@ -259,6 +259,8 @@
         "partnership_title": "La Voix du Futsal s'ouvre à d'autres rédactions.",
         "partnership_body": "Certaines interviews sont réalisées en partenariat avec des médias spécialisés du futsal marocain, comme DM Sport. Chaque interview publiée en co-signature indique clairement la rédaction partenaire, et le nom du rédacteur quand il est communiqué. Les interviews signées par le club portent la mention « Par Dina Kenitra FC ».",
         "seo_description_fallback": "Interview de {{name}} — La Voix du Futsal.",
+        "seo_description_chronicle": "Chronique éditoriale, La Voix du Futsal, Dina Kenitra FC.",
+        "chronicle_badge": "Chronique",
         "related_kicker": "Aussi à lire",
         "related_title": "Autres voix du futsal",
         "published_on": "Publié le",

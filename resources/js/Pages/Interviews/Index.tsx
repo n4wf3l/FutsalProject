@@ -191,7 +191,7 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
                 <div className="flex flex-col justify-center gap-6 p-8 lg:p-12">
                     <div>
                         <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-champagne">
-                            {interview.interviewee_role}
+                            {interview.interviewee_role ?? t('interviews.chronicle_badge')}
                             {interview.interviewee_affiliation && (
                                 <> · <span className="text-muted-foreground">{interview.interviewee_affiliation}</span></>
                             )}
@@ -199,9 +199,11 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
                         <h2 className="mt-3 font-editorial text-2xl font-medium leading-tight tracking-tight text-foreground sm:text-3xl lg:text-4xl">
                             {interview.title}
                         </h2>
-                        <div className="mt-3 font-mono text-xs uppercase tracking-widest text-champagne">
-                            {t('interviews.with_person', { name: interview.interviewee_name })}
-                        </div>
+                        {interview.interviewee_name && (
+                            <div className="mt-3 font-mono text-xs uppercase tracking-widest text-champagne">
+                                {t('interviews.with_person', { name: interview.interviewee_name })}
+                            </div>
+                        )}
                     </div>
 
                     {interview.quote_highlight && (
@@ -240,6 +242,7 @@ function FeaturedInterview({ interview }: { interview: Interview }) {
 }
 
 function InterviewCard({ interview, index }: { interview: Interview; index: number }) {
+    const { t } = useTranslation('pages');
     const date = interview.published_at ? formatMatchDate(interview.published_at) : null;
 
     return (
@@ -265,7 +268,7 @@ function InterviewCard({ interview, index }: { interview: Interview; index: numb
                     )}
                     <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-card via-card/70 to-transparent" />
                     <div className="absolute left-4 top-4">
-                        <Badge variant="champagne">{interview.interviewee_role}</Badge>
+                        <Badge variant="champagne">{interview.interviewee_role ?? t('interviews.chronicle_badge')}</Badge>
                     </div>
                 </div>
                 <div className="p-6">
@@ -277,16 +280,18 @@ function InterviewCard({ interview, index }: { interview: Interview; index: numb
                     <h3 className="mt-2 font-editorial text-xl leading-snug transition-colors group-hover:text-champagne">
                         {interview.title}
                     </h3>
-                    <div className="mt-2 flex items-center gap-2 text-sm font-semibold text-champagne">
-                        {interview.interviewee_photo && (
-                            <img
-                                src={`/storage/${interview.interviewee_photo}`}
-                                alt={interview.interviewee_name}
-                                className="h-6 w-6 rounded-full border border-border object-cover"
-                            />
-                        )}
-                        {interview.interviewee_name}
-                    </div>
+                    {interview.interviewee_name && (
+                        <div className="mt-2 flex items-center gap-2 text-sm font-semibold text-champagne">
+                            {interview.interviewee_photo && (
+                                <img
+                                    src={`/storage/${interview.interviewee_photo}`}
+                                    alt={interview.interviewee_name}
+                                    className="h-6 w-6 rounded-full border border-border object-cover"
+                                />
+                            )}
+                            {interview.interviewee_name}
+                        </div>
+                    )}
                     {interview.excerpt && (
                         <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
                             {interview.excerpt}

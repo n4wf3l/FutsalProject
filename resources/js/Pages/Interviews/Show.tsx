@@ -47,6 +47,22 @@ export default function InterviewShow({ interview, related }: Props) {
 
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
+    // For pure chronicles (no interviewed guest) JSON-LD attributes the
+    // article to the partner writer if any, else to the partner media as
+    // an Organization, else to the club itself.
+    const authorLd = interview.interviewee_name
+        ? {
+              '@type': 'Person',
+              name: interview.interviewee_name,
+              ...(interview.interviewee_role ? { jobTitle: interview.interviewee_role } : {}),
+              ...(interview.interviewee_affiliation
+                  ? { affiliation: { '@type': 'Organization', name: interview.interviewee_affiliation } }
+                  : {}),
+          }
+        : writer !== ''
+            ? { '@type': 'Person', name: writer, ...(media !== '' ? { affiliation: { '@type': 'Organization', name: media } } : {}) }
+            : { '@type': 'Organization', name: media !== '' ? media : 'Dina Kenitra FC' };
+
     const interviewLd = {
         '@context': 'https://schema.org',
         '@type': 'NewsArticle',
@@ -55,20 +71,13 @@ export default function InterviewShow({ interview, related }: Props) {
         image: interview.hero_image ? [`${origin}/storage/${interview.hero_image}`] : undefined,
         datePublished: interview.published_at ?? interview.created_at,
         dateModified: interview.updated_at,
-        author: {
-            '@type': 'Person',
-            name: interview.interviewee_name,
-            jobTitle: interview.interviewee_role,
-            ...(interview.interviewee_affiliation
-                ? { affiliation: { '@type': 'Organization', name: interview.interviewee_affiliation } }
-                : {}),
-        },
+        author: authorLd,
         publisher: {
             '@type': 'Organization',
             name: 'Dina Kenitra FC',
             logo: { '@type': 'ImageObject', url: `${origin}/logo-dinakenitra.png` },
         },
-        articleSection: 'Interviews · La Voix du Futsal',
+        articleSection: 'La Voix du Futsal',
         mainEntityOfPage: {
             '@type': 'WebPage',
             '@id': typeof window !== 'undefined' ? window.location.href : '',
@@ -79,13 +88,18 @@ export default function InterviewShow({ interview, related }: Props) {
         <SiteLayout>
             <SEO
                 title={interview.title}
-                description={plainDescription || t('interviews.seo_description_fallback', { name: interview.interviewee_name })}
+                description={
+                    plainDescription
+                    || (interview.interviewee_name
+                        ? t('interviews.seo_description_fallback', { name: interview.interviewee_name })
+                        : t('interviews.seo_description_chronicle'))
+                }
                 image={interview.hero_image}
                 type="article"
                 publishedAt={interview.published_at ?? interview.created_at}
                 modifiedAt={interview.updated_at}
-                author={interview.interviewee_name}
-                section={`Interviews · ${interview.interviewee_role}`}
+                author={interview.interviewee_name ?? (writer !== '' ? writer : (media !== '' ? media : 'Dina Kenitra FC'))}
+                section={interview.interviewee_role ? `Interviews · ${interview.interviewee_role}` : 'La Voix du Futsal'}
                 jsonLd={interviewLd}
             />
 
@@ -123,7 +137,9 @@ export default function InterviewShow({ interview, related }: Props) {
                                 <Mic className="h-3 w-3" />
                                 {t('interviews.series_name')}
                             </Badge>
-                            <Badge variant="muted">{interview.interviewee_role}</Badge>
+                            {interview.interviewee_role && (
+                                <Badge variant="muted">{interview.interviewee_role}</Badge>
+                            )}
                             {date && (
                                 <div className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-muted-foreground">
                                     <Calendar className="h-3 w-3" />
@@ -136,34 +152,36 @@ export default function InterviewShow({ interview, related }: Props) {
                             {interview.title}
                         </h1>
 
-                        <div className="mt-8 flex items-center gap-4 border-t border-border pt-6">
-                            <div className="relative">
-                                {interview.interviewee_photo ? (
-                                    <img
-                                        src={`/storage/${interview.interviewee_photo}`}
-                                        alt={interview.interviewee_name}
-                                        className="h-16 w-16 rounded-full border-2 border-champagne object-cover"
-                                    />
-                                ) : (
-                                    <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-champagne bg-card">
-                                        <User className="h-8 w-8 text-muted-foreground" />
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <div className="font-mono text-[10px] uppercase tracking-widest text-champagne">
-                                    {t('interviews.our_guest')}
+                        {interview.interviewee_name && (
+                            <div className="mt-8 flex items-center gap-4 border-t border-border pt-6">
+                                <div className="relative">
+                                    {interview.interviewee_photo ? (
+                                        <img
+                                            src={`/storage/${interview.interviewee_photo}`}
+                                            alt={interview.interviewee_name}
+                                            className="h-16 w-16 rounded-full border-2 border-champagne object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-champagne bg-card">
+                                            <User className="h-8 w-8 text-muted-foreground" />
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="font-display text-lg font-bold">
-                                    {interview.interviewee_name}
-                                </div>
-                                {interview.interviewee_affiliation && (
-                                    <div className="text-sm text-muted-foreground">
-                                        {interview.interviewee_affiliation}
+                                <div>
+                                    <div className="font-mono text-[10px] uppercase tracking-widest text-champagne">
+                                        {t('interviews.our_guest')}
                                     </div>
-                                )}
+                                    <div className="font-display text-lg font-bold">
+                                        {interview.interviewee_name}
+                                    </div>
+                                    {interview.interviewee_affiliation && (
+                                        <div className="text-sm text-muted-foreground">
+                                            {interview.interviewee_affiliation}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </motion.header>
                 </div>
             </section>
@@ -200,9 +218,11 @@ export default function InterviewShow({ interview, related }: Props) {
                         <p className="mt-6 font-editorial text-2xl italic leading-relaxed text-foreground lg:text-3xl">
                             « {interview.quote_highlight} »
                         </p>
-                        <div className="mt-6 font-mono text-xs uppercase tracking-widest text-champagne">
-                            — {interview.interviewee_name}
-                        </div>
+                        {interview.interviewee_name && (
+                            <div className="mt-6 font-mono text-xs uppercase tracking-widest text-champagne">
+                                {interview.interviewee_name}
+                            </div>
+                        )}
                     </blockquote>
                 </motion.section>
             )}
@@ -330,14 +350,16 @@ export default function InterviewShow({ interview, related }: Props) {
                                 </div>
                                 <div className="p-5">
                                     <Badge variant="champagne" className="mb-2">
-                                        {r.interviewee_role}
+                                        {r.interviewee_role ?? t('interviews.chronicle_badge')}
                                     </Badge>
                                     <h3 className="font-display text-base font-semibold leading-tight transition-colors group-hover:text-champagne">
                                         {r.title}
                                     </h3>
-                                    <div className="mt-1 text-sm text-muted-foreground">
-                                        {r.interviewee_name}
-                                    </div>
+                                    {r.interviewee_name && (
+                                        <div className="mt-1 text-sm text-muted-foreground">
+                                            {r.interviewee_name}
+                                        </div>
+                                    )}
                                 </div>
                             </Link>
                         ))}

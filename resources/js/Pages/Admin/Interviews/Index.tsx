@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Mic, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { CalendarClock, Eye, EyeOff, Mic, Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
@@ -24,23 +24,23 @@ export default function AdminInterviewsIndex({ interviews }: Props) {
         const q = search.toLowerCase();
         return (
             i.title.toLowerCase().includes(q) ||
-            i.interviewee_name.toLowerCase().includes(q) ||
-            i.interviewee_role.toLowerCase().includes(q) ||
+            (i.interviewee_name ?? '').toLowerCase().includes(q) ||
+            (i.interviewee_role ?? '').toLowerCase().includes(q) ||
             (i.interviewee_affiliation ?? '').toLowerCase().includes(q)
         );
     });
 
     return (
-        <AdminLayout title="Interviews">
-            <Head title="Interviews" />
+        <AdminLayout title="La Voix du Futsal">
+            <Head title="La Voix du Futsal" />
 
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <div className="font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                        La Voix du Futsal
+                        Série éditoriale
                     </div>
                     <h1 className="mt-1 font-display text-3xl font-bold">
-                        Interviews <span className="text-muted-foreground">· {interviews.length}</span>
+                        La Voix du Futsal <span className="text-muted-foreground">· {interviews.length}</span>
                     </h1>
                 </div>
                 <Button asChild size="lg">
@@ -139,7 +139,13 @@ function InterviewRow({
     index: number;
     onDelete: (i: Interview) => void;
 }) {
-    const isPublished = !!interview.published_at && new Date(interview.published_at) <= new Date();
+    const publishedAt = interview.published_at ? new Date(interview.published_at) : null;
+    const now = new Date();
+    const status: 'published' | 'scheduled' | 'draft' = publishedAt
+        ? publishedAt <= now
+            ? 'published'
+            : 'scheduled'
+        : 'draft';
     const date = interview.published_at ? formatMatchDate(interview.published_at) : null;
 
     return (
@@ -167,25 +173,38 @@ function InterviewRow({
                     </div>
                     <div>
                         <div className="line-clamp-1 font-semibold">{interview.title}</div>
-                        <div className="text-xs text-muted-foreground">
-                            avec {interview.interviewee_name}
-                        </div>
+                        {interview.interviewee_name && (
+                            <div className="text-xs text-muted-foreground">
+                                avec {interview.interviewee_name}
+                            </div>
+                        )}
                     </div>
                 </div>
             </td>
             <td className="hidden px-4 py-3 md:table-cell">
-                <Badge variant="champagne">{interview.interviewee_role}</Badge>
+                {interview.interviewee_role ? (
+                    <Badge variant="champagne">{interview.interviewee_role}</Badge>
+                ) : (
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Chronique</span>
+                )}
             </td>
             <td className="hidden px-4 py-3 font-mono text-xs text-muted-foreground lg:table-cell">
                 {date ? `${date.day} ${date.month} ${date.year}` : '—'}
             </td>
             <td className="px-4 py-3">
-                {isPublished ? (
+                {status === 'published' && (
                     <Badge variant="win">
                         <Eye className="h-3 w-3" />
                         Publiée
                     </Badge>
-                ) : (
+                )}
+                {status === 'scheduled' && (
+                    <Badge variant="champagne">
+                        <CalendarClock className="h-3 w-3" />
+                        Programmée
+                    </Badge>
+                )}
+                {status === 'draft' && (
                     <Badge variant="muted">
                         <EyeOff className="h-3 w-3" />
                         Brouillon

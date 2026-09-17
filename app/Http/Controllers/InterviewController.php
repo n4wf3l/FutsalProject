@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Interview;
 use App\Support\SeoMeta;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -91,6 +92,7 @@ class InterviewController extends Controller
     {
         $data = $this->validated($request);
         $data = $this->handleImages($request, $data);
+        $data['published_at'] = $this->normalizePublishedAt($data['published_at'] ?? null);
         $data['slug'] = $this->uniqueSlug($data['title']);
         $data['user_id'] = Auth::id();
 
@@ -111,6 +113,7 @@ class InterviewController extends Controller
     {
         $data = $this->validated($request);
         $data = $this->handleImages($request, $data, $interview);
+        $data['published_at'] = $this->normalizePublishedAt($data['published_at'] ?? null);
 
         if ($data['title'] !== $interview->title) {
             $data['slug'] = $this->uniqueSlug($data['title'], $interview->id);
@@ -138,8 +141,8 @@ class InterviewController extends Controller
     {
         return $request->validate([
             'title' => 'required|string|max:255',
-            'interviewee_name' => 'required|string|max:255',
-            'interviewee_role' => 'required|string|max:120',
+            'interviewee_name' => 'nullable|string|max:255',
+            'interviewee_role' => 'nullable|string|max:120',
             'interviewee_affiliation' => 'nullable|string|max:255',
             'partner_media' => 'nullable|string|max:120',
             'partner_writer' => 'nullable|string|max:120',
@@ -166,6 +169,23 @@ class InterviewController extends Controller
             }
         }
         return $data;
+    }
+
+    /**
+     * The admin datetime-local input sends a naive local wall-clock string
+     * such as "2026-09-18T14:32". APP_TIMEZONE is UTC on this install, so
+     * without a timezone hint Laravel would interpret it as UTC and shift
+     * the publication into the future for admins in Africa/Casablanca. We
+     * anchor the string to Casablanca time then convert to UTC for storage
+     * so that the published_at column is directly comparable to now().
+     */
+    private function normalizePublishedAt(?string $value): ?Carbon
+    {
+        $value = $value !== null ? trim($value) : null;
+        if ($value === null || $value === '') {
+            return null;
+        }
+        return Carbon::parse($value, 'Africa/Casablanca')->utc();
     }
 
     private function uniqueSlug(string $title, ?int $ignoreId = null): string

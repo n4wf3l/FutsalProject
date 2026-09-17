@@ -14,6 +14,17 @@ interface Props {
     roles: string[];
 }
 
+// datetime-local wants a naive wall-clock string ("YYYY-MM-DDTHH:mm") in
+// the admin's local time. Laravel returns published_at in UTC ISO with a
+// trailing Z; naively slicing that would show UTC in the input, one hour
+// off for a Morocco-based admin. This converts a UTC ISO to the browser's
+// local wall-clock string.
+function toLocalDatetimeInput(iso: string): string {
+    const d = new Date(iso);
+    const tzOffsetMs = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffsetMs).toISOString().slice(0, 16);
+}
+
 export default function InterviewForm({ interview, roles }: Props) {
     const isEdit = !!interview;
 
@@ -39,7 +50,7 @@ export default function InterviewForm({ interview, roles }: Props) {
         quote_highlight: interview?.quote_highlight ?? '',
         content: interview?.content ?? '',
         published_at: interview?.published_at
-            ? new Date(interview.published_at).toISOString().slice(0, 16)
+            ? toLocalDatetimeInput(interview.published_at)
             : '',
     });
 
@@ -81,7 +92,7 @@ export default function InterviewForm({ interview, roles }: Props) {
 
     return (
         <AdminLayout>
-            <Head title={isEdit ? 'Modifier interview' : 'Nouvelle interview'} />
+            <Head title={isEdit ? 'Modifier · La Voix du Futsal' : 'Nouvelle interview · La Voix du Futsal'} />
 
             <div className="mb-6">
                 <Link
@@ -89,14 +100,14 @@ export default function InterviewForm({ interview, roles }: Props) {
                     className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-champagne"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Retour aux interviews
+                    Retour à La Voix du Futsal
                 </Link>
                 <div className="mt-3">
                     <div className="font-mono text-xs uppercase tracking-[0.3em] text-champagne">
-                        {isEdit ? 'Édition' : 'Nouvelle interview'}
+                        La Voix du Futsal
                     </div>
                     <h1 className="mt-1 font-display text-3xl font-bold">
-                        {isEdit ? interview!.title : 'La Voix du Futsal'}
+                        {isEdit ? interview!.title : 'Nouvelle interview'}
                     </h1>
                 </div>
             </div>
@@ -158,26 +169,27 @@ export default function InterviewForm({ interview, roles }: Props) {
                         </div>
                     </div>
 
-                    {/* Interviewee */}
+                    {/* Interviewee (optional) */}
                     <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
-                        <SectionTitle title="Notre invité·e" />
+                        <SectionTitle title="Invité·e" />
+                        <p className="mt-3 text-sm text-muted-foreground">
+                            Optionnel. À remplir uniquement si le contenu est une interview d'une personnalité. Pour une chronique ou un éditorial sans invité, laisse les champs vides et le bloc n'apparaît pas côté public.
+                        </p>
                         <div className="mt-4 grid gap-5 sm:grid-cols-2">
-                            <Field label="Nom" required error={errors.interviewee_name}>
+                            <Field label="Nom" error={errors.interviewee_name}>
                                 <Input
-                                    value={data.interviewee_name}
+                                    value={data.interviewee_name ?? ''}
                                     onChange={(e) => setData('interviewee_name', e.target.value)}
-                                    required
                                     placeholder="Hicham Dguig"
                                 />
                             </Field>
-                            <Field label="Rôle" required error={errors.interviewee_role}>
+                            <Field label="Rôle" error={errors.interviewee_role}>
                                 <select
-                                    value={data.interviewee_role}
+                                    value={data.interviewee_role ?? ''}
                                     onChange={(e) => setData('interviewee_role', e.target.value)}
-                                    required
                                     className="flex h-10 w-full rounded-lg border border-input bg-card px-4 py-2 text-sm focus:border-champagne focus:outline-none focus:ring-2 focus:ring-champagne/20"
                                 >
-                                    <option value="">— Sélectionner —</option>
+                                    <option value="">— Aucun rôle —</option>
                                     {roles.map((r) => (
                                         <option key={r} value={r}>
                                             {r}
